@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Grupos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon"><i class="fa-solid fa-infinity"></i></div>
+            <div class="logo-text">
+                <h2>FocusFlight</h2>
+                <span>Academic Platform</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-plane-departure"></i> FocusFlight</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-book"></i> Materias</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-file-pen"></i> Parciales</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-laptop-code"></i> Trabajos Prácticos</a>
+            <a href="#" class="nav-item"><i class="fa-regular fa-calendar"></i> Calendario</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> AI Co-Pilot</a>
+            <a href="#" class="nav-item"><i class="fa-regular fa-user"></i> Mi Perfil</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-avatar">JM</div>
+            <div class="user-info">
+                <strong>Juan Méndez</strong>
+                <span>Ing. en Sistemas</span>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Search subjects, tasks, exams...">
+            </div>
+            <div class="topbar-actions">
+                <button class="streak-btn"><i class="fa-solid fa-fire"></i> 7 Day Streak</button>
+                <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+                <div class="user-avatar-small">JM</div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="page-header">
+                <div class="header-titles">
+                    <h1>Grupos</h1>
+                    <p class="subtitle">Lunes, 14 Sep • Semana 37</p>
+                </div>
+                <div class="header-buttons">
+                    <button class="btn-primary"><i class="fa-solid fa-plane-departure"></i> Launch FocusFlight</button>
+                    <button class="btn-secondary"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Assistant</button>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h2>Grupo 1</h2>
+                    <p>Descripción del Grupo 1</p>
+                    <a href="grupos/grupo1"><button class="btn-secondary">Ver Detalles</button></a>
+                </div>
+                <div class="card">
+                    <h2>Grupo 2</h2>
+                    <p>Descripción del Grupo 2</p>
+                    <a href="grupos/grupo2"><button class="btn-secondary">Ver Detalles</button></a>
+                </div>
+                <div class="card">
+                    <h2>Grupo 3</h2>
+                    <p>Descripción del Grupo 3</p>
+                    <a href="grupos/grupo3"><button class="btn-secondary">Ver Detalles</button></a>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>

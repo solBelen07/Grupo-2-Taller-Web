@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${datosGrupo?.nombre ?: 'Grupo no encontrado'}">Detalle del Grupo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon"><i class="fa-solid fa-infinity"></i></div>
+            <div class="logo-text">
+                <h2>FocusFlight</h2>
+                <span>Academic Platform</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-plane-departure"></i> FocusFlight</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-book"></i> Materias</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-file-pen"></i> Parciales</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-laptop-code"></i> Trabajos Prácticos</a>
+            <a href="#" class="nav-item"><i class="fa-regular fa-calendar"></i> Calendario</a>
+            <a href="#" class="nav-item"><i class="fa-solid fa-robot"></i> AI Co-Pilot</a>
+            <a href="#" class="nav-item"><i class="fa-regular fa-user"></i> Mi Perfil</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-avatar">JM</div>
+            <div class="user-info">
+                <strong>Juan Méndez</strong>
+                <span>Ing. en Sistemas</span>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Buscar materias, tareas, parciales...">
+            </div>
+            <div class="topbar-actions">
+                <button class="streak-btn"><i class="fa-solid fa-fire"></i> 7 Day Streak</button>
+                <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+                <div class="user-avatar-small">JM</div>
+            </div>
+        </header>
+
+        <main class="page-content">
+            <div class="page-header">
+                <div class="header-titles">
+                    <div th:if="${error != null}" class="alert alert-danger d-flex align-items-center mt-3" role="alert">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                        <span th:text="${error}">Mensaje de error</span>
+                    </div>
+
+                    <div th:if="${datosGrupo != null}">
+                        <h1 class="h3 fw-bold mb-1" th:text="${datosGrupo.nombre}">Nombre del Grupo</h1>
+                        <p class="text-secondary small mb-0">Detalles del grupo...</p>
+                        <a href="/spring/grupos/invitar"><button>Invitar</button></a>
+                    </div>
+                    <div class="header-buttons">
+                        <a href="/spring/grupos"><button class="btn-primary">Volver</button></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="dashboard-grid">
+
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>
