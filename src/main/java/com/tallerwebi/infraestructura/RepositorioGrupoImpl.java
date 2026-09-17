@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.Grupo;
 import com.tallerwebi.dominio.RepositorioGrupo;
+import java.util.List;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +22,10 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
       .createQuery("from Grupo where nombre = :nombre", Grupo.class)
       .setParameter("nombre", nombre)
       .uniqueResult();
+  }
+
+  @Override
+  public List<Grupo> listar() {
+    return sessionFactory.getCurrentSession().createQuery("from Grupo", Grupo.class).list();
   }
 }

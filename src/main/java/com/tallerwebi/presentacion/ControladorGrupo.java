@@ -18,7 +18,11 @@ public class ControladorGrupo {
   @RequestMapping("/grupos")
   public ModelAndView verGrupos() {
     Map<String, Object> modelo = new ModelMap();
-    modelo.put("datosGrupo", new DatosGrupo());
+    try {
+      modelo.put("datosGrupo", servicioGrupo.listarGrupos());
+    } catch (Exception e) {
+      modelo.put("error", "No se pudieron cargar los grupos");
+    }
 
     return new ModelAndView("grupos", modelo);
   }

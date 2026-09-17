@@ -61,22 +61,12 @@
                     <button class="btn-secondary"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Assistant</button>
                 </div>
             </div>
-
-            <div class="dashboard-grid">
-                <div class="card">
-                    <h2>Grupo 1</h2>
-                    <p>Descripción del Grupo 1</p>
-                    <a href="grupos/grupo1"><button class="btn-secondary">Ver Detalles</button></a>
-                </div>
-                <div class="card">
-                    <h2>Grupo 2</h2>
-                    <p>Descripción del Grupo 2</p>
-                    <a href="grupos/grupo2"><button class="btn-secondary">Ver Detalles</button></a>
-                </div>
-                <div class="card">
-                    <h2>Grupo 3</h2>
-                    <p>Descripción del Grupo 3</p>
-                    <a href="grupos/grupo3"><button class="btn-secondary">Ver Detalles</button></a>
+            <div th:if="${error != null}" th:text="${error}" class="dashboard-grid">
+            </div>
+            <div th:if="${datosGrupo != null and !#lists.isEmpty(datosGrupo)}" class="dashboard-grid">
+                <div th:each="grupo : ${datosGrupo}" class="card">
+                    <h2 th:text="${grupo.nombre}">Nombre de grupo</h2>
+                    <a th:href="@{/grupos/{nombre}(nombre=${grupo.nombre})}" class="btn-secondary">Ver Detalles</a>
                 </div>
             </div>
         </main>

@@ -1,6 +1,8 @@
 package com.tallerwebi.dominio;
 
-@FunctionalInterface
+import java.util.List;
+
 public interface RepositorioGrupo {
   Grupo buscar(String nombre);
+  List<Grupo> listar();
 }

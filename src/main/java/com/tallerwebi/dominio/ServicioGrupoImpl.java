@@ -2,6 +2,7 @@ package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.excepcion.GrupoNoEncontrado;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service("servicioGrupo")
@@ -20,5 +21,10 @@ public class ServicioGrupoImpl implements ServicioGrupo {
       throw new GrupoNoEncontrado();
     }
     return repositorioGrupo.buscar(nombre);
+  }
+
+  @Override
+  public List<Grupo> listarGrupos() {
+    return repositorioGrupo.listar();
   }
 }
