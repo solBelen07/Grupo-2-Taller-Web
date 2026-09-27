@@ -1,0 +1,299 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Materia</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+        crossorigin="anonymous"
+    >
+
+    <link
+        rel="stylesheet"
+        th:href="@{/css/main.css}"
+    />
+
+</head>
+
+<body>
+
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+
+    <a
+        class="navbar-brand"
+        th:href="@{/materias}"
+    >
+        FocusFlight
+    </a>
+
+</nav>
+
+
+<main class="container">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+
+            <h1
+                th:text="${datosMateria.id == null}
+                    ? 'Nueva materia'
+                    : 'Editar materia'"
+            >
+                Materia
+            </h1>
+
+
+            <p class="text-muted">
+                Completá los datos de la materia.
+            </p>
+
+
+            <!-- ERROR DE MATERIA REPETIDA -->
+
+            <div
+                th:if="${error != null}"
+                class="alert alert-danger"
+                th:text="${error}"
+            >
+            </div>
+
+
+            <form
+                th:object="${datosMateria}"
+                th:action="${datosMateria.id == null}
+                    ? @{/materias/guardar}
+                    : @{/materias/modificar}"
+                method="POST"
+            >
+
+
+                <!-- ID -->
+
+                <input
+                    type="hidden"
+                    th:field="*{id}"
+                >
+
+
+                <!-- NOMBRE -->
+
+                <div class="mb-3">
+
+                    <label
+                        for="nombre"
+                        class="form-label"
+                    >
+                        Nombre de la materia
+                    </label>
+
+                    <input
+                        id="nombre"
+                        type="text"
+                        th:field="*{nombre}"
+                        class="form-control"
+                        placeholder="Ej: Taller Web I"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- DESCRIPCIÓN -->
+
+                <div class="mb-3">
+
+                    <label
+                        for="descripcion"
+                        class="form-label"
+                    >
+                        Descripción
+                    </label>
+
+                    <textarea
+                        id="descripcion"
+                        th:field="*{descripcion}"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Descripción de la materia..."
+                    ></textarea>
+
+                </div>
+
+
+                <!-- DOCENTE -->
+
+                <div class="mb-3">
+
+                    <label
+                        for="docente"
+                        class="form-label"
+                    >
+                        Docente
+                    </label>
+
+                    <input
+                        id="docente"
+                        type="text"
+                        th:field="*{docente}"
+                        class="form-control"
+                        placeholder="Ej: Martín Kowalski"
+                    >
+
+                </div>
+
+
+                <div class="row">
+
+
+                    <!-- DÍAS -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label
+                            for="dias"
+                            class="form-label"
+                        >
+                            Días de cursada
+                        </label>
+
+                        <input
+                            id="dias"
+                            type="text"
+                            th:field="*{dias}"
+                            class="form-control"
+                            placeholder="Ej: Lunes y Miércoles"
+                        >
+
+                    </div>
+
+
+                    <!-- HORARIO -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label
+                            for="horario"
+                            class="form-label"
+                        >
+                            Horario
+                        </label>
+
+                        <input
+                            id="horario"
+                            type="text"
+                            th:field="*{horario}"
+                            class="form-control"
+                            placeholder="Ej: 18:00 - 22:00"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- COLOR -->
+
+                <div class="mb-3">
+
+                    <label
+                        for="color"
+                        class="form-label"
+                    >
+                        Color identificativo
+                    </label>
+
+                    <input
+                        id="color"
+                        type="color"
+                        th:field="*{color}"
+                        class="form-control form-control-color"
+                    >
+
+                    <small class="text-muted">
+                        Este color se utilizará para identificar la materia.
+                    </small>
+
+                </div>
+
+
+                <!-- MATERIAL -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="materialBibliografico"
+                        class="form-label"
+                    >
+                        Material bibliográfico
+                    </label>
+
+                    <input
+                        id="materialBibliografico"
+                        type="text"
+                        th:field="*{materialBibliografico}"
+                        class="form-control"
+                        placeholder="Ej: https://... o nombre del material"
+                    >
+
+                    <small class="text-muted">
+                        Por ahora este campo permite guardar texto o un enlace.
+                    </small>
+
+                </div>
+
+
+                <!-- BOTONES -->
+
+                <div class="d-flex gap-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        th:text="${datosMateria.id == null}
+                            ? 'Crear materia'
+                            : 'Guardar cambios'"
+                    >
+                        Guardar
+                    </button>
+
+
+                    <a
+                        th:href="@{/materias}"
+                        class="btn btn-secondary"
+                    >
+                        Cancelar
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"
+></script>
+
+</body>
+</html>
