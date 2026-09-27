@@ -1,0 +1,11 @@
+:root {
+    --bg-dark: #0b0711;
+    --card-bg: #161022;
+    --card-border: #291f3a;
+    --input-bg: #100b1a;
+    --accent-purple: #9333ea;
+    --accent-hover: #7e22ce;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --sidebar-width: 240px;
+}

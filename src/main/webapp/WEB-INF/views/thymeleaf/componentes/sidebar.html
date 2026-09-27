@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<aside th:fragment="sidebar-nav" class="sidebar">
+    <div>
+        <!-- Logo -->
+        <div class="brand">
+            <i class="fa-solid fa-plane-up brand-icon"></i>
+            <div>
+                <h2>FocusFlight</h2>
+                <p>Plataforma académica</p>
+            </div>
+        </div>
+
+        <!-- Menú de Navegación -->
+        <nav class="nav-menu">
+            <a th:href="@{/dashboard}" class="nav-item">
+                <i class="fa-solid fa-border-all"></i> Dashboard
+            </a>
+            <a th:href="@{/FocusFlight}" class="nav-item active">
+                <i class="fa-solid fa-plane-departure"></i> FocusFlight
+            </a>
+            <a th:href="@{/materias}" class="nav-item">
+                <i class="fa-solid fa-book"></i> Materias
+            </a>
+            <a th:href="@{/parciales}" class="nav-item">
+                <i class="fa-regular fa-calendar-check"></i> Parciales
+            </a>
+            <a th:href="@{/trabajos-practicos}" class="nav-item">
+                <i class="fa-solid fa-folder-open"></i> Trabajos Prácticos
+            </a>
+            <a th:href="@{/calendario}" class="nav-item">
+                <i class="fa-regular fa-calendar"></i> Calendario
+            </a>
+            <a th:href="@{/ai-copilot}" class="nav-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> AI
+            </a>
+            <a th:href="@{/perfil}" class="nav-item">
+                <i class="fa-regular fa-user"></i> Mi Perfil
+            </a>
+        </nav>
+    </div>
+
+    <!-- Usuario Footer Bottom -->
+    <div class="sidebar-user">
+        <div class="avatar-circle sm" th:text="${usuario != null ? #strings.substring(usuario.nombre,0,1) + #strings.substring(usuario.apellido,0,1) : 'JM'}">JM</div>
+        <div class="user-info">
+            <h4 th:text="${usuario != null ? usuario.nombre + ' ' + usuario.apellido : 'Juan Méndez'}">Juan Méndez</h4>
+            <p th:text="${usuario != null ? usuario.carrera : 'Ing. en Sistemas'}">Ing. en Sistemas</p>
+        </div>
+    </div>
+</aside>
+
+</body>
+</html>

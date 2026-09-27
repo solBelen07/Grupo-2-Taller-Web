@@ -1,0 +1,64 @@
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--bg-dark);
+    border-right: 1px solid var(--card-border);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    height: 100vh;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.brand-icon {
+    font-size: 20px;
+    color: var(--accent-purple);
+}
+
+.brand h2 { font-size: 16px; font-weight: 700; }
+.brand p { font-size: 11px; color: var(--text-secondary); }
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.nav-item:hover, .nav-item.active {
+    background-color: #231638;
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    border: 1px solid #3b235d;
+}
+
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid var(--card-border);
+}
+
+.user-info h4 { font-size: 13px; font-weight: 600; }
+.user-info p { font-size: 11px; color: var(--text-secondary); }
