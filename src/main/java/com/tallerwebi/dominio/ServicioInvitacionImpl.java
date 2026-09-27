@@ -46,6 +46,19 @@ public class ServicioInvitacionImpl implements ServicioInvitacion {
     return this.repositorioInvitacion.enviarInvitacion(invitacion);
   }
 
+  public void aceptarInvitacion(DatosInvitacion datosInvitacion) throws InvitacionInvalida {
+    Invitacion invitacion = repositorioInvitacion.buscar(
+      datosInvitacion.getEmisor(),
+      datosInvitacion.getReceptor(),
+      datosInvitacion.getGrupo()
+    );
+    if (invitacion == null) {
+      throw new InvitacionInvalida();
+    }
+    invitacion.setVigente(Boolean.FALSE);
+    repositorioInvitacion.aceptar(invitacion);
+  }
+
   public List<Invitacion> listarInvitaciones(String usuarioLogueado) {
     return this.repositorioInvitacion.buscarInvitacionesPorReceptor(usuarioLogueado);
   }

@@ -10,4 +10,5 @@ public interface ServicioInvitacion {
   Invitacion validarInvitacion(DatosInvitacion datosInvitacion) throws InvitacionInvalida;
   Invitacion crearInvitacion(Invitacion invitacion);
   List<Invitacion> listarInvitaciones(String usuarioLogueado);
+  void aceptarInvitacion(DatosInvitacion datosInvitacion) throws InvitacionInvalida;
 }

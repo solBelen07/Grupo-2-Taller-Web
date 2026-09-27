@@ -130,6 +130,40 @@ public class ServicioInvitacionTest {
     verify(repositorioInvitacionMock, never()).enviarInvitacion(any());
   }
 
+  @Test
+  public void deberiaAceptarLaInvitacionExitosamente() throws InvitacionInvalida {
+    DatosInvitacion datos = new DatosInvitacion();
+    datos.setEmisor("emisor@test.com");
+    datos.setReceptor("receptor@test.com");
+    datos.setGrupo("grupo-test");
+
+    Invitacion invitacionReal = new Invitacion();
+    invitacionReal.setVigente(true);
+
+    when(repositorioInvitacionMock.buscar(anyString(), anyString(), anyString()))
+      .thenReturn(invitacionReal);
+
+    cuandoSeAceptaLaInvitacion(datos);
+
+    entoncesDejaDeEstarVigenteLaInvitacion(invitacionReal);
+  }
+
+  private Invitacion dadoQueExisteLaInvitacion(DatosInvitacion datosInvitacion) {
+    Invitacion invitacion = new Invitacion(new Usuario(), new Usuario(), new Grupo());
+    invitacion.getEmisor().setEmail(datosInvitacion.getEmisor());
+    invitacion.getReceptor().setEmail(datosInvitacion.getReceptor());
+    invitacion.getGrupo().setNombre(datosInvitacion.getGrupo());
+    when(
+      repositorioInvitacionMock.buscar(
+        datosInvitacion.getEmisor(),
+        datosInvitacion.getReceptor(),
+        datosInvitacion.getGrupo()
+      )
+    )
+      .thenReturn(invitacion);
+    return invitacion;
+  }
+
   private Usuario dadoQueExisteUnUsuario(String email) {
     Usuario usuario = new Usuario();
     usuario.setEmail(email);
@@ -151,6 +185,16 @@ public class ServicioInvitacionTest {
   private void cuandoLosDatosDeInvitacionSonValidos() {
     when(repositorioInvitacionMock.enviarInvitacion(any(Invitacion.class)))
       .thenAnswer(invocation -> invocation.getArgument(0));
+  }
+
+  private void cuandoSeAceptaLaInvitacion(DatosInvitacion datosInvitacion)
+    throws InvitacionInvalida {
+    servicioInvitacion.aceptarInvitacion(datosInvitacion);
+  }
+
+  private void entoncesDejaDeEstarVigenteLaInvitacion(Invitacion invitacion) {
+    assertFalse(invitacion.getVigente());
+    verify(repositorioInvitacionMock, times(1)).aceptar(invitacion);
   }
 
   private void entoncesSeObtieneUnaInvitacionValida(

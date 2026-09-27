@@ -21,9 +21,32 @@ public class RepositorioInvitacionImpl implements RepositorioInvitacion {
   public List<Invitacion> buscarInvitacionesPorReceptor(String emailReceptor) {
     return sessionFactory
       .getCurrentSession()
-      .createQuery("from Invitacion where receptor.email = :email", Invitacion.class)
+      .createQuery(
+        "from Invitacion where receptor.email = :email and vigente is true",
+        Invitacion.class
+      )
       .setParameter("email", emailReceptor)
       .list();
+  }
+
+  @Override
+  public Invitacion buscar(String emailEmisor, String emailReceptor, String nombreGrupo) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "from Invitacion i where i.emisor.email = :emisor and i.receptor.email = :receptor and i.grupo.nombre = :grupo",
+        Invitacion.class
+      )
+      .setParameter("emisor", emailEmisor)
+      .setParameter("receptor", emailReceptor)
+      .setParameter("grupo", nombreGrupo)
+      .uniqueResult();
+  }
+
+  @Override
+  public void aceptar(Invitacion invitacion) {
+    invitacion.setVigente(false);
+    sessionFactory.getCurrentSession().update(invitacion);
   }
 
   public RepositorioInvitacionImpl(SessionFactory sessionFactory) {

@@ -49,6 +49,14 @@ public class ControladorInvitacionTest {
   }
 
   @Test
+  public void aceptarInvitacionDeberiaRecargarPantallaDeInvitacionConMensajeDeExito()
+    throws InvitacionInvalida {
+    dadoQueElUsuarioTieneInvitacionesPendientes();
+    ModelAndView vistaInvitacionesYMensajeDeExito = cuandoAceptaLaInvitacion();
+    entoncesRedirigeAInvitacionesConMensajeDeExito(vistaInvitacionesYMensajeDeExito);
+  }
+
+  @Test
   public void deberiaDevolverALaPantallaDeGruposSiLaInvitacionEsValida() throws InvitacionInvalida {
     dadoQueLaInvitacionEsValida();
     ModelAndView vistaDeGruposYMjeDeExito = cuandoEnviaUnaInvitacionAUnUsuario();
@@ -80,6 +88,10 @@ public class ControladorInvitacionTest {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(null);
   }
 
+  private void dadoQueElUsuarioTieneInvitacionesPendientes() throws InvitacionInvalida {
+    doNothing().when(servicioInvitacionMock).aceptarInvitacion(datosInvitacion);
+  }
+
   private void dadoQueLaInvitacionEsValida() throws InvitacionInvalida {
     Invitacion invitacionCreada = new Invitacion();
 
@@ -89,6 +101,10 @@ public class ControladorInvitacionTest {
   private void dadoQueLaInvitacionEsInvalida() throws InvitacionInvalida {
     when(servicioInvitacionMock.validarInvitacion(datosInvitacion))
       .thenThrow(new InvitacionInvalida());
+  }
+
+  private ModelAndView cuandoAceptaLaInvitacion() {
+    return controladorInvitacion.aceptar(datosInvitacion, requestMock, redirectAttributesMock);
   }
 
   private ModelAndView cuandoEnviaUnaInvitacionAUnUsuario() {
@@ -102,6 +118,10 @@ public class ControladorInvitacionTest {
 
   private ModelAndView cuandoSolicitaVerLasInvitaciones() {
     return controladorInvitacion.verInvitaciones(requestMock);
+  }
+
+  private void entoncesRedirigeAInvitacionesConMensajeDeExito(ModelAndView vista) {
+    assertEquals("redirect:/invitaciones", vista.getViewName());
   }
 
   private void entoncesRedirigeAlLogin(ModelAndView mav) {
@@ -126,17 +146,3 @@ public class ControladorInvitacionTest {
     assertEquals("invitaciones", vistaDeInvitaciones.getViewName());
   }
 }
-/*
-* @Test
-  public void deberiaDevolverPantallaDeInvitaciones() {
-      dadoQueElUsuarioEmisorEstaLogueado();
-      ModelAndView vistaDeInvitaciones = cuandoAccedeAVistaDeInvitaciones();
-      entoncesSeMuestraLaPantallaDeInvitaciones(vistaDeInvitaciones);
-  }
-  *
-  private void dadoQueElUsuarioEmisorEstaLogueado() {
-    usuarioLogueado.setEmail("emisor@test.com");
-    when(requestMock.getSession()).thenReturn(sessionMock);
-    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioLogueado);
-  }
-* */
