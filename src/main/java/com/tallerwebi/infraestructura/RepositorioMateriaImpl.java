@@ -41,6 +41,15 @@ public class RepositorioMateriaImpl implements RepositorioMateria {
   }
 
   @Override
+  public Materia buscarPorId(Integer id) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery("from Materia where id = :id", Materia.class)
+      .setParameter("id", id)
+      .uniqueResult();
+  }
+
+  @Override
   public void modificar(Materia materia) {
     Materia existente = sessionFactory
       .getCurrentSession()

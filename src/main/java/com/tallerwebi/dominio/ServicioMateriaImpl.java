@@ -38,6 +38,11 @@ public class ServicioMateriaImpl implements ServicioMateria {
   }
 
   @Override
+  public Materia buscarMateriaPorId(Integer id) {
+    return repositorioMateria.buscarPorId(id);
+  }
+
+  @Override
   public void editarMateria(Materia materia) {
     repositorioMateria.modificar(materia);
   }
