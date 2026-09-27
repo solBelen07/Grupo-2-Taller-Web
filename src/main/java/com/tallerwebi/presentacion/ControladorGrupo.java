@@ -15,7 +15,7 @@ public class ControladorGrupo {
 
   private ServicioGrupo servicioGrupo;
 
-  @RequestMapping("/grupos")
+  @RequestMapping(value = "/grupos", method = RequestMethod.GET)
   public ModelAndView verGrupos() {
     Map<String, Object> modelo = new ModelMap();
     try {
@@ -23,7 +23,6 @@ public class ControladorGrupo {
     } catch (Exception e) {
       modelo.put("error", "No se pudieron cargar los grupos");
     }
-
     return new ModelAndView("grupos", modelo);
   }
 
@@ -37,6 +36,19 @@ public class ControladorGrupo {
     } catch (GrupoNoEncontrado e) {
       modelo.put("error", "El grupo no existe");
       return new ModelAndView("grupo-detalle", modelo);
+    }
+  }
+
+  @GetMapping("/grupos/{nombre}/invitar")
+  public ModelAndView irAInvitar(@PathVariable("nombre") String grupoAInvitar) {
+    Map<String, Object> modelo = new ModelMap();
+    try {
+      Grupo grupo = servicioGrupo.buscarPorNombre(grupoAInvitar);
+      modelo.put("datosGrupo", grupo);
+      return new ModelAndView("grupo-invitar", modelo);
+    } catch (GrupoNoEncontrado e) {
+      modelo.put("error", "El grupo no existe");
+      return new ModelAndView("grupo-invitar", modelo);
     }
   }
 

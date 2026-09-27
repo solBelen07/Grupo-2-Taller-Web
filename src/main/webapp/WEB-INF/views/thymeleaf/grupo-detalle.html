@@ -61,7 +61,10 @@
                     <div th:if="${datosGrupo != null}">
                         <h1 class="h3 fw-bold mb-1" th:text="${datosGrupo.nombre}">Nombre del Grupo</h1>
                         <p class="text-secondary small mb-0">Detalles del grupo...</p>
-                        <a href="/spring/grupos/invitar"><button>Invitar</button></a>
+                        <a th:href="@{/grupos/{nombre}/invitar(nombre=${datosGrupo.nombre})}"
+                           class="btn btn-primary">
+                            Invitar a alguien
+                        </a>
                     </div>
                     <div class="header-buttons">
                         <a href="/spring/grupos"><button class="btn-primary">Volver</button></a>

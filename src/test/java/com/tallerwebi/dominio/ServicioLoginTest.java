@@ -65,4 +65,11 @@ public class ServicioLoginTest {
     assertThrows(UsuarioExistente.class, () -> this.servicioLogin.registrar(usuario));
     verify(this.repositorioUsuarioMock, times(0)).guardar(usuario);
   }
+
+  @Test
+  public void buscarUsuarioInexistentePorMailDeberiaLanzarExcepcion() {
+    Usuario usuario = new Usuario();
+    usuario.setEmail("noexiste@test.com");
+    when(this.repositorioUsuarioMock.buscar(usuario.getEmail())).thenReturn(null);
+  }
 }

@@ -114,7 +114,6 @@ public class RepositorioUsuarioTest {
   @Rollback
   public void deberiaLanzarUnaExcepcionAlIntentarModificarUnUsuarioInexistente() {
     Usuario usuario = this.dadoQueTengoUnUsuario("noexiste@test.com", "123", "USER");
-
     // Al no tener ID (no estar persistido), buscar por id devuelve null y
     // modificar debe lanzar UsuarioNoEncontrado.
     this.entoncesSeLanzaUnaUsuarioNoEncontrado(usuario);
