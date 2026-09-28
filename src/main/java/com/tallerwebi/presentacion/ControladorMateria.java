@@ -9,6 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -66,7 +67,7 @@ public class ControladorMateria {
   }
 
   @RequestMapping(path = "/materias/detalle", method = RequestMethod.GET)
-  public ModelAndView verMateria(Integer id) {
+  public ModelAndView verMateria(@RequestParam("id") Integer id) {
     Materia materia = servicioMateria.buscarMateriaPorId(id);
 
     Map<String, Object> model = new ModelMap();
@@ -77,7 +78,7 @@ public class ControladorMateria {
   }
 
   @RequestMapping(path = "/materias/editar", method = RequestMethod.GET)
-  public ModelAndView editarMateria(Integer id) {
+  public ModelAndView editarMateria(@RequestParam("id") Integer id) {
     Materia materia = servicioMateria.buscarMateriaPorId(id);
 
     DatosMateria datosMateria = new DatosMateria();
@@ -119,14 +120,14 @@ public class ControladorMateria {
   }
 
   @RequestMapping(path = "/materias/eliminar", method = RequestMethod.POST)
-  public ModelAndView eliminarMateria(String nombre) {
+  public ModelAndView eliminarMateria(@RequestParam("nombre") String nombre) {
     servicioMateria.eliminarMateria(nombre);
 
     return new ModelAndView("redirect:/materias");
   }
 
   @RequestMapping(path = "/materias/buscar", method = RequestMethod.GET)
-  public ModelAndView buscarMateria(String nombre) {
+  public ModelAndView buscarMateria(@RequestParam("nombre") String nombre) {
     Materia materia = servicioMateria.buscarMateriaPorNombre(nombre);
 
     Map<String, Object> model = new ModelMap();

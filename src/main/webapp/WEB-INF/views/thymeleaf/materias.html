@@ -32,13 +32,7 @@
 
         <form th:action="@{/materias/buscar}" method="GET" class="mb-4">
             <div class="input-group">
-                <input
-                    type="text"
-                    name="nombre"
-                    class="form-control"
-                    placeholder="Buscar materia por nombre..."
-                    th:value="${nombreBuscado}"
-                    required>
+                <input type="text" name="nombre" class="form-control" placeholder="Buscar materia por nombre..." th:value="${nombreBuscado}" required>
 
                 <button type="submit" class="btn btn-outline-primary">Buscar</button>
                 <a th:href="@{/materias}" class="btn btn-outline-secondary">Mostrar todas</a>
