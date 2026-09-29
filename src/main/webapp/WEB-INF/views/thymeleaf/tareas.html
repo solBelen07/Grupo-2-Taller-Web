@@ -11,11 +11,16 @@
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
     <link rel="stylesheet" th:href="@{/css/tareas.css}">
+    <link rel="stylesheet" th:href="@{/css/componentes/variables.css}">
+    <link rel="stylesheet" th:href="@{/css/componentes/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/componentes/header.css}">
 
 
 </head>
 
 <body>
+    <div th:replace="~{componentes/sidebar :: sidebar-nav}"></div>
+    <div th:replace="~{componentes/header :: header-principal}"></div>
 
 
     <div class="contenido-tareas">

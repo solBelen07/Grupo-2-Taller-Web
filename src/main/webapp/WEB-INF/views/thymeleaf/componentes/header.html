@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<!-- Fragmento del Header Superior -->
+<header th:fragment="header-principal" class="header-navbar">
+    <!-- Buscador -->
+    <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+        <input type="text" placeholder="Buscar asignaturas, tareas, exámenes..." />
+    </div>
+
+    <!-- Widget de Estado / Streak y Perfil -->
+    <div class="user-widgets">
+        <div class="streak-badge">
+            <i class="fa-solid fa-fire text-purple-400"></i>
+            <span th:text="${usuario != null && usuario.streak != null ? usuario.streak + ' Day Streak' : '7 Day Streak'}">Racha de 7 días</span>
+        </div>
+
+        <div class="avatar-circle" th:text="${usuario != null ? #strings.substring(usuario.nombre,0,1) + #strings.substring(usuario.apellido,0,1) : 'JM'}">
+            JM
+        </div>
+    </div>
+</header>
+
+</body>
+</html>

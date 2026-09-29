@@ -5,11 +5,10 @@ body {
 }
 
 .contenido-tareas {
+    margin-left: 240px;
     padding: 35px;
     max-width: 1200px;
-    margin: 0 auto;
 }
-
 .titulo-principal {
     font-size: 30px;
     font-weight: 600;
