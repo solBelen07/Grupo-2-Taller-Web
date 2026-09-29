@@ -1,8 +1,8 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.materia;
 
-import com.tallerwebi.dominio.Materia;
-import com.tallerwebi.dominio.ServicioMateria;
-import com.tallerwebi.dominio.excepcion.MateriaExistente;
+import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaExistente;
+import com.tallerwebi.dominio.materia.Materia;
+import com.tallerwebi.dominio.materia.ServicioMateria;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

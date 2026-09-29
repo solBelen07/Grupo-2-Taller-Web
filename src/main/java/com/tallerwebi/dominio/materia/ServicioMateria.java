@@ -1,6 +1,6 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.materia;
 
-import com.tallerwebi.dominio.excepcion.MateriaExistente;
+import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaExistente;
 import java.util.List;
 
 public interface ServicioMateria {

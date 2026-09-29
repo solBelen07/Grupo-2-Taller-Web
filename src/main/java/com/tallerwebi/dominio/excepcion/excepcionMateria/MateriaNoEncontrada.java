@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio.excepcion;
+package com.tallerwebi.dominio.excepcion.excepcionMateria;
 
 public class MateriaNoEncontrada extends RuntimeException {
 

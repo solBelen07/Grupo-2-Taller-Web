@@ -7,13 +7,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.tallerwebi.dominio.Materia;
-import com.tallerwebi.dominio.RepositorioMateria;
-import com.tallerwebi.dominio.RepositorioUsuario;
-import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.excepcion.MateriaNoEncontrada;
-import com.tallerwebi.dominio.excepcion.UsuarioNoEncontrado;
+import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaNoEncontrada;
+import com.tallerwebi.dominio.materia.Materia;
+import com.tallerwebi.dominio.materia.RepositorioMateria;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
+import com.tallerwebi.infraestructura.materia.RepositorioMateriaImpl;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import java.util.List;
