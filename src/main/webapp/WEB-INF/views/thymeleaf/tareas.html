@@ -150,8 +150,9 @@
                         Usuario
                     </span>
 
-                    <span class="aporte-cantidad" th:text="${aporte.value + ' tareas completadas'}">
-                        0 tareas completadas
+                    <span class="aporte-cantidad"
+                        th:text="${aporte.value + ' tareas completadas - ' + (aporte.value * 100 / total) + '%'}">
+                        0 tareas completadas - 0%
                     </span>
 
                 </div>
