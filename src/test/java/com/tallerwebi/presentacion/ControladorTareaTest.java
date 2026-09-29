@@ -5,8 +5,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.ServicioTarea;
-import com.tallerwebi.dominio.Tarea;
+import com.tallerwebi.dominio.tarea.ServicioTarea;
+import com.tallerwebi.dominio.tarea.Tarea;
+import com.tallerwebi.presentacion.tarea.ControladorTarea;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

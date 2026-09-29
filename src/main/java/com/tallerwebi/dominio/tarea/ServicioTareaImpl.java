@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.tarea;
 
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;

@@ -1,7 +1,7 @@
-package com.tallerwebi.infraestructura;
+package com.tallerwebi.infraestructura.tarea;
 
-import com.tallerwebi.dominio.RepositorioTarea;
-import com.tallerwebi.dominio.Tarea;
+import com.tallerwebi.dominio.tarea.RepositorioTarea;
+import com.tallerwebi.dominio.tarea.Tarea;
 import java.util.List;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

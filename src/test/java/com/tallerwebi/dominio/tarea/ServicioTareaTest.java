@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.tarea;
 
 //para hacer los test unitarios:
 import static org.hamcrest.MatcherAssert.assertThat; //para comprobar que el resultado es el esperado
@@ -148,5 +148,44 @@ public class ServicioTareaTest {
     assertThat(resultado.get("Camila"), equalTo(2L));
     assertThat(resultado.get("Juan"), equalTo(1L));
     verify(this.repositorioTareaMock, times(1)).buscarTodas();
+  }
+
+  @Test
+  public void crearTareaDeberiaGuardarLaTareaEnElRepositorio() {
+    Tarea tarea = new Tarea();
+    tarea.setTitulo("Estudiar para el parcial");
+
+    this.servicioTarea.crearTarea(tarea);
+
+    verify(this.repositorioTareaMock, times(1)).guardar(tarea);
+  }
+
+  @Test
+  public void calcularPorcentajeHorasDeberiaCalcularElPorcentajeCorrectamente() {
+    // preparacion
+    Tarea tarea = new Tarea();
+    tarea.setHorasPlanificadas(10);
+    tarea.setHorasRealizadas(5);
+
+    // ejecucion
+    double resultado = this.servicioTarea.calcularPorcentajeHoras(tarea);
+
+    // validacion
+    assertThat(resultado, equalTo(50.0));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaIndicarPreparacionAdecuadaParaUnParcial() {
+    // preparacion
+    Tarea tarea = new Tarea();
+    tarea.setTipo("PARCIAL");
+    tarea.setHorasPlanificadas(10);
+    tarea.setHorasRealizadas(8);
+
+    // ejecucion
+    String resultado = this.servicioTarea.calcularIndicador(tarea);
+
+    // validacion
+    assertThat(resultado, equalTo("PREPARACIÓN ADECUADA"));
   }
 }

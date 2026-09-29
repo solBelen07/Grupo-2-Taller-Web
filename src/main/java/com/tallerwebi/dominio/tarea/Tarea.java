@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.tarea;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

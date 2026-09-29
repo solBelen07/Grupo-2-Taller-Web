@@ -1,7 +1,7 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.tarea;
 
-import com.tallerwebi.dominio.ServicioTarea;
-import com.tallerwebi.dominio.Tarea;
+import com.tallerwebi.dominio.tarea.ServicioTarea;
+import com.tallerwebi.dominio.tarea.Tarea;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
