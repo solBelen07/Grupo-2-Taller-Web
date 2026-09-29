@@ -15,7 +15,6 @@ import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.RepositorioMateria;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
 import com.tallerwebi.infraestructura.materia.RepositorioMateriaImpl;
-
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import java.util.List;
