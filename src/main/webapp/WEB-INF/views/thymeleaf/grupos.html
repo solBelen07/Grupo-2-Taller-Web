@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Grupos - FocusFlight</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0b0914; color: #ffffff; font-family: 'Inter', sans-serif; }
+        .sidebar { height: 100vh; border-right: 1px solid #2a253c; padding-top: 20px; }
+        .nav-link { color: #8e8b99; margin-bottom: 8px; border-radius: 8px; padding: 10px 15px; }
+        .nav-link:hover, .nav-link.active { background-color: #241c38; color: #d6b4fc; }
+        .card-custom { background-color: #171324; border: 1px solid #2a253c; border-radius: 12px; }
+        .btn-purple { background-color: #a855f7; color: white; border: none; border-radius: 8px; font-weight: 500; }
+        .btn-purple:hover { background-color: #9333ea; color: white; }
+        .badge-live { background-color: rgba(168, 85, 247, 0.2); color: #d6b4fc; border: 1px solid rgba(168, 85, 247, 0.5); }
+    </style>
+</head>
+<body>
+<div class="d-flex">
+    <div class="sidebar p-3" style="width: 250px;">
+        <div class="d-flex align-items-center mb-4 px-2">
+            <i class="fa-solid fa-plane-departure text-light fs-4 me-2"></i>
+            <h5 class="mb-0 fw-bold">FocusFlight</h5>
+        </div>
+        <nav class="nav flex-column">
+            <a class="nav-link active" th:href="@{/grupos}"><i class="fa-solid fa-users me-2"></i> Grupos</a>
+            <a class="nav-link" th:href="@{/invitaciones}"><i class="fa-solid fa-envelope me-2"></i> Invitaciones</a>
+        </nav>
+    </div>
+
+    <div class="flex-grow-1 p-4">
+        <h3 class="fw-bold mb-1">Grupos</h3>
+        <p class="text-secondary mb-4">Gestiona tus espacios de estudio colaborativo</p>
+        <div th:if="${exito != null}" th:text="${exito}" class="dashboard-grid">Mensaje de confirmación.</div>
+        <div class="row g-4">
+            <div th:each="grupo : ${datosGrupo}" class="col-md-4">
+                <div class="card card-custom h-100 p-3 shadow-sm">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="bg-secondary bg-opacity-25 p-2 rounded text-light">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <span class="badge badge-live rounded-pill px-3">Activo</span>
+                    </div>
+                    <h5 class="fw-bold" th:text="${grupo.nombre}">Nombre del Grupo</h5>
+                    <p class="text-secondary small mb-4">Espacio de trabajo colaborativo.</p>
+
+                    <div class="mt-auto d-flex gap-2">
+                        <a th:href="@{/grupos/{nombre}/invitar(nombre=${grupo.nombre})}" class="btn btn-outline-light btn-sm w-100">Invitar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
