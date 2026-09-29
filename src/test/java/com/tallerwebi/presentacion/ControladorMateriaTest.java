@@ -5,9 +5,11 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.Materia;
-import com.tallerwebi.dominio.ServicioMateria;
-import com.tallerwebi.dominio.excepcion.MateriaExistente;
+import com.tallerwebi.dominio.materia.Materia;
+import com.tallerwebi.dominio.materia.ServicioMateria;
+import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaExistente;
+import com.tallerwebi.presentacion.materia.ControladorMateria;
+import com.tallerwebi.presentacion.materia.DatosMateria;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
