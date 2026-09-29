@@ -1,7 +1,8 @@
 package com.tallerwebi.dominio.materia;
 
-import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaExistente;
 import java.util.List;
+
+import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaExistente;
 
 public interface ServicioMateria {
   void crearMateria(Materia materia) throws MateriaExistente;
