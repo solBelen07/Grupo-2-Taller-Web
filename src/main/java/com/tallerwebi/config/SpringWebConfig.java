@@ -41,8 +41,10 @@ public class SpringWebConfig implements WebMvcConfigurer {
     templateResolver.setApplicationContext(this.applicationContext);
     templateResolver.setPrefix("/WEB-INF/views/thymeleaf/");
     templateResolver.setSuffix(".html");
+
     // HTML is the default value, added here for the sake of clarity.
     templateResolver.setTemplateMode(TemplateMode.HTML);
+    templateResolver.setCharacterEncoding("UTF-8");
     // Template cache is true by default. Set to false if you want
     // templates to be automatically updated when modified.
     templateResolver.setCacheable(true);
@@ -71,6 +73,7 @@ public class SpringWebConfig implements WebMvcConfigurer {
   public ThymeleafViewResolver viewResolver() {
     ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
     viewResolver.setTemplateEngine(templateEngine());
+    viewResolver.setCharacterEncoding("UTF-8");
     return viewResolver;
   }
 }

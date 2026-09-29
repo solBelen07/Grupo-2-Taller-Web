@@ -1,19 +1,9 @@
-body {
-  padding-top: 5rem;
-}
-.starter-template {
-  padding: 3rem 1.5rem;
-  text-align: center;
-}
+/*-------------- componentes --------------*/
+@import url("componentes/variables.css");
+@import url("componentes/header.css");
+@import url("componentes/sidebar.css");
 
-h1{
-	color:#0000FF;
-}
-
-h2{
-	color:#FF0000;
-}
-
-.navbar-brand{
-    margin:0 2rem;
-}
+/*-------------- paginas --------------*/
+@import url("paginas/pomodoro.css");
+@import url("paginas/boleto.css");
+@import url("paginas/materias.css");
