@@ -1,8 +1,8 @@
 package com.tallerwebi.infraestructura.materia;
 
+import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaNoEncontrada;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.RepositorioMateria;
-import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaNoEncontrada;
 import java.util.List;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
