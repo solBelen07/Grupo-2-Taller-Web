@@ -1,0 +1,54 @@
+<section
+  th:fragment="semana"
+  class="vista-semana"
+  data-testid="vista-semana"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <div class="semana-scroll" data-semana-scroll>
+    <div
+      class="semana-grid"
+      data-semana-grid
+      th:data-hora-inicio="${calendario.horaInicio}"
+      th:style="|--horas:${calendario.horaFin - calendario.horaInicio}|"
+    >
+      <div class="esquina"><span class="visually-hidden">Hora</span></div>
+      <div class="dia-cabecera" th:each="dia : ${calendario.dias}" th:data-hoy="${dia.esHoy}">
+        <a
+          th:href="@{/calendario(vista='semana',fecha=${dia.fecha})}"
+          th:aria-current="${dia.esHoy} ? 'date'"
+          th:aria-label="|${dia.nombre} ${dia.fecha.dayOfMonth}|"
+        >
+          <span class="dia-nombre" th:text="${dia.abreviatura}">Lun</span>
+          <span class="dia-numero" th:text="${dia.fecha.dayOfMonth}">28</span>
+        </a>
+      </div>
+
+      <div class="gutter" aria-hidden="true">
+        <div class="hora" th:each="etiqueta : ${calendario.etiquetasHoras}" th:text="${etiqueta}">
+          07:00
+        </div>
+      </div>
+      <section
+        class="columna-dia"
+        th:each="dia : ${calendario.dias}"
+        th:data-fecha="${dia.fecha}"
+        th:data-hoy="${dia.esHoy}"
+        th:aria-label="|${dia.nombre} ${dia.fecha.dayOfMonth}|"
+      >
+        <ol class="bloques">
+          <li
+            class="bloque"
+            th:each="bloque : ${dia.bloques}"
+            th:data-tipo="${bloque.segmento.tipo}"
+            th:title="${bloque.segmento.descripcion}"
+            th:style="|--top:${bloque.top};--alto:${bloque.alto};--col:${bloque.columna};--cols:${bloque.columnas};--materia:${bloque.segmento.color}|"
+          >
+            <span class="bloque-titulo" th:text="${bloque.segmento.titulo}">Título</span>
+            <span class="bloque-horario" th:text="${bloque.segmento.horario}">18:00 – 20:00</span>
+            <span class="bloque-materia" th:text="${bloque.segmento.materia}">Materia</span>
+          </li>
+        </ol>
+      </section>
+    </div>
+  </div>
+</section>

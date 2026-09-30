@@ -42,3 +42,9 @@ VALUES
 INSERT INTO Usuario(id, email, password, rol, activo) VALUES(null, 'test@unlam.edu.ar', 'test', 'ADMIN', true), (null,'user@test.com','1234','ADMIN', true);
 INSERT INTO Grupo(id, nombre) VALUES(null, 'grupo1'),(null, 'grupo2'),(null, 'grupo3');
 
+-- Eventos de ejemplo para el calendario (CAL-01), para el usuario test@unlam.edu.ar (id 1),
+-- usando las materias ya sembradas arriba (1 = Taller Web I, 2 = Base de Datos II).
+INSERT INTO Evento(id, usuarioId, titulo, tipo, inicio, fin, materia_id)
+VALUES(null, 1, 'Clase de Taller Web I', 'CLASE', CONCAT(CURDATE(), ' 18:00:00'), CONCAT(CURDATE(), ' 22:00:00'), 1);
+INSERT INTO Evento(id, usuarioId, titulo, tipo, inicio, fin, materia_id)
+VALUES(null, 1, 'Práctica de Base de Datos II', 'CLASE', CONCAT(CURDATE(), ' 08:00:00'), CONCAT(CURDATE(), ' 10:00:00'), 2);
