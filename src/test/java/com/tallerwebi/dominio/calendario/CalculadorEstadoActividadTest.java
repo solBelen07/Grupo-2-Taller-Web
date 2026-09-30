@@ -17,27 +17,27 @@ public class CalculadorEstadoActividadTest {
     Integer horasPlanificadas,
     LocalDate fechaVencimiento
   ) {
-    return tarea(estado, null, horasRealizadas, horasPlanificadas, fechaVencimiento);
-  }
-
-  private static Tarea tarea(
-    String estado,
-    String tipo,
-    Integer horasRealizadas,
-    Integer horasPlanificadas,
-    LocalDate fechaVencimiento
-  ) {
     Tarea tarea = new Tarea();
     tarea.setEstado(estado);
-    tarea.setTipo(tipo);
     tarea.setHorasRealizadas(horasRealizadas);
     tarea.setHorasPlanificadas(horasPlanificadas);
     tarea.setFechaVencimiento(fechaVencimiento);
     return tarea;
   }
 
+  // ---------------------------------------------------------------- Completada
+
   @Test
-  public void unaTareaCompletadaDaEstadoCompletada() {
+  public void marcadaComoCompletadaDaEstadoCompletada() {
+    // preparacion
+    Tarea tarea = tarea("COMPLETADA", 3, 10, HOY.plusDays(30));
+
+    // ejecucion y validacion
+    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.COMPLETADA));
+  }
+
+  @Test
+  public void laCompletadaGanaAunqueLaFechaYaHayaVencido() {
     // preparacion
     Tarea tarea = tarea("COMPLETADA", 10, 10, HOY.minusDays(5));
 
@@ -46,7 +46,18 @@ public class CalculadorEstadoActividadTest {
   }
 
   @Test
-  public void unaTareaConFechaVencidaYNoCompletadaDaEstadoVencida() {
+  public void cienPorCientoDeHorasSinMarcarCompletadaNoEsCompletada() {
+    // preparacion: hizo el 100% de las horas pero no lo marcó como completada.
+    Tarea tarea = tarea("PENDIENTE", 10, 10, HOY.plusDays(30));
+
+    // ejecucion y validacion
+    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
+  }
+
+  // ---------------------------------------------------------------- Vencida
+
+  @Test
+  public void fechaVencidaYNoCompletadaDaVencida() {
     // preparacion
     Tarea tarea = tarea("PENDIENTE", 0, 10, HOY.minusDays(1));
 
@@ -55,16 +66,18 @@ public class CalculadorEstadoActividadTest {
   }
 
   @Test
-  public void laCompletadaGanaAunqueLaFechaYaHayaVencido() {
+  public void laVencidaGanaAunqueTengaProgresoParcial() {
     // preparacion
-    Tarea tarea = tarea("COMPLETADA", 10, 10, HOY.minusDays(1));
+    Tarea tarea = tarea("PENDIENTE", 6, 10, HOY.minusDays(1));
 
     // ejecucion y validacion
-    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.COMPLETADA));
+    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.VENCIDA));
   }
 
+  // ---------------------------------------------------------------- Próxima a vencer
+
   @Test
-  public void unaTareaQueVenceEnTresDiasEstaProximaAVencer() {
+  public void venceEnTresDiasEstaProximaAVencer() {
     // preparacion
     Tarea tarea = tarea("PENDIENTE", 0, 10, HOY.plusDays(3));
 
@@ -76,7 +89,7 @@ public class CalculadorEstadoActividadTest {
   }
 
   @Test
-  public void unaTareaQueVenceHoyEstaProximaAVencer() {
+  public void veceHoyEstaProximaAVencer() {
     // preparacion
     Tarea tarea = tarea("PENDIENTE", 0, 10, HOY);
 
@@ -88,7 +101,31 @@ public class CalculadorEstadoActividadTest {
   }
 
   @Test
-  public void unaTareaQueVenceEnCuatroDiasNoEstaProximaAVencerTodavia() {
+  public void laUrgenciaPorFechaGanaAunqueTengaBuenProgreso() {
+    // preparacion: 60% de avance, pero vence en 2 días — la urgencia pesa más.
+    Tarea tarea = tarea("PENDIENTE", 6, 10, HOY.plusDays(2));
+
+    // ejecucion y validacion
+    assertThat(
+      CalculadorEstadoActividad.calcular(tarea, HOY),
+      is(EstadoActividad.PROXIMA_A_VENCER)
+    );
+  }
+
+  @Test
+  public void laUrgenciaPorFechaGanaAunqueNoTengaNingunProgreso() {
+    // preparacion
+    Tarea tarea = tarea("PENDIENTE", 0, 10, HOY.plusDays(2));
+
+    // ejecucion y validacion
+    assertThat(
+      CalculadorEstadoActividad.calcular(tarea, HOY),
+      is(EstadoActividad.PROXIMA_A_VENCER)
+    );
+  }
+
+  @Test
+  public void venceEnCuatroDiasNoEstaProximaAVencerTodavia() {
     // preparacion
     Tarea tarea = tarea("PENDIENTE", 0, 10, HOY.plusDays(4));
 
@@ -96,19 +133,12 @@ public class CalculadorEstadoActividadTest {
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
   }
 
-  @Test
-  public void laVencidaGanaAunqueTengaHorasParciales() {
-    // preparacion
-    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 4, 10, HOY.minusDays(1));
-
-    // ejecucion y validacion
-    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.VENCIDA));
-  }
+  // ---------------------------------------------------------------- Parcialmente completada
 
   @Test
-  public void unParcialConHorasIntermediasYSinUrgenciaDeFechaDaParcialmenteCompletada() {
-    // preparacion
-    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 4, 10, HOY.plusDays(20));
+  public void conProgresoIntermedioYTiempoDeSobraDaParcialmenteCompletada() {
+    // preparacion: 60% de avance, vence en 30 días.
+    Tarea tarea = tarea("PENDIENTE", 6, 10, HOY.plusDays(30));
 
     // ejecucion y validacion
     assertThat(
@@ -118,9 +148,9 @@ public class CalculadorEstadoActividadTest {
   }
 
   @Test
-  public void laComparacionDeTipoEsInsensibleAMayusculas() {
-    // preparacion
-    Tarea tarea = tarea("PENDIENTE", "parcial", 4, 10, HOY.plusDays(20));
+  public void conCincuentaPorCientoExactoYaEsParcialmenteCompletada() {
+    // preparacion: el umbral es a partir de 50%, inclusive.
+    Tarea tarea = tarea("PENDIENTE", 50, 100, HOY.plusDays(30));
 
     // ejecucion y validacion
     assertThat(
@@ -130,62 +160,51 @@ public class CalculadorEstadoActividadTest {
   }
 
   @Test
-  public void unTpConLasMismasHorasIntermediasDaEnTiempoIgualQueEnTareas() {
-    // preparacion: mismo escenario que un Parcial "parcialmente completado", pero de tipo TP.
-    // /tareas no mira las horas para un TP, así que el calendario tampoco debería hacerlo.
-    Tarea tarea = tarea("PENDIENTE", "TP", 4, 10, HOY.plusDays(20));
+  public void conMenosDeCincuentaPorCientoTodaviaEsEnTiempo() {
+    // preparacion: 49%, justo por debajo del umbral.
+    Tarea tarea = tarea("PENDIENTE", 49, 100, HOY.plusDays(30));
 
     // ejecucion y validacion
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
   }
 
   @Test
-  public void unaTareaSinTipoConHorasParcialesNoEsParcialmenteCompletada() {
-    // preparacion: sin tipo cargado, no se puede asumir que es un Parcial.
-    Tarea tarea = tarea("PENDIENTE", 4, 10, HOY.plusDays(20));
+  public void conNoventaYNuevePorCientoTodaviaEsParcialmenteCompletada() {
+    // preparacion: no llega al 100%, sigue siendo "parcial".
+    Tarea tarea = tarea("PENDIENTE", 99, 100, HOY.plusDays(30));
 
     // ejecucion y validacion
-    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
+    assertThat(
+      CalculadorEstadoActividad.calcular(tarea, HOY),
+      is(EstadoActividad.PARCIALMENTE_COMPLETADA)
+    );
   }
 
   @Test
-  public void sinNingunaHoraRealizadaNoEsParcialmenteCompletada() {
+  public void sinFechaDeVencimientoPeroConProgresoDaParcialmenteCompletada() {
+    // preparacion: sin fecha cargada, el progreso igual cuenta.
+    Tarea tarea = tarea("PENDIENTE", 6, 10, null);
+
+    // ejecucion y validacion
+    assertThat(
+      CalculadorEstadoActividad.calcular(tarea, HOY),
+      is(EstadoActividad.PARCIALMENTE_COMPLETADA)
+    );
+  }
+
+  // ---------------------------------------------------------------- En tiempo
+
+  @Test
+  public void sinProgresoYConTiempoDeSobraDaEnTiempo() {
     // preparacion
-    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 0, 10, HOY.plusDays(20));
+    Tarea tarea = tarea("PENDIENTE", 0, 10, HOY.plusDays(30));
 
     // ejecucion y validacion
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
   }
 
   @Test
-  public void conTodasLasHorasRealizadasPeroSinMarcarComoCompletadaNoEsParcial() {
-    // preparacion: hizo el 100% de las horas pero no la marcó como completada.
-    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 10, 10, HOY.plusDays(20));
-
-    // ejecucion y validacion
-    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
-  }
-
-  @Test
-  public void sinHorasRealizadasCargadasNoEsParcialmenteCompletada() {
-    // preparacion
-    Tarea tarea = tarea("PENDIENTE", "PARCIAL", null, 10, HOY.plusDays(20));
-
-    // ejecucion y validacion
-    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
-  }
-
-  @Test
-  public void sinHorasPlanificadasCargadasNoEsParcialmenteCompletada() {
-    // preparacion
-    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 4, null, HOY.plusDays(20));
-
-    // ejecucion y validacion
-    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
-  }
-
-  @Test
-  public void sinFechaDeVencimientoYSinHorasDaEnTiempo() {
+  public void sinFechaNiHorasCargadasDaEnTiempo() {
     // preparacion
     Tarea tarea = tarea("PENDIENTE", null, null, null);
 
@@ -194,13 +213,64 @@ public class CalculadorEstadoActividadTest {
   }
 
   @Test
-  public void sinFechaDeVencimientoPeroConHorasParcialesDeUnParcialDaParcialmenteCompletada() {
-    // preparacion
-    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 4, 10, null);
+  public void sinHorasPlanificadasCargadasDaEnTiempo() {
+    // preparacion: no se puede calcular porcentaje sin saber cuánto planificó.
+    Tarea tarea = tarea("PENDIENTE", 5, null, HOY.plusDays(30));
 
     // ejecucion y validacion
+    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
+  }
+
+  @Test
+  public void conHorasPlanificadasEnCeroDaEnTiempo() {
+    // preparacion
+    Tarea tarea = tarea("PENDIENTE", 5, 0, HOY.plusDays(30));
+
+    // ejecucion y validacion
+    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
+  }
+
+  @Test
+  public void sinHorasRealizadasCargadasDaEnTiempo() {
+    // preparacion
+    Tarea tarea = tarea("PENDIENTE", null, 10, HOY.plusDays(30));
+
+    // ejecucion y validacion
+    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
+  }
+
+  @Test
+  public void conHorasRealizadasNegativasDaEnTiempo() {
+    // preparacion: dato corrupto/negativo, no debería contar como progreso.
+    Tarea tarea = tarea("PENDIENTE", -1, 10, HOY.plusDays(30));
+
+    // ejecucion y validacion
+    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
+  }
+
+  // ---------------------------------------------------------------- El tipo ya no importa
+
+  @Test
+  public void elResultadoEsElMismoSeaCualSeaElTipo() {
+    // preparacion: mismos datos, tres tipos distintos.
+    Tarea comoTp = tarea("PENDIENTE", 6, 10, HOY.plusDays(30));
+    comoTp.setTipo("TP");
+    Tarea comoParcial = tarea("PENDIENTE", 6, 10, HOY.plusDays(30));
+    comoParcial.setTipo("PARCIAL");
+    Tarea sinTipo = tarea("PENDIENTE", 6, 10, HOY.plusDays(30));
+    sinTipo.setTipo(null);
+
+    // ejecucion y validacion: los tres dan exactamente lo mismo.
     assertThat(
-      CalculadorEstadoActividad.calcular(tarea, HOY),
+      CalculadorEstadoActividad.calcular(comoTp, HOY),
+      is(EstadoActividad.PARCIALMENTE_COMPLETADA)
+    );
+    assertThat(
+      CalculadorEstadoActividad.calcular(comoParcial, HOY),
+      is(EstadoActividad.PARCIALMENTE_COMPLETADA)
+    );
+    assertThat(
+      CalculadorEstadoActividad.calcular(sinTipo, HOY),
       is(EstadoActividad.PARCIALMENTE_COMPLETADA)
     );
   }

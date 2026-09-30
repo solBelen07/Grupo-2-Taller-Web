@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
 
-/** Textos en español para el calendario, independientes de los datos de locale de la JDK. */
+/** Textos en español para el calendario. */
 public final class TextosCalendario {
 
   private static final String[] MESES = {
