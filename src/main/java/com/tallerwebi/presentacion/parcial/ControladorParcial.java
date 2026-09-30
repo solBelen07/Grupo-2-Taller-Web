@@ -1,11 +1,14 @@
 package com.tallerwebi.presentacion.parcial;
 
 import com.tallerwebi.dominio.materia.ServicioMateria;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -19,6 +22,15 @@ public class ControladorParcial {
     this.servicioMateria = servicioMateria;
   }
 
+  /*@RequestMapping(path = "/parciales", method = RequestMethod.GET)
+  public ModelAndView listarMaterias() {
+    Map<String, Object> model = new ModelMap();
+
+    model.put("parciales", servicioparciales.obtenerparciales());
+
+    return new ModelAndView("parciales", model);
+  }*/
+
   @RequestMapping(path = "/nuevo", method = RequestMethod.GET)
   public ModelAndView nuevoParcial() {
     ModelMap modelo = new ModelMap();
@@ -27,6 +39,6 @@ public class ControladorParcial {
 
     modelo.put("materias", servicioMateria.obtenerMaterias());
 
-    return new ModelAndView("parcial-formulario", modelo);
+    return new ModelAndView("parciales", modelo);
   }
 }
