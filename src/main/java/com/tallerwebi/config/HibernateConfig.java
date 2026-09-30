@@ -30,7 +30,7 @@ public class HibernateConfig {
     if (dbPassword == null) dbPassword = "user";
 
     String url = String.format(
-      "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true",
+      "jdbc:mysql://%s:%s/%s?useSSL=false&serverTimezone=America/Argentina/Buenos_Aires&allowPublicKeyRetrieval=true",
       dbHost,
       dbPort,
       dbName
