@@ -1,2 +1,1 @@
-INSERT INTO Usuario(id, nombre, apellido, email, password, rol, activo, puntos) VALUES(1,'Juan', 'Mendez', 'test@unlam.edu.ar', 'test', 'ADMIN', true, 0);
-INSERT INTO Materia(id, nombre) VALUES (1, 'Taller Web'), (2, 'Diseño UX'), (3, 'Base de datos');
+INSERT INTO Usuario(id, email, password, rol, activo) VALUES(null, 'test@unlam.edu.ar', 'test', 'ADMIN', true);

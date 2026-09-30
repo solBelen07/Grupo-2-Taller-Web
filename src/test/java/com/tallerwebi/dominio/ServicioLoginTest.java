@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,5 +65,12 @@ public class ServicioLoginTest {
     // ejecucion y validacion
     assertThrows(UsuarioExistente.class, () -> this.servicioLogin.registrar(usuario));
     verify(this.repositorioUsuarioMock, times(0)).guardar(usuario);
+  }
+
+  @Test
+  public void buscarUsuarioInexistentePorMailDeberiaLanzarExcepcion() {
+    Usuario usuario = new Usuario();
+    usuario.setEmail("noexiste@test.com");
+    when(this.repositorioUsuarioMock.buscar(usuario.getEmail())).thenReturn(null);
   }
 }

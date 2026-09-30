@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.tallerwebi.dominio.RepositorioUsuario;
+import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioNoEncontrado;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
@@ -114,7 +115,6 @@ public class RepositorioUsuarioTest {
   @Rollback
   public void deberiaLanzarUnaExcepcionAlIntentarModificarUnUsuarioInexistente() {
     Usuario usuario = this.dadoQueTengoUnUsuario("noexiste@test.com", "123", "USER");
-
     // Al no tener ID (no estar persistido), buscar por id devuelve null y
     // modificar debe lanzar UsuarioNoEncontrado.
     this.entoncesSeLanzaUnaUsuarioNoEncontrado(usuario);
@@ -149,8 +149,8 @@ public class RepositorioUsuarioTest {
   }
 
   private void entoncesSeGuardoElUsuario(String email, Usuario usuarioEsperado) {
-    String hql = "FROM Usuario WHERE email = :email";
-    Query query = this.sessionFactory.getCurrentSession().createQuery(hql, Usuario.class);
+    String sql = "FROM Usuario WHERE email = :email";
+    Query query = this.sessionFactory.getCurrentSession().createQuery(sql, Usuario.class);
     query.setParameter("email", email);
     Usuario usuarioObtenido = (Usuario) query.getSingleResult();
     this.entoncesElUsuarioObtenidoEsCorrecto(usuarioEsperado, usuarioObtenido);
