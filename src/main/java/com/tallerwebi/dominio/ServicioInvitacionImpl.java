@@ -24,6 +24,7 @@ public class ServicioInvitacionImpl implements ServicioInvitacion {
     this.repositorioGrupo = repositorioGrupo;
   }
 
+  @Override
   public Invitacion validarInvitacion(DatosInvitacion datosInvitacion) throws InvitacionInvalida {
     Usuario usuarioEmisor = repositorioUsuario.buscar(datosInvitacion.getEmisor());
     Usuario usuarioReceptor = repositorioUsuario.buscar(datosInvitacion.getReceptor());
@@ -33,7 +34,7 @@ public class ServicioInvitacionImpl implements ServicioInvitacion {
       usuarioEmisor == null ||
       usuarioReceptor == null ||
       grupoInvitado == null ||
-      usuarioEmisor == usuarioReceptor
+      usuarioEmisor.equals(usuarioReceptor)
     ) {
       throw new InvitacionInvalida();
     }
@@ -42,10 +43,12 @@ public class ServicioInvitacionImpl implements ServicioInvitacion {
     return crearInvitacion(invitacion);
   }
 
+  @Override
   public Invitacion crearInvitacion(Invitacion invitacion) {
     return this.repositorioInvitacion.enviarInvitacion(invitacion);
   }
 
+  @Override
   public void aceptarInvitacion(DatosInvitacion datosInvitacion) throws InvitacionInvalida {
     Invitacion invitacion = repositorioInvitacion.buscar(
       datosInvitacion.getEmisor(),
@@ -59,6 +62,7 @@ public class ServicioInvitacionImpl implements ServicioInvitacion {
     repositorioInvitacion.aceptar(invitacion);
   }
 
+  @Override
   public List<Invitacion> listarInvitaciones(String usuarioLogueado) {
     return this.repositorioInvitacion.buscarInvitacionesPorReceptor(usuarioLogueado);
   }
