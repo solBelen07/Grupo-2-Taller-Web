@@ -35,6 +35,9 @@ public class Evento {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private Materia materia;
 
+  /** Id de la Tarea de /tareas vinculada a este evento (CAL-02); null si no tiene ninguna. */
+  private Long tareaId;
+
   /** Requerido por Hibernate. */
   protected Evento() {}
 
@@ -107,5 +110,14 @@ public class Evento {
 
   public Materia getMateria() {
     return materia;
+  }
+
+  public Long getTareaId() {
+    return tareaId;
+  }
+
+  /** Vincula este evento a una Tarea de /tareas (CAL-02), para mostrar su estado como badge. */
+  public void vincularTarea(Long idDeLaTarea) {
+    this.tareaId = idDeLaTarea;
   }
 }

@@ -33,7 +33,7 @@ public class SegmentoDiaTest {
     Evento evento = evento(LUNES.atTime(18, 30), LUNES.atTime(20, 0));
 
     // ejecucion
-    SegmentoDia segmento = SegmentoDia.recortar(evento, LUNES).orElseThrow();
+    SegmentoDia segmento = SegmentoDia.recortar(evento, LUNES, null).orElseThrow();
 
     // validacion
     assertThat(segmento.minutoInicio(), is(18 * 60 + 30));
@@ -51,8 +51,8 @@ public class SegmentoDiaTest {
     Evento evento = evento(LUNES.atTime(18, 0), LUNES.atTime(20, 0));
 
     // ejecucion y validacion
-    assertThat(SegmentoDia.recortar(evento, LUNES.plusDays(1)), is(Optional.empty()));
-    assertThat(SegmentoDia.recortar(evento, LUNES.minusDays(1)), is(Optional.empty()));
+    assertThat(SegmentoDia.recortar(evento, LUNES.plusDays(1), null), is(Optional.empty()));
+    assertThat(SegmentoDia.recortar(evento, LUNES.minusDays(1), null), is(Optional.empty()));
   }
 
   @Test
@@ -61,8 +61,8 @@ public class SegmentoDiaTest {
     Evento evento = evento(LUNES.atTime(22, 0), LUNES.plusDays(1).atTime(1, 0));
 
     // ejecucion
-    SegmentoDia primero = SegmentoDia.recortar(evento, LUNES).orElseThrow();
-    SegmentoDia segundo = SegmentoDia.recortar(evento, LUNES.plusDays(1)).orElseThrow();
+    SegmentoDia primero = SegmentoDia.recortar(evento, LUNES, null).orElseThrow();
+    SegmentoDia segundo = SegmentoDia.recortar(evento, LUNES.plusDays(1), null).orElseThrow();
 
     // validacion
     assertThat(primero.minutoInicio(), is(22 * 60));
@@ -81,8 +81,8 @@ public class SegmentoDiaTest {
     Evento evento = evento(LUNES.atTime(22, 0), LUNES.plusDays(1).atStartOfDay());
 
     // ejecucion y validacion
-    assertThat(SegmentoDia.recortar(evento, LUNES).isPresent(), is(true));
-    assertThat(SegmentoDia.recortar(evento, LUNES.plusDays(1)).isPresent(), is(false));
+    assertThat(SegmentoDia.recortar(evento, LUNES, null).isPresent(), is(true));
+    assertThat(SegmentoDia.recortar(evento, LUNES.plusDays(1), null).isPresent(), is(false));
   }
 
   @Test
@@ -91,7 +91,7 @@ public class SegmentoDiaTest {
     Evento evento = evento(LUNES.atTime(10, 0), LUNES.plusDays(2).atTime(12, 0));
 
     // ejecucion
-    SegmentoDia enMedio = SegmentoDia.recortar(evento, LUNES.plusDays(1)).orElseThrow();
+    SegmentoDia enMedio = SegmentoDia.recortar(evento, LUNES.plusDays(1), null).orElseThrow();
 
     // validacion
     assertThat(enMedio.minutoInicio(), is(0));
@@ -106,7 +106,7 @@ public class SegmentoDiaTest {
     Evento evento = evento(LUNES.atTime(9, 5), LUNES.atTime(11, 0));
 
     // ejecucion
-    SegmentoDia segmento = SegmentoDia.recortar(evento, LUNES).orElseThrow();
+    SegmentoDia segmento = SegmentoDia.recortar(evento, LUNES, null).orElseThrow();
 
     // validacion
     assertThat(segmento.horaInicio(), is("09:05"));
@@ -121,9 +121,52 @@ public class SegmentoDiaTest {
     Evento evento = evento(LUNES.atTime(23, 0), LUNES.plusDays(1).atStartOfDay());
 
     // ejecucion
-    SegmentoDia segmento = SegmentoDia.recortar(evento, LUNES).orElseThrow();
+    SegmentoDia segmento = SegmentoDia.recortar(evento, LUNES, null).orElseThrow();
 
     // validacion
     assertThat(segmento.horaFin(), is("00:00"));
+  }
+
+  @Test
+  public void deberiaLlevarElEstadoDeSeguimientoCuandoSeLoPasan() {
+    // preparacion
+    Evento evento = evento(LUNES.atTime(18, 0), LUNES.atTime(20, 0));
+
+    // ejecucion
+    SegmentoDia segmento = SegmentoDia
+      .recortar(evento, LUNES, EstadoActividad.PROXIMA_A_VENCER)
+      .orElseThrow();
+
+    // validacion
+    assertThat(segmento.estado(), is(EstadoActividad.PROXIMA_A_VENCER));
+  }
+
+  @Test
+  public void laDescripcionDeberiaIncluirElEstadoCuandoHay() {
+    // preparacion
+    Evento evento = evento(LUNES.atTime(9, 5), LUNES.atTime(11, 0));
+
+    // ejecucion
+    SegmentoDia segmento = SegmentoDia
+      .recortar(evento, LUNES, EstadoActividad.VENCIDA)
+      .orElseThrow();
+
+    // validacion
+    assertThat(
+      segmento.descripcion(),
+      is("Clase · Análisis II · Teoría · 09:05 – 11:00 · Vencida")
+    );
+  }
+
+  @Test
+  public void laDescripcionNoDeberiaCambiarSinEstado() {
+    // preparacion
+    Evento evento = evento(LUNES.atTime(9, 5), LUNES.atTime(11, 0));
+
+    // ejecucion
+    SegmentoDia segmento = SegmentoDia.recortar(evento, LUNES, null).orElseThrow();
+
+    // validacion
+    assertThat(segmento.descripcion(), is("Clase · Análisis II · Teoría · 09:05 – 11:00"));
   }
 }

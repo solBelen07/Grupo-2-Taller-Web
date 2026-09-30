@@ -46,6 +46,13 @@
             <span class="bloque-titulo" th:text="${bloque.segmento.titulo}">Título</span>
             <span class="bloque-horario" th:text="${bloque.segmento.horario}">18:00 – 20:00</span>
             <span class="bloque-materia" th:text="${bloque.segmento.materia}">Materia</span>
+            <span
+              class="badge-estado"
+              th:if="${bloque.segmento.estado != null}"
+              th:classappend="|estado-${bloque.segmento.estado}|"
+              th:text="${bloque.segmento.estado.etiqueta}"
+              >Vencida</span
+            >
           </li>
         </ol>
       </section>

@@ -20,6 +20,7 @@ import java.util.Optional;
  * @param minutoFin minuto del día en que termina el segmento
  * @param continuaDesdeAntes si el evento ya venía ocupando el día anterior
  * @param continuaDespues si el evento sigue ocupando el día siguiente
+ * @param estado estado de seguimiento (CAL-02) de la Tarea vinculada; null si no tiene ninguna
  */
 public record SegmentoDia(
   Long eventoId,
@@ -30,13 +31,24 @@ public record SegmentoDia(
   int minutoInicio,
   int minutoFin,
   boolean continuaDesdeAntes,
-  boolean continuaDespues
+  boolean continuaDespues,
+  EstadoActividad estado
 ) {
   private static final int MINUTOS_POR_HORA = 60;
   private static final int HORAS_POR_DIA = 24;
+  private static final String SEPARADOR = " · ";
 
-  /** Recorta el evento al día indicado; vacío si el evento no ocupa ese día. */
-  public static Optional<SegmentoDia> recortar(Evento evento, LocalDate dia) {
+  /**
+   * Recorta el evento al día indicado; vacío si el evento no ocupa ese día.
+   *
+   * @param estado estado de seguimiento ya calculado para este evento (CAL-02), o null si el
+   *     evento no tiene una Tarea vinculada
+   */
+  public static Optional<SegmentoDia> recortar(
+    Evento evento,
+    LocalDate dia,
+    EstadoActividad estado
+  ) {
     LocalDateTime inicioDia = dia.atStartOfDay();
     LocalDateTime finDia = dia.plusDays(1).atStartOfDay();
     if (!evento.getInicio().isBefore(finDia) || !evento.getFin().isAfter(inicioDia)) {
@@ -56,7 +68,8 @@ public record SegmentoDia(
         (int) Duration.between(inicioDia, desde).toMinutes(),
         (int) Duration.between(inicioDia, hasta).toMinutes(),
         empiezaAntes,
-        terminaDespues
+        terminaDespues,
+        estado
       )
     );
   }
@@ -83,7 +96,9 @@ public record SegmentoDia(
 
   /** Descripción completa para tooltips y lectores de pantalla. */
   public String descripcion() {
-    return tipo.getEtiqueta() + " · " + materia + " · " + titulo + " · " + horario();
+    String base =
+      tipo.getEtiqueta() + SEPARADOR + materia + SEPARADOR + titulo + SEPARADOR + horario();
+    return estado == null ? base : base + SEPARADOR + estado.getEtiqueta();
   }
 
   private static String formatear(int minutos) {

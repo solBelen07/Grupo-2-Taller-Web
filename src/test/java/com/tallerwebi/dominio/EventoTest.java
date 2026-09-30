@@ -111,4 +111,19 @@ public class EventoTest {
       () -> new Evento(USUARIO, materia(), TipoEvento.CLASE, "Clase", INICIO, null)
     );
   }
+
+  @Test
+  public void unEventoNuevoNoTieneTareaVinculadaHastaQueSeLaAsignen() {
+    // preparacion y ejecucion
+    Evento evento = new Evento(USUARIO, materia(), TipoEvento.TRABAJO_PRACTICO, "TP", INICIO, FIN);
+
+    // validacion
+    assertThat(evento.getTareaId(), is(nullValue()));
+
+    // ejecucion
+    evento.vincularTarea(42L);
+
+    // validacion
+    assertThat(evento.getTareaId(), is(42L));
+  }
 }

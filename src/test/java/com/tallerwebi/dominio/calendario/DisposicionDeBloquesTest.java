@@ -21,7 +21,8 @@ public class DisposicionDeBloquesTest {
       desdeMinuto,
       hastaMinuto,
       false,
-      false
+      false,
+      null
     );
   }
 

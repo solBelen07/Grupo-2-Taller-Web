@@ -49,8 +49,8 @@
             <ul class="eventos" th:unless="${dia.eventos.isEmpty()}">
               <li
                 class="evento"
-                th:each="ev, estado : ${dia.eventos}"
-                th:if="${estado.index lt 3}"
+                th:each="ev, posicion : ${dia.eventos}"
+                th:if="${posicion.index lt 3}"
                 th:data-tipo="${ev.tipo}"
                 th:title="${ev.descripcion}"
                 th:style="|--materia:${ev.color}|"
@@ -59,6 +59,12 @@
                   >18:00</span
                 >
                 <span class="evento-texto" th:text="${ev.titulo}">Título del evento</span>
+                <span
+                  class="punto-estado"
+                  th:if="${ev.estado != null}"
+                  th:classappend="|estado-${ev.estado}|"
+                  aria-hidden="true"
+                ></span>
               </li>
             </ul>
             <a

@@ -4,16 +4,20 @@ import static java.time.temporal.TemporalAdjusters.nextOrSame;
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
 
 import com.tallerwebi.dominio.calendario.BloqueHorario;
+import com.tallerwebi.dominio.calendario.CalculadorEstadoActividad;
 import com.tallerwebi.dominio.calendario.CalendarioMensual;
 import com.tallerwebi.dominio.calendario.CalendarioSemanal;
 import com.tallerwebi.dominio.calendario.DiaMensual;
 import com.tallerwebi.dominio.calendario.DiaSemanal;
 import com.tallerwebi.dominio.calendario.DisposicionDeBloques;
+import com.tallerwebi.dominio.calendario.EstadoActividad;
 import com.tallerwebi.dominio.calendario.ResumenMateria;
 import com.tallerwebi.dominio.calendario.SegmentoDia;
 import com.tallerwebi.dominio.calendario.SemanaMensual;
 import com.tallerwebi.dominio.calendario.TextosCalendario;
 import com.tallerwebi.dominio.materia.Materia;
+import com.tallerwebi.dominio.tarea.RepositorioTarea;
+import com.tallerwebi.dominio.tarea.Tarea;
 import jakarta.transaction.Transactional;
 import java.time.Clock;
 import java.time.DayOfWeek;
@@ -25,6 +29,7 @@ import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,11 +47,17 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
   private static final int HORAS_POR_DIA = 24;
 
   private RepositorioEvento repositorioEvento;
+  private RepositorioTarea repositorioTarea;
   private Clock reloj;
 
   @Autowired
-  public ServicioCalendarioImpl(RepositorioEvento repositorioEvento, Clock reloj) {
+  public ServicioCalendarioImpl(
+    RepositorioEvento repositorioEvento,
+    RepositorioTarea repositorioTarea,
+    Clock reloj
+  ) {
     this.repositorioEvento = repositorioEvento;
+    this.repositorioTarea = repositorioTarea;
     this.reloj = reloj;
   }
 
@@ -61,6 +72,7 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
       ultimoDia.plusDays(1).atStartOfDay()
     );
     LocalDate hoy = LocalDate.now(reloj);
+    Function<Evento, EstadoActividad> estados = estadosDe(eventos, hoy);
 
     List<SemanaMensual> semanas = new ArrayList<>();
     for (LocalDate lunes = primerDia; !lunes.isAfter(ultimoDia); lunes = lunes.plusWeeks(1)) {
@@ -72,7 +84,7 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
             fecha,
             YearMonth.from(fecha).equals(mes),
             fecha.equals(hoy),
-            segmentosDelDia(eventos, fecha)
+            segmentosDelDia(eventos, fecha, estados)
           )
         );
       }
@@ -100,10 +112,11 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
       lunes.plusDays(DIAS_POR_SEMANA).atStartOfDay()
     );
     LocalDate hoy = LocalDate.now(reloj);
+    Function<Evento, EstadoActividad> estados = estadosDe(eventos, hoy);
 
     List<List<SegmentoDia>> segmentosPorDia = new ArrayList<>();
     for (int i = 0; i < DIAS_POR_SEMANA; i++) {
-      segmentosPorDia.add(segmentosDelDia(eventos, lunes.plusDays(i)));
+      segmentosPorDia.add(segmentosDelDia(eventos, lunes.plusDays(i), estados));
     }
     int[] rangoDeHoras = calcularRangoDeHoras(segmentosPorDia);
     int horaInicio = rangoDeHoras[0];
@@ -121,6 +134,25 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
       resumirMaterias(eventos),
       eventos.size()
     );
+  }
+
+  /**
+   * Función evento → estado de seguimiento (CAL-02): resuelve una sola vez todas las Tareas que
+   * puedan estar vinculadas a los eventos del período, en vez de una consulta por evento.
+   */
+  private Function<Evento, EstadoActividad> estadosDe(List<Evento> eventos, LocalDate hoy) {
+    boolean ningunEventoTieneTarea = eventos.stream().allMatch(e -> e.getTareaId() == null);
+    if (ningunEventoTieneTarea) {
+      return evento -> null;
+    }
+    Map<Long, Tarea> tareasPorId = repositorioTarea
+      .buscarTodas()
+      .stream()
+      .collect(Collectors.toMap(Tarea::getId, tarea -> tarea, (unaTarea, otraTarea) -> unaTarea));
+    return evento -> {
+      Tarea tarea = evento.getTareaId() == null ? null : tareasPorId.get(evento.getTareaId());
+      return tarea == null ? null : CalculadorEstadoActividad.calcular(tarea, hoy);
+    };
   }
 
   /** Menor y mayor hora que ocupa algún segmento, acotadas entre el mínimo y las 24 horas. */
@@ -174,10 +206,14 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
     return List.copyOf(etiquetas);
   }
 
-  private static List<SegmentoDia> segmentosDelDia(List<Evento> eventos, LocalDate dia) {
+  private static List<SegmentoDia> segmentosDelDia(
+    List<Evento> eventos,
+    LocalDate dia,
+    Function<Evento, EstadoActividad> estados
+  ) {
     return eventos
       .stream()
-      .flatMap(evento -> SegmentoDia.recortar(evento, dia).stream())
+      .flatMap(evento -> SegmentoDia.recortar(evento, dia, estados.apply(evento)).stream())
       .sorted(
         Comparator
           .comparingInt(SegmentoDia::minutoInicio)

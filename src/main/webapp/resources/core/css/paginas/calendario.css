@@ -480,3 +480,59 @@
     display: none;
   }
 }
+
+/*
+  CAL-02: código de colores (ya lo da --materia, tomado de la materia de cada evento) y badges de
+  estado de seguimiento para los eventos vinculados a una Tarea de /tareas.
+*/
+.evento {
+  position: relative;
+}
+
+.punto-estado {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid var(--card-bg);
+}
+
+.badge-estado {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 1px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  color: #ffffff;
+  width: fit-content;
+}
+
+.punto-estado.estado-COMPLETADA,
+.badge-estado.estado-COMPLETADA {
+  background-color: #22c55e;
+}
+
+.punto-estado.estado-VENCIDA,
+.badge-estado.estado-VENCIDA {
+  background-color: #ef4444;
+}
+
+.punto-estado.estado-PROXIMA_A_VENCER,
+.badge-estado.estado-PROXIMA_A_VENCER {
+  background-color: #f59e0b;
+}
+
+.punto-estado.estado-PARCIALMENTE_COMPLETADA,
+.badge-estado.estado-PARCIALMENTE_COMPLETADA {
+  background-color: #3b82f6;
+}
+
+.punto-estado.estado-EN_TIEMPO,
+.badge-estado.estado-EN_TIEMPO {
+  background-color: var(--text-secondary);
+}

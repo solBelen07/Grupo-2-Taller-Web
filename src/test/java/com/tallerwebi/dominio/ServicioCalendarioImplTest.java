@@ -5,9 +5,11 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,8 +18,11 @@ import com.tallerwebi.dominio.calendario.CalendarioMensual;
 import com.tallerwebi.dominio.calendario.CalendarioSemanal;
 import com.tallerwebi.dominio.calendario.DiaMensual;
 import com.tallerwebi.dominio.calendario.DiaSemanal;
+import com.tallerwebi.dominio.calendario.EstadoActividad;
 import com.tallerwebi.dominio.calendario.ResumenMateria;
 import com.tallerwebi.dominio.materia.Materia;
+import com.tallerwebi.dominio.tarea.RepositorioTarea;
+import com.tallerwebi.dominio.tarea.Tarea;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -35,6 +40,7 @@ public class ServicioCalendarioImplTest {
   private static final Clock RELOJ = Clock.fixed(Instant.parse("2026-09-28T13:00:00Z"), ZONA);
 
   private RepositorioEvento repositorioEventoMock;
+  private RepositorioTarea repositorioTareaMock;
   private ServicioCalendario servicioCalendario;
   private Materia analisis;
   private Materia fisica;
@@ -49,6 +55,7 @@ public class ServicioCalendarioImplTest {
   @BeforeEach
   public void init() {
     this.repositorioEventoMock = mock(RepositorioEvento.class);
+    this.repositorioTareaMock = mock(RepositorioTarea.class);
     this.analisis = materia("Análisis II", "#2F6FDE");
     this.fisica = materia("Física II", "#D98A00");
     when(
@@ -59,7 +66,9 @@ public class ServicioCalendarioImplTest {
         )
     )
       .thenReturn(List.of());
-    this.servicioCalendario = new ServicioCalendarioImpl(this.repositorioEventoMock, RELOJ);
+    when(this.repositorioTareaMock.buscarTodas()).thenReturn(List.of());
+    this.servicioCalendario =
+      new ServicioCalendarioImpl(this.repositorioEventoMock, this.repositorioTareaMock, RELOJ);
   }
 
   private void conEventos(Evento... eventos) {
@@ -376,5 +385,102 @@ public class ServicioCalendarioImplTest {
     assertThat(semana.dias().get(6).bloques(), hasSize(1));
     assertThat(semana.horaInicio(), is(0));
     assertThat(semana.horaFin(), is(24));
+  }
+
+  // ---------------------------------------------------------------- CAL-02: estado de actividades
+
+  private static Tarea tarea(Long id, String estado, LocalDate fechaVencimiento) {
+    Tarea tarea = new Tarea();
+    tarea.setId(id);
+    tarea.setEstado(estado);
+    tarea.setFechaVencimiento(fechaVencimiento);
+    return tarea;
+  }
+
+  @Test
+  public void unEventoSinTareaVinculadaNoTieneEstado() {
+    // preparacion
+    LocalDate lunes = LocalDate.of(2026, 9, 28);
+    conEventos(evento(this.analisis, "Teoría", lunes.atTime(18, 0), lunes.atTime(20, 0)));
+
+    // ejecucion
+    CalendarioMensual mes = this.servicioCalendario.obtenerMes(USUARIO, lunes);
+
+    // validacion
+    assertThat(dia(mes, lunes).eventos().get(0).estado(), is(nullValue()));
+    verify(this.repositorioTareaMock, never()).buscarTodas();
+  }
+
+  @Test
+  public void unEventoConTareaVinculadaMuestraElEstadoDeEsaTarea() {
+    // preparacion
+    LocalDate lunes = LocalDate.of(2026, 9, 28);
+    Evento evento = evento(this.analisis, "Entrega TP", lunes.atTime(18, 0), lunes.atTime(20, 0));
+    evento.vincularTarea(5L);
+    when(this.repositorioTareaMock.buscarTodas())
+      .thenReturn(List.of(tarea(5L, "COMPLETADA", lunes.minusDays(1))));
+    conEventos(evento);
+
+    // ejecucion
+    CalendarioMensual mes = this.servicioCalendario.obtenerMes(USUARIO, lunes);
+
+    // validacion
+    assertThat(dia(mes, lunes).eventos().get(0).estado(), is(EstadoActividad.COMPLETADA));
+  }
+
+  @Test
+  public void siLaTareaVinculadaNoExisteMasElEventoQuedaSinEstado() {
+    // preparacion
+    LocalDate lunes = LocalDate.of(2026, 9, 28);
+    Evento evento = evento(this.analisis, "Entrega TP", lunes.atTime(18, 0), lunes.atTime(20, 0));
+    evento.vincularTarea(999L);
+    when(this.repositorioTareaMock.buscarTodas()).thenReturn(List.of());
+    conEventos(evento);
+
+    // ejecucion
+    CalendarioMensual mes = this.servicioCalendario.obtenerMes(USUARIO, lunes);
+
+    // validacion
+    assertThat(dia(mes, lunes).eventos().get(0).estado(), is(nullValue()));
+  }
+
+  @Test
+  public void enUnPeriodoConVariosEventosSoloTraeEstadoElQueTieneTareaVinculada() {
+    // preparacion
+    LocalDate lunes = LocalDate.of(2026, 9, 28);
+    Evento conTarea = evento(this.analisis, "Entrega TP", lunes.atTime(18, 0), lunes.atTime(20, 0));
+    conTarea.vincularTarea(3L);
+    Evento sinTarea = evento(this.fisica, "Clase común", lunes.atTime(8, 0), lunes.atTime(10, 0));
+    when(this.repositorioTareaMock.buscarTodas())
+      .thenReturn(List.of(tarea(3L, "COMPLETADA", lunes.minusDays(1))));
+    conEventos(conTarea, sinTarea);
+
+    // ejecucion
+    CalendarioMensual mes = this.servicioCalendario.obtenerMes(USUARIO, lunes);
+
+    // validacion
+    List<com.tallerwebi.dominio.calendario.SegmentoDia> eventosDelDia = dia(mes, lunes).eventos();
+    assertThat(eventosDelDia.get(0).estado(), is(nullValue())); // "Clase común" (08:00) va primero por horario
+    assertThat(eventosDelDia.get(1).estado(), is(EstadoActividad.COMPLETADA));
+  }
+
+  @Test
+  public void elEstadoTambienSeVeEnLaVistaSemanal() {
+    // preparacion
+    LocalDate martes = LocalDate.of(2026, 9, 29);
+    Evento evento = evento(this.analisis, "Entrega TP", martes.atTime(18, 0), martes.atTime(20, 0));
+    evento.vincularTarea(7L);
+    when(this.repositorioTareaMock.buscarTodas())
+      .thenReturn(List.of(tarea(7L, "PENDIENTE", martes.plusDays(1))));
+    conEventos(evento);
+
+    // ejecucion
+    CalendarioSemanal semana = this.servicioCalendario.obtenerSemana(USUARIO, martes);
+
+    // validacion
+    assertThat(
+      semana.dias().get(1).bloques().get(0).segmento().estado(),
+      is(EstadoActividad.PROXIMA_A_VENCER)
+    );
   }
 }
