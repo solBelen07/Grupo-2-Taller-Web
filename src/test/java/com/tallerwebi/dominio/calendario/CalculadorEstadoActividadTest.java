@@ -17,8 +17,19 @@ public class CalculadorEstadoActividadTest {
     Integer horasPlanificadas,
     LocalDate fechaVencimiento
   ) {
+    return tarea(estado, null, horasRealizadas, horasPlanificadas, fechaVencimiento);
+  }
+
+  private static Tarea tarea(
+    String estado,
+    String tipo,
+    Integer horasRealizadas,
+    Integer horasPlanificadas,
+    LocalDate fechaVencimiento
+  ) {
     Tarea tarea = new Tarea();
     tarea.setEstado(estado);
+    tarea.setTipo(tipo);
     tarea.setHorasRealizadas(horasRealizadas);
     tarea.setHorasPlanificadas(horasPlanificadas);
     tarea.setFechaVencimiento(fechaVencimiento);
@@ -88,16 +99,16 @@ public class CalculadorEstadoActividadTest {
   @Test
   public void laVencidaGanaAunqueTengaHorasParciales() {
     // preparacion
-    Tarea tarea = tarea("PENDIENTE", 4, 10, HOY.minusDays(1));
+    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 4, 10, HOY.minusDays(1));
 
     // ejecucion y validacion
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.VENCIDA));
   }
 
   @Test
-  public void conHorasParcialesYSinUrgenciaDeFechaDaParcialmenteCompletada() {
+  public void unParcialConHorasIntermediasYSinUrgenciaDeFechaDaParcialmenteCompletada() {
     // preparacion
-    Tarea tarea = tarea("PENDIENTE", 4, 10, HOY.plusDays(20));
+    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 4, 10, HOY.plusDays(20));
 
     // ejecucion y validacion
     assertThat(
@@ -107,9 +118,40 @@ public class CalculadorEstadoActividadTest {
   }
 
   @Test
+  public void laComparacionDeTipoEsInsensibleAMayusculas() {
+    // preparacion
+    Tarea tarea = tarea("PENDIENTE", "parcial", 4, 10, HOY.plusDays(20));
+
+    // ejecucion y validacion
+    assertThat(
+      CalculadorEstadoActividad.calcular(tarea, HOY),
+      is(EstadoActividad.PARCIALMENTE_COMPLETADA)
+    );
+  }
+
+  @Test
+  public void unTpConLasMismasHorasIntermediasDaEnTiempoIgualQueEnTareas() {
+    // preparacion: mismo escenario que un Parcial "parcialmente completado", pero de tipo TP.
+    // /tareas no mira las horas para un TP, así que el calendario tampoco debería hacerlo.
+    Tarea tarea = tarea("PENDIENTE", "TP", 4, 10, HOY.plusDays(20));
+
+    // ejecucion y validacion
+    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
+  }
+
+  @Test
+  public void unaTareaSinTipoConHorasParcialesNoEsParcialmenteCompletada() {
+    // preparacion: sin tipo cargado, no se puede asumir que es un Parcial.
+    Tarea tarea = tarea("PENDIENTE", 4, 10, HOY.plusDays(20));
+
+    // ejecucion y validacion
+    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
+  }
+
+  @Test
   public void sinNingunaHoraRealizadaNoEsParcialmenteCompletada() {
     // preparacion
-    Tarea tarea = tarea("PENDIENTE", 0, 10, HOY.plusDays(20));
+    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 0, 10, HOY.plusDays(20));
 
     // ejecucion y validacion
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
@@ -118,7 +160,16 @@ public class CalculadorEstadoActividadTest {
   @Test
   public void conTodasLasHorasRealizadasPeroSinMarcarComoCompletadaNoEsParcial() {
     // preparacion: hizo el 100% de las horas pero no la marcó como completada.
-    Tarea tarea = tarea("PENDIENTE", 10, 10, HOY.plusDays(20));
+    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 10, 10, HOY.plusDays(20));
+
+    // ejecucion y validacion
+    assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
+  }
+
+  @Test
+  public void sinHorasRealizadasCargadasNoEsParcialmenteCompletada() {
+    // preparacion
+    Tarea tarea = tarea("PENDIENTE", "PARCIAL", null, 10, HOY.plusDays(20));
 
     // ejecucion y validacion
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
@@ -127,7 +178,7 @@ public class CalculadorEstadoActividadTest {
   @Test
   public void sinHorasPlanificadasCargadasNoEsParcialmenteCompletada() {
     // preparacion
-    Tarea tarea = tarea("PENDIENTE", 4, null, HOY.plusDays(20));
+    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 4, null, HOY.plusDays(20));
 
     // ejecucion y validacion
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
@@ -143,9 +194,9 @@ public class CalculadorEstadoActividadTest {
   }
 
   @Test
-  public void sinFechaDeVencimientoPeroConHorasParcialesDaParcialmenteCompletada() {
+  public void sinFechaDeVencimientoPeroConHorasParcialesDeUnParcialDaParcialmenteCompletada() {
     // preparacion
-    Tarea tarea = tarea("PENDIENTE", 4, 10, null);
+    Tarea tarea = tarea("PENDIENTE", "PARCIAL", 4, 10, null);
 
     // ejecucion y validacion
     assertThat(

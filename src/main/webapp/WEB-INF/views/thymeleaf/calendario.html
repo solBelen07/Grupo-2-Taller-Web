@@ -100,6 +100,26 @@
           </li>
         </ul>
 
+        <ul
+          class="calendario-leyenda-estados"
+          aria-label="Estados de seguimiento"
+          data-testid="leyenda-estados"
+        >
+          <li><span class="punto-leyenda estado-EN_TIEMPO" aria-hidden="true"></span>En tiempo</li>
+          <li>
+            <span class="punto-leyenda estado-PROXIMA_A_VENCER" aria-hidden="true"></span>Próxima
+            a vencer
+          </li>
+          <li><span class="punto-leyenda estado-VENCIDA" aria-hidden="true"></span>Vencida</li>
+          <li>
+            <span class="punto-leyenda estado-COMPLETADA" aria-hidden="true"></span>Completada
+          </li>
+          <li>
+            <span class="punto-leyenda estado-PARCIALMENTE_COMPLETADA" aria-hidden="true"></span
+            >Parcialmente completada
+          </li>
+        </ul>
+
         <p class="calendario-vacio" th:if="${calendario.vacio}" data-testid="sin-eventos">
           No hay eventos en este período.
         </p>

@@ -403,6 +403,14 @@
   border-left-style: dashed;
 }
 
+.bloque-titulo,
+.bloque-horario,
+.bloque-materia {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .bloque-titulo {
   font-weight: 700;
 }
@@ -501,9 +509,14 @@
 
 .badge-estado {
   align-self: flex-start;
+  flex: none;
   margin-top: 2px;
-  padding: 1px 7px;
-  font-size: 10px;
+  padding: 1px 6px;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -513,26 +526,52 @@
 }
 
 .punto-estado.estado-COMPLETADA,
-.badge-estado.estado-COMPLETADA {
-  background-color: #22c55e;
+.badge-estado.estado-COMPLETADA,
+.punto-leyenda.estado-COMPLETADA {
+  background-color: #3b82f6;
 }
 
 .punto-estado.estado-VENCIDA,
-.badge-estado.estado-VENCIDA {
+.badge-estado.estado-VENCIDA,
+.punto-leyenda.estado-VENCIDA {
   background-color: #ef4444;
 }
 
 .punto-estado.estado-PROXIMA_A_VENCER,
-.badge-estado.estado-PROXIMA_A_VENCER {
-  background-color: #f59e0b;
+.badge-estado.estado-PROXIMA_A_VENCER,
+.punto-leyenda.estado-PROXIMA_A_VENCER {
+  background-color: #eab308;
 }
 
 .punto-estado.estado-PARCIALMENTE_COMPLETADA,
-.badge-estado.estado-PARCIALMENTE_COMPLETADA {
-  background-color: #3b82f6;
+.badge-estado.estado-PARCIALMENTE_COMPLETADA,
+.punto-leyenda.estado-PARCIALMENTE_COMPLETADA {
+  background-color: #38bdf8;
 }
 
 .punto-estado.estado-EN_TIEMPO,
-.badge-estado.estado-EN_TIEMPO {
-  background-color: var(--text-secondary);
+.badge-estado.estado-EN_TIEMPO,
+.punto-leyenda.estado-EN_TIEMPO {
+  background-color: #22c55e;
+}
+
+/* Leyenda fija de los 5 estados de seguimiento (independiente de las materias). */
+.calendario-leyenda-estados {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.punto-leyenda {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 7px;
+  border-radius: 50%;
+  vertical-align: middle;
 }

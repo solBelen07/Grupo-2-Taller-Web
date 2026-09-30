@@ -228,6 +228,30 @@ body {
     color: #d89cff;
 }
 
+/* Colores por valor de indicador (calcularIndicador en ServicioTareaImpl). */
+.indicador[data-indicador="EN TIEMPO"],
+.indicador[data-indicador="PREPARACIÓN ADECUADA"] {
+    background-color: #22c55e;
+    color: #ffffff;
+}
+
+.indicador[data-indicador="PRÓXIMO A VENCER"],
+.indicador[data-indicador="REGULAR"] {
+    background-color: #eab308;
+    color: #1b1204;
+}
+
+.indicador[data-indicador="ATRASADO"],
+.indicador[data-indicador="INSUFICIENTE"] {
+    background-color: #ef4444;
+    color: #ffffff;
+}
+
+.indicador[data-indicador="COMPLETADO"] {
+    background-color: #3b82f6;
+    color: #ffffff;
+}
+
 /* responsive */
 
 @media (max-width: 768px) {

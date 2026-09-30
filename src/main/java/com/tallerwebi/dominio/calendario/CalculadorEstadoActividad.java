@@ -6,11 +6,15 @@ import java.time.LocalDate;
 /**
  * Deriva el {@link EstadoActividad} de una {@code Tarea} sin modificar esa clase ni el indicador
  * que ya calcula {@code ServicioTareaImpl} para /tareas: esto es una lectura de sus mismos datos
- * (estado, horas, fecha de vencimiento) adaptada al vocabulario de 5 estados que pide CAL-02.
+ * (estado, tipo, horas, fecha de vencimiento) adaptada al vocabulario de 5 estados que pide CAL-02.
+ * "Parcialmente completada" solo aplica a los Parciales, igual que {@code calcularIndicador} en
+ * /tareas usa las horas solo para ese tipo; para un TP, el resultado coincide exactamente con lo
+ * que ya muestra /tareas (Completada, Vencida, Próxima a vencer o En tiempo).
  */
 public final class CalculadorEstadoActividad {
 
   static final String ESTADO_COMPLETADA = "COMPLETADA";
+  static final String TIPO_PARCIAL = "PARCIAL";
   static final int DIAS_PROXIMO_VENCIMIENTO = 3;
 
   private CalculadorEstadoActividad() {}
@@ -26,10 +30,14 @@ public final class CalculadorEstadoActividad {
     if (vencimiento != null && !vencimiento.isAfter(hoy.plusDays(DIAS_PROXIMO_VENCIMIENTO))) {
       return EstadoActividad.PROXIMA_A_VENCER;
     }
-    if (tieneProgresoParcial(tarea)) {
+    if (esParcial(tarea) && tieneProgresoParcial(tarea)) {
       return EstadoActividad.PARCIALMENTE_COMPLETADA;
     }
     return EstadoActividad.EN_TIEMPO;
+  }
+
+  private static boolean esParcial(Tarea tarea) {
+    return TIPO_PARCIAL.equalsIgnoreCase(tarea.getTipo());
   }
 
   private static boolean tieneProgresoParcial(Tarea tarea) {
