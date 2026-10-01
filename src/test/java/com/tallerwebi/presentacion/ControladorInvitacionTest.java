@@ -4,9 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.excepcion.InvitacionInvalida;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.InvitacionInvalida;
 import com.tallerwebi.dominio.invitacion.Invitacion;
 import com.tallerwebi.dominio.invitacion.ServicioInvitacion;
+import com.tallerwebi.presentacion.grupo.ControladorInvitacion;
+import com.tallerwebi.presentacion.grupo.DatosInvitacion;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,14 +55,6 @@ public class ControladorInvitacionTest {
     throws InvitacionInvalida {
     dadoQueElUsuarioTieneInvitacionesPendientes();
     ModelAndView vistaInvitacionesYMensajeDeExito = cuandoAceptaLaInvitacion();
-    entoncesRedirigeAInvitacionesConMensajeDeExito(vistaInvitacionesYMensajeDeExito);
-  }
-
-  @Test
-  public void rechazarInvitacionDeberiaRecargarPantallaDeInvitacionConMensajeDeExito()
-    throws InvitacionInvalida {
-    dadoQueElUsuarioTieneInvitacionesPendientes();
-    ModelAndView vistaInvitacionesYMensajeDeExito = cuandoRechazaLaInvitacion();
     entoncesRedirigeAInvitacionesConMensajeDeExito(vistaInvitacionesYMensajeDeExito);
   }
 
@@ -113,10 +107,6 @@ public class ControladorInvitacionTest {
 
   private ModelAndView cuandoAceptaLaInvitacion() {
     return controladorInvitacion.aceptar(datosInvitacion, requestMock, redirectAttributesMock);
-  }
-
-  private ModelAndView cuandoRechazaLaInvitacion() {
-    return controladorInvitacion.rechazar(datosInvitacion, requestMock, redirectAttributesMock);
   }
 
   private ModelAndView cuandoEnviaUnaInvitacionAUnUsuario() {

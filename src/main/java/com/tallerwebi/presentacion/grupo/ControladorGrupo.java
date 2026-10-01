@@ -1,6 +1,6 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.grupo;
 
-import com.tallerwebi.dominio.excepcion.GrupoNoEncontrado;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import java.util.Map;

@@ -12,7 +12,6 @@ public class RepositorioInvitacionImpl implements RepositorioInvitacion {
 
   private SessionFactory sessionFactory;
 
-  @Override
   public Invitacion enviarInvitacion(Invitacion invitacion) {
     sessionFactory.getCurrentSession().persist(invitacion);
     return invitacion;
@@ -44,6 +43,7 @@ public class RepositorioInvitacionImpl implements RepositorioInvitacion {
       .uniqueResult();
   }
 
+  @Override
   public void cambiarEstado(Invitacion invitacion, Estado estado) {
     invitacion.setVigente(false);
     invitacion.setEstadoInvitacion(estado);

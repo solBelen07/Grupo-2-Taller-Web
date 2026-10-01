@@ -28,7 +28,7 @@ public class ControladorMateria {
 
     model.put(DATOS_MATERIA, new DatosMateria());
 
-    return new ModelAndView("materia-formulario", model);
+    return new ModelAndView("paginas/materia/materia-formulario", model);
   }
 
   @RequestMapping(path = "/materias/guardar", method = RequestMethod.POST)
@@ -51,7 +51,7 @@ public class ControladorMateria {
       model.put("error", "Ya existe una materia con ese nombre");
       model.put(DATOS_MATERIA, datosMateria);
 
-      return new ModelAndView("materia-formulario", model);
+      return new ModelAndView("paginas/materia/materia-formulario", model);
     }
 
     return new ModelAndView("redirect:/materias");
@@ -63,7 +63,7 @@ public class ControladorMateria {
 
     model.put("materias", servicioMateria.obtenerMaterias());
 
-    return new ModelAndView("materias", model);
+    return new ModelAndView("paginas/materia/materias", model);
   }
 
   @RequestMapping(path = "/materias/detalle", method = RequestMethod.GET)
@@ -74,7 +74,7 @@ public class ControladorMateria {
 
     model.put("materia", materia);
 
-    return new ModelAndView("materia-detalle", model);
+    return new ModelAndView("paginas/materia/materia-detalle", model);
   }
 
   @RequestMapping(path = "/materias/editar", method = RequestMethod.GET)
@@ -95,7 +95,7 @@ public class ControladorMateria {
     Map<String, Object> model = new ModelMap();
     model.put(DATOS_MATERIA, datosMateria);
 
-    return new ModelAndView("materia-formulario", model);
+    return new ModelAndView("paginas/materia/materia-formulario", model);
   }
 
   @RequestMapping(path = "/materias/modificar", method = RequestMethod.POST)
@@ -135,6 +135,6 @@ public class ControladorMateria {
     model.put("materiaBuscada", materia);
     model.put("nombreBuscado", nombre);
 
-    return new ModelAndView("materias", model);
+    return new ModelAndView("paginas/materia/materias", model);
   }
 }

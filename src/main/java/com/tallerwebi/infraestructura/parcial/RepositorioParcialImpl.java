@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+@SuppressWarnings("CPD-START")
 @Repository
 public class RepositorioParcialImpl implements RepositorioParcial {
 

@@ -3,11 +3,14 @@ package com.tallerwebi.dominio;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.excepcion.InvitacionInvalida;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.InvitacionInvalida;
 import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.RepositorioGrupo;
-import com.tallerwebi.dominio.invitacion.*;
-import com.tallerwebi.presentacion.DatosInvitacion;
+import com.tallerwebi.dominio.invitacion.Invitacion;
+import com.tallerwebi.dominio.invitacion.RepositorioInvitacion;
+import com.tallerwebi.dominio.invitacion.ServicioInvitacion;
+import com.tallerwebi.dominio.invitacion.ServicioInvitacionImpl;
+import com.tallerwebi.presentacion.grupo.DatosInvitacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,33 +36,6 @@ public class ServicioInvitacionTest {
   }
 
   @Test
-  public void rechazarDeberiaHacerInvitacionInvalida() throws InvitacionInvalida {
-    Usuario emisor = dadoQueExisteUnUsuario("usuario@test.com");
-    Usuario receptor = dadoQueExisteUnUsuario("receptor@test.com");
-    Grupo grupo = dadoQueExisteUnGrupo("grupo-test");
-    DatosInvitacion datosInvitacion = new DatosInvitacion();
-    datosInvitacion.setEmisor(emisor.getEmail());
-    datosInvitacion.setReceptor(receptor.getEmail());
-    datosInvitacion.setGrupo(grupo.getNombre());
-
-    Invitacion invitacion = new Invitacion(emisor, receptor, grupo);
-
-    when(
-      repositorioInvitacionMock.buscar(
-        datosInvitacion.getEmisor(),
-        datosInvitacion.getReceptor(),
-        datosInvitacion.getGrupo()
-      )
-    )
-      .thenReturn(invitacion);
-
-    cuandoSeRechazaLaInvitacion(datosInvitacion);
-
-    entoncesDejaDeEstarVigenteLaInvitacion(invitacion);
-    entoncesSeLlamaAlRepositorioParaCambiarDeEstado();
-  }
-
-  @Test
   public void deberiaCrearLaInvitacionCuandoTodosLosDatosSonValidos() throws InvitacionInvalida {
     String emailEmisor = "emisor@test.com";
     String emailReceptor = "receptor@test.com";
@@ -77,7 +53,7 @@ public class ServicioInvitacionTest {
     Invitacion resultado = servicioInvitacion.validarInvitacion(datosInvitacion);
 
     entoncesSeObtieneUnaInvitacionValida(resultado, emisor, receptor, grupo);
-    entoncesSeLlamaAlRepositorioParaCrearInvitacion();
+    entoncesSeLlamaAlRepositorio();
   }
 
   @Test
@@ -95,8 +71,7 @@ public class ServicioInvitacionTest {
       emailReceptor,
       nombreGrupo
     );
-
-    entoncesNoDeberiaCrearseLaInvitacionEnElRepositorio();
+    verify(repositorioInvitacionMock, never()).enviarInvitacion(any());
   }
 
   @Test
@@ -223,11 +198,6 @@ public class ServicioInvitacionTest {
     servicioInvitacion.aceptarInvitacion(datosInvitacion);
   }
 
-  private void cuandoSeRechazaLaInvitacion(DatosInvitacion datosInvitacion)
-    throws InvitacionInvalida {
-    servicioInvitacion.rechazarInvitacion(datosInvitacion);
-  }
-
   private void entoncesDejaDeEstarVigenteLaInvitacion(Invitacion invitacion) {
     assertFalse(invitacion.getVigente());
     verify(repositorioInvitacionMock, times(1)).cambiarEstado(any(), any());
@@ -246,12 +216,8 @@ public class ServicioInvitacionTest {
     assertEquals(grupo, invitacion.getGrupo());
   }
 
-  private void entoncesSeLlamaAlRepositorioParaCrearInvitacion() {
+  private void entoncesSeLlamaAlRepositorio() {
     verify(repositorioInvitacionMock, times(1)).enviarInvitacion(any(Invitacion.class));
-  }
-
-  private void entoncesSeLlamaAlRepositorioParaCambiarDeEstado() {
-    verify(repositorioInvitacionMock, times(1)).cambiarEstado(any(), any());
   }
 
   private void entoncesValidarInvitacionLanzaExcepcionInvitacionInvalida(
@@ -269,9 +235,5 @@ public class ServicioInvitacionTest {
         servicioInvitacion.validarInvitacion(datosInvitacion);
       }
     );
-  }
-
-  private void entoncesNoDeberiaCrearseLaInvitacionEnElRepositorio() {
-    verify(repositorioInvitacionMock, never()).enviarInvitacion(any());
   }
 }

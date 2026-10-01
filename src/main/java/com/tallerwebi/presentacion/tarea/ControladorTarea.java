@@ -50,7 +50,7 @@ public class ControladorTarea {
     modelo.put("aporteIndividual", aporteIndividual);
     modelo.put("indicadores", indicadores);
 
-    return new ModelAndView("tareas", modelo);
+    return new ModelAndView("paginas/materia/tareas", modelo);
   }
 
   @RequestMapping("/tareas/crear")
