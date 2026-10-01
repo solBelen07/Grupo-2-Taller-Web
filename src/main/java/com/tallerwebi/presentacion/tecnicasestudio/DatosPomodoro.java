@@ -11,7 +11,7 @@ public class DatosPomodoro {
   private String destino;
   private Integer duracion;
   private Estado estado;
-  private Materia materia;
+  private Integer materia;
   private Usuario usuario;
   private String objetivo;
 
@@ -20,7 +20,7 @@ public class DatosPomodoro {
     String destino,
     Integer duracion,
     Estado estado,
-    Materia materia,
+    Integer materia,
     Usuario usuario,
     String objetivo
   ) {
@@ -59,11 +59,11 @@ public class DatosPomodoro {
     this.duracion = duracion;
   }
 
-  public Materia getMateria() {
+  public Integer getMateria() {
     return materia;
   }
 
-  public void setMateria(Materia materia) {
+  public void setMateria(Integer materia) {
     this.materia = materia;
   }
 

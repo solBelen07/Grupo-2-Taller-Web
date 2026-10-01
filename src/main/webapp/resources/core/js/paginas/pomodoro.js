@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
             {name: "origen", mensaje: "Ingresa el lugar de origen."},
             {name: "destino", mensaje: "Ingresa el lugar de destino."},
             {name: "duracion", mensaje: "Selecciona la duración de la sesion."},
-            {name: "materiaId", mensaje: "Selecciona una materia."},
+            {name: "materia", mensaje: "Selecciona una materia."},
         ];
 
         campos.forEach(campo => {

@@ -82,7 +82,7 @@
                 </div>
                 <div class="info-item">
                     <span class="label">MATERIA</span>
-                    <span class="value" th:text="${datosPomodoro.materia != null ? datosPomodoro.materia : 'Diseño Sistemas'}">Diseño Sistemas</span>
+                    <span class="value" th:text="${materia != null ? materia.nombre : 'Diseño Sistemas'}">Diseño Sistemas</span>
                 </div>
             </div>
 
@@ -105,10 +105,13 @@
 
         </div>
 
-        <div class="action-container">
-            <button class="btn-cut"><i data-lucide="scissors"></i>Cortar Boleto</button>
-            <span class="btn-caption">El cronómetro comienza cuando cortas el boleto.</span>
-        </div>
+        <form th:action="@{/FocusFlight/Timer/{id}(id=${pomodoroId})}" method="POST" style="display: inline;" class="action-container">
+            <button type="submit" class="btn-cut">
+                <i data-lucide="scissors"></i>
+                <span>Cortar Boleto</span>
+            </button>
+        </form>
+        <span class="btn-caption">El cronómetro comienza cuando cortas el boleto.</span>
 
     </main>
 </div>

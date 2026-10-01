@@ -1,11 +1,9 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.grupo;
 
-import com.tallerwebi.dominio.Invitacion;
-import com.tallerwebi.dominio.ServicioInvitacion;
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.excepcion.InvitacionInvalida;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.InvitacionInvalida;
+import com.tallerwebi.dominio.grupo.ServicioInvitacion;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -49,10 +47,10 @@ public class ControladorInvitacion {
         "datosInvitacion",
         servicioInvitacion.listarInvitaciones(usuarioLogueado.getEmail())
       );
-      return new ModelAndView("invitaciones", modelo);
+      return new ModelAndView("paginas/grupo/invitaciones", modelo);
     } catch (Exception e) {
       modelo.put("error", "No se pudo mostrar invitaciones");
-      return new ModelAndView("invitaciones", modelo);
+      return new ModelAndView("paginas/grupo/invitaciones", modelo);
     }
   }
 

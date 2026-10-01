@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.grupo;
 
 import java.util.List;
 import org.springframework.stereotype.Repository;

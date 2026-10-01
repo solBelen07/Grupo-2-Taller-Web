@@ -1,8 +1,7 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.Invitacion;
-import com.tallerwebi.dominio.RepositorioInvitacion;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.grupo.Invitacion;
+import com.tallerwebi.dominio.grupo.RepositorioInvitacion;
 import java.util.List;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;

@@ -3,8 +3,9 @@ package com.tallerwebi.dominio;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.excepcion.InvitacionInvalida;
-import com.tallerwebi.presentacion.DatosInvitacion;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.InvitacionInvalida;
+import com.tallerwebi.dominio.grupo.*;
+import com.tallerwebi.presentacion.grupo.DatosInvitacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

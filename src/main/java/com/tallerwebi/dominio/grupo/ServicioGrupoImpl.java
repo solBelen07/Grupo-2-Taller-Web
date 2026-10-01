@@ -1,6 +1,6 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.grupo;
 
-import com.tallerwebi.dominio.excepcion.GrupoNoEncontrado;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.stereotype.Service;

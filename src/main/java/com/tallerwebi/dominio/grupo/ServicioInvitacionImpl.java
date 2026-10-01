@@ -1,7 +1,9 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.grupo;
 
-import com.tallerwebi.dominio.excepcion.InvitacionInvalida;
-import com.tallerwebi.presentacion.DatosInvitacion;
+import com.tallerwebi.dominio.RepositorioUsuario;
+import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.InvitacionInvalida;
+import com.tallerwebi.presentacion.grupo.DatosInvitacion;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

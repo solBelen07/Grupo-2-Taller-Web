@@ -4,10 +4,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.tallerwebi.dominio.Grupo;
-import com.tallerwebi.dominio.Invitacion;
-import com.tallerwebi.dominio.RepositorioInvitacion;
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.Invitacion;
+import com.tallerwebi.dominio.grupo.RepositorioInvitacion;
 import com.tallerwebi.integracion.config.HibernateTestConfig;
 import com.tallerwebi.integracion.config.SpringWebTestConfig;
 import java.util.List;

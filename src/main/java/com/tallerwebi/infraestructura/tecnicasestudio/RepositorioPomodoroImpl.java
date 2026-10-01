@@ -1,9 +1,9 @@
 package com.tallerwebi.infraestructura.tecnicasestudio;
 
-import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.tecnicasestudio.Estado;
 import com.tallerwebi.dominio.tecnicasestudio.Pomodoro;
 import com.tallerwebi.dominio.tecnicasestudio.RepositorioPomodoro;
+import java.util.Optional;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository("RepositorioPomodoro")
 public class RepositorioPomodoroImpl implements RepositorioPomodoro {
 
-  private SessionFactory sessionFactory;
+  private final SessionFactory sessionFactory;
 
   @Autowired
   public RepositorioPomodoroImpl(SessionFactory sessionFactory) {
@@ -19,48 +19,51 @@ public class RepositorioPomodoroImpl implements RepositorioPomodoro {
   }
 
   @Override
-  public void guardar(Pomodoro sesion) {
-    this.sessionFactory.getCurrentSession().persist(sesion);
+  public void guardar(Pomodoro pomodoro) {
+    this.sessionFactory.getCurrentSession().persist(pomodoro);
   }
 
   @Override
-  public void modificar(Pomodoro sesion) {
-    Pomodoro existente =
-      this.sessionFactory.getCurrentSession()
-        .createQuery("FROM Pomodoro WHERE id = :id ", Pomodoro.class)
-        .setParameter("id", Long.valueOf(sesion.getId()))
-        .uniqueResult();
+  public void actualizar(Pomodoro pomodoro) {
+    boolean existe =
+      pomodoro.getId() != null &&
+      this.sessionFactory.getCurrentSession().find(Pomodoro.class, pomodoro.getId()) != null;
 
-    if (existente == null) throw new RuntimeException("Sesion no encontrada");
+    if (!existe) throw new RuntimeException("Sesion no encontrada");
 
-    this.sessionFactory.getCurrentSession().merge(sesion);
+    this.sessionFactory.getCurrentSession().merge(pomodoro);
   }
 
   @Override
-  public Pomodoro buscarPorId(long id) {
+  public Optional<Pomodoro> buscarPorId(Long id) {
+    return Optional.ofNullable(this.sessionFactory.getCurrentSession().find(Pomodoro.class, id));
+  }
+
+  @Override
+  public Optional<Pomodoro> buscarPorUsuarioYEstado(Long idUsuario, Estado estado) {
     return this.sessionFactory.getCurrentSession()
-      .createQuery("FROM Pomodoro WHERE id = :id", Pomodoro.class)
-      .setParameter("id", Long.valueOf(id))
-      .uniqueResult();
-  }
-
-  @Override
-  public Pomodoro buscarSesionesEnCurso(Usuario usuario) {
-    return this.sessionFactory.getCurrentSession()
-      .createQuery("FROM Pomodoro WHERE id = :id AND estado = :estado", Pomodoro.class)
-      .setParameter("id", usuario.getId())
-      .setParameter("estado", Estado.EN_CURSO)
-      .uniqueResult();
-  }
-
-  @Override
-  public Integer obtenerTotalMinutosCompletados(Usuario usuario) {
-    return (Integer) this.sessionFactory.getCurrentSession()
       .createQuery(
-        "SELECT SUM(duracion) FROM Pomodoro WHERE usuario = :usuario AND estado = :estado"
+        "FROM Pomodoro p WHERE p.usuario.id = :idUsuario AND p.estado = :estado " +
+        "ORDER BY p.fechaInicio DESC",
+        Pomodoro.class
       )
-      .setParameter("usuario", usuario)
-      .setParameter("estado", Estado.COMPLETADA)
-      .uniqueResult();
+      .setParameter("idUsuario", idUsuario)
+      .setParameter("estado", estado)
+      .setMaxResults(1)
+      .uniqueResultOptional();
+  }
+
+  @Override
+  public long calcularMinutosCompletados(Long idUsuario) {
+    Long total =
+      this.sessionFactory.getCurrentSession()
+        .createQuery(
+          "SELECT SUM(p.duracionMinutos) FROM Pomodoro p WHERE p.usuario.id = :idUsuario AND p.estado = :estado",
+          Long.class
+        )
+        .setParameter("idUsuario", idUsuario)
+        .setParameter("estado", Estado.COMPLETADO)
+        .uniqueResult();
+    return total != null ? total : 0L;
   }
 }

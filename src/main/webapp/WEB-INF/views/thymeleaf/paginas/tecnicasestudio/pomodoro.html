@@ -45,7 +45,6 @@
                     </div>
                 </div>
 
-                <div class="form-grid-2">
                     <div class="form-group">
                         <label>Tiempo de concentración (min)</label>
                         <select name="duracion" class="custom-select">
@@ -55,15 +54,14 @@
                             <option value="60">60 min</option>
                         </select>
                     </div>
-                </div>
 
                 <div class="form-group">
                     <label>Materia</label>
-                    <select name="materiaId" class="custom-select">
+                    <select name="materia" class="custom-select">
                         <option value="" disabled selected>Seleccionar materia...</option>
                         <option th:each="materia : ${materias}"
                                 th:value="${materia.id}"
-                                th:text="${materia.nombre}">Diseño de Sistemas</option>
+                                th:text="${materia.nombre}"></option>
                     </select>
                 </div>
 

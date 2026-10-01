@@ -1,67 +1,57 @@
 package com.tallerwebi.dominio.tecnicasestudio;
 
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.materia.Materia;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "pomodoro")
 public class Pomodoro {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
-  private String origen;
-  private String destino;
-  private int duracion;
-
-  @Enumerated(EnumType.STRING)
-  private Estado estado;
-
-  @ManyToOne
-  @JoinColumn(name = "materia_id")
-  private Materia materia;
-
-  @ManyToOne
-  @JoinColumn(name = "usuario_id")
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "usuario_id", nullable = false)
   private Usuario usuario;
 
-  private String objetivo;
+  @Embedded
+  private PlanDeVuelo plan;
 
-  public Pomodoro(
-    String origen,
-    String destino,
-    int duracion,
-    Estado estado,
-    Materia materia,
-    Usuario usuario,
-    String objetivo
-  ) {
-    this.origen = origen;
-    this.destino = destino;
-    this.duracion = duracion;
-    this.estado = estado;
-    this.materia = materia;
-    this.usuario = usuario;
-    this.objetivo = objetivo;
-  }
+  @Column(name = "duracion_minutos", nullable = false)
+  private int duracionMinutos;
 
-  public Pomodoro() {}
+  @Enumerated(EnumType.STRING)
+  @Column(name = "estado", nullable = false, length = 20)
+  private Estado estado;
 
-  public long getId() {
+  @Column(name = "fecha_inicio")
+  private LocalDateTime fechaInicio;
+
+  @Column(name = "fecha_pausa")
+  private LocalDateTime fechaPausa;
+
+  @Column(name = "fecha_fin")
+  private LocalDateTime fechaFin;
+
+  public Long getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(Long id) {
     this.id = id;
-  }
-
-  public void setEstado(Estado estado) {
-    this.estado = estado;
-  }
-
-  public Estado getEstado() {
-    return estado;
   }
 
   public Usuario getUsuario() {
@@ -72,11 +62,51 @@ public class Pomodoro {
     this.usuario = usuario;
   }
 
-  public String getObjetivo() {
-    return objetivo;
+  public PlanDeVuelo getPlan() {
+    return plan;
   }
 
-  public void setObjetivo(String objetivo) {
-    this.objetivo = objetivo;
+  public void setPlan(PlanDeVuelo plan) {
+    this.plan = plan;
+  }
+
+  public int getDuracionMinutos() {
+    return duracionMinutos;
+  }
+
+  public void setDuracionMinutos(int duracionMinutos) {
+    this.duracionMinutos = duracionMinutos;
+  }
+
+  public Estado getEstado() {
+    return estado;
+  }
+
+  public void setEstado(Estado estado) {
+    this.estado = estado;
+  }
+
+  public LocalDateTime getFechaInicio() {
+    return fechaInicio;
+  }
+
+  public void setFechaInicio(LocalDateTime fechaInicio) {
+    this.fechaInicio = fechaInicio;
+  }
+
+  public LocalDateTime getFechaPausa() {
+    return fechaPausa;
+  }
+
+  public void setFechaPausa(LocalDateTime fechaPausa) {
+    this.fechaPausa = fechaPausa;
+  }
+
+  public LocalDateTime getFechaFin() {
+    return fechaFin;
+  }
+
+  public void setFechaFin(LocalDateTime fechaFin) {
+    this.fechaFin = fechaFin;
   }
 }
