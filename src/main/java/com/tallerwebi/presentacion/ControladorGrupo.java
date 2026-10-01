@@ -1,8 +1,8 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Grupo;
-import com.tallerwebi.dominio.ServicioGrupo;
 import com.tallerwebi.dominio.excepcion.GrupoNoEncontrado;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
