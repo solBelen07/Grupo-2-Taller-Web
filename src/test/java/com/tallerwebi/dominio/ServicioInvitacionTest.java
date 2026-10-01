@@ -3,8 +3,14 @@ package com.tallerwebi.dominio;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.excepcion.InvitacionInvalida;
-import com.tallerwebi.presentacion.DatosInvitacion;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.InvitacionInvalida;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.RepositorioGrupo;
+import com.tallerwebi.dominio.invitacion.Invitacion;
+import com.tallerwebi.dominio.invitacion.RepositorioInvitacion;
+import com.tallerwebi.dominio.invitacion.ServicioInvitacion;
+import com.tallerwebi.dominio.invitacion.ServicioInvitacionImpl;
+import com.tallerwebi.presentacion.grupo.DatosInvitacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -194,7 +200,7 @@ public class ServicioInvitacionTest {
 
   private void entoncesDejaDeEstarVigenteLaInvitacion(Invitacion invitacion) {
     assertFalse(invitacion.getVigente());
-    verify(repositorioInvitacionMock, times(1)).aceptar(invitacion);
+    verify(repositorioInvitacionMock, times(1)).cambiarEstado(any(), any());
   }
 
   private void entoncesSeObtieneUnaInvitacionValida(

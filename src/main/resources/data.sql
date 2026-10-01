@@ -39,6 +39,5 @@ VALUES
     '14:00 - 18:00',
     'Material de Figma'
 );
-INSERT INTO Usuario(id, email, password, rol, activo) VALUES(null, 'test@unlam.edu.ar', 'test', 'ADMIN', true), (null,'user@test.com','1234','ADMIN', true);
+INSERT INTO Usuario(id, nombre, apellido, email, password, rol, activo, puntos) VALUES(null, 'Juan', 'Mendez','test@unlam.edu.ar', 'test', 'ADMIN', true, 0), (null,'user','nose','user@test.com','1234','ADMIN', true, 0);
 INSERT INTO Grupo(id, nombre) VALUES(null, 'grupo1'),(null, 'grupo2'),(null, 'grupo3');
-

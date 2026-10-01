@@ -1,6 +1,5 @@
 package com.tallerwebi.dominio.tecnicasestudio;
 
-import com.tallerwebi.dominio.Usuario;
 import java.util.*;
 
 public interface RepositorioPomodoro {

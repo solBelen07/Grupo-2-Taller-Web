@@ -1,9 +1,9 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.grupo;
 
-import com.tallerwebi.dominio.Invitacion;
-import com.tallerwebi.dominio.ServicioInvitacion;
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.excepcion.InvitacionInvalida;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.InvitacionInvalida;
+import com.tallerwebi.dominio.invitacion.ServicioInvitacion;
+import com.tallerwebi.presentacion.grupo.DatosInvitacion;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;

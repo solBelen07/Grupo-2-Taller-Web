@@ -4,10 +4,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.tallerwebi.dominio.Grupo;
-import com.tallerwebi.dominio.Invitacion;
-import com.tallerwebi.dominio.RepositorioInvitacion;
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.invitacion.Estado;
+import com.tallerwebi.dominio.invitacion.Invitacion;
+import com.tallerwebi.dominio.invitacion.RepositorioInvitacion;
 import com.tallerwebi.integracion.config.HibernateTestConfig;
 import com.tallerwebi.integracion.config.SpringWebTestConfig;
 import java.util.List;
@@ -120,7 +121,7 @@ public class RepositorioInvitacionTest {
   }
 
   private void cuandoSeAceptaLaInvitacion(Invitacion invitacion) {
-    repositorioInvitacion.aceptar(invitacion);
+    repositorioInvitacion.cambiarEstado(invitacion, Estado.ACEPTADA);
     this.sessionFactory.getCurrentSession().flush();
   }
 
