@@ -23,7 +23,7 @@ public class ControladorGrupo {
     } catch (Exception e) {
       modelo.put("error", "No se pudieron cargar los grupos");
     }
-    return new ModelAndView("grupos", modelo);
+    return new ModelAndView("paginas/grupo/grupos", modelo);
   }
 
   @GetMapping("/grupos/{nombre}")
@@ -32,10 +32,10 @@ public class ControladorGrupo {
     try {
       Grupo grupo = servicioGrupo.buscarPorNombre(nombre);
       modelo.put("datosGrupo", grupo);
-      return new ModelAndView("grupo-detalle", modelo);
+      return new ModelAndView("paginas/grupo/grupo-detalle", modelo);
     } catch (GrupoNoEncontrado e) {
       modelo.put("error", "El grupo no existe");
-      return new ModelAndView("grupo-detalle", modelo);
+      return new ModelAndView("paginas/grupo/grupo-detalle", modelo);
     }
   }
 
@@ -45,10 +45,10 @@ public class ControladorGrupo {
     try {
       Grupo grupo = servicioGrupo.buscarPorNombre(grupoAInvitar);
       modelo.put("datosGrupo", grupo);
-      return new ModelAndView("grupo-invitar", modelo);
+      return new ModelAndView("paginas/grupo/grupo-invitar", modelo);
     } catch (GrupoNoEncontrado e) {
       modelo.put("error", "El grupo no existe");
-      return new ModelAndView("grupo-invitar", modelo);
+      return new ModelAndView("paginas/grupo/grupo-invitar", modelo);
     }
   }
 
