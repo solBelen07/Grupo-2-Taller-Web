@@ -20,8 +20,6 @@
 
     <main class="container">
 
-        <!-- ENCABEZADO -->
-
         <div class="d-flex justify-content-between align-items-center mb-4">
 
             <div>
@@ -36,14 +34,13 @@
             </a>
 
         </div>
-        <!-- SIN PARCIALES -->
+        
         <div th:if="${parciales == null or parciales.isEmpty()}" class="alert alert-info">
             Todavía no tenés parciales cargados.
         </div>
-        <!-- LISTADO -->
+
         <div th:each="parcial : ${parciales}" class="parcial-plan-card">
-                
-            <!-- CABECERA -->
+
             <div class="parcial-cabecera">
             
                 <h3 class="parcial-titulo">
@@ -68,14 +65,10 @@
             
             </div>
         
-        
-            <!-- PROGRESO -->
             <div class="progreso-cabecera">
-            
                 <span class="progreso-titulo">
                     Progreso del plan
                 </span>
-            
                 <div class="progreso-info">
                 
                     <span class="sesiones-cantidad">
@@ -99,45 +92,22 @@
             
             </div>
         
-        
-            <!-- BARRA -->
             <div class="barra-progreso">
-            
-                <div
-                        class="barra-progreso-completado"
-                        th:style="'width:' + ${parcial.porcentajeCompletado} + '%'">
-                </div>
-            
+                <div class="barra-progreso-completado" th:style="'width:' + ${parcial.porcentajeCompletado} + '%'"></div>
             </div>
         
-        
-            <!-- SESIONES -->
             <div class="sesiones">
             
-                <div
-                        th:each="sesion : ${parcial.sesiones}"
-                        class="sesion-estudio"
-                        th:classappend="${sesion.completada} ? ' sesion-completada' : ''">
-            
-                    <!-- CHECK -->
+                <div th:each="sesion : ${parcial.sesiones}" class="sesion-estudio" th:classappend="${sesion.completada} ? ' sesion-completada' : ''">
+             
                     <div class="sesion-check">
                     
-                        <form
-                                th:action="@{/parciales/sesion/completar}"
-                                method="post">
+                        <form th:action="@{/parciales/sesion/completar}" method="post">
                     
-                            <input
-                                    type="hidden"
-                                    name="id"
-                                    th:value="${sesion.id}">
-                    
+                            <input type="hidden" name="id" th:value="${sesion.id}">
                             <label class="checkbox-personalizado">
                             
-                                <input
-                                        type="checkbox"
-                                        th:checked="${sesion.completada}"
-                                        onchange="this.form.submit()">
-                            
+                                <input type="checkbox" th:checked="${sesion.completada}" onchange="this.form.submit()">
                                 <span class="checkmark">
                                     <i class="fa-solid fa-check"></i>
                                 </span>
@@ -148,29 +118,21 @@
                     
                     </div>
                 
-                
-                    <!-- INFORMACIÓN -->
                     <div class="sesion-contenido">
                     
                         <div class="sesion-datos">
                         
-                            <span
-                                    class="sesion-fecha"
-                                    th:text="${sesion.fecha}">
+                            <span class="sesion-fecha" th:text="${sesion.fecha}">
                                 11 Sep
                             </span>
                         
-                            <span
-                                    class="sesion-horas"
-                                    th:text="${sesion.cantidadHoras + ' h'}">
+                            <span class="sesion-horas" th:text="${sesion.cantidadHoras + ' h'}">
                                 2 h
                             </span>
                         
                         </div>
                     
-                        <div
-                                class="sesion-tema"
-                                th:classappend="${sesion.completada} ? ' completada' : ''">
+                        <div class="sesion-tema" th:classappend="${sesion.completada} ? ' completada' : ''">
                     
                             <span th:text="${sesion.tema}">
                                 Normalización y Álgebra Relacional
