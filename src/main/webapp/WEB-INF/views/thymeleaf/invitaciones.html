@@ -49,7 +49,9 @@
 
                         <div class="d-flex gap-2 mt-auto">
                             <form th:action="@{/invitaciones/rechazar}" method="POST" class="w-50">
+                                <input type="hidden" name="emisor" th:value="${invitacion.emisor.email}">
                                 <input type="hidden" name="grupo" th:value="${invitacion.grupo.nombre}">
+                                <input type="hidden" name="receptor" th:value="${invitacion.receptor.email}">
                                 <button type="submit" class="btn btn-outline-secondary w-100">Rechazar</button>
                             </form>
                             <form th:action="@{/invitaciones/aceptar}" method="POST" class="w-50">
