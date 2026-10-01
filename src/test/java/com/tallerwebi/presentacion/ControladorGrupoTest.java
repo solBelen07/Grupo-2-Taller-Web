@@ -6,9 +6,9 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.Grupo;
-import com.tallerwebi.dominio.ServicioGrupo;
 import com.tallerwebi.dominio.excepcion.GrupoNoEncontrado;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

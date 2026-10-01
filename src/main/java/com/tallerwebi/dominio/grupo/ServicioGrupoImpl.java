@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.grupo;
 
 import com.tallerwebi.dominio.excepcion.GrupoNoEncontrado;
 import jakarta.transaction.Transactional;
