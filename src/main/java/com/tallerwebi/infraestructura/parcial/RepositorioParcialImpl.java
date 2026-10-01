@@ -57,4 +57,14 @@ public class RepositorioParcialImpl implements RepositorioParcial {
   public void eliminar(Parcial parcial) {
     sessionFactory.getCurrentSession().remove(parcial);
   }
+
+  @Override
+  public void eliminarPorMateriaId(Integer materiaId) {
+    String hql = "delete from Parcial p where p.materia.id = :materiaId";
+    sessionFactory
+      .getCurrentSession()
+      .createQuery(hql)
+      .setParameter("materiaId", materiaId)
+      .executeUpdate();
+  }
 }

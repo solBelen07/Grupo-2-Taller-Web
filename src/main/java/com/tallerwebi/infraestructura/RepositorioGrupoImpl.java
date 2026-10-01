@@ -21,6 +21,7 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
       .getCurrentSession()
       .createQuery("from Grupo where nombre = :nombre", Grupo.class)
       .setParameter("nombre", nombre)
+      .setMaxResults(1)
       .uniqueResult();
   }
 

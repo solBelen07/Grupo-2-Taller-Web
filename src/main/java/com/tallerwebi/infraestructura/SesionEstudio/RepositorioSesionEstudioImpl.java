@@ -39,4 +39,14 @@ public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
       .setParameter("id", id)
       .uniqueResult();
   }
+
+  @Override
+  public void eliminarPorMateriaId(Integer materiaId) {
+    String hql = "delete from SesionEstudio s where s.parcial.materia.id = :materiaId";
+    sessionFactory
+      .getCurrentSession()
+      .createQuery(hql)
+      .setParameter("materiaId", materiaId)
+      .executeUpdate();
+  }
 }

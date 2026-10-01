@@ -10,4 +10,8 @@
     --sidebar-width: 240px;
     --error-acento: #ef4444;
     --error-fondo: rgba(239, 68, 68, 0.05);
+
+    --sidebar-width: 260px;
+    --input-bg: #15101f;
+    --card-border: #36224d;
 }
