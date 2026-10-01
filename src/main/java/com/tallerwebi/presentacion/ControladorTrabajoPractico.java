@@ -40,7 +40,7 @@ public class ControladorTrabajoPractico {
     modelo.put("enCurso", filtrar(lista, EstadoTP.EN_CURSO));
     modelo.put("finalizados", filtrar(lista, EstadoTP.FINALIZADO));
     modelo.put("materiaBuscada", materia);
-    return new ModelAndView("trabajos-practicos", modelo);
+    return new ModelAndView("paginas/trabajos-practicos", modelo);
   }
 
   private List<TrabajoPractico> filtrar(List<TrabajoPractico> lista, EstadoTP estado) {
@@ -53,7 +53,7 @@ public class ControladorTrabajoPractico {
     modelo.put("trabajoPractico", new TrabajoPractico());
     modelo.put("tipos", TipoTrabajo.values());
     modelo.put("estados", EstadoTP.values());
-    return new ModelAndView("nuevo-trabajo-practico", modelo);
+    return new ModelAndView("paginas/nuevo-trabajo-practico", modelo);
   }
 
   @RequestMapping(path = "/guardar", method = RequestMethod.POST)
@@ -70,7 +70,7 @@ public class ControladorTrabajoPractico {
     modelo.put("trabajoPractico", servicioTrabajoPractico.buscarPorId(id));
     modelo.put("tipos", TipoTrabajo.values());
     modelo.put("estados", EstadoTP.values());
-    return new ModelAndView("nuevo-trabajo-practico", modelo);
+    return new ModelAndView("paginas/nuevo-trabajo-practico", modelo);
   }
 
   @RequestMapping(path = "/eliminar/{id}", method = RequestMethod.POST)

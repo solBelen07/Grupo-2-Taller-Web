@@ -44,22 +44,22 @@ public class ControladorTrabajoPracticoTest {
 
     ModelAndView modelAndView = result.getModelAndView();
     assert modelAndView != null;
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("trabajos-practicos"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/trabajos-practicos"));
   }
 
   @Test
   public void debeRetornarVistaDeTpsYContenerAtributosEnElModelo() throws Exception {
     this.mockMvc.perform(get("/trabajos-practicos"))
       .andExpect(status().isOk())
-      .andExpect(view().name("trabajos-practicos"))
+      .andExpect(view().name("paginas/trabajos-practicos"))
       .andExpect(model().attributeExists("pendientes", "enCurso", "finalizados"));
   }
 
   @Test
   public void debeFiltrarTrabajosPracticosPorMateria() throws Exception {
-    this.mockMvc.perform(get("/trabajos-practicos").param("materia", "Taller Web I"))
+    this.mockMvc.perform(get("/trabajos-practicos").param("materia", "Taller Web"))
       .andExpect(status().isOk())
-      .andExpect(view().name("trabajos-practicos"))
+      .andExpect(view().name("paginas/trabajos-practicos"))
       .andExpect(model().attributeExists("pendientes", "enCurso", "finalizados"));
   }
 
@@ -68,7 +68,7 @@ public class ControladorTrabajoPracticoTest {
     this.mockMvc.perform(
         post("/trabajos-practicos/guardar")
           .param("nombre", "TP Integrador")
-          .param("materia", "Taller Web I")
+          .param("materia", "Taller Web")
           .param("tipo", "GRUPAL")
           .param("estado", "PENDIENTE")
       )

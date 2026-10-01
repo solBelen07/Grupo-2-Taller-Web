@@ -8,16 +8,13 @@ public class DisponibilidadHoraria {
   private String dia;
   private int horas;
 
-  // Constructor para inicializar fácilmente el día y las horas
   public DisponibilidadHoraria(String dia, int horas) {
     this.dia = dia;
     this.horas = horas;
   }
 
-  // Constructor vacío (por si lo necesita Spring o algún framework)
   public DisponibilidadHoraria() {}
 
-  // Getters y Setters
   public String getDia() {
     return dia;
   }

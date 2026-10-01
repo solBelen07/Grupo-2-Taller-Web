@@ -39,7 +39,7 @@ public class ControladorTrabajoPracticoTest {
     ModelAndView modelAndView = controladorTrabajoPractico.listarTrabajosPracticos(null);
 
     // Validación
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("trabajos-practicos"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/trabajos-practicos"));
     assertThat((List<?>) modelAndView.getModel().get("pendientes"), hasSize(1));
     assertThat((List<?>) modelAndView.getModel().get("enCurso"), empty());
     assertThat((List<?>) modelAndView.getModel().get("finalizados"), empty());
@@ -49,7 +49,7 @@ public class ControladorTrabajoPracticoTest {
   @Test
   public void listarTrabajosPracticosConFiltroMateriaDeberiaRetornarVistaFiltrada() {
     // Preparación
-    String materiaFiltro = "Taller Web I";
+    String materiaFiltro = "Taller Web";
     List<TrabajoPractico> listaTps = new ArrayList<>();
     when(servicioTrabajoPracticoMock.buscarPorMateria(materiaFiltro)).thenReturn(listaTps);
 
@@ -57,7 +57,7 @@ public class ControladorTrabajoPracticoTest {
     ModelAndView modelAndView = controladorTrabajoPractico.listarTrabajosPracticos(materiaFiltro);
 
     // Validación
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("trabajos-practicos"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/trabajos-practicos"));
     assertThat(modelAndView.getModel().get("pendientes"), notNullValue());
     assertThat(modelAndView.getModel().get("materiaBuscada"), equalTo(materiaFiltro));
     verify(servicioTrabajoPracticoMock, times(1)).buscarPorMateria(materiaFiltro);
@@ -69,7 +69,7 @@ public class ControladorTrabajoPracticoTest {
     ModelAndView modelAndView = controladorTrabajoPractico.irANuevoTrabajoPractico();
 
     // Validación
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-trabajo-practico"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/nuevo-trabajo-practico"));
     assertThat(modelAndView.getModel().get("trabajoPractico"), instanceOf(TrabajoPractico.class));
   }
 
@@ -95,7 +95,7 @@ public class ControladorTrabajoPracticoTest {
     ModelAndView modelAndView = controladorTrabajoPractico.editarTrabajoPractico(id);
 
     // Validación
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("nuevo-trabajo-practico"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/nuevo-trabajo-practico"));
     assertThat(modelAndView.getModel().get("trabajoPractico"), notNullValue());
     verify(servicioTrabajoPracticoMock, times(1)).buscarPorId(id);
   }

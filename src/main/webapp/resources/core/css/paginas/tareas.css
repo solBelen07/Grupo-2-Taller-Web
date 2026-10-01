@@ -1,0 +1,275 @@
+body {
+    background-color: #0b0810;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+.contenido-tareas {
+    margin-left: 260px;
+    padding: 35px;
+    max-width: 1200px;
+}
+.titulo-principal {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.subtitulo {
+    color: #aaa0b8;
+    margin-bottom: 30px;
+}
+
+/* TARJETAS */
+
+.tarjeta {
+    background-color: #1b1228;
+    border: 1px solid #382052;
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 22px;
+}
+
+.titulo-tarjeta {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 18px;
+}
+
+/* PROGRESO */
+
+.progreso-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.porcentaje {
+    color: #c56cff;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.barra-progreso {
+    height: 9px;
+    background-color: #35204c;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.barra-progreso-interna {
+    height: 100%;
+    background-color: #bd5cff;
+    border-radius: 20px;
+}
+
+.estadisticas-progreso {
+    display: flex;
+    gap: 25px;
+    color: #aaa0b8;
+    font-size: 14px;
+}
+
+.estadisticas-progreso span {
+    color: #ffffff;
+}
+
+/* ESTADÍSTICAS */
+
+.estadisticas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.estadistica {
+    background-color: #17101f;
+    border: 1px solid #382052;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.estadistica-titulo {
+    color: #aaa0b8;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.estadistica-numero {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* APORTE INDIVIDUAL */
+
+.aporte-item {
+    margin-bottom: 20px;
+}
+
+.aporte-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 7px;
+}
+
+.aporte-nombre {
+    font-weight: 500;
+}
+
+.aporte-cantidad {
+    color: #c56cff;
+    font-weight: 600;
+}
+
+.barra-aporte {
+    height: 7px;
+    background-color: #35204c;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.barra-aporte-interna {
+    height: 100%;
+    background-color: #bd5cff;
+    border-radius: 20px;
+}
+
+/* FORMULARIO */
+
+.form-control,
+.form-select {
+    background-color: #110c17;
+    border: 1px solid #49305e;
+    color: #ffffff;
+    border-radius: 10px;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: #110c17;
+    color: #ffffff;
+    border-color: #bd5cff;
+    box-shadow: 0 0 0 0.2rem rgba(189, 92, 255, 0.15);
+}
+
+.form-select option {
+    background-color: #17101f;
+    color: #ffffff;
+}
+
+.btn-crear {
+    background-color: #b85cff;
+    border: none;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px 22px;
+}
+
+.btn-crear:hover {
+    background-color: #a946ef;
+    color: #ffffff;
+}
+
+/* TABLA */
+
+.tabla-contenedor {
+    overflow-x: auto;
+}
+
+.tabla-tareas {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+.tabla-tareas thead th {
+    color: #aaa0b8;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    padding: 10px 14px;
+}
+
+.tabla-tareas tbody tr {
+    background-color: #17101f;
+}
+
+.tabla-tareas tbody td {
+    border-top: 1px solid #30203e;
+    border-bottom: 1px solid #30203e;
+    padding: 15px 14px;
+    color: #eeeeee;
+    vertical-align: middle;
+}
+
+.tabla-tareas tbody td:first-child {
+    border-left: 1px solid #30203e;
+    border-radius: 10px 0 0 10px;
+}
+
+.tabla-tareas tbody td:last-child {
+    border-right: 1px solid #30203e;
+    border-radius: 0 10px 10px 0;
+}
+
+/* INDICADOR */
+
+.indicador {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background-color: #35204c;
+    color: #d89cff;
+}
+
+/* Colores por valor de indicador (calcularIndicador en ServicioTareaImpl). */
+.indicador[data-indicador="EN TIEMPO"],
+.indicador[data-indicador="PREPARACIÓN ADECUADA"] {
+    background-color: #22c55e;
+    color: #ffffff;
+}
+
+.indicador[data-indicador="PRÓXIMO A VENCER"],
+.indicador[data-indicador="REGULAR"] {
+    background-color: #eab308;
+    color: #1b1204;
+}
+
+.indicador[data-indicador="ATRASADO"],
+.indicador[data-indicador="INSUFICIENTE"] {
+    background-color: #ef4444;
+    color: #ffffff;
+}
+
+.indicador[data-indicador="COMPLETADO"] {
+    background-color: #3b82f6;
+    color: #ffffff;
+}
+
+/* responsive */
+
+@media (max-width: 768px) {
+
+    .contenido-tareas {
+        padding: 20px;
+    }
+
+    .estadisticas {
+        grid-template-columns: 1fr;
+    }
+
+    .estadisticas-progreso {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .titulo-principal {
+        font-size: 24px;
+    }
+}

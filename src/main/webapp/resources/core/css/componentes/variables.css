@@ -1,0 +1,17 @@
+:root {
+    --bg-dark: #0b0711;
+    --card-bg: #161022;
+    --card-border: #291f3a;
+    --input-bg: #100b1a;
+    --accent-purple: #9333ea;
+    --accent-hover: #7e22ce;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --sidebar-width: 240px;
+    --error-acento: #ef4444;
+    --error-fondo: rgba(239, 68, 68, 0.05);
+
+    --sidebar-width: 260px;
+    --input-bg: #15101f;
+    --card-border: #36224d;
+}
