@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio.grupo;
+package com.tallerwebi.dominio.invitacion;
 
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.InvitacionInvalida;
 import com.tallerwebi.presentacion.grupo.DatosInvitacion;
@@ -11,4 +11,5 @@ public interface ServicioInvitacion {
   Invitacion crearInvitacion(Invitacion invitacion);
   List<Invitacion> listarInvitaciones(String usuarioLogueado);
   void aceptarInvitacion(DatosInvitacion datosInvitacion) throws InvitacionInvalida;
+  void rechazarInvitacion(DatosInvitacion datosInvitacion) throws InvitacionInvalida;
 }

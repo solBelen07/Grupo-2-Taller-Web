@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio.grupo;
+package com.tallerwebi.dominio.invitacion;
 
 import com.tallerwebi.dominio.Usuario;
 import jakarta.persistence.Entity;
@@ -7,6 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+
+import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.grupo.Grupo;
+import jakarta.persistence.*;
 
 @Entity
 public class Invitacion {
@@ -28,6 +32,9 @@ public class Invitacion {
   private Grupo grupo;
 
   private Boolean vigente = true;
+
+  @Enumerated(EnumType.STRING)
+  private Estado estado = Estado.PENDIENTE;
 
   // Constructores
   public Invitacion() {}
@@ -76,5 +83,13 @@ public class Invitacion {
 
   public void setVigente(Boolean vigente) {
     this.vigente = vigente;
+  }
+
+  public Estado getEstadoInvitacion() {
+    return estado;
+  }
+
+  public void setEstadoInvitacion(Estado estado) {
+    this.estado = estado;
   }
 }

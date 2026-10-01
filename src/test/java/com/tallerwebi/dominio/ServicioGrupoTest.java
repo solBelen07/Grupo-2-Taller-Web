@@ -5,11 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
-import com.tallerwebi.dominio.grupo.Grupo;
-import com.tallerwebi.dominio.grupo.RepositorioGrupo;
-import com.tallerwebi.dominio.grupo.ServicioGrupo;
-import com.tallerwebi.dominio.grupo.ServicioGrupoImpl;
+import com.tallerwebi.dominio.excepcion.GrupoNoEncontrado;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

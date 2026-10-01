@@ -1,8 +1,9 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.grupo.Invitacion;
-import com.tallerwebi.dominio.grupo.RepositorioInvitacion;
 import java.util.List;
+import com.tallerwebi.dominio.invitacion.Estado;
+import com.tallerwebi.dominio.invitacion.Invitacion;
+import com.tallerwebi.dominio.invitacion.RepositorioInvitacion;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
@@ -43,8 +44,9 @@ public class RepositorioInvitacionImpl implements RepositorioInvitacion {
   }
 
   @Override
-  public void aceptar(Invitacion invitacion) {
+  public void cambiarEstado(Invitacion invitacion, Estado estado) {
     invitacion.setVigente(false);
+    invitacion.setEstadoInvitacion(estado);
     sessionFactory.getCurrentSession().update(invitacion);
   }
 

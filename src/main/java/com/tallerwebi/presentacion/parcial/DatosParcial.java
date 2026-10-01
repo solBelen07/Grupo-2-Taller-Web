@@ -2,6 +2,8 @@ package com.tallerwebi.presentacion.parcial;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatosParcial {
 
@@ -11,7 +13,7 @@ public class DatosParcial {
   private LocalTime horario;
   private Integer cantidadDiasEstudio;
   private Integer horasPorDia;
-  private String temas;
+  private List<String> temas = new ArrayList<>();
 
   public DatosParcial() {}
 
@@ -63,11 +65,11 @@ public class DatosParcial {
     this.horasPorDia = horasPorDia;
   }
 
-  public String getTemas() {
+  public List<String> getTemas() {
     return temas;
   }
 
-  public void setTemas(String temas) {
+  public void setTemas(List<String> temas) {
     this.temas = temas;
   }
 }

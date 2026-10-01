@@ -3,12 +3,10 @@ package com.tallerwebi.presentacion;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.Invitacion;
+import com.tallerwebi.dominio.ServicioInvitacion;
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.excepcion.excepcionGrupo.InvitacionInvalida;
-import com.tallerwebi.dominio.grupo.Invitacion;
-import com.tallerwebi.dominio.grupo.ServicioInvitacion;
-import com.tallerwebi.presentacion.grupo.ControladorInvitacion;
-import com.tallerwebi.presentacion.grupo.DatosInvitacion;
+import com.tallerwebi.dominio.excepcion.InvitacionInvalida;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.BeforeEach;

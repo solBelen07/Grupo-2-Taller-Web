@@ -3,6 +3,7 @@ package com.tallerwebi.presentacion;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.tarea.ServicioTarea;
@@ -71,5 +72,25 @@ public class ControladorTareaTest {
     verify(servicioTareaMock, times(1)).contarTareasPendientes();
     verify(servicioTareaMock, times(1)).contarTareasTotales();
     verify(servicioTareaMock, times(1)).calcularAporteIndividual();
+  }
+
+  @Test
+  public void crearTareaDeberiaCrearYGuardarLaTarea() {
+    // ejecucion
+    ModelAndView resultado = controladorTarea.crearTarea(
+      "Estudiar parcial",
+      "Programación Web",
+      "PENDIENTE",
+      "Camila",
+      10,
+      5,
+      "PARCIAL",
+      java.time.LocalDate.of(2026, 10, 10)
+    );
+
+    // validacion
+    assertThat(resultado.getViewName(), equalToIgnoringCase("redirect:/tareas"));
+
+    verify(servicioTareaMock, times(1)).crearTarea(any(Tarea.class));
   }
 }
