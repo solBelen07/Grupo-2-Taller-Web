@@ -41,65 +41,149 @@
             Todavía no tenés parciales cargados.
         </div>
         <!-- LISTADO -->
-        <div th:each="parcial : ${parciales}" class="parcial-plan-card mb-4">
-            <!-- CABECERA DEL PARCIAL -->
-
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <h3>
-                        Plan —
-                        <span th:text="${parcial.materia.nombre}">
-                            Base de Datos II
-                        </span>
-                        <span th:text="${parcial.nombre}">
-                            Parcial 1
-                        </span>
-                    </h3>
-                </div>
+        <div th:each="parcial : ${parciales}" class="parcial-plan-card">
+                
+            <!-- CABECERA -->
+            <div class="parcial-cabecera">
+            
+                <h3 class="parcial-titulo">
+                    Plan —
+                    <span th:text="${parcial.materia.nombre}">
+                        Base de Datos II
+                    </span>
+                    <span th:text="${parcial.nombre}">
+                        Parcial 1
+                    </span>
+                </h3>
+            
                 <div class="parcial-fecha">
                     <span th:text="${parcial.fecha}">
-                        16/09/2026
-                    </span>-<span th:text="${parcial.horario}">
+                        16 Sep
+                    </span>
+                    ·
+                    <span th:text="${parcial.horario}">
                         10:00
                     </span>
                 </div>
+            
             </div>
+        
+        
             <!-- PROGRESO -->
-            <div class="d-flex justify-content-between mb-1">
-                <span>Progreso del plan</span>
-                <span>
-                    <strong th:text="${parcial.porcentajeCompletado}">40</strong>%
+            <div class="progreso-cabecera">
+            
+                <span class="progreso-titulo">
+                    Progreso del plan
                 </span>
+            
+                <div class="progreso-info">
+                
+                    <span class="sesiones-cantidad">
+                        <span th:text="${parcial.cantidadSesionesCompletadas}">
+                            2
+                        </span>
+                        /
+                        <span th:text="${parcial.cantidadSesiones}">
+                            5
+                        </span>
+                        sesiones
+                    </span>
+                
+                    <span class="porcentaje">
+                        <span th:text="${parcial.porcentajeCompletado}">
+                            40
+                        </span>%
+                    </span>
+                
+                </div>
+            
             </div>
-
-            <div class="progress mb-4">
-                <div class="progress-bar" role="progressbar" th:style="'width:' + ${parcial.porcentajeCompletado} + '%'"></div>
+        
+        
+            <!-- BARRA -->
+            <div class="barra-progreso">
+            
+                <div
+                        class="barra-progreso-completado"
+                        th:style="'width:' + ${parcial.porcentajeCompletado} + '%'">
+                </div>
+            
             </div>
-
+        
+        
             <!-- SESIONES -->
             <div class="sesiones">
-
-                <div th:each="sesion : ${parcial.sesiones}" class="sesion-estudio">
+            
+                <div
+                        th:each="sesion : ${parcial.sesiones}"
+                        class="sesion-estudio"
+                        th:classappend="${sesion.completada} ? ' sesion-completada' : ''">
+            
+                    <!-- CHECK -->
                     <div class="sesion-check">
-                        <input type="checkbox" th:checked="${sesion.completada}">
+                    
+                        <form
+                                th:action="@{/parciales/sesion/completar}"
+                                method="post">
+                    
+                            <input
+                                    type="hidden"
+                                    name="id"
+                                    th:value="${sesion.id}">
+                    
+                            <label class="checkbox-personalizado">
+                            
+                                <input
+                                        type="checkbox"
+                                        th:checked="${sesion.completada}"
+                                        onchange="this.form.submit()">
+                            
+                                <span class="checkmark">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                            
+                            </label>
+                        
+                        </form>
+                    
                     </div>
+                
+                
+                    <!-- INFORMACIÓN -->
                     <div class="sesion-contenido">
+                    
                         <div class="sesion-datos">
-                            <span th:text="${sesion.fecha}">
+                        
+                            <span
+                                    class="sesion-fecha"
+                                    th:text="${sesion.fecha}">
                                 11 Sep
                             </span>
-                            <span th:text="${sesion.cantidadHoras + ' h'}">
+                        
+                            <span
+                                    class="sesion-horas"
+                                    th:text="${sesion.cantidadHoras + ' h'}">
                                 2 h
                             </span>
+                        
                         </div>
-                        <div class="sesion-tema" th:classappend="${sesion.completada} ? 'completada' : ''">
+                    
+                        <div
+                                class="sesion-tema"
+                                th:classappend="${sesion.completada} ? ' completada' : ''">
+                    
                             <span th:text="${sesion.tema}">
                                 Normalización y Álgebra Relacional
                             </span>
+                        
                         </div>
+                    
                     </div>
+                
                 </div>
+            
             </div>
+        
         </div>
     </main>
 </div>

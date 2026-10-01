@@ -1,25 +1,26 @@
 package com.tallerwebi.dominio.parcial;
 
+import com.tallerwebi.dominio.sesionEstudio.ServicioSesionEstudio;
+import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
 import jakarta.transaction.Transactional;
-
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
-
-import com.tallerwebi.dominio.sesionEstudio.ServicioSesionEstudio;
-import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
 
 @Service
 @Transactional
 public class ServicioParcialImpl implements ServicioParcial {
 
   private final RepositorioParcial repositorioParcial;
-    private final ServicioSesionEstudio servicioSesionEstudio;
+  private final ServicioSesionEstudio servicioSesionEstudio;
 
-    public ServicioParcialImpl(RepositorioParcial repositorioParcial, ServicioSesionEstudio servicioSesionEstudio) {
-        this.repositorioParcial = repositorioParcial;
-        this.servicioSesionEstudio = servicioSesionEstudio;
-    }
+  public ServicioParcialImpl(
+    RepositorioParcial repositorioParcial,
+    ServicioSesionEstudio servicioSesionEstudio
+  ) {
+    this.repositorioParcial = repositorioParcial;
+    this.servicioSesionEstudio = servicioSesionEstudio;
+  }
 
   @Override
   public void crearParcial(Parcial parcial) {
@@ -51,22 +52,20 @@ public class ServicioParcialImpl implements ServicioParcial {
   }
 
   @Override
-    public void agregarTema(Integer parcialId, String tema, LocalDate fecha, Integer cantidadHoras) {
+  public void agregarTema(Integer parcialId, String tema, LocalDate fecha, Integer cantidadHoras) {
+    Parcial parcial = repositorioParcial.buscarPorId(parcialId);
 
-        Parcial parcial = repositorioParcial.buscarPorId(parcialId);
+    if (parcial != null) {
+      SesionEstudio sesion = new SesionEstudio();
 
-        if (parcial != null) {
+      sesion.setTema(tema);
+      sesion.setFecha(fecha);
+      sesion.setCantidadHoras(cantidadHoras);
+      sesion.setCompletada(false);
 
-            SesionEstudio sesion = new SesionEstudio();
+      parcial.agregarSesion(sesion);
 
-            sesion.setTema(tema);
-            sesion.setFecha(fecha);
-            sesion.setCantidadHoras(cantidadHoras);
-            sesion.setCompletada(false);
-
-            parcial.agregarSesion(sesion);
-
-            servicioSesionEstudio.crearSesion(sesion);
-        }
+      servicioSesionEstudio.crearSesion(sesion);
     }
+  }
 }

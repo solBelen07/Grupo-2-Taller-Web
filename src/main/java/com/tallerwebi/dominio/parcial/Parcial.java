@@ -16,12 +16,10 @@ public class Parcial {
   private Integer id;
 
   private LocalDate fecha;
-
   private LocalTime horario;
-
   private Integer cantidadDiasEstudio;
-
   private Integer horasPorDia;
+  private String nombre;
 
   @ManyToOne
   @JoinColumn(name = "materia_id", nullable = false)
@@ -91,5 +89,42 @@ public class Parcial {
   public void agregarSesion(SesionEstudio sesion) {
     sesiones.add(sesion);
     sesion.setParcial(this);
+  }
+
+  public String getNombre() {
+    return nombre;
+  }
+
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
+
+  public Integer getPorcentajeCompletado() {
+    if (sesiones == null || sesiones.isEmpty()) {
+      return 0;
+    }
+
+    long sesionesCompletadas = sesiones
+      .stream()
+      .filter(sesion -> Boolean.TRUE.equals(sesion.getCompletada()))
+      .count();
+
+    return (int) ((sesionesCompletadas * 100) / sesiones.size());
+  }
+
+  public Integer getCantidadSesiones() {
+    if (sesiones == null) {
+      return 0;
+    }
+
+    return sesiones.size();
+  }
+
+  public Long getCantidadSesionesCompletadas() {
+    if (sesiones == null) {
+      return 0L;
+    }
+
+    return sesiones.stream().filter(sesion -> Boolean.TRUE.equals(sesion.getCompletada())).count();
   }
 }

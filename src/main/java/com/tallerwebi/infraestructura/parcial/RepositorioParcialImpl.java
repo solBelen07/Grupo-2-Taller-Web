@@ -32,7 +32,12 @@ public class RepositorioParcialImpl implements RepositorioParcial {
   public List<Parcial> obtenerTodos() {
     Session session = sessionFactory.getCurrentSession();
 
-    return session.createQuery("FROM Parcial", Parcial.class).getResultList();
+    return session
+      .createQuery(
+        "SELECT DISTINCT p " + "FROM Parcial p " + "LEFT JOIN FETCH p.sesiones",
+        Parcial.class
+      )
+      .getResultList();
   }
 
   @Override
