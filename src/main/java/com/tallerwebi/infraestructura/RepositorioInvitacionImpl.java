@@ -40,6 +40,7 @@ public class RepositorioInvitacionImpl implements RepositorioInvitacion {
       .setParameter("emisor", emailEmisor)
       .setParameter("receptor", emailReceptor)
       .setParameter("grupo", nombreGrupo)
+      .setMaxResults(1)
       .uniqueResult();
   }
 

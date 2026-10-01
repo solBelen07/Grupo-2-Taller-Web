@@ -12,4 +12,6 @@ public interface RepositorioParcial {
   void modificar(Parcial parcial);
 
   void eliminar(Parcial parcial);
+
+  void eliminarPorMateriaId(Integer materiaId);
 }

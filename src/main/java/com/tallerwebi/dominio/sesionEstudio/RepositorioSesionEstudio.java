@@ -5,4 +5,5 @@ public interface RepositorioSesionEstudio {
   void modificar(SesionEstudio sesionEstudio);
   void eliminar(SesionEstudio sesionEstudio);
   SesionEstudio buscarPorId(Integer id);
+  void eliminarPorMateriaId(Integer materiaId);
 }
