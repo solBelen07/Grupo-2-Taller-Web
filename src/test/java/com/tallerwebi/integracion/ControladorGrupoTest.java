@@ -70,12 +70,12 @@ public class ControladorGrupoTest {
   private void entoncesSeMuestraLaPaginaDeUnGrupo() {
     ModelAndView modelAndView = this.mvcResult.getModelAndView();
     assert modelAndView != null;
-    assert modelAndView.getViewName().equals("grupo-detalle");
+    assert modelAndView.getViewName().equals("paginas/grupo/grupo-detalle");
   }
 
   private void entoncesSeMuestraLaPaginaDeGrupos() {
     ModelAndView modelAndView = this.mvcResult.getModelAndView();
     assert modelAndView != null;
-    assert modelAndView.getViewName().equals("grupos");
+    assert modelAndView.getViewName().equals("paginas/grupo/grupos");
   }
 }

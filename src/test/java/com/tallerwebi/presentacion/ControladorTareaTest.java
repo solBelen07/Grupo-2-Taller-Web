@@ -52,7 +52,7 @@ public class ControladorTareaTest {
     ModelAndView modelAndView = controladorTarea.verTareas();
 
     // validacion
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("tareas"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/materia/tareas"));
 
     assertThat(modelAndView.getModel().get("tareas"), equalTo(Arrays.asList(tarea)));
 

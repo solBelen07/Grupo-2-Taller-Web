@@ -33,14 +33,14 @@ public class ControladorGrupoTest {
   public void irAGrupoDeberiaRetornarVistaGrupo() {
     ModelAndView modelAndView = controladorGrupo.verGrupo("grupo1");
 
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("grupo-detalle"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/grupo/grupo-detalle"));
   }
 
   @Test
   public void irAGruposDeberiaRetornarVistaGruposYDatosGrupo() {
     when(servicioGrupoMock.listarGrupos()).thenReturn(java.util.Arrays.asList(grupoMock));
     ModelAndView modelAndView = controladorGrupo.verGrupos();
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("grupos"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/grupo/grupos"));
     assertThat(modelAndView.getModel().get("datosGrupo"), instanceOf(List.class));
   }
 
@@ -48,7 +48,7 @@ public class ControladorGrupoTest {
   public void irAGruposDeberiaRetornarVistaGrupos() {
     ModelAndView modelAndView = controladorGrupo.verGrupos();
 
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("grupos"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/grupo/grupos"));
   }
 
   @Test
@@ -58,7 +58,7 @@ public class ControladorGrupoTest {
 
     ModelAndView modelAndView = controladorGrupo.verGrupo("grupo2");
 
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("grupo-detalle"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/grupo/grupo-detalle"));
     assertThat(
       modelAndView.getModel().get("error").toString(),
       equalToIgnoringCase("El grupo no existe")
@@ -71,7 +71,7 @@ public class ControladorGrupoTest {
     ModelAndView modelAndView = controladorGrupo.irAInvitar("grupo-existente");
     when(modelAndView.getModel().get("datosGrupo")).thenReturn(grupoMock);
 
-    assertEquals("grupo-invitar", modelAndView.getViewName());
+    assertEquals("paginas/grupo/grupo-invitar", modelAndView.getViewName());
     assertEquals(grupoMock, modelAndView.getModel().get("datosGrupo"));
   }
 
@@ -81,7 +81,7 @@ public class ControladorGrupoTest {
 
     ModelAndView modelAndView = controladorGrupo.irAInvitar("grupo-inexistente");
 
-    assertThat(modelAndView.getViewName(), equalToIgnoringCase("grupo-invitar"));
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/grupo/grupo-invitar"));
     assertThat(
       modelAndView.getModel().get("error").toString(),
       equalToIgnoringCase("El grupo no existe")

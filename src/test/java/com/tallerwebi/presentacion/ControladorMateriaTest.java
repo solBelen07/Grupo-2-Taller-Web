@@ -76,7 +76,7 @@ public class ControladorMateriaTest {
 
     List<Materia> materias = (List<Materia>) mav.getModel().get("materias");
 
-    assertThat(mav.getViewName(), equalTo("materias"));
+    assertThat(mav.getViewName(), equalTo("paginas/materia/materias"));
     assertThat(materias, hasItem(materiaCreada));
     assertThat(materias.size(), equalTo(1));
   }
@@ -94,7 +94,7 @@ public class ControladorMateriaTest {
 
     ModelAndView mav = controladorMateria.verMateria(id);
 
-    assertThat(mav.getViewName(), equalTo("materia-detalle"));
+    assertThat(mav.getViewName(), equalTo("paginas/materia/materia-detalle"));
 
     assertThat(mav.getModel().get("materia"), equalTo(materia));
 
@@ -186,7 +186,7 @@ public class ControladorMateriaTest {
 
     Materia materiaObtenida = (Materia) mav.getModel().get("materiaBuscada");
 
-    assertThat(mav.getViewName(), equalTo("materias"));
+    assertThat(mav.getViewName(), equalTo("paginas/materia/materias"));
 
     assertThat(materiaObtenida, equalTo(materiaEsperada));
 

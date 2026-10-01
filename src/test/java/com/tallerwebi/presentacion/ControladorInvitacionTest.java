@@ -145,6 +145,6 @@ public class ControladorInvitacionTest {
   }
 
   private void entoncesDevuelveLaVistaDeInvitaciones(ModelAndView vistaDeInvitaciones) {
-    assertEquals("invitaciones", vistaDeInvitaciones.getViewName());
+    assertEquals("paginas/grupo/invitaciones", vistaDeInvitaciones.getViewName());
   }
 }
