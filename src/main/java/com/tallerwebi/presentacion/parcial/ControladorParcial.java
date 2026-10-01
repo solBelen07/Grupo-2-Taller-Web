@@ -38,7 +38,7 @@ public class ControladorParcial {
 
   @RequestMapping(path = "/nuevo", method = RequestMethod.GET)
   public ModelAndView nuevoParcial() {
-    ModelMap modelo = new ModelMap();
+    Map<String, Object> modelo = new ModelMap();
 
     modelo.put("datosParcial", new DatosParcial());
     modelo.put("materias", servicioMateria.obtenerMaterias());
@@ -48,7 +48,7 @@ public class ControladorParcial {
 
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView listarParciales() {
-    ModelMap modelo = new ModelMap();
+    Map<String, Object> modelo = new ModelMap();
 
     modelo.put("parciales", servicioParcial.obtenerParciales());
 
