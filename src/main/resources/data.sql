@@ -135,10 +135,6 @@ VALUES
         WHERE nombre = 'Evaluación de Interfaces'
     ));
 
--- =====================================================================
--- Usuarios y grupos
--- =====================================================================
-
 INSERT INTO Usuario (id, email, password, rol, activo)
 VALUES
     (null, 'test@unlam.edu.ar', 'test', 'ADMIN', true),
@@ -149,12 +145,6 @@ VALUES
     (null, 'grupo1'),
     (null, 'grupo2'),
     (null, 'grupo3');
-
--- =====================================================================
--- CAL-01: eventos de ejemplo para el calendario, del usuario
--- test@unlam.edu.ar (id 1), usando las materias sembradas arriba
--- (1 = Taller Web I, 2 = Base de Datos II).
--- =====================================================================
 
 INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id)
 VALUES (
@@ -178,13 +168,6 @@ VALUES (
            2
        );
 
--- =====================================================================
--- CAL-02: Tareas de /tareas vinculadas a eventos del calendario, para
--- mostrar el badge de estado de seguimiento.
--- =====================================================================
-
--- Ejemplo 1, hoy: un TP con 40% de avance y 10 días para la entrega.
--- Menos del 50% -> "En tiempo".
 INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento)
 VALUES (
            null,
@@ -210,8 +193,6 @@ VALUES (
            1
        );
 
--- Ejemplo 2, mañana: un Parcial con 70% de avance pero que vence en 2
--- días. La urgencia por fecha le gana al progreso -> "Próxima a vencer".
 INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento)
 VALUES (
            null,
@@ -237,8 +218,6 @@ VALUES (
            2
        );
 
--- Ejemplo 3, pasado mañana: un Parcial con 60% de avance y 15 días
--- todavía. Acá gana el progreso -> "Parcialmente completada".
 INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento)
 VALUES (
            null,
