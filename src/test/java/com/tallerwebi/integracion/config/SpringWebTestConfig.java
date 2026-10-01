@@ -1,5 +1,7 @@
 package com.tallerwebi.integracion.config;
 
+import java.time.Clock;
+import java.time.ZoneId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -72,5 +74,11 @@ public class SpringWebTestConfig implements WebMvcConfigurer {
     ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
     viewResolver.setTemplateEngine(templateEngine());
     return viewResolver;
+  }
+
+  /** Reloj de la aplicación (fijo en el fuso de la app, no en el de la máquina que corre el test). */
+  @Bean
+  public Clock reloj() {
+    return Clock.system(ZoneId.of("America/Argentina/Buenos_Aires"));
   }
 }

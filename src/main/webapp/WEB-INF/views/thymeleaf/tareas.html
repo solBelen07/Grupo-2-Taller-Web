@@ -379,7 +379,11 @@
 
                             <td>
 
-                                <span class="indicador" th:text="${indicadores[tarea.id]}">
+                                <span
+                                    class="indicador"
+                                    th:text="${indicadores[tarea.id]}"
+                                    th:attr="data-indicador=${indicadores[tarea.id]}"
+                                >
                                     Indicador
                                 </span>
 

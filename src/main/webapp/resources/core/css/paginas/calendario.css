@@ -1,0 +1,577 @@
+/*
+  CAL-01: Vista general de calendario.
+  Usa los tokens de componentes/variables.css (tema oscuro "FocusFlight").
+*/
+
+/* ---------- Armazón: sidebar fija + contenido ---------- */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+}
+
+.app-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendario-main {
+  flex: 1;
+  padding: 24px 32px 40px;
+}
+
+/* ---------- Barra superior del calendario ---------- */
+.calendario-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: 16px;
+}
+
+.calendario-titulo {
+  margin: 0;
+  font-size: clamp(20px, 2.4vw, 28px);
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.calendario-controles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.grupo-botones {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-icono,
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--input-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.btn-icono {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 12px;
+}
+
+.btn-pill {
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn-icono:hover,
+.btn-pill:hover {
+  background-color: #231638;
+  color: var(--text-primary);
+}
+
+.btn-pill.activo {
+  background-color: var(--accent-purple);
+  border-color: var(--accent-purple);
+}
+
+.btn-pill.activo:hover {
+  background-color: var(--accent-hover);
+}
+
+/* ---------- Leyenda de materias ---------- */
+.calendario-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.leyenda-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.punto {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--materia);
+  flex: none;
+}
+
+.cuenta {
+  min-width: 20px;
+  padding: 0 6px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-secondary);
+  background-color: var(--input-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 999px;
+}
+
+.calendario-vacio {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* ---------- Vista mensual ---------- */
+.tabla-scroll {
+  overflow-x: auto;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+}
+
+.tabla-mes {
+  width: 100%;
+  min-width: 700px;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.tabla-mes thead th {
+  padding: 10px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.tabla-mes .col-semana {
+  width: 44px;
+  padding: 6px;
+  text-align: center;
+  vertical-align: top;
+  border-right: 1px solid var(--card-border);
+}
+
+.numero-semana {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.numero-semana:hover {
+  color: var(--text-primary);
+}
+
+.dia {
+  height: 112px;
+  padding: 6px 6px 4px;
+  vertical-align: top;
+  border-right: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.dia:last-child {
+  border-right: 0;
+}
+
+.dia[data-fuera="true"] {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.dia[data-fuera="true"] .dia-numero {
+  color: var(--text-secondary);
+}
+
+.dia-numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  border-radius: 50%;
+}
+
+.dia[data-hoy="true"] .dia-numero {
+  background-color: var(--accent-purple);
+  color: #ffffff;
+}
+
+.eventos {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.evento {
+  display: flex;
+  gap: 5px;
+  align-items: baseline;
+  margin-bottom: 2px;
+  padding: 1px 5px;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.35;
+  white-space: nowrap;
+  color: var(--text-primary);
+  background-color: color-mix(in srgb, var(--materia) 20%, var(--card-bg));
+  border-left: 3px solid var(--materia);
+  border-radius: 0 4px 4px 0;
+}
+
+.evento[data-tipo="PARCIAL"],
+.evento[data-tipo="TRABAJO_PRACTICO"] {
+  font-weight: 700;
+  background-color: color-mix(in srgb, var(--materia) 34%, var(--card-bg));
+  border-left-width: 4px;
+}
+
+.evento[data-tipo="ESTUDIO"] {
+  border-left-style: dashed;
+}
+
+.evento-hora {
+  flex: none;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.evento-texto {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mas {
+  display: inline-block;
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-purple);
+  text-decoration: none;
+}
+
+.mas:hover {
+  color: var(--accent-hover);
+}
+
+/* ---------- Vista semanal ---------- */
+.semana-scroll {
+  max-height: 70vh;
+  overflow: auto;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+}
+
+.semana-grid {
+  display: grid;
+  grid-template-columns: 52px repeat(7, minmax(104px, 1fr));
+  min-width: 820px;
+}
+
+.esquina,
+.dia-cabecera {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  padding: 8px 4px;
+  text-align: center;
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.esquina {
+  left: 0;
+  z-index: 5;
+  border-right: 1px solid var(--card-border);
+}
+
+.dia-cabecera a {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.dia-cabecera .dia-nombre {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.dia-cabecera .dia-numero {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.dia-cabecera[data-hoy="true"] .dia-numero {
+  color: var(--accent-purple);
+}
+
+.gutter {
+  position: sticky;
+  left: 0;
+  z-index: 4;
+  background-color: var(--card-bg);
+  border-right: 1px solid var(--card-border);
+}
+
+.hora {
+  height: 60px;
+  padding: 2px 8px 0 0;
+  text-align: right;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  border-top: 1px solid var(--card-border);
+}
+
+.columna-dia {
+  position: relative;
+  height: calc(var(--horas) * 60px);
+  border-right: 1px solid var(--card-border);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--card-border) 0,
+    var(--card-border) 1px,
+    transparent 1px,
+    transparent 60px
+  );
+}
+
+.columna-dia:last-child {
+  border-right: 0;
+}
+
+.columna-dia[data-hoy="true"] {
+  background-color: rgba(147, 51, 234, 0.06);
+}
+
+.bloques {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 1 minuto = 1px: --top y --alto llegan en minutos desde el servidor. */
+.bloque {
+  position: absolute;
+  top: calc(var(--top) * 1px + 1px);
+  height: calc(var(--alto) * 1px - 2px);
+  min-height: 22px;
+  left: calc(100% * var(--col) / var(--cols) + 2px);
+  width: calc(100% / var(--cols) - 4px);
+  display: flex;
+  flex-direction: column;
+  padding: 3px 7px;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--text-primary);
+  background-color: color-mix(in srgb, var(--materia) 22%, var(--card-bg));
+  border-left: 3px solid var(--materia);
+  border-radius: 0 6px 6px 0;
+}
+
+.bloque[data-tipo="PARCIAL"],
+.bloque[data-tipo="TRABAJO_PRACTICO"] {
+  background-color: color-mix(in srgb, var(--materia) 36%, var(--card-bg));
+  border-left-width: 4px;
+}
+
+.bloque[data-tipo="ESTUDIO"] {
+  border-left-style: dashed;
+}
+
+.bloque-titulo,
+.bloque-horario,
+.bloque-materia {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.bloque-titulo {
+  font-weight: 700;
+}
+
+.bloque-horario,
+.bloque-materia {
+  color: var(--text-secondary);
+}
+
+.linea-ahora {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--top) * 1px);
+  height: 2px;
+  z-index: 2;
+  background-color: var(--accent-purple);
+  pointer-events: none;
+}
+
+.linea-ahora::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  top: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-purple);
+}
+
+/* ---------- Pantallas chicas ---------- */
+@media (max-width: 900px) {
+  .sidebar {
+    display: none;
+  }
+
+  .app-content {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .calendario-main {
+    padding: 16px;
+  }
+
+  .tabla-mes {
+    min-width: 0;
+  }
+
+  .dia {
+    height: 68px;
+    padding: 4px;
+  }
+
+  .eventos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+
+  .evento {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    margin: 0;
+    background-color: var(--materia);
+    border: 0;
+    border-radius: 50%;
+  }
+
+  .evento-hora,
+  .evento-texto {
+    display: none;
+  }
+}
+
+/*
+  CAL-02: código de colores (ya lo da --materia, tomado de la materia de cada evento) y badges de
+  estado de seguimiento para los eventos vinculados a una Tarea de /tareas.
+*/
+.evento {
+  position: relative;
+}
+
+.punto-estado {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid var(--card-bg);
+}
+
+.badge-estado {
+  align-self: flex-start;
+  flex: none;
+  margin-top: 2px;
+  padding: 1px 6px;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  color: #ffffff;
+  width: fit-content;
+}
+
+.punto-estado.estado-COMPLETADA,
+.badge-estado.estado-COMPLETADA,
+.punto-leyenda.estado-COMPLETADA {
+  background-color: #3b82f6;
+}
+
+.punto-estado.estado-VENCIDA,
+.badge-estado.estado-VENCIDA,
+.punto-leyenda.estado-VENCIDA {
+  background-color: #ef4444;
+}
+
+.punto-estado.estado-PROXIMA_A_VENCER,
+.badge-estado.estado-PROXIMA_A_VENCER,
+.punto-leyenda.estado-PROXIMA_A_VENCER {
+  background-color: #eab308;
+}
+
+.punto-estado.estado-PARCIALMENTE_COMPLETADA,
+.badge-estado.estado-PARCIALMENTE_COMPLETADA,
+.punto-leyenda.estado-PARCIALMENTE_COMPLETADA {
+  background-color: #38bdf8;
+}
+
+.punto-estado.estado-EN_TIEMPO,
+.badge-estado.estado-EN_TIEMPO,
+.punto-leyenda.estado-EN_TIEMPO {
+  background-color: #22c55e;
+}
+
+/* Leyenda fija de los 5 estados de seguimiento (independiente de las materias). */
+.calendario-leyenda-estados {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.punto-leyenda {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 7px;
+  border-radius: 50%;
+  vertical-align: middle;
+}

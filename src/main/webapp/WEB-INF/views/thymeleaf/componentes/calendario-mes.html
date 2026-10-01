@@ -1,0 +1,82 @@
+<section
+  th:fragment="mes"
+  class="vista-mes"
+  data-testid="vista-mes"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <div class="tabla-scroll">
+    <table class="tabla-mes">
+      <caption class="visually-hidden" th:text="|Calendario mensual de ${calendario.titulo}|">
+        Calendario mensual
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col" class="col-semana"><span class="visually-hidden">Semana</span></th>
+          <th scope="col" abbr="Lunes">Lun</th>
+          <th scope="col" abbr="Martes">Mar</th>
+          <th scope="col" abbr="Miércoles">Mié</th>
+          <th scope="col" abbr="Jueves">Jue</th>
+          <th scope="col" abbr="Viernes">Vie</th>
+          <th scope="col" abbr="Sábado">Sáb</th>
+          <th scope="col" abbr="Domingo">Dom</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="semana : ${calendario.semanas}">
+          <th scope="row" class="col-semana">
+            <a
+              class="numero-semana"
+              th:href="@{/calendario(vista='semana',fecha=${semana.lunes})}"
+              th:title="|Ver la semana ${semana.numero}|"
+              th:text="${semana.numero}"
+              >40</a
+            >
+          </th>
+          <td
+            class="dia"
+            th:each="dia : ${semana.dias}"
+            th:data-fecha="${dia.fecha}"
+            th:data-hoy="${dia.esHoy}"
+            th:data-fuera="${!dia.delMesActual}"
+          >
+            <a
+              class="dia-numero"
+              th:href="@{/calendario(vista='semana',fecha=${dia.fecha})}"
+              th:aria-current="${dia.esHoy} ? 'date'"
+            >
+              <time th:datetime="${dia.fecha}" th:text="${dia.fecha.dayOfMonth}">28</time>
+            </a>
+            <ul class="eventos" th:unless="${dia.eventos.isEmpty()}">
+              <li
+                class="evento"
+                th:each="ev, posicion : ${dia.eventos}"
+                th:if="${posicion.index lt 3}"
+                th:data-tipo="${ev.tipo}"
+                th:title="${ev.descripcion}"
+                th:style="|--materia:${ev.color}|"
+              >
+                <span class="evento-hora" th:text="${ev.continuaDesdeAntes} ? '↳' : ${ev.horaInicio}"
+                  >18:00</span
+                >
+                <span class="evento-texto" th:text="${ev.titulo}">Título del evento</span>
+                <span
+                  class="punto-estado"
+                  th:if="${ev.estado != null}"
+                  th:classappend="|estado-${ev.estado}|"
+                  aria-hidden="true"
+                ></span>
+              </li>
+            </ul>
+            <a
+              class="mas"
+              th:if="${dia.eventos.size() gt 3}"
+              th:href="@{/calendario(vista='semana',fecha=${dia.fecha})}"
+              th:text="|+${dia.eventos.size() - 3} más|"
+              >+2 más</a
+            >
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

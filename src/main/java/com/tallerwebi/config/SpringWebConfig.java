@@ -1,5 +1,7 @@
 package com.tallerwebi.config;
 
+import java.time.Clock;
+import java.time.ZoneId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -75,5 +77,11 @@ public class SpringWebConfig implements WebMvcConfigurer {
     viewResolver.setTemplateEngine(templateEngine());
     viewResolver.setCharacterEncoding("UTF-8");
     return viewResolver;
+  }
+
+  /** Reloj de la aplicación (inyectable para poder fijar la fecha "de hoy" en los tests). */
+  @Bean
+  public Clock reloj() {
+    return Clock.system(ZoneId.of("America/Argentina/Buenos_Aires"));
   }
 }

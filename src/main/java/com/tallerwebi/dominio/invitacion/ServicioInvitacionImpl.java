@@ -1,6 +1,10 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.invitacion;
 
+import com.tallerwebi.dominio.RepositorioUsuario;
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.InvitacionInvalida;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.RepositorioGrupo;
 import com.tallerwebi.presentacion.DatosInvitacion;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,7 @@ public class ServicioInvitacionImpl implements ServicioInvitacion {
     this.repositorioGrupo = repositorioGrupo;
   }
 
+  @Override
   public Invitacion validarInvitacion(DatosInvitacion datosInvitacion) throws InvitacionInvalida {
     Usuario usuarioEmisor = repositorioUsuario.buscar(datosInvitacion.getEmisor());
     Usuario usuarioReceptor = repositorioUsuario.buscar(datosInvitacion.getReceptor());
@@ -33,7 +38,7 @@ public class ServicioInvitacionImpl implements ServicioInvitacion {
       usuarioEmisor == null ||
       usuarioReceptor == null ||
       grupoInvitado == null ||
-      usuarioEmisor == usuarioReceptor
+      usuarioEmisor.equals(usuarioReceptor)
     ) {
       throw new InvitacionInvalida();
     }
@@ -42,10 +47,12 @@ public class ServicioInvitacionImpl implements ServicioInvitacion {
     return crearInvitacion(invitacion);
   }
 
+  @Override
   public Invitacion crearInvitacion(Invitacion invitacion) {
     return this.repositorioInvitacion.enviarInvitacion(invitacion);
   }
 
+  @Override
   public void aceptarInvitacion(DatosInvitacion datosInvitacion) throws InvitacionInvalida {
     Invitacion invitacion = repositorioInvitacion.buscar(
       datosInvitacion.getEmisor(),
@@ -56,9 +63,23 @@ public class ServicioInvitacionImpl implements ServicioInvitacion {
       throw new InvitacionInvalida();
     }
     invitacion.setVigente(Boolean.FALSE);
-    repositorioInvitacion.aceptar(invitacion);
+    repositorioInvitacion.cambiarEstado(invitacion, Estado.ACEPTADA);
   }
 
+  public void rechazarInvitacion(DatosInvitacion datosInvitacion) throws InvitacionInvalida {
+    Invitacion invitacion = repositorioInvitacion.buscar(
+      datosInvitacion.getEmisor(),
+      datosInvitacion.getReceptor(),
+      datosInvitacion.getGrupo()
+    );
+    if (invitacion == null) {
+      throw new InvitacionInvalida();
+    }
+    invitacion.setVigente(Boolean.FALSE);
+    repositorioInvitacion.cambiarEstado(invitacion, Estado.RECHAZADA);
+  }
+
+  @Override
   public List<Invitacion> listarInvitaciones(String usuarioLogueado) {
     return this.repositorioInvitacion.buscarInvitacionesPorReceptor(usuarioLogueado);
   }

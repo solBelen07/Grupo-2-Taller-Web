@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.excepcion.InvitacionInvalida;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.RepositorioGrupo;
+import com.tallerwebi.dominio.invitacion.*;
 import com.tallerwebi.presentacion.DatosInvitacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +33,33 @@ public class ServicioInvitacionTest {
   }
 
   @Test
+  public void rechazarDeberiaHacerInvitacionInvalida() throws InvitacionInvalida {
+    Usuario emisor = dadoQueExisteUnUsuario("usuario@test.com");
+    Usuario receptor = dadoQueExisteUnUsuario("receptor@test.com");
+    Grupo grupo = dadoQueExisteUnGrupo("grupo-test");
+    DatosInvitacion datosInvitacion = new DatosInvitacion();
+    datosInvitacion.setEmisor(emisor.getEmail());
+    datosInvitacion.setReceptor(receptor.getEmail());
+    datosInvitacion.setGrupo(grupo.getNombre());
+
+    Invitacion invitacion = new Invitacion(emisor, receptor, grupo);
+
+    when(
+      repositorioInvitacionMock.buscar(
+        datosInvitacion.getEmisor(),
+        datosInvitacion.getReceptor(),
+        datosInvitacion.getGrupo()
+      )
+    )
+      .thenReturn(invitacion);
+
+    cuandoSeRechazaLaInvitacion(datosInvitacion);
+
+    entoncesDejaDeEstarVigenteLaInvitacion(invitacion);
+    entoncesSeLlamaAlRepositorioParaCambiarDeEstado();
+  }
+
+  @Test
   public void deberiaCrearLaInvitacionCuandoTodosLosDatosSonValidos() throws InvitacionInvalida {
     String emailEmisor = "emisor@test.com";
     String emailReceptor = "receptor@test.com";
@@ -47,7 +77,7 @@ public class ServicioInvitacionTest {
     Invitacion resultado = servicioInvitacion.validarInvitacion(datosInvitacion);
 
     entoncesSeObtieneUnaInvitacionValida(resultado, emisor, receptor, grupo);
-    entoncesSeLlamaAlRepositorio();
+    entoncesSeLlamaAlRepositorioParaCrearInvitacion();
   }
 
   @Test
@@ -65,7 +95,8 @@ public class ServicioInvitacionTest {
       emailReceptor,
       nombreGrupo
     );
-    verify(repositorioInvitacionMock, never()).enviarInvitacion(any());
+
+    entoncesNoDeberiaCrearseLaInvitacionEnElRepositorio();
   }
 
   @Test
@@ -192,9 +223,14 @@ public class ServicioInvitacionTest {
     servicioInvitacion.aceptarInvitacion(datosInvitacion);
   }
 
+  private void cuandoSeRechazaLaInvitacion(DatosInvitacion datosInvitacion)
+    throws InvitacionInvalida {
+    servicioInvitacion.rechazarInvitacion(datosInvitacion);
+  }
+
   private void entoncesDejaDeEstarVigenteLaInvitacion(Invitacion invitacion) {
     assertFalse(invitacion.getVigente());
-    verify(repositorioInvitacionMock, times(1)).aceptar(invitacion);
+    verify(repositorioInvitacionMock, times(1)).cambiarEstado(any(), any());
   }
 
   private void entoncesSeObtieneUnaInvitacionValida(
@@ -210,8 +246,12 @@ public class ServicioInvitacionTest {
     assertEquals(grupo, invitacion.getGrupo());
   }
 
-  private void entoncesSeLlamaAlRepositorio() {
+  private void entoncesSeLlamaAlRepositorioParaCrearInvitacion() {
     verify(repositorioInvitacionMock, times(1)).enviarInvitacion(any(Invitacion.class));
+  }
+
+  private void entoncesSeLlamaAlRepositorioParaCambiarDeEstado() {
+    verify(repositorioInvitacionMock, times(1)).cambiarEstado(any(), any());
   }
 
   private void entoncesValidarInvitacionLanzaExcepcionInvitacionInvalida(
@@ -229,5 +269,9 @@ public class ServicioInvitacionTest {
         servicioInvitacion.validarInvitacion(datosInvitacion);
       }
     );
+  }
+
+  private void entoncesNoDeberiaCrearseLaInvitacionEnElRepositorio() {
+    verify(repositorioInvitacionMock, never()).enviarInvitacion(any());
   }
 }

@@ -3,8 +3,8 @@ package com.tallerwebi.infraestructura;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-import com.tallerwebi.dominio.Grupo;
-import com.tallerwebi.dominio.RepositorioGrupo;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.RepositorioGrupo;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
 import jakarta.transaction.Transactional;
 import org.hibernate.SessionFactory;

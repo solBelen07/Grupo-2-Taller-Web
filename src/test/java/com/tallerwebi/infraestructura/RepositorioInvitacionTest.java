@@ -4,10 +4,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.tallerwebi.dominio.Grupo;
-import com.tallerwebi.dominio.Invitacion;
-import com.tallerwebi.dominio.RepositorioInvitacion;
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.invitacion.Estado;
+import com.tallerwebi.dominio.invitacion.Invitacion;
+import com.tallerwebi.dominio.invitacion.RepositorioInvitacion;
 import com.tallerwebi.integracion.config.HibernateTestConfig;
 import com.tallerwebi.integracion.config.SpringWebTestConfig;
 import java.util.List;
@@ -94,6 +95,44 @@ public class RepositorioInvitacionTest {
     entoncesLaInvitacionEsInvalidaEnElRepositorio();
   }
 
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaCrearseConEstadoPendienteLaInvitacion() {
+    Usuario emisor = this.dadoQueExisteUnUsuario("emisor@test.com");
+    Usuario receptor = this.dadoQueExisteUnUsuario("receptor@test.com");
+    Grupo grupo = this.dadoQueExisteUnGrupo("grupo-test");
+    Invitacion invitacion = dadoQueExisteUnaInvitacionVigente(emisor, receptor, grupo);
+    entoncesTieneEstadoPendiente(invitacion);
+    entoncesLaInvitacionEsPendienteEnElRepositorio();
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaCambiarElEstadoAAceptada() {
+    Usuario emisor = this.dadoQueExisteUnUsuario("emisor@test.com");
+    Usuario receptor = this.dadoQueExisteUnUsuario("receptor@test.com");
+    Grupo grupo = this.dadoQueExisteUnGrupo("grupo-test");
+    Invitacion invitacion = dadoQueExisteUnaInvitacionVigente(emisor, receptor, grupo);
+    cuandoSeAceptaLaInvitacion(invitacion);
+    entoncesTieneEstadoAceptada(invitacion);
+    entoncesLaInvitacionEsAceptadaEnElRepositorio();
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaCambiarElEstadoARechazada() {
+    Usuario emisor = this.dadoQueExisteUnUsuario("emisor@test.com");
+    Usuario receptor = this.dadoQueExisteUnUsuario("receptor@test.com");
+    Grupo grupo = this.dadoQueExisteUnGrupo("grupo-test");
+    Invitacion invitacion = dadoQueExisteUnaInvitacionVigente(emisor, receptor, grupo);
+    cuandoSeRechazaLaInvitacion(invitacion);
+    entoncesTieneEstadoRechazada(invitacion);
+    entoncesLaInvitacionEsRechazadaEnElRepositorio();
+  }
+
   private Usuario dadoQueExisteUnUsuario(String email) {
     Usuario usuario = new Usuario();
     usuario.setEmail(email);
@@ -115,20 +154,61 @@ public class RepositorioInvitacionTest {
   ) {
     Invitacion invitacion = new Invitacion(emisor, receptor, grupo);
     invitacion.setVigente(true);
-    this.sessionFactory.getCurrentSession().save(invitacion);
+    this.sessionFactory.getCurrentSession().persist(invitacion);
     return invitacion;
   }
 
   private void cuandoSeAceptaLaInvitacion(Invitacion invitacion) {
-    repositorioInvitacion.aceptar(invitacion);
+    repositorioInvitacion.cambiarEstado(invitacion, Estado.ACEPTADA);
+    this.sessionFactory.getCurrentSession().flush();
+  }
+
+  private void cuandoSeRechazaLaInvitacion(Invitacion invitacion) {
+    repositorioInvitacion.cambiarEstado(invitacion, Estado.RECHAZADA);
     this.sessionFactory.getCurrentSession().flush();
   }
 
   private void entoncesLaInvitacionEsInvalidaEnElRepositorio() {
-    String sql = "from Invitacion i where i.vigente is false";
+    String sql = "from Invitacion where vigente is false";
     Invitacion invitacionObtenida =
       this.sessionFactory.getCurrentSession().createQuery(sql, Invitacion.class).getSingleResult();
 
     assertFalse(invitacionObtenida.getVigente());
+  }
+
+  private void entoncesLaInvitacionEsAceptadaEnElRepositorio() {
+    String sql = "from Invitacion where estado LIKE 'ACEPTADA'";
+    Invitacion invitacionObtenida =
+      this.sessionFactory.getCurrentSession().createQuery(sql, Invitacion.class).getSingleResult();
+
+    assertEquals(invitacionObtenida.getEstadoInvitacion(), Estado.ACEPTADA);
+  }
+
+  private void entoncesLaInvitacionEsPendienteEnElRepositorio() {
+    String sql = "from Invitacion where estado LIKE 'PENDIENTE'";
+    Invitacion invitacionObtenida =
+      this.sessionFactory.getCurrentSession().createQuery(sql, Invitacion.class).getSingleResult();
+
+    assertEquals(invitacionObtenida.getEstadoInvitacion(), Estado.PENDIENTE);
+  }
+
+  private void entoncesLaInvitacionEsRechazadaEnElRepositorio() {
+    String sql = "from Invitacion where estado LIKE 'RECHAZADA'";
+    Invitacion invitacionObtenida =
+      this.sessionFactory.getCurrentSession().createQuery(sql, Invitacion.class).getSingleResult();
+
+    assertEquals(invitacionObtenida.getEstadoInvitacion(), Estado.RECHAZADA);
+  }
+
+  private void entoncesTieneEstadoRechazada(Invitacion invitacion) {
+    assertEquals(invitacion.getEstadoInvitacion(), Estado.RECHAZADA);
+  }
+
+  private void entoncesTieneEstadoAceptada(Invitacion invitacion) {
+    assertEquals(invitacion.getEstadoInvitacion(), Estado.ACEPTADA);
+  }
+
+  private void entoncesTieneEstadoPendiente(Invitacion invitacion) {
+    assertEquals(invitacion.getEstadoInvitacion(), Estado.PENDIENTE);
   }
 }

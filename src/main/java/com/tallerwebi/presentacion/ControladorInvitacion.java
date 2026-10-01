@@ -1,11 +1,9 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.Invitacion;
-import com.tallerwebi.dominio.ServicioInvitacion;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.InvitacionInvalida;
+import com.tallerwebi.dominio.invitacion.ServicioInvitacion;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,21 +19,20 @@ public class ControladorInvitacion {
   @RequestMapping(path = "/grupos/{nombreGrupo}/invitar", method = RequestMethod.POST)
   public ModelAndView validarInvitacion(
     @PathVariable("nombreGrupo") String nombreGrupo,
-    @ModelAttribute("datosInvitacion") DatosInvitacion datosInvitacion,
+    @ModelAttribute(modeloDeDatos) DatosInvitacion datosInvitacion,
     HttpServletRequest request,
     RedirectAttributes redirectAttributes
   ) {
-    Usuario emisor = (Usuario) request.getSession().getAttribute("USUARIO");
-    if (emisor == null) {
+    if (obtenerUsuarioLogueado(request) == null) {
       return new ModelAndView("redirect:/login");
     }
-    datosInvitacion.setEmisor(emisor.getEmail());
+    datosInvitacion.setEmisor(obtenerUsuarioLogueado(request).getEmail());
     try {
       servicioInvitacion.validarInvitacion(datosInvitacion);
       redirectAttributes.addFlashAttribute("exito", "Invitación enviada");
       return new ModelAndView("redirect:/grupos");
     } catch (InvitacionInvalida e) {
-      redirectAttributes.addFlashAttribute("error", "Invitación inválida");
+      redirigirMensajeDeError(redirectAttributes, "Invitación inválida");
       return new ModelAndView("redirect:/grupos/" + nombreGrupo + "/invitar");
     }
   }
@@ -44,10 +41,10 @@ public class ControladorInvitacion {
   public ModelAndView verInvitaciones(HttpServletRequest request) {
     Map<String, Object> modelo = new ModelMap();
     try {
-      Usuario usuarioLogueado = (Usuario) request.getSession().getAttribute("USUARIO");
+      obtenerUsuarioLogueado(request).getEmail();
       modelo.put(
         "datosInvitacion",
-        servicioInvitacion.listarInvitaciones(usuarioLogueado.getEmail())
+        servicioInvitacion.listarInvitaciones(obtenerUsuarioLogueado(request).getEmail())
       );
       return new ModelAndView("invitaciones", modelo);
     } catch (Exception e) {
@@ -58,24 +55,52 @@ public class ControladorInvitacion {
 
   @RequestMapping(path = "/invitaciones/aceptar", method = RequestMethod.POST)
   public ModelAndView aceptar(
-    @ModelAttribute("datosInvitacion") DatosInvitacion datosInvitacion,
+    @ModelAttribute(modeloDeDatos) DatosInvitacion datosInvitacion,
     HttpServletRequest request,
     RedirectAttributes redirectAttrs
   ) {
     try {
-      Usuario usuarioLogueado = (Usuario) request.getSession().getAttribute("USUARIO");
-      if (usuarioLogueado == null) {
+      if (obtenerUsuarioLogueado(request) == null) {
         return new ModelAndView("redirect:/login");
       }
-      datosInvitacion.setReceptor(usuarioLogueado.getEmail());
+      datosInvitacion.setReceptor(obtenerUsuarioLogueado(request).getEmail());
       servicioInvitacion.aceptarInvitacion(datosInvitacion);
-
       redirectAttrs.addFlashAttribute("exito", "Invitación aceptada");
     } catch (Exception e) {
-      redirectAttrs.addFlashAttribute("error", "No se pudo aceptar la invitación");
+      redirigirMensajeDeError(redirectAttrs, "No se pudo aceptar la invitación");
     }
     return new ModelAndView("redirect:/invitaciones");
   }
+
+  @RequestMapping(path = "/invitaciones/rechazar", method = RequestMethod.POST)
+  public ModelAndView rechazar(
+    @ModelAttribute(modeloDeDatos) DatosInvitacion datosInvitacion,
+    HttpServletRequest request,
+    RedirectAttributes redirectAttributes
+  ) {
+    try {
+      if (obtenerUsuarioLogueado(request) == null) {
+        return new ModelAndView("redirect:/login");
+      }
+      datosInvitacion.setReceptor(obtenerUsuarioLogueado(request).getEmail());
+      servicioInvitacion.rechazarInvitacion(datosInvitacion);
+
+      redirectAttributes.addFlashAttribute("exito", "Invitación rechazada");
+    } catch (Exception e) {
+      redirigirMensajeDeError(redirectAttributes, "No se pudo rechazar la invitación");
+    }
+    return new ModelAndView("redirect:/invitaciones");
+  }
+
+  private Usuario obtenerUsuarioLogueado(HttpServletRequest request) {
+    return (Usuario) request.getSession().getAttribute("USUARIO");
+  }
+
+  private void redirigirMensajeDeError(RedirectAttributes redirectAttributes, String mensaje) {
+    redirectAttributes.addFlashAttribute("error", mensaje);
+  }
+
+  public static final String modeloDeDatos = "datosInvitacion";
 
   public ControladorInvitacion(ServicioInvitacion servicioInvitacion) {
     this.servicioInvitacion = servicioInvitacion;
