@@ -18,21 +18,28 @@ public class RepositorioParcialImpl implements RepositorioParcial {
 
   @Override
   public void guardar(Parcial parcial) {
-    Session session = sessionFactory.getCurrentSession();
-    session.persist(parcial);
+    sessionFactory.getCurrentSession().save(parcial);
   }
 
   @Override
   public Parcial buscarPorId(Integer id) {
-    Session session = sessionFactory.getCurrentSession();
-    return session.get(Parcial.class, id);
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "SELECT DISTINCT p " +
+        "FROM Parcial p " +
+        "LEFT JOIN FETCH p.sesiones " +
+        "WHERE p.id = :id",
+        Parcial.class
+      )
+      .setParameter("id", id)
+      .uniqueResult();
   }
 
   @Override
   public List<Parcial> obtenerTodos() {
-    Session session = sessionFactory.getCurrentSession();
-
-    return session
+    return sessionFactory
+      .getCurrentSession()
       .createQuery(
         "SELECT DISTINCT p " + "FROM Parcial p " + "LEFT JOIN FETCH p.sesiones",
         Parcial.class
@@ -42,13 +49,11 @@ public class RepositorioParcialImpl implements RepositorioParcial {
 
   @Override
   public void modificar(Parcial parcial) {
-    Session session = sessionFactory.getCurrentSession();
-    session.merge(parcial);
+    sessionFactory.getCurrentSession().update(parcial);
   }
 
   @Override
   public void eliminar(Parcial parcial) {
-    Session session = sessionFactory.getCurrentSession();
-    session.remove(parcial);
+    sessionFactory.getCurrentSession().remove(parcial);
   }
 }

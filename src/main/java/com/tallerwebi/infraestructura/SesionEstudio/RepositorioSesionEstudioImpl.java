@@ -17,24 +17,25 @@ public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
 
   @Override
   public void guardar(SesionEstudio sesionEstudio) {
-    Session session = sessionFactory.getCurrentSession();
-    session.persist(sesionEstudio);
+    sessionFactory.getCurrentSession().persist(sesionEstudio);
   }
 
   @Override
   public void modificar(SesionEstudio sesionEstudio) {
-    Session session = sessionFactory.getCurrentSession();
-    session.merge(sesionEstudio);
+    sessionFactory.getCurrentSession().update(sesionEstudio);
   }
 
   @Override
   public void eliminar(SesionEstudio sesionEstudio) {
-    Session session = sessionFactory.getCurrentSession();
-    session.remove(sesionEstudio);
+    sessionFactory.getCurrentSession().remove(sesionEstudio);
   }
 
   @Override
   public SesionEstudio buscarPorId(Integer id) {
-    return sessionFactory.getCurrentSession().get(SesionEstudio.class, id);
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery("from SesionEstudio where id = :id", SesionEstudio.class)
+      .setParameter("id", id)
+      .uniqueResult();
   }
 }
