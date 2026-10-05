@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<aside th:fragment="sidebar-nav" class="sidebar">
+<aside th:fragment="sidebar-nav(activePage)" class="sidebar">
     <div>
         <!-- Logo -->
         <div class="brand">
@@ -15,33 +15,57 @@
 
         <!-- Menú de Navegación -->
         <nav class="nav-menu">
-            <a th:href="@{/dashboard}" class="nav-item">
+            <a th:href="@{/dashboard}"
+               class="nav-item"
+               th:classappend="${activePage == 'dashboard' ? 'activo' : ''}">
                 <i class="fa-solid fa-border-all"></i> Dashboard
             </a>
 
-            <a th:href="@{/FocusFlight}" class="nav-item active">
-
+            <a th:href="@{/focusflight}"
+               class="nav-item"
+               th:classappend="${activePage == 'focusflight' ? 'activo' : ''}">
                 <i class="fa-solid fa-plane-departure"></i> FocusFlight
             </a>
-            <a th:href="@{/materias}" class="nav-item">
+
+            <a th:href="@{/materias}"
+               class="nav-item"
+               th:classappend="${activePage == 'materias' ? 'activo' : ''}">
                 <i class="fa-solid fa-book"></i> Materias
             </a>
-            <a th:href="@{/parciales}" class="nav-item">
+
+            <a th:href="@{/parciales}"
+               class="nav-item"
+               th:classappend="${activePage == 'parciales' ? 'activo' : ''}">
                 <i class="fa-regular fa-calendar-check"></i> Parciales
             </a>
-            <a th:href="@{/trabajos-practicos}" class="nav-item">
+
+            <a th:href="@{/trabajos-practicos}"
+               class="nav-item"
+               th:classappend="${activePage == 'trabajos-practicos' ? 'activo' : ''}">
                 <i class="fa-solid fa-folder-open"></i> Trabajos Prácticos
             </a>
-            <a th:href="@{/grupos}" class="nav-item">
+
+            <a th:href="@{/grupos}"
+               class="nav-item"
+               th:classappend="${activePage == 'grupos' ? 'activo' : ''}">
                 <i class="fa-solid fa-users"></i> Grupos
             </a>
-            <a th:href="@{/calendario}" class="nav-item">
+
+            <a th:href="@{/calendario}"
+               class="nav-item"
+               th:classappend="${activePage == 'calendario' ? 'activo' : ''}">
                 <i class="fa-regular fa-calendar"></i> Calendario
             </a>
-            <a th:href="@{/ai-copilot}" class="nav-item">
+
+            <a th:href="@{/ai-copilot}"
+               class="nav-item"
+               th:classappend="${activePage == 'ai' ? 'activo' : ''}">
                 <i class="fa-solid fa-wand-magic-sparkles"></i> AI
             </a>
-            <a th:href="@{/perfil}" class="nav-item">
+
+            <a th:href="@{/perfil}"
+               class="nav-item"
+               th:classappend="${activePage == 'perfil' ? 'activo' : ''}">
                 <i class="fa-regular fa-user"></i> Mi Perfil
             </a>
         </nav>
@@ -56,6 +80,5 @@
         </div>
     </div>
 </aside>
-
 </body>
 </html>

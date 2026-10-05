@@ -43,12 +43,12 @@
     transition: all 0.2s;
 }
 
-.nav-item:hover, .nav-item.active {
+.nav-item:hover, .nav-item.activo {
     background-color: #231638;
     color: var(--text-primary);
 }
 
-.nav-item.active {
+.nav-item.activo {
     border: 1px solid #3b235d;
 }
 

@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<div th:replace="~{componentes/sidebar :: sidebar-nav}"></div>
+<div th:replace="~{componentes/sidebar :: sidebar-nav('focusflight')}"></div>
 
 <div class="main-wrapper">
 
@@ -20,7 +20,7 @@
         <h1 class="page-title">Configurar Vuelo</h1>
         <p class="page-subtitle">Configura tu sesión de concentración como un vuelo académico.</p>
 
-        <form id="form-vuelo" th:action="@{/FocusFlight/Boleto}" method="POST" accept-charset="UTF-8" th:object="${datosPomodoro}" novalidate>
+        <form id="form-vuelo" th:action="@{/focusflight/boleto}" method="POST" accept-charset="UTF-8" th:object="${datosPomodoro}" novalidate>
             <div class="flight-card">
                 <div class="card-header-title">
                     <i class="fa-solid fa-plane-flight"></i>
