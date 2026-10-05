@@ -39,6 +39,12 @@
                 <i class="fa-regular fa-calendar-check"></i> Parciales
             </a>
 
+            <a th:href="@{/tareas}"
+               class="nav-item"
+               th:classappend="${activePage == 'tareas' ? 'activo' : ''}">
+                <i class="fa-solid fa-list-check"></i> Tareas
+            </a>
+
             <a th:href="@{/trabajos-practicos}"
                class="nav-item"
                th:classappend="${activePage == 'trabajos-practicos' ? 'activo' : ''}">

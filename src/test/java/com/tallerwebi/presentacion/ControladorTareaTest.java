@@ -6,6 +6,7 @@ import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
 import com.tallerwebi.dominio.tarea.Tarea;
 import com.tallerwebi.presentacion.tarea.ControladorTarea;
@@ -20,11 +21,13 @@ public class ControladorTareaTest {
 
   private ControladorTarea controladorTarea;
   private ServicioTarea servicioTareaMock;
+  private ServicioMateria servicioMateriaMock;
 
   @BeforeEach
   public void init() {
     servicioTareaMock = mock(ServicioTarea.class);
-    controladorTarea = new ControladorTarea(servicioTareaMock);
+    servicioMateriaMock = mock(ServicioMateria.class);
+    controladorTarea = new ControladorTarea(servicioTareaMock, servicioMateriaMock);
   }
 
   @Test
