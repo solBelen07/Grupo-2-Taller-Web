@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trabajos Prácticos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+<body>
+
+<div th:replace="~{componentes/sidebar :: sidebar-nav}"></div>
+
+<div class="contenido-principal">
+
+    <div th:replace="~{componentes/header :: header-principal}"></div>
+
+    <main class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1>Trabajos Prácticos</h1>
+                <p class="text-muted">Administrá tus entregas y planificación de TPs.</p>
+            </div>
+            <a th:href="@{/trabajos-practicos/nuevo}" class="btn btn-primary">+ Agregar trabajo práctico</a>
+        </div>
+
+        <!-- FILTRO -->
+        <form th:action="@{/trabajos-practicos}" method="GET" class="tp-filtro">
+            <select name="materia">
+                <option value="">Todas las materias</option>
+                <option value="Taller Web" th:selected="${materiaBuscada == 'Taller Web'}">Taller Web</option>
+                <option value="Programación Web" th:selected="${materiaBuscada == 'Programación Web'}">Programación Web</option>
+                <option value="Base de Datos" th:selected="${materiaBuscada == 'Base de Datos'}">Base de Datos</option>
+            </select>
+            <button type="submit" class="tp-btn-sec">Filtrar</button>
+            <a th:href="@{/trabajos-practicos}" class="tp-btn-sec">Mostrar todos</a>
+        </form>
+
+        <!-- TABLERO -->
+        <div class="tp-tablero">
+
+            <!-- PENDIENTE -->
+            <section class="tp-columna tp-pendiente">
+                <div class="tp-columna-cabecera">
+                    <h2 class="tp-columna-titulo">PENDIENTE</h2>
+                    <span class="tp-contador" th:text="${#lists.size(pendientes)}">0</span>
+                </div>
+
+                <div th:if="${pendientes.isEmpty()}" class="tp-vacio">Sin trabajos</div>
+
+                <article th:each="tp : ${pendientes}" class="tp-tarjeta">
+                    <div class="tp-tarjeta-cabecera">
+                        <h3 class="tp-nombre" th:text="${tp.nombre}">Nombre TP</h3>
+                        <span class="tp-punto"></span>
+                    </div>
+                    <p class="tp-materia" th:text="${tp.materia}">Materia</p>
+                    <span class="tp-etiqueta" th:text="${tp.tipo}">TIPO</span>
+                    <div class="tp-acciones">
+                        <a th:href="@{/trabajos-practicos/editar/{id}(id=${tp.id})}" class="tp-btn-mini">Editar</a>
+                        <form th:action="@{/trabajos-practicos/eliminar/{id}(id=${tp.id})}" method="POST"
+                              onsubmit="return confirm('¿Estás seguro de eliminar este trabajo práctico?');">
+                            <button type="submit" class="tp-btn-mini peligro">Eliminar</button>
+                        </form>
+                    </div>
+                </article>
+            </section>
+
+            <!-- EN CURSO -->
+            <section class="tp-columna tp-en-curso">
+                <div class="tp-columna-cabecera">
+                    <h2 class="tp-columna-titulo">EN CURSO</h2>
+                    <span class="tp-contador" th:text="${#lists.size(enCurso)}">0</span>
+                </div>
+
+                <div th:if="${enCurso.isEmpty()}" class="tp-vacio">Sin trabajos</div>
+
+                <article th:each="tp : ${enCurso}" class="tp-tarjeta">
+                    <div class="tp-tarjeta-cabecera">
+                        <h3 class="tp-nombre" th:text="${tp.nombre}">Nombre TP</h3>
+                        <span class="tp-punto"></span>
+                    </div>
+                    <p class="tp-materia" th:text="${tp.materia}">Materia</p>
+                    <span class="tp-etiqueta" th:text="${tp.tipo}">TIPO</span>
+                    <div class="tp-acciones">
+                        <a th:href="@{/trabajos-practicos/editar/{id}(id=${tp.id})}" class="tp-btn-mini">Editar</a>
+                        <form th:action="@{/trabajos-practicos/eliminar/{id}(id=${tp.id})}" method="POST"
+                              onsubmit="return confirm('¿Estás seguro de eliminar este trabajo práctico?');">
+                            <button type="submit" class="tp-btn-mini peligro">Eliminar</button>
+                        </form>
+                    </div>
+                </article>
+            </section>
+
+            <!-- FINALIZADO -->
+            <section class="tp-columna tp-finalizado">
+                <div class="tp-columna-cabecera">
+                    <h2 class="tp-columna-titulo">FINALIZADO</h2>
+                    <span class="tp-contador" th:text="${#lists.size(finalizados)}">0</span>
+                </div>
+
+                <div th:if="${finalizados.isEmpty()}" class="tp-vacio">Sin trabajos</div>
+
+                <article th:each="tp : ${finalizados}" class="tp-tarjeta">
+                    <div class="tp-tarjeta-cabecera">
+                        <h3 class="tp-nombre" th:text="${tp.nombre}">Nombre TP</h3>
+                        <span class="tp-punto"></span>
+                    </div>
+                    <p class="tp-materia" th:text="${tp.materia}">Materia</p>
+                    <span class="tp-etiqueta" th:text="${tp.tipo}">TIPO</span>
+                    <div class="tp-acciones">
+                        <a th:href="@{/trabajos-practicos/editar/{id}(id=${tp.id})}" class="tp-btn-mini">Editar</a>
+                        <form th:action="@{/trabajos-practicos/eliminar/{id}(id=${tp.id})}" method="POST"
+                              onsubmit="return confirm('¿Estás seguro de eliminar este trabajo práctico?');">
+                            <button type="submit" class="tp-btn-mini peligro">Eliminar</button>
+                        </form>
+                    </div>
+                </article>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
+</html>
