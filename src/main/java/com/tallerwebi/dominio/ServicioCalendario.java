@@ -6,9 +6,9 @@ import java.time.LocalDate;
 
 /** Arma el calendario unificado (todas las materias) de un alumno. */
 public interface ServicioCalendario {
-  /** Vista mensual del mes que contiene a {@code referencia}. */
+  /** Vista mensual del mes que contiene a  referencia. */
   CalendarioMensual obtenerMes(Long usuarioId, LocalDate referencia);
 
-  /** Vista semanal (lunes a domingo) de la semana que contiene a {@code referencia}. */
+  /** Vista semanal (lunes a domingo) de la semana que contiene a referencia. */
   CalendarioSemanal obtenerSemana(Long usuarioId, LocalDate referencia);
 }

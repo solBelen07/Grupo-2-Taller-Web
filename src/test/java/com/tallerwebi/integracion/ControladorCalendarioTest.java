@@ -55,7 +55,7 @@ public class ControladorCalendarioTest {
   }
 
   @Test
-  public void debeBindearLosParametrosVistaYFecha() throws Exception {
+  public void debeAsociarLosParametrosVistaYFecha() throws Exception {
     this.mockMvc.perform(
         get("/calendario")
           .sessionAttr("USUARIO", this.usuarioLogueado)
