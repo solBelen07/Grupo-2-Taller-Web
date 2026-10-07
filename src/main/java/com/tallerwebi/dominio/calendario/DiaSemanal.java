@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @param fecha fecha de la columna
  * @param nombre nombre del día, por ejemplo {@code Lunes}
- * @param abreviatura abreviatura de tres letras, por ejemplo {@code Lun}
+ * @param abreviatura abreviatura de tres letras, por ejemplo Lun
  * @param esHoy si la fecha es la de hoy
  * @param bloques bloques de eventos posicionados en la grilla horaria de este día
  */
@@ -18,4 +18,6 @@ public record DiaSemanal(
   String abreviatura,
   boolean esHoy,
   List<BloqueHorario> bloques
-) {}
+) {
+
+}

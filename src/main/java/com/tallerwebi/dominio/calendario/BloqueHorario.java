@@ -9,4 +9,6 @@ package com.tallerwebi.dominio.calendario;
  * @param columna columna (0-based) que ocupa entre los bloques que se superponen
  * @param columnas cantidad de columnas del grupo de bloques superpuestos
  */
-public record BloqueHorario(SegmentoDia segmento, int top, int alto, int columna, int columnas) {}
+public record BloqueHorario(SegmentoDia segmento, int top, int alto, int columna, int columnas) {
+
+}

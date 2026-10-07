@@ -25,7 +25,7 @@ public class CalculadorEstadoActividadTest {
     return tarea;
   }
 
-  // ---------------------------------------------------------------- Completada
+  // completada
 
   @Test
   public void marcadaComoCompletadaDaEstadoCompletada() {
@@ -54,7 +54,7 @@ public class CalculadorEstadoActividadTest {
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
   }
 
-  // ---------------------------------------------------------------- Vencida
+  // Vencida
 
   @Test
   public void fechaVencidaYNoCompletadaDaVencida() {
@@ -74,7 +74,7 @@ public class CalculadorEstadoActividadTest {
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.VENCIDA));
   }
 
-  // ---------------------------------------------------------------- Próxima a vencer
+  // Próxima a vencer
 
   @Test
   public void venceEnTresDiasEstaProximaAVencer() {
@@ -133,7 +133,7 @@ public class CalculadorEstadoActividadTest {
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
   }
 
-  // ---------------------------------------------------------------- Parcialmente completada
+  //  Parcialmente completada
 
   @Test
   public void conProgresoIntermedioYTiempoDeSobraDaParcialmenteCompletada() {
@@ -158,6 +158,7 @@ public class CalculadorEstadoActividadTest {
       is(EstadoActividad.PARCIALMENTE_COMPLETADA)
     );
   }
+
 
   @Test
   public void conMenosDeCincuentaPorCientoTodaviaEsEnTiempo() {
@@ -192,7 +193,7 @@ public class CalculadorEstadoActividadTest {
     );
   }
 
-  // ---------------------------------------------------------------- En tiempo
+  // En tiempo
 
   @Test
   public void sinProgresoYConTiempoDeSobraDaEnTiempo() {
@@ -248,7 +249,7 @@ public class CalculadorEstadoActividadTest {
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
   }
 
-  // ---------------------------------------------------------------- El tipo ya no importa
+  // El tipo ya no importa
 
   @Test
   public void elResultadoEsElMismoSeaCualSeaElTipo() {

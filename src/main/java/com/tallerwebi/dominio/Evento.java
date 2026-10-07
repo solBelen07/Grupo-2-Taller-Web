@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 /**
  * Evento del calendario académico de un alumno: clase, parcial, trabajo práctico, estudio o
  * reunión grupal. La materia es el catálogo compartido de la app (no tiene dueño), así que el
- * evento guarda su propio {@code usuarioId} para saber de quién es.
+ * evento guarda su propio usuarioId para saber de quién es.
  */
 @Entity
 public class Evento {
@@ -35,11 +35,13 @@ public class Evento {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private Materia materia;
 
-  /** Id de la Tarea de /tareas vinculada a este evento (CAL-02); null si no tiene ninguna. */
+  /** Id de la Tarea de /tareas vinculada a este evento; null si no tiene ninguna. */
   private Long tareaId;
 
   /** Requerido por Hibernate. */
-  protected Evento() {}
+  protected Evento() {
+
+  }
 
   /**
    * Crea un evento validando sus datos.

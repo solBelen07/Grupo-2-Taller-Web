@@ -41,7 +41,7 @@ public record SegmentoDia(
   /**
    * Recorta el evento al día indicado; vacío si el evento no ocupa ese día.
    *
-   * @param estado estado de seguimiento ya calculado para este evento (CAL-02), o null si el
+   * @param estado estado de seguimiento ya calculado para este evento, o null si el
    *     evento no tiene una Tarea vinculada
    */
   public static Optional<SegmentoDia> recortar(
@@ -76,20 +76,21 @@ public record SegmentoDia(
 
   /** Duración del segmento en minutos. */
   public int duracion() {
+
     return minutoFin - minutoInicio;
   }
 
-  /** Hora de inicio con formato {@code HH:mm}. */
+  /** Hora de inicio con formato HH:mm */
   public String horaInicio() {
     return formatear(minutoInicio);
   }
 
-  /** Hora de fin con formato {@code HH:mm} (la medianoche final se muestra como 00:00). */
+  /** Hora de fin con formato HH:mm (la medianoche final se muestra como 00:00). */
   public String horaFin() {
     return formatear(minutoFin);
   }
 
-  /** Rango legible, por ejemplo {@code 18:00 – 20:00}. */
+  /** Rango legible, por ejemplo  18:00 – 20:00 */
   public String horario() {
     return horaInicio() + " – " + horaFin();
   }
