@@ -1,10 +1,10 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.trabajosPracticos;
 
 import java.util.List;
 
 public interface ServicioTrabajoPractico {
   TrabajoPractico crearTrabajoPractico(TrabajoPractico trabajoPractico);
-  TrabajoPractico cambiarEstado(int id, EstadoTP nuevoEstado);
+  TrabajoPractico cambiarEstado(Long id, EstadoTP nuevoEstado);
   List<TrabajoPractico> obtenerTodos();
   List<TrabajoPractico> buscarPorMateria(String materiaFiltro);
   TrabajoPractico buscarPorId(Long id);

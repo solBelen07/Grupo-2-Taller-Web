@@ -1,13 +1,13 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.trabajosPracticos;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.EstadoTP;
-import com.tallerwebi.dominio.ServicioTrabajoPractico;
-import com.tallerwebi.dominio.TrabajoPractico;
+import com.tallerwebi.dominio.trabajosPracticos.EstadoTP;
+import com.tallerwebi.dominio.trabajosPracticos.ServicioTrabajoPractico;
+import com.tallerwebi.dominio.trabajosPracticos.TrabajoPractico;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.trabajosPracticos;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -48,7 +48,7 @@ public class ServicioTrabajoPracticoTest {
   @Test
   void deberiaCambiarElEstadoDelTrabajoPracticoExitosamente() {
     // Arrange
-    int idTp = 1;
+    Long idTp = 1L;
     TrabajoPractico tpExistente = new TrabajoPractico(
       "TP Arquitectura",
       "Desarrollo de Software",

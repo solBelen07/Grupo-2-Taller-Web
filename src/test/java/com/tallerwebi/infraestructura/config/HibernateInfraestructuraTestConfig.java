@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan(basePackages = { "com.tallerwebi.infraestructura", "com.tallerwebi.dominio" })
+@ComponentScan(basePackages = { "com.tallerwebi.infraestructura" })
 public class HibernateInfraestructuraTestConfig {
 
   @Bean

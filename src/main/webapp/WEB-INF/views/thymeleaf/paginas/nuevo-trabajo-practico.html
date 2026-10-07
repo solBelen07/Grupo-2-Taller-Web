@@ -45,6 +45,16 @@
             </div>
 
             <div class="tp-campo">
+                <label for="descripcion">Descripción</label>
+                <textarea id="descripcion" th:field="*{descripcion}" rows="3"></textarea>
+            </div>
+
+            <div class="tp-campo">
+                <label for="fechaEntrega">Fecha de entrega</label>
+                <input type="date" id="fechaEntrega" th:field="*{fechaEntrega}" required>
+            </div>
+
+            <div class="tp-campo">
                 <label for="tipo">Tipo</label>
                 <select id="tipo" th:field="*{tipo}" required>
                     <option value="">Seleccioná una opción</option>
@@ -58,6 +68,21 @@
                     <option th:each="e : ${estados}" th:value="${e}"
                             th:text="${#strings.replace(e, '_', ' ')}"></option>
                 </select>
+            </div>
+
+            <div class="tp-campo">
+                <label>Disponibilidad horaria</label>
+                <div class="tp-disponibilidad">
+                    <div th:each="disp, stat : *{disponibilidades}" class="tp-disponibilidad-fila">
+                        <input type="hidden" th:field="*{disponibilidades[__${stat.index}__].dia}">
+                        <span class="tp-disponibilidad-dia" th:text="${disp.dia}"></span>
+                        <div class="tp-disponibilidad-horas">
+                            <input type="number" min="0" max="24"
+                                   th:field="*{disponibilidades[__${stat.index}__].horas}">
+                            <span>hs</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="tp-form-botones">

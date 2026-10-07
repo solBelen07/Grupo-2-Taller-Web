@@ -1,4 +1,4 @@
-package com.tallerwebi.integracion;
+package com.tallerwebi.integracion.trabajosPractico;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalToIgnoringCase;

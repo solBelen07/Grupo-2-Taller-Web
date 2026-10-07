@@ -1,9 +1,10 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.trabajosPracticos;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class TrabajoPractico {
@@ -15,6 +16,8 @@ public class TrabajoPractico {
   private String nombre;
   private String materia;
   private String descripcion;
+
+  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate fechaEntrega;
 
   @ElementCollection

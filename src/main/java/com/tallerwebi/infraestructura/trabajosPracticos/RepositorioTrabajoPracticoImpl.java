@@ -1,9 +1,10 @@
-package com.tallerwebi.infraestructura;
+package com.tallerwebi.infraestructura.trabajosPracticos;
 
-import com.tallerwebi.dominio.RepositorioTrabajoPractico;
-import com.tallerwebi.dominio.TipoTrabajo;
-import com.tallerwebi.dominio.TrabajoPractico;
+import com.tallerwebi.dominio.trabajosPracticos.RepositorioTrabajoPractico;
+import com.tallerwebi.dominio.trabajosPracticos.TipoTrabajo;
+import com.tallerwebi.dominio.trabajosPracticos.TrabajoPractico;
 import java.util.List;
+import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -29,7 +30,11 @@ public class RepositorioTrabajoPracticoImpl implements RepositorioTrabajoPractic
 
   @Override
   public TrabajoPractico buscarPorId(Long id) {
-    return sessionFactory.getCurrentSession().get(TrabajoPractico.class, id);
+    TrabajoPractico tp = sessionFactory.getCurrentSession().get(TrabajoPractico.class, id);
+    if (tp != null) {
+      Hibernate.initialize(tp.getDisponibilidades());
+    }
+    return tp;
   }
 
   @Override

@@ -1,9 +1,11 @@
-package com.tallerwebi.presentacion;
+package com.tallerwebi.presentacion.trabajosPracticos;
 
-import com.tallerwebi.dominio.EstadoTP;
-import com.tallerwebi.dominio.ServicioTrabajoPractico;
-import com.tallerwebi.dominio.TipoTrabajo;
-import com.tallerwebi.dominio.TrabajoPractico;
+import com.tallerwebi.dominio.trabajosPracticos.DisponibilidadHoraria;
+import com.tallerwebi.dominio.trabajosPracticos.EstadoTP;
+import com.tallerwebi.dominio.trabajosPracticos.ServicioTrabajoPractico;
+import com.tallerwebi.dominio.trabajosPracticos.TipoTrabajo;
+import com.tallerwebi.dominio.trabajosPracticos.TrabajoPractico;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,16 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/trabajos-practicos")
 public class ControladorTrabajoPractico {
+
+  private static final List<String> DIAS = List.of(
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+    "Domingo"
+  );
 
   private final ServicioTrabajoPractico servicioTrabajoPractico;
 
@@ -49,8 +61,11 @@ public class ControladorTrabajoPractico {
 
   @RequestMapping(path = "/nuevo", method = RequestMethod.GET)
   public ModelAndView irANuevoTrabajoPractico() {
+    TrabajoPractico tp = new TrabajoPractico();
+    completarDisponibilidades(tp);
+
     Map<String, Object> modelo = new ModelMap();
-    modelo.put("trabajoPractico", new TrabajoPractico());
+    modelo.put("trabajoPractico", tp);
     modelo.put("tipos", TipoTrabajo.values());
     modelo.put("estados", EstadoTP.values());
     return new ModelAndView("paginas/nuevo-trabajo-practico", modelo);
@@ -60,14 +75,20 @@ public class ControladorTrabajoPractico {
   public ModelAndView guardarTrabajoPractico(
     @ModelAttribute("trabajoPractico") TrabajoPractico trabajoPractico
   ) {
+    if (trabajoPractico.getDisponibilidades() != null) {
+      trabajoPractico.getDisponibilidades().removeIf(d -> d.getHoras() == 0);
+    }
     servicioTrabajoPractico.crearTrabajoPractico(trabajoPractico);
     return new ModelAndView("redirect:/trabajos-practicos");
   }
 
   @RequestMapping(path = "/editar/{id}", method = RequestMethod.GET)
   public ModelAndView editarTrabajoPractico(@PathVariable("id") Long id) {
+    TrabajoPractico tp = servicioTrabajoPractico.buscarPorId(id);
+    completarDisponibilidades(tp);
+
     Map<String, Object> modelo = new ModelMap();
-    modelo.put("trabajoPractico", servicioTrabajoPractico.buscarPorId(id));
+    modelo.put("trabajoPractico", tp);
     modelo.put("tipos", TipoTrabajo.values());
     modelo.put("estados", EstadoTP.values());
     return new ModelAndView("paginas/nuevo-trabajo-practico", modelo);
@@ -77,5 +98,23 @@ public class ControladorTrabajoPractico {
   public String eliminarTrabajoPractico(@PathVariable("id") Long id) {
     servicioTrabajoPractico.eliminar(id);
     return "redirect:/trabajos-practicos";
+  }
+
+  private void completarDisponibilidades(TrabajoPractico tp) {
+    List<DisponibilidadHoraria> completas = new ArrayList<>();
+    for (String dia : DIAS) {
+      DisponibilidadHoraria existente = null;
+      if (tp.getDisponibilidades() != null) {
+        existente =
+          tp
+            .getDisponibilidades()
+            .stream()
+            .filter(d -> dia.equals(d.getDia()))
+            .findFirst()
+            .orElse(null);
+      }
+      completas.add(existente != null ? existente : new DisponibilidadHoraria(dia, 0));
+    }
+    tp.setDisponibilidades(completas);
   }
 }

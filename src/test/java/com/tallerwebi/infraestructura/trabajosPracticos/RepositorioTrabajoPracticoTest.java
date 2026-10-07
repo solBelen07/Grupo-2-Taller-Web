@@ -1,11 +1,11 @@
-package com.tallerwebi.infraestructura;
+package com.tallerwebi.infraestructura.trabajosPracticos;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-import com.tallerwebi.dominio.RepositorioTrabajoPractico;
-import com.tallerwebi.dominio.TipoTrabajo;
-import com.tallerwebi.dominio.TrabajoPractico;
+import com.tallerwebi.dominio.trabajosPracticos.RepositorioTrabajoPractico;
+import com.tallerwebi.dominio.trabajosPracticos.TipoTrabajo;
+import com.tallerwebi.dominio.trabajosPracticos.TrabajoPractico;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

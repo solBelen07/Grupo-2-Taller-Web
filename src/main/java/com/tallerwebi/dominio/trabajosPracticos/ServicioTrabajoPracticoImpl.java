@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio;
+package com.tallerwebi.dominio.trabajosPracticos;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -22,15 +22,15 @@ public class ServicioTrabajoPracticoImpl implements ServicioTrabajoPractico {
   }
 
   @Override
-  public TrabajoPractico cambiarEstado(int id, EstadoTP nuevoEstado) {
-    TrabajoPractico trabajoPractico = this.repositorioTrabajoPractico.buscarPorId((long) id);
+  public TrabajoPractico cambiarEstado(Long id, EstadoTP nuevoEstado) {
+    TrabajoPractico trabajoPractico = this.repositorioTrabajoPractico.buscarPorId(id);
 
-    if (trabajoPractico != null) {
-      trabajoPractico.setEstado(nuevoEstado);
-      return this.repositorioTrabajoPractico.save(trabajoPractico);
+    if (trabajoPractico == null) {
+      throw new RuntimeException("Trabajo práctico no encontrado");
     }
 
-    throw new RuntimeException("Trabajo práctico no encontrado");
+    trabajoPractico.setEstado(nuevoEstado);
+    return this.repositorioTrabajoPractico.save(trabajoPractico);
   }
 
   @Override
