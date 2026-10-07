@@ -12,6 +12,7 @@ public class RepositorioInvitacionImpl implements RepositorioInvitacion {
 
   private SessionFactory sessionFactory;
 
+  @Override
   public Invitacion enviarInvitacion(Invitacion invitacion) {
     sessionFactory.getCurrentSession().persist(invitacion);
     return invitacion;
