@@ -18,6 +18,4 @@ public record DiaSemanal(
   String abreviatura,
   boolean esHoy,
   List<BloqueHorario> bloques
-) {
-
-}
+) {}

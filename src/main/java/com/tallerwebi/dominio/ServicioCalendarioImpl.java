@@ -56,10 +56,10 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
 
   @Autowired
   public ServicioCalendarioImpl(
-          RepositorioEvento repositorioEvento,
-          RepositorioTarea repositorioTarea,
-          List<FuenteDeEventos> fuentes,
-          Clock reloj
+    RepositorioEvento repositorioEvento,
+    RepositorioTarea repositorioTarea,
+    List<FuenteDeEventos> fuentes,
+    Clock reloj
   ) {
     this.repositorioEvento = repositorioEvento;
     this.repositorioTarea = repositorioTarea;
@@ -84,26 +84,26 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
       for (int i = 0; i < DIAS_POR_SEMANA; i++) {
         LocalDate fecha = lunes.plusDays(i);
         dias.add(
-                new DiaMensual(
-                        fecha,
-                        YearMonth.from(fecha).equals(mes),
-                        fecha.equals(hoy),
-                        segmentosDelDia(eventos, fecha)
-                )
+          new DiaMensual(
+            fecha,
+            YearMonth.from(fecha).equals(mes),
+            fecha.equals(hoy),
+            segmentosDelDia(eventos, fecha)
+          )
         );
       }
       semanas.add(
-              new SemanaMensual(lunes.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR), lunes, List.copyOf(dias))
+        new SemanaMensual(lunes.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR), lunes, List.copyOf(dias))
       );
     }
     return new CalendarioMensual(
-            TextosCalendario.tituloMes(mes),
-            mes.minusMonths(1).atDay(1),
-            mes.plusMonths(1).atDay(1),
-            hoy,
-            List.copyOf(semanas),
-            resumirMaterias(eventos),
-            eventos.size()
+      TextosCalendario.tituloMes(mes),
+      mes.minusMonths(1).atDay(1),
+      mes.plusMonths(1).atDay(1),
+      hoy,
+      List.copyOf(semanas),
+      resumirMaterias(eventos),
+      eventos.size()
     );
   }
 
@@ -125,29 +125,29 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
     int horaFin = rangoDeHoras[1];
 
     return new CalendarioSemanal(
-            TextosCalendario.tituloSemana(lunes),
-            lunes.minusWeeks(1),
-            lunes.plusWeeks(1),
-            hoy,
-            armarDiasDeLaSemana(lunes, segmentosPorDia, horaInicio, hoy),
-            horaInicio,
-            horaFin,
-            armarEtiquetasDeHoras(horaInicio, horaFin),
-            resumirMaterias(eventos),
-            eventos.size()
+      TextosCalendario.tituloSemana(lunes),
+      lunes.minusWeeks(1),
+      lunes.plusWeeks(1),
+      hoy,
+      armarDiasDeLaSemana(lunes, segmentosPorDia, horaInicio, hoy),
+      horaInicio,
+      horaFin,
+      armarEtiquetasDeHoras(horaInicio, horaFin),
+      resumirMaterias(eventos),
+      eventos.size()
     );
   }
 
   /**
    * Junta los eventos reales del usuario (con el estado de su Tarea vinculada, si tienen) y los
-   * que aporta cada {@link FuenteDeEventos} (Parciales, TPs...) para el período {@code [desde,
-   * hasta)}.
+   * que aporta cada {@link FuenteDeEventos} (Parciales, TPs...) para el período (desde,
+   * hasta)
    */
   private List<EventoConEstado> cargarEventos(
-          Long usuarioId,
-          LocalDateTime desde,
-          LocalDateTime hasta,
-          LocalDate hoy
+    Long usuarioId,
+    LocalDateTime desde,
+    LocalDateTime hasta,
+    LocalDate hoy
   ) {
     List<Evento> reales = repositorioEvento.buscarEnRango(usuarioId, desde, hasta);
     Function<Evento, EstadoActividad> estados = estadosDeTareas(reales, hoy);
@@ -162,7 +162,7 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
   }
 
   /**
-   * Función evento → estado de seguimiento (CAL-02): resuelve una sola vez todas las Tareas que
+   * Función evento -> estado de seguimiento (CAL-02): resuelve una sola vez todas las Tareas que
    * puedan estar vinculadas a los eventos reales del período.
    */
   private Function<Evento, EstadoActividad> estadosDeTareas(List<Evento> eventos, LocalDate hoy) {
@@ -170,9 +170,9 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
       return evento -> null;
     }
     Map<Long, Tarea> tareasPorId = repositorioTarea
-            .buscarTodas()
-            .stream()
-            .collect(Collectors.toMap(Tarea::getId, tarea -> tarea, (unaTarea, otraTarea) -> unaTarea));
+      .buscarTodas()
+      .stream()
+      .collect(Collectors.toMap(Tarea::getId, tarea -> tarea, (unaTarea, otraTarea) -> unaTarea));
     return evento -> {
       Tarea tarea = evento.getTareaId() == null ? null : tareasPorId.get(evento.getTareaId());
       return tarea == null ? null : CalculadorEstadoActividad.calcular(tarea, hoy);
@@ -186,36 +186,37 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
     for (List<SegmentoDia> segmentos : segmentosPorDia) {
       for (SegmentoDia segmento : segmentos) {
         horaInicio = Math.min(horaInicio, segmento.minutoInicio() / MINUTOS_POR_HORA);
-        horaFin = Math.min(
-                HORAS_POR_DIA,
-                Math.max(horaFin, (segmento.minutoFin() + MINUTOS_POR_HORA - 1) / MINUTOS_POR_HORA)
-        );
+        horaFin =
+          Math.min(
+            HORAS_POR_DIA,
+            Math.max(horaFin, (segmento.minutoFin() + MINUTOS_POR_HORA - 1) / MINUTOS_POR_HORA)
+          );
       }
     }
     return new int[] { horaInicio, horaFin };
   }
 
   private static List<DiaSemanal> armarDiasDeLaSemana(
-          LocalDate lunes,
-          List<List<SegmentoDia>> segmentosPorDia,
-          int horaInicio,
-          LocalDate hoy
+    LocalDate lunes,
+    List<List<SegmentoDia>> segmentosPorDia,
+    int horaInicio,
+    LocalDate hoy
   ) {
     List<DiaSemanal> dias = new ArrayList<>();
     for (int i = 0; i < DIAS_POR_SEMANA; i++) {
       LocalDate fecha = lunes.plusDays(i);
       List<BloqueHorario> bloques = DisposicionDeBloques.disponer(
-              segmentosPorDia.get(i),
-              horaInicio * MINUTOS_POR_HORA
+        segmentosPorDia.get(i),
+        horaInicio * MINUTOS_POR_HORA
       );
       dias.add(
-              new DiaSemanal(
-                      fecha,
-                      TextosCalendario.nombreDia(fecha.getDayOfWeek()),
-                      TextosCalendario.abreviaturaDia(fecha.getDayOfWeek()),
-                      fecha.equals(hoy),
-                      bloques
-              )
+        new DiaSemanal(
+          fecha,
+          TextosCalendario.nombreDia(fecha.getDayOfWeek()),
+          TextosCalendario.abreviaturaDia(fecha.getDayOfWeek()),
+          fecha.equals(hoy),
+          bloques
+        )
       );
     }
     return List.copyOf(dias);
@@ -231,37 +232,38 @@ public class ServicioCalendarioImpl implements ServicioCalendario {
 
   private static List<SegmentoDia> segmentosDelDia(List<EventoConEstado> eventos, LocalDate dia) {
     return eventos
-            .stream()
-            .flatMap(item -> SegmentoDia.recortar(item.evento(), dia, item.estado()).stream())
-            .sorted(
-                    Comparator.comparingInt(SegmentoDia::minutoInicio)
-                            .thenComparingInt(SegmentoDia::minutoFin)
-                            .thenComparing(SegmentoDia::titulo)
-            )
-            .toList();
+      .stream()
+      .flatMap(item -> SegmentoDia.recortar(item.evento(), dia, item.estado()).stream())
+      .sorted(
+        Comparator
+          .comparingInt(SegmentoDia::minutoInicio)
+          .thenComparingInt(SegmentoDia::minutoFin)
+          .thenComparing(SegmentoDia::titulo)
+      )
+      .toList();
   }
 
   /** Materias que efectivamente tienen algún evento en el período mostrado, con su cantidad. */
   private static List<ResumenMateria> resumirMaterias(List<EventoConEstado> eventos) {
     Map<Materia, Long> cantidadPorMateria = eventos
-            .stream()
-            .map(EventoConEstado::evento)
-            .collect(
-                    Collectors.groupingBy(Evento::getMateria, IdentityHashMap::new, Collectors.counting())
-            );
+      .stream()
+      .map(EventoConEstado::evento)
+      .collect(
+        Collectors.groupingBy(Evento::getMateria, IdentityHashMap::new, Collectors.counting())
+      );
     return cantidadPorMateria
-            .entrySet()
-            .stream()
-            .sorted(
-                    Comparator.comparing(entrada -> entrada.getKey().getNombre(), String.CASE_INSENSITIVE_ORDER)
-            )
-            .map(entrada ->
-                    new ResumenMateria(
-                            entrada.getKey().getNombre(),
-                            entrada.getKey().getColor(),
-                            entrada.getValue().intValue()
-                    )
-            )
-            .toList();
+      .entrySet()
+      .stream()
+      .sorted(
+        Comparator.comparing(entrada -> entrada.getKey().getNombre(), String.CASE_INSENSITIVE_ORDER)
+      )
+      .map(entrada ->
+        new ResumenMateria(
+          entrada.getKey().getNombre(),
+          entrada.getKey().getColor(),
+          entrada.getValue().intValue()
+        )
+      )
+      .toList();
   }
 }

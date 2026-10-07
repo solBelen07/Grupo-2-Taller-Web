@@ -74,10 +74,7 @@ public class FuenteDeParcialesTest {
   @Test
   public void sinNombreUsaElTituloGenerico() {
     assertThat(
-      traer(parcial(HOY, LocalTime.of(14, 0), null))
-        .get(0)
-        .evento()
-        .getTitulo(),
+      traer(parcial(HOY, LocalTime.of(14, 0), null)).get(0).evento().getTitulo(),
       is("Parcial de Análisis II")
     );
   }
@@ -85,10 +82,7 @@ public class FuenteDeParcialesTest {
   @Test
   public void conNombreEnBlancoUsaElTituloGenerico() {
     assertThat(
-      traer(parcial(HOY, LocalTime.of(14, 0), "   "))
-        .get(0)
-        .evento()
-        .getTitulo(),
+      traer(parcial(HOY, LocalTime.of(14, 0), "   ")).get(0).evento().getTitulo(),
       is("Parcial de Análisis II")
     );
   }
@@ -96,10 +90,7 @@ public class FuenteDeParcialesTest {
   @Test
   public void conNombreCargadoUsaEseNombre() {
     assertThat(
-      traer(parcial(HOY, LocalTime.of(14, 0), "Primer Parcial"))
-        .get(0)
-        .evento()
-        .getTitulo(),
+      traer(parcial(HOY, LocalTime.of(14, 0), "Primer Parcial")).get(0).evento().getTitulo(),
       is("Primer Parcial")
     );
   }
@@ -134,9 +125,7 @@ public class FuenteDeParcialesTest {
   public void elEstadoSeCalculaConLasSesionesDelParcial() {
     // sin sesiones completadas y con 6 días por delante -> En tiempo
     assertThat(
-      traer(parcial(HOY.plusDays(6), LocalTime.of(14, 0), null))
-        .get(0)
-        .estado(),
+      traer(parcial(HOY.plusDays(6), LocalTime.of(14, 0), null)).get(0).estado(),
       is(EstadoActividad.EN_TIEMPO)
     );
   }
@@ -144,9 +133,7 @@ public class FuenteDeParcialesTest {
   @Test
   public void unParcialQueEsHoyEstaProximoAVencer() {
     assertThat(
-      traer(parcial(HOY, LocalTime.of(14, 0), null))
-        .get(0)
-        .estado(),
+      traer(parcial(HOY, LocalTime.of(14, 0), null)).get(0).estado(),
       is(EstadoActividad.PROXIMA_A_VENCER)
     );
   }

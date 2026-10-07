@@ -39,9 +39,7 @@ public class Evento {
   private Long tareaId;
 
   /** Requerido por Hibernate. */
-  protected Evento() {
-
-  }
+  protected Evento() {}
 
   /**
    * Crea un evento validando sus datos.
@@ -118,7 +116,7 @@ public class Evento {
     return tareaId;
   }
 
-  /** Vincula este evento a una Tarea de /tareas (CAL-02), para mostrar su estado como badge. */
+  /** Vincula este evento a una Tarea de /tareas (CAL-02), para mostrar su estado. */
   public void vincularTarea(Long idDeLaTarea) {
     this.tareaId = idDeLaTarea;
   }

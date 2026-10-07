@@ -19,11 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Aporta al calendario los Trabajos Prácticos del módulo /trabajos-practicos: cada uno aparece
- * como un bloque de {@link #DURACION_HORAS} hora a las {@link #HORA_DE_ENTREGA} del día de
- * entrega (el TP solo guarda la fecha). El TP guarda la materia como texto, así que se busca la
- * {@code Materia} real por nombre (si no hay coincidencia sale en gris). No tiene dueño todavía,
- * así que se muestra a cualquier usuario.
+ * Aporta al calendario los Trabajos Prácticos del módulo /trabajos-practicos
  */
 @Component
 public class FuenteDeTrabajosPracticos implements FuenteDeEventos {
@@ -85,8 +81,7 @@ public class FuenteDeTrabajosPracticos implements FuenteDeEventos {
   }
 
   /**
-   * Busca la Materia real por nombre (sin importar mayúsculas ni espacios). Si no hay ninguna,
-   * usa una materia gris con ese nombre que nunca se guarda, la misma para el mismo nombre.
+   * Busca la Materia real por nombre (sin importar mayúsculas ni espacios).
    */
   private static Materia materiaDe(
     TrabajoPractico trabajo,
@@ -99,17 +94,20 @@ public class FuenteDeTrabajosPracticos implements FuenteDeEventos {
         return materia;
       }
     }
-    return sinCatalogo.computeIfAbsent(nombre.toLowerCase(Locale.ROOT), clave -> {
-      Materia gris = new Materia();
-      gris.setNombre(nombre.isEmpty() ? MATERIA_SIN_NOMBRE : nombre);
-      gris.setColor(COLOR_SIN_MATERIA);
-      return gris;
-    });
+    return sinCatalogo.computeIfAbsent(
+      nombre.toLowerCase(Locale.ROOT),
+      clave -> {
+        Materia gris = new Materia();
+        gris.setNombre(nombre.isEmpty() ? MATERIA_SIN_NOMBRE : nombre);
+        gris.setColor(COLOR_SIN_MATERIA);
+        return gris;
+      }
+    );
   }
 
   /**
    * Estado de un TP: un TP no guarda horas ni avance, así que solo cuentan su estado y su fecha.
-   * Finalizado &gt; Vencido &gt; Próximo a vencer &gt; En tiempo.
+   * Finalizado, Vencido, Próximo a vencer, En tiempo.
    */
   static EstadoActividad estadoDe(TrabajoPractico trabajo, LocalDate hoy) {
     if (trabajo.getEstado() == EstadoTP.FINALIZADO) {

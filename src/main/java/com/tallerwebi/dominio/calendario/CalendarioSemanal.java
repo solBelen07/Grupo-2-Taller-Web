@@ -31,7 +31,6 @@ public record CalendarioSemanal(
 ) {
   /** Indica si no hay ningún evento en la semana. */
   public boolean vacio() {
-
     return totalEventos == 0;
   }
 }

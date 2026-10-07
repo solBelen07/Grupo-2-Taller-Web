@@ -8,7 +8,7 @@ public final class CalculadorEstadoActividad {
   static final String ESTADO_COMPLETADA = "COMPLETADA";
   static final int DIAS_PROXIMO_VENCIMIENTO = 3;
   static final double PORCENTAJE_COMPLETO = 100.0;
-  static final double UMBRAL_PARCIALMENTE_COMPLETADA = 50.0;
+  static final double PARCIALMENTE_COMPLETADA = 50.0;
 
   private CalculadorEstadoActividad() {}
 
@@ -24,7 +24,7 @@ public final class CalculadorEstadoActividad {
       return EstadoActividad.PROXIMA_A_VENCER;
     }
     double porcentaje = calcularPorcentajeHoras(tarea);
-    if (porcentaje >= UMBRAL_PARCIALMENTE_COMPLETADA && porcentaje < PORCENTAJE_COMPLETO) {
+    if (porcentaje >= PARCIALMENTE_COMPLETADA && porcentaje < PORCENTAJE_COMPLETO) {
       return EstadoActividad.PARCIALMENTE_COMPLETADA;
     }
     return EstadoActividad.EN_TIEMPO;

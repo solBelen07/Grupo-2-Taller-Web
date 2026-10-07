@@ -76,7 +76,6 @@ public record SegmentoDia(
 
   /** Duración del segmento en minutos. */
   public int duracion() {
-
     return minutoFin - minutoInicio;
   }
 
@@ -95,7 +94,6 @@ public record SegmentoDia(
     return horaInicio() + " – " + horaFin();
   }
 
-  /** Descripción completa para tooltips y lectores de pantalla. */
   public String descripcion() {
     String base =
       tipo.getEtiqueta() + SEPARADOR + materia + SEPARADOR + titulo + SEPARADOR + horario();

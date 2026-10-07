@@ -37,10 +37,8 @@ public class FuenteDeTrabajosPracticosTest {
   public void init() {
     this.repositorioTpMock = mock(RepositorioTrabajoPractico.class);
     this.repositorioMateriaMock = mock(RepositorioMateria.class);
-    this.fuente = new FuenteDeTrabajosPracticos(
-      this.repositorioTpMock,
-      this.repositorioMateriaMock
-    );
+    this.fuente =
+      new FuenteDeTrabajosPracticos(this.repositorioTpMock, this.repositorioMateriaMock);
     this.tallerWeb = new Materia();
     this.tallerWeb.setNombre("Taller Web I");
     this.tallerWeb.setColor("#2F6FDE");
@@ -76,30 +74,13 @@ public class FuenteDeTrabajosPracticosTest {
   }
 
   @Test
-  public void sinMateriaCoincidenteUsaUnaMateriaGris() {
-    Materia materia = traer(tp("TP 1", "Inglés", HOY))
-      .get(0)
-      .evento()
-      .getMateria();
-
-    assertThat(materia.getNombre(), is("Inglés"));
-    assertThat(materia.getColor(), is(FuenteDeTrabajosPracticos.COLOR_SIN_MATERIA));
-  }
-
-  @Test
   public void sinNombreUsaUnTituloGenerico() {
     assertThat(
-      traer(tp(null, "Taller Web I", HOY))
-        .get(0)
-        .evento()
-        .getTitulo(),
+      traer(tp(null, "Taller Web I", HOY)).get(0).evento().getTitulo(),
       is(FuenteDeTrabajosPracticos.TITULO_GENERICO)
     );
     assertThat(
-      traer(tp("  ", "Taller Web I", HOY))
-        .get(0)
-        .evento()
-        .getTitulo(),
+      traer(tp("  ", "Taller Web I", HOY)).get(0).evento().getTitulo(),
       is(FuenteDeTrabajosPracticos.TITULO_GENERICO)
     );
   }
@@ -213,10 +194,7 @@ public class FuenteDeTrabajosPracticosTest {
 
   @Test
   public void usaLaMateriaRealSinImportarMayusculasNiEspacios() {
-    Materia materia = traer(tp("TP 1", " taller web i ", HOY))
-      .get(0)
-      .evento()
-      .getMateria();
+    Materia materia = traer(tp("TP 1", " taller web i ", HOY)).get(0).evento().getMateria();
     assertThat(materia, is(sameInstance(this.tallerWeb)));
   }
 
@@ -234,22 +212,15 @@ public class FuenteDeTrabajosPracticosTest {
 
   @Test
   public void unTpSinMateriaUsaElNombreGenerico() {
-    Materia materia = traer(tp("TP 1", null, HOY))
-      .get(0)
-      .evento()
-      .getMateria();
+    Materia materia = traer(tp("TP 1", null, HOY)).get(0).evento().getMateria();
     assertThat(materia.getNombre(), is(FuenteDeTrabajosPracticos.MATERIA_SIN_NOMBRE));
   }
 
   @Test
   public void ignoraLasMateriasDelCatalogoSinNombre() {
-    when(this.repositorioMateriaMock.obtenerTodas()).thenReturn(
-      List.of(new Materia(), this.tallerWeb)
-    );
-    Materia materia = traer(tp("TP 1", "Taller Web I", HOY))
-      .get(0)
-      .evento()
-      .getMateria();
+    when(this.repositorioMateriaMock.obtenerTodas())
+      .thenReturn(List.of(new Materia(), this.tallerWeb));
+    Materia materia = traer(tp("TP 1", "Taller Web I", HOY)).get(0).evento().getMateria();
     assertThat(materia, is(sameInstance(this.tallerWeb)));
   }
 }

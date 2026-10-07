@@ -89,7 +89,7 @@ public class CalculadorEstadoActividadTest {
   }
 
   @Test
-  public void veceHoyEstaProximaAVencer() {
+  public void venceHoyEstaProximaAVencer() {
     // preparacion
     Tarea tarea = tarea("PENDIENTE", 0, 10, HOY);
 
@@ -158,7 +158,6 @@ public class CalculadorEstadoActividadTest {
       is(EstadoActividad.PARCIALMENTE_COMPLETADA)
     );
   }
-
 
   @Test
   public void conMenosDeCincuentaPorCientoTodaviaEsEnTiempo() {
@@ -242,7 +241,7 @@ public class CalculadorEstadoActividadTest {
 
   @Test
   public void conHorasRealizadasNegativasDaEnTiempo() {
-    // preparacion: dato corrupto/negativo, no debería contar como progreso.
+    // preparacion: dato negativo, no debería contar como progreso.
     Tarea tarea = tarea("PENDIENTE", -1, 10, HOY.plusDays(30));
 
     // ejecucion y validacion
