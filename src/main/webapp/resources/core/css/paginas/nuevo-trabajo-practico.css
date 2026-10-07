@@ -1,0 +1,143 @@
+/* Campos que el CSS base no cubría */
+.tp-form-card textarea,
+.tp-form-card input[type="date"],
+.tp-form-card input[type="number"] {
+    width: 100%;
+    background-color: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tp-form-card textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+/* Mismo estilo de foco para todos los campos */
+.tp-form-card input:focus,
+.tp-form-card select:focus,
+.tp-form-card textarea:focus {
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+}
+
+.tp-form-card input::placeholder,
+.tp-form-card textarea::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+/* Ícono del calendario visible sobre fondo oscuro */
+.tp-form-card input[type="date"] {
+    color-scheme: dark;
+}
+
+/* Quitar flechitas del input numérico para un look más limpio */
+.tp-form-card input[type="number"]::-webkit-outer-spin-button,
+.tp-form-card input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.tp-form-card input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* Opciones del select legibles en tema oscuro */
+.tp-form-card select option {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+/* Campos inválidos tras intentar enviar */
+.tp-form-card input:invalid:not(:placeholder-shown):not(:focus),
+.tp-form-card select:invalid:not(:focus) {
+    border-color: var(--card-border);
+}
+
+.tp-form-card .tp-campo:has(input:user-invalid) input,
+.tp-form-card .tp-campo:has(select:user-invalid) select {
+    border-color: var(--error-acento);
+}
+
+/* ---------- Disponibilidad horaria ---------- */
+.tp-disponibilidad {
+    background-color: var(--input-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.tp-disponibilidad-fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.tp-disponibilidad-fila:last-child {
+    border-bottom: none;
+}
+
+.tp-disponibilidad-dia {
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.tp-disponibilidad-horas {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.tp-form-card .tp-disponibilidad-horas input[type="number"] {
+    width: 72px;
+    padding: 6px 10px;
+    text-align: center;
+    background-color: var(--card-bg);
+}
+
+/* ---------- Botón principal ---------- */
+.tp-form-card .btn-primary {
+    background-color: var(--accent-purple);
+    border: 1px solid var(--accent-purple);
+    border-radius: 10px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.tp-form-card .btn-primary:hover,
+.tp-form-card .btn-primary:focus {
+    filter: brightness(1.12);
+    background-color: var(--accent-purple);
+    border-color: var(--accent-purple);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 576px) {
+    .tp-form-card {
+        padding: 20px;
+    }
+
+    .tp-form-botones {
+        flex-direction: column;
+    }
+
+    .tp-form-botones .btn,
+    .tp-form-botones .tp-btn-sec {
+        width: 100%;
+        text-align: center;
+    }
+}
