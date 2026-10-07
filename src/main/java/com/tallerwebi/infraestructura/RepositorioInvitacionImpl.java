@@ -1,8 +1,8 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.dominio.Invitacion;
-import com.tallerwebi.dominio.RepositorioInvitacion;
-import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.invitacion.Estado;
+import com.tallerwebi.dominio.invitacion.Invitacion;
+import com.tallerwebi.dominio.invitacion.RepositorioInvitacion;
 import java.util.List;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,6 @@ public class RepositorioInvitacionImpl implements RepositorioInvitacion {
 
   private SessionFactory sessionFactory;
 
-  @Override
   public Invitacion enviarInvitacion(Invitacion invitacion) {
     sessionFactory.getCurrentSession().persist(invitacion);
     return invitacion;
@@ -41,12 +40,14 @@ public class RepositorioInvitacionImpl implements RepositorioInvitacion {
       .setParameter("emisor", emailEmisor)
       .setParameter("receptor", emailReceptor)
       .setParameter("grupo", nombreGrupo)
+      .setMaxResults(1)
       .uniqueResult();
   }
 
   @Override
-  public void aceptar(Invitacion invitacion) {
+  public void cambiarEstado(Invitacion invitacion, Estado estado) {
     invitacion.setVigente(false);
+    invitacion.setEstadoInvitacion(estado);
     sessionFactory.getCurrentSession().update(invitacion);
   }
 

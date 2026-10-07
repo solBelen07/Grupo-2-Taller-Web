@@ -1,0 +1,333 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Layout Wrapper */
+.main-wrapper {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* Titles */
+.title-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Ticket Card */
+.ticket-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    padding: 1.5rem;
+    position: relative;
+    box-shadow: 0 0 25px rgba(147, 51, 234, 0.15);
+}
+
+/* Ticket Header */
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.airline-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    background-color: var(--accent-purple);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.airline-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.airline-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.airline-sub {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+}
+
+.ticket-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.meta-label {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+}
+
+.meta-value {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent-purple);
+}
+
+/* Flight Route */
+.flight-route {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.airport-code h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.airport-code .city {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    margin-top: 0.25rem;
+}
+
+.airport-code .sub-city {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+}
+
+.align-right {
+    text-align: right;
+}
+
+.flight-path {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    padding: 0 1rem;
+}
+
+.flight-path .duration {
+    font-size: 0.7rem;
+    color: var(--accent-purple);
+    margin-bottom: 0.25rem;
+}
+
+.path-line {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.path-line .line {
+    width: 100%;
+    height: 1px;
+    border-top: 1px dashed var(--card-border);
+}
+
+.path-line .plane-icon {
+    position: absolute;
+    background-color: var(--card-bg);
+    padding: 0 0.25rem;
+    color: var(--accent-purple);
+    transform: rotate(90deg);
+}
+
+/* Info Grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item .label {
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+    margin-bottom: 0.2rem;
+}
+
+.info-item .value {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Tear Line */
+.tear-line {
+    position: relative;
+    margin: 0 -1.5rem 1.5rem -1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.dashed-line {
+    width: 100%;
+    border-top: 2px dashed var(--card-border);
+}
+
+.notch {
+    width: 16px;
+    height: 16px;
+    background-color: var(--bg-dark);
+    border-radius: 50%;
+    position: absolute;
+}
+
+.notch-left {
+    left: -8px;
+}
+
+.notch-right {
+    right: -8px;
+}
+
+/* Ticket Footer */
+.ticket-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.objective-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.objective-container .label {
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+    margin-bottom: 0.2rem;
+}
+
+.objective-container .value-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.objective-container .value-sub {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+}
+
+/* Barcode */
+.barcode-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.barcode {
+    width: 90px;
+    height: 25px;
+    background: repeating-linear-gradient(
+            90deg,
+            var(--accent-purple),
+            var(--accent-purple) 2px,
+            transparent 2px,
+            transparent 4px,
+            var(--accent-purple) 4px,
+            var(--accent-purple) 7px
+    );
+    margin-bottom: 0.25rem;
+}
+
+.barcode-text {
+    font-size: 0.6rem;
+    font-family: monospace;
+    color: var(--text-secondary);
+}
+
+/* Action Button */
+.action-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.btn-cut {
+    background-color: var(--accent-purple);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.75rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 4px 14px rgba(147, 51, 234, 0.4);
+}
+
+.btn-cut:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-1px);
+}
+
+.btn-caption {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}

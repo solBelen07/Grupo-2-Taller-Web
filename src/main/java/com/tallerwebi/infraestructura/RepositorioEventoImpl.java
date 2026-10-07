@@ -39,4 +39,14 @@ public class RepositorioEventoImpl implements RepositorioEvento {
   public void guardar(Evento evento) {
     sessionFactory.getCurrentSession().persist(evento);
   }
+
+  @Override
+  public void eliminarPorMateriaId(Integer materiaId) {
+    String hql = "delete from Evento e where e.materia.id = :materiaId";
+    sessionFactory
+      .getCurrentSession()
+      .createQuery(hql)
+      .setParameter("materiaId", materiaId)
+      .executeUpdate();
+  }
 }

@@ -1,0 +1,30 @@
+package com.tallerwebi.dominio.grupo;
+
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
+import jakarta.transaction.Transactional;
+import java.util.List;
+import org.springframework.stereotype.Service;
+
+@Service("servicioGrupo")
+@Transactional
+public class ServicioGrupoImpl implements ServicioGrupo {
+
+  private RepositorioGrupo repositorioGrupo;
+
+  public ServicioGrupoImpl(RepositorioGrupo repositorioGrupo) {
+    this.repositorioGrupo = repositorioGrupo;
+  }
+
+  @Override
+  public Grupo buscarPorNombre(String nombre) throws GrupoNoEncontrado {
+    if (repositorioGrupo.buscar(nombre) == null) {
+      throw new GrupoNoEncontrado();
+    }
+    return repositorioGrupo.buscar(nombre);
+  }
+
+  @Override
+  public List<Grupo> listarGrupos() {
+    return repositorioGrupo.listar();
+  }
+}

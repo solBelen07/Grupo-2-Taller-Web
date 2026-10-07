@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.tallerwebi.dominio.Grupo;
+import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.integracion.config.HibernateTestConfig;
 import com.tallerwebi.integracion.config.SpringWebTestConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,12 +70,12 @@ public class ControladorGrupoTest {
   private void entoncesSeMuestraLaPaginaDeUnGrupo() {
     ModelAndView modelAndView = this.mvcResult.getModelAndView();
     assert modelAndView != null;
-    assert modelAndView.getViewName().equals("grupo-detalle");
+    assert modelAndView.getViewName().equals("paginas/grupo/grupo-detalle");
   }
 
   private void entoncesSeMuestraLaPaginaDeGrupos() {
     ModelAndView modelAndView = this.mvcResult.getModelAndView();
     assert modelAndView != null;
-    assert modelAndView.getViewName().equals("grupos");
+    assert modelAndView.getViewName().equals("paginas/grupo/grupos");
   }
 }

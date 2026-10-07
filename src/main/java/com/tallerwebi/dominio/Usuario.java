@@ -12,10 +12,13 @@ public class Usuario {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  private String nombre;
+  private String apellido;
   private String email;
   private String password;
   private String rol;
-  private Boolean activo = false;
+  private boolean activo = false;
+  private int puntos;
 
   public Long getId() {
     return id;
@@ -49,7 +52,7 @@ public class Usuario {
     this.rol = rol;
   }
 
-  public Boolean getActivo() {
+  public boolean getActivo() {
     return activo;
   }
 
@@ -58,6 +61,14 @@ public class Usuario {
   }
 
   public void activar() {
-    activo = true;
+    activo = (Boolean) true;
+  }
+
+  public int getPuntos() {
+    return puntos;
+  }
+
+  public void setPuntos(int puntos) {
+    this.puntos = puntos;
   }
 }

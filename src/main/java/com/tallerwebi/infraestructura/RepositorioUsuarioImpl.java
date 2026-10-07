@@ -24,6 +24,7 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
       .createQuery("from Usuario where email = :email and password = :password", Usuario.class)
       .setParameter("email", email)
       .setParameter("password", password)
+      .setMaxResults(1)
       .uniqueResult();
   }
 
@@ -38,6 +39,7 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
       .getCurrentSession()
       .createQuery("from Usuario where email = :email", Usuario.class)
       .setParameter("email", email)
+      .setMaxResults(1)
       .uniqueResult();
   }
 

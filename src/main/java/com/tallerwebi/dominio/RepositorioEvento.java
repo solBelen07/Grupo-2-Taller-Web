@@ -12,4 +12,5 @@ public interface RepositorioEvento {
 
   /** Persiste un evento nuevo. */
   void guardar(Evento evento);
+  void eliminarPorMateriaId(Integer materiaId);
 }

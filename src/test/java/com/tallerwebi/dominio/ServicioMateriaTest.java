@@ -9,6 +9,8 @@ import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.RepositorioMateria;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.materia.ServicioMateriaImpl;
+import com.tallerwebi.dominio.parcial.RepositorioParcial;
+import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,11 +19,23 @@ public class ServicioMateriaTest {
 
   private ServicioMateria servicioMateria;
   private RepositorioMateria repositorioMateriaMock;
+  private RepositorioEvento repositorioEventoMock;
+  private RepositorioParcial repositorioParcialMock;
+  private RepositorioSesionEstudio repositorioSesionEstudioMock;
 
   @BeforeEach
   public void init() {
     this.repositorioMateriaMock = mock(RepositorioMateria.class);
-    this.servicioMateria = new ServicioMateriaImpl(this.repositorioMateriaMock);
+    this.repositorioEventoMock = mock(RepositorioEvento.class);
+    this.repositorioParcialMock = mock(RepositorioParcial.class);
+    this.repositorioSesionEstudioMock = mock(RepositorioSesionEstudio.class);
+    this.servicioMateria =
+      new ServicioMateriaImpl(
+        this.repositorioMateriaMock,
+        this.repositorioEventoMock,
+        this.repositorioParcialMock,
+        this.repositorioSesionEstudioMock
+      );
   }
 
   /*@Test
