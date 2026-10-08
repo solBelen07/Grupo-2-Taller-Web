@@ -138,7 +138,7 @@ public class ControladorPomodoroTest {
   public void deberiaReanudarLaSesionYRedirigirAlTimer() throws Exception {
     this.mockMvc.perform(post("/focusflight/timer/reanudar/1"))
       .andExpect(status().is3xxRedirection())
-      .andExpect(redirectedUrl("/focusflight/Ttmer/1"));
+      .andExpect(redirectedUrl("/focusflight/timer/1"));
 
     verify(this.servicioPomodoroMock, times(1)).reanudarSesion(ID_SESION);
   }
@@ -147,7 +147,7 @@ public class ControladorPomodoroTest {
   public void deberiaCancelarLaSesionYRedirigirAlInicioDeFocusFlight() throws Exception {
     this.mockMvc.perform(post("/focusflight/timer/cancelar/1"))
       .andExpect(status().is3xxRedirection())
-      .andExpect(redirectedUrl("/FocusFlight"));
+      .andExpect(redirectedUrl("/focusflight"));
 
     verify(this.servicioPomodoroMock, times(1)).modificarEstadoCancelada(ID_SESION);
   }
