@@ -35,27 +35,27 @@ public final class TextosCalendario {
 
   private TextosCalendario() {}
 
-  /** Nombre del mes en minúsculas, por ejemplo {@code septiembre}. */
+  /** Nombre del mes en minúsculas, por ejemplo septiembre  */
   public static String nombreMes(Month mes) {
     return MESES[mes.getValue() - 1];
   }
 
-  /** Nombre del día, por ejemplo {@code Miércoles}. */
+  /** Nombre del día, por ejemplo Miércoles */
   public static String nombreDia(DayOfWeek dia) {
     return DIAS[dia.getValue() - 1];
   }
 
-  /** Abreviatura de tres letras, por ejemplo {@code Mié}. */
+  /** Abreviatura de tres letras, por ejemplo Mie */
   public static String abreviaturaDia(DayOfWeek dia) {
     return nombreDia(dia).substring(0, LETRAS_ABREVIATURA);
   }
 
-  /** Por ejemplo {@code septiembre de 2026}. */
+  /** Por ejemplo septiembre de 2026 */
   public static String tituloMes(YearMonth mes) {
     return nombreMes(mes.getMonth()) + " de " + mes.getYear();
   }
 
-  /** Por ejemplo {@code 28 sep – 4 oct 2026}, o con ambos años si la semana cruza de año. */
+  /** Por ejemplo  28 sep – 4 oct 2026, o con ambos años si la semana cruza de año. */
   public static String tituloSemana(LocalDate lunes) {
     LocalDate domingo = lunes.plusDays(6);
     String inicio = lunes.getDayOfMonth() + " " + abreviaturaMes(lunes.getMonth());

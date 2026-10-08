@@ -66,6 +66,7 @@ public class ServicioInvitacionImpl implements ServicioInvitacion {
     repositorioInvitacion.cambiarEstado(invitacion, Estado.ACEPTADA);
   }
 
+  @Override
   public void rechazarInvitacion(DatosInvitacion datosInvitacion) throws InvitacionInvalida {
     Invitacion invitacion = repositorioInvitacion.buscar(
       datosInvitacion.getEmisor(),

@@ -25,7 +25,7 @@ public class CalculadorEstadoActividadTest {
     return tarea;
   }
 
-  // ---------------------------------------------------------------- Completada
+  // completada
 
   @Test
   public void marcadaComoCompletadaDaEstadoCompletada() {
@@ -54,7 +54,7 @@ public class CalculadorEstadoActividadTest {
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
   }
 
-  // ---------------------------------------------------------------- Vencida
+  // Vencida
 
   @Test
   public void fechaVencidaYNoCompletadaDaVencida() {
@@ -74,7 +74,7 @@ public class CalculadorEstadoActividadTest {
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.VENCIDA));
   }
 
-  // ---------------------------------------------------------------- Próxima a vencer
+  // Próxima a vencer
 
   @Test
   public void venceEnTresDiasEstaProximaAVencer() {
@@ -89,7 +89,7 @@ public class CalculadorEstadoActividadTest {
   }
 
   @Test
-  public void veceHoyEstaProximaAVencer() {
+  public void venceHoyEstaProximaAVencer() {
     // preparacion
     Tarea tarea = tarea("PENDIENTE", 0, 10, HOY);
 
@@ -133,7 +133,7 @@ public class CalculadorEstadoActividadTest {
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
   }
 
-  // ---------------------------------------------------------------- Parcialmente completada
+  //  Parcialmente completada
 
   @Test
   public void conProgresoIntermedioYTiempoDeSobraDaParcialmenteCompletada() {
@@ -192,7 +192,7 @@ public class CalculadorEstadoActividadTest {
     );
   }
 
-  // ---------------------------------------------------------------- En tiempo
+  // En tiempo
 
   @Test
   public void sinProgresoYConTiempoDeSobraDaEnTiempo() {
@@ -241,14 +241,14 @@ public class CalculadorEstadoActividadTest {
 
   @Test
   public void conHorasRealizadasNegativasDaEnTiempo() {
-    // preparacion: dato corrupto/negativo, no debería contar como progreso.
+    // preparacion: dato negativo, no debería contar como progreso.
     Tarea tarea = tarea("PENDIENTE", -1, 10, HOY.plusDays(30));
 
     // ejecucion y validacion
     assertThat(CalculadorEstadoActividad.calcular(tarea, HOY), is(EstadoActividad.EN_TIEMPO));
   }
 
-  // ---------------------------------------------------------------- El tipo ya no importa
+  // El tipo ya no importa
 
   @Test
   public void elResultadoEsElMismoSeaCualSeaElTipo() {

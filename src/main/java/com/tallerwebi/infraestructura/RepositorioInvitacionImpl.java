@@ -10,8 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository("repositorioInvitacion")
 public class RepositorioInvitacionImpl implements RepositorioInvitacion {
 
-  private SessionFactory sessionFactory;
+  private final SessionFactory sessionFactory;
 
+  @Override
   public Invitacion enviarInvitacion(Invitacion invitacion) {
     sessionFactory.getCurrentSession().persist(invitacion);
     return invitacion;

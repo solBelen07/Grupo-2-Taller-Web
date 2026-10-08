@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-/** Persistencia de eventos con Hibernate nativo (HQL). */
+/** Persistencia de eventos con Hibernate  */
 @Repository("repositorioEvento")
 public class RepositorioEventoImpl implements RepositorioEvento {
 
