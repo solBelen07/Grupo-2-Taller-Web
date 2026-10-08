@@ -21,7 +21,7 @@
     <link rel="stylesheet" th:href="@{/css/main.css}" />
   </head>
   <body class="app-shell">
-    <div th:replace="~{componentes/sidebar :: sidebar-nav}"></div>
+    <div th:replace="~{componentes/sidebar :: sidebar-nav('calendario')}"></div>
 
     <div class="app-content">
       <div th:replace="~{componentes/header :: header-principal}"></div>

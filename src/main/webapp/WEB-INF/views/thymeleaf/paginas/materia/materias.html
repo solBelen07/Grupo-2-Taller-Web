@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Materias</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+
+</head>
+
+<body>
+
+<div th:replace="~{componentes/sidebar :: sidebar-nav('materias')}"></div>
+
+<div class="contenido-principal">
+    <div th:replace="~{componentes/header :: header-principal}"></div>
+    <main class="container">
+
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1>Materias</h1>
+                <p class="text-muted">Administrá tus materias y tu planificación académica.</p>
+            </div>
+            <a th:href="@{/materias/nueva}" class="btn btn-primary">+ Agregar materia</a>
+        </div>
+
+        <!-- BUSCADOR -->
+
+        <form th:action="@{/materias/buscar}" method="GET" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="nombre" class="form-control" placeholder="Buscar materia por nombre..." th:value="${nombreBuscado}" required>
+
+                <button type="submit" class="btn btn-outline-primary">Buscar</button>
+                <a th:href="@{/materias}" class="btn btn-outline-secondary">Mostrar todas</a>
+            </div>
+        </form>
+
+        <!-- RESULTADO DE BÚSQUEDA -->
+
+        <div th:if="${nombreBuscado != null}" class="mb-4">
+            <h4>Resultado de búsqueda para:<span th:text="${nombreBuscado}"></span></h4>
+
+            <div th:if="${materiaBuscada != null}" class="card mb-3">
+
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a th:href="@{/materias/detalle(id=${materiaBuscada.id})}" class="text-decoration-none">
+                                <h3 th:text="${materiaBuscada.nombre}">Nombre materia</h3>
+                            </a>
+
+                            <p>Docente:<span th:text="${materiaBuscada.docente}">Docente</span></p>
+                            <p>Cursada:<span th:text="${materiaBuscada.dias}"></span>-<span th:text="${materiaBuscada.horario}"></span>
+                            </p>
+                        </div>
+                        <a th:href="@{/materias/editar(id=${materiaBuscada.id})}" class="btn btn-outline-secondary">Editar</a>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${materiaBuscada == null}" class="alert alert-warning">No se encontró ninguna materia con ese nombre.</div>
+        </div>
+
+        <!-- LISTADO GENERAL -->
+
+        <div th:if="${nombreBuscado == null}">
+            <div th:if="${materias != null and materias.isEmpty()}" class="alert alert-info">
+                Todavía no tenés materias cargadas.
+            </div>
+
+            <div th:each="materia : ${materias}" class="card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="materia-color" th:style="'background-color:' + ${materia.color}">
+                                <span th:text="${#strings.substring(materia.nombre,0,1)}">M</span>
+                            </div>
+                        </div>
+                        <!-- Datos -->
+                        <div class="col">
+                            <a th:href="@{/materias/detalle(id=${materia.id})}" class="text-decoration-none">
+                                <h3 th:text="${materia.nombre}">Nombre materia</h3>
+                            </a>
+                            <p class="mb-1">Docente:<span th:text="${materia.docente}">Docente</span>
+                            </p>
+                            <p class="mb-1"><strong>Cursada:</strong><span th:text="${materia.dias}"></span>
+                                -<span th:text="${materia.horario}"></span>
+                            </p>
+                        </div>
+                        <!-- Acciones -->
+                        <div class="col-auto">
+                            <a th:href="@{/materias/editar(id=${materia.id})}" class="btn btn-outline-secondary mb-2">
+                                Editar
+                            </a>
+                            <form th:action="@{/materias/eliminar}" method="POST">
+                                <input type="hidden" name="nombre" th:value="${materia.nombre}">
+                                <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"
+></script>
+
+</body>
+</html>

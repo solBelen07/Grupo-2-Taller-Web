@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFlight - Boleto</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+<div th:replace="~{componentes/sidebar :: sidebar-nav('focusflight')}"></div>
+
+<div class="main-wrapper">
+    <div th:replace="~{componentes/header :: header-principal}"></div>
+
+    <main class="content-container">
+        <div class="title-container">
+            <h1 class="page-title">Pase de abordar</h1>
+            <p class="page-subtitle">Tu boleto está listo: rómpelo para comenzar tu vuelo.</p>
+        </div>
+
+        <div class="ticket-card">
+            <div class="ticket-header">
+                <div class="airline-brand">
+                    <div class="logo-icon">
+                        <i data-lucide="infinity"></i>
+                    </div>
+                    <div class="airline-text">
+                        <span class="airline-name">FOCUSFLIGHT AIR</span>
+                        <span class="airline-sub">ACADEMIC AIRWAYS</span>
+                    </div>
+                </div>
+                <div class="ticket-meta">
+                    <span class="meta-label">PASE DE ABORDAR</span>
+                    <span class="meta-value">VUELO #FF-0047</span>
+                </div>
+            </div>
+
+            <div class="flight-route">
+                <div class="airport-code">
+                    <h2 th:text="${datosPomodoro.origen != null ? datosPomodoro.origen : 'BUE'}">BUE</h2>
+                    <span class="city">Buenos Aires</span>
+                    <span class="sub-city">Aeroparque Jorge Newbery</span>
+                </div>
+
+                <div class="flight-path">
+                    <div class="path-line">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="plane-icon"><i data-lucide="plane"></i></div>
+                    </div>
+                </div>
+
+                <div class="airport-code align-right">
+                    <h2 th:text="${datosPomodoro.destino != null ? datosPomodoro.destino : 'BCN'}">BCN</h2>
+                    <span class="city">Barcelona</span>
+                    <span class="sub-city">Aeropuerto Josep Tarradellas</span>
+                </div>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">PASAJERO/A</span>
+                    <span class="value" th:text="${datosPomodoro.usuario != null ? datosPomodoro.usuario : 'Juan Méndez'}">Juan Méndez</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">ASIENTO</span>
+                    <span class="value">14A</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">CLASE</span>
+                    <span class="value">business</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">PUERTA</span>
+                    <span class="value">G-7</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">EMBARQUE</span>
+                    <span class="value">19:30</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">MATERIA</span>
+                    <span class="value" th:text="${materia != null ? materia.nombre : 'Diseño Sistemas'}">Diseño Sistemas</span>
+                </div>
+            </div>
+
+            <div class="tear-line">
+                <div class="notch notch-left"></div>
+                <div class="dashed-line"></div>
+                <div class="notch notch-right"></div>
+            </div>
+
+            <div class="ticket-footer">
+                <div class="objective-container">
+                    <span class="label">OBJETIVO DE LA SESIÓN</span>
+                    <span class="value-sub" th:text="${datosPomodoro.objetivo != null ? datosPomodoro.objetivo : 'Capítulos 3-5 - Singleton, Factory, Observer'}">Capítulos 3-5 - Singleton, Factory, Observer</span>
+                </div>
+                <div class="barcode-container">
+                    <div class="barcode"></div>
+                    <span class="barcode-text">FF0047-25M-14A</span>
+                </div>
+            </div>
+
+        </div>
+
+        <form th:action="@{/focusflight/timer/{id}(id=${pomodoroId})}" method="POST" style="display: inline;" class="action-container">
+            <button type="submit" class="btn-cut">
+                <i data-lucide="scissors"></i>
+                <span>Cortar Boleto</span>
+            </button>
+        </form>
+        <span class="btn-caption">El cronómetro comienza cuando cortas el boleto.</span>
+
+    </main>
+</div>
+
+<script> lucide.createIcons(); </script>
+</body>
+</html>

@@ -1,9 +1,10 @@
 package com.tallerwebi.dominio.materia;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.tecnicasestudio.Pomodoro;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Materia {
@@ -19,6 +20,14 @@ public class Materia {
   private String horario;
   private String color;
   private String materialBibliografico;
+
+  @ManyToMany
+  @JoinTable(
+    name = "materia_usuario",
+    joinColumns = @JoinColumn(name = "materia_id"),
+    inverseJoinColumns = @JoinColumn(name = "usuario_id")
+  )
+  private List<Usuario> usuarios = new ArrayList<>();
 
   public Integer getId() {
     return id;
@@ -84,5 +93,13 @@ public class Materia {
 
   public void setMaterialBibliografico(String materialBibliografico) {
     this.materialBibliografico = materialBibliografico;
+  }
+
+  public List<Usuario> getUsuarios() {
+    return usuarios;
+  }
+
+  public void setUsuarios(List<Usuario> usuarios) {
+    this.usuarios = usuarios;
   }
 }

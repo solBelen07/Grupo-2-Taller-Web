@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurar vuelo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+
+<div th:replace="~{componentes/sidebar :: sidebar-nav('focusflight')}"></div>
+
+<div class="main-wrapper">
+
+    <div th:replace="~{componentes/header :: header-principal}"></div>
+
+    <main class="content-container">
+
+        <h1 class="page-title">Configurar Vuelo</h1>
+        <p class="page-subtitle">Configura tu sesión de concentración como un vuelo académico.</p>
+
+        <form id="form-vuelo" th:action="@{/focusflight/boleto}" method="POST" accept-charset="UTF-8" th:object="${datosPomodoro}" novalidate>
+            <div class="flight-card">
+                <div class="card-header-title">
+                    <i class="fa-solid fa-plane-flight"></i>
+                    <span>Información de vuelo</span>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Origen</label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <input type="text" name="origen" class="custom-input" value="ARG" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Destino</label>
+                        <div class="input-with-icon">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <input type="text" name="destino" class="custom-input" placeholder="ESP" required />
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="form-group">
+                        <label>Tiempo de concentración (min)</label>
+                        <select name="duracion" class="custom-select">
+                            <option disabled>Seleccionar tiempo</option>
+                            <option value="25">25 min</option>
+                            <option value="45">45 min</option>
+                            <option value="60">60 min</option>
+                            <option value="120">120 min</option>
+                        </select>
+                    </div>
+
+                <div class="form-group">
+                    <label>Materia</label>
+                    <select name="materia" class="custom-select">
+                        <option value="" disabled selected>Seleccionar materia</option>
+                        <option th:each="materia : ${materias}"
+                                th:value="${materia.id}"
+                                th:text="${materia.nombre}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Objetivo de la sesión</label>
+                    <textarea name="objetivo" class="custom-textarea" rows="3" placeholder="¿Qué lograrás en este vuelo? (p. ej., revisar los capítulos 3 a 5 sobre patrones de diseño UI)"></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">
+                <i class="fa-solid fa-plane-up"></i>
+                <span>Iniciar Vuelo</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </form>
+    </main>
+</div>
+<script th:src="@{/js/paginas/pomodoro.js}"></script>
+</body>
+</html>

@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+@SuppressWarnings("CPD-START")
 @Repository
 public class RepositorioParcialImpl implements RepositorioParcial {
 
@@ -18,21 +19,28 @@ public class RepositorioParcialImpl implements RepositorioParcial {
 
   @Override
   public void guardar(Parcial parcial) {
-    Session session = sessionFactory.getCurrentSession();
-    session.persist(parcial);
+    sessionFactory.getCurrentSession().save(parcial);
   }
 
   @Override
   public Parcial buscarPorId(Integer id) {
-    Session session = sessionFactory.getCurrentSession();
-    return session.get(Parcial.class, id);
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "SELECT DISTINCT p " +
+        "FROM Parcial p " +
+        "LEFT JOIN FETCH p.sesiones " +
+        "WHERE p.id = :id",
+        Parcial.class
+      )
+      .setParameter("id", id)
+      .uniqueResult();
   }
 
   @Override
   public List<Parcial> obtenerTodos() {
-    Session session = sessionFactory.getCurrentSession();
-
-    return session
+    return sessionFactory
+      .getCurrentSession()
       .createQuery(
         "SELECT DISTINCT p " + "FROM Parcial p " + "LEFT JOIN FETCH p.sesiones",
         Parcial.class
@@ -42,13 +50,21 @@ public class RepositorioParcialImpl implements RepositorioParcial {
 
   @Override
   public void modificar(Parcial parcial) {
-    Session session = sessionFactory.getCurrentSession();
-    session.merge(parcial);
+    sessionFactory.getCurrentSession().update(parcial);
   }
 
   @Override
   public void eliminar(Parcial parcial) {
-    Session session = sessionFactory.getCurrentSession();
-    session.remove(parcial);
+    sessionFactory.getCurrentSession().remove(parcial);
+  }
+
+  @Override
+  public void eliminarPorMateriaId(Integer materiaId) {
+    String hql = "delete from Parcial p where p.materia.id = :materiaId";
+    sessionFactory
+      .getCurrentSession()
+      .createQuery(hql)
+      .setParameter("materiaId", materiaId)
+      .executeUpdate();
   }
 }

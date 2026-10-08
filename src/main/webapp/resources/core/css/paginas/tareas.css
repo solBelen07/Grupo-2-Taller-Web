@@ -1,0 +1,265 @@
+/* ==========================================
+   PÁGINA TAREAS (paginas/tareas.css)
+   ========================================== */
+
+/* Wrapper que contiene Header + Contenido desplazado a la derecha del Sidebar */
+.main-wrapper {
+    margin-left: var(--sidebar-width, 260px);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: calc(100% - var(--sidebar-width, 260px));
+}
+
+/* Área de contenido de la vista */
+.contenido-tareas {
+    padding: 30px 40px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* HEADER DE LA VISTA Y BOTÓN NUEVA TAREA */
+
+.contenido-tareas .header-seccion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.contenido-tareas .titulo-principal {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-primary, #ffffff);
+}
+
+.contenido-tareas .subtitulo {
+    color: var(--text-secondary, #aaa0b8);
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.contenido-tareas .btn-nueva-tarea {
+    background-color: var(--accent-purple, #9333ea);
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.contenido-tareas .btn-nueva-tarea:hover {
+    background-color: var(--accent-hover, #7e22ce);
+    color: #ffffff;
+}
+
+/* CONTENEDORES Y TARJETAS */
+
+.contenido-tareas .tarjeta {
+    background-color: var(--card-bg, #161022);
+    border: 1px solid var(--card-border, #36224d);
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 22px;
+}
+
+.contenido-tareas .titulo-tarjeta {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    color: var(--text-primary, #ffffff);
+}
+
+/* TARJETAS SUPERIORES DE ESTADÍSTICAS */
+
+.contenido-tareas .estadisticas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.contenido-tareas .estadistica {
+    background-color: var(--card-bg, #161022);
+    border: 1px solid var(--card-border, #36224d);
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.contenido-tareas .estadistica-titulo {
+    color: var(--text-secondary, #aaa0b8);
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.contenido-tareas .estadistica-numero {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--text-primary, #ffffff);
+}
+
+/* FILA DOBLE (PROGRESO + APORTE) */
+
+.contenido-tareas .fila-doble {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 22px;
+}
+
+.contenido-tareas .fila-doble .tarjeta {
+    margin-bottom: 0;
+}
+
+/* PROGRESO Y APORTE INDIVIDUAL */
+
+.contenido-tareas .progreso-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.contenido-tareas .porcentaje {
+    color: var(--accent-purple, #bd5cff);
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.contenido-tareas .barra-progreso,
+.contenido-tareas .barra-aporte {
+    height: 8px;
+    background-color: #2b1a40;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.contenido-tareas .barra-progreso-interna,
+.contenido-tareas .barra-aporte-interna {
+    height: 100%;
+    background-color: var(--accent-purple, #bd5cff);
+    border-radius: 20px;
+}
+
+.contenido-tareas .estadisticas-progreso {
+    display: flex;
+    gap: 25px;
+    color: var(--text-secondary, #aaa0b8);
+    font-size: 14px;
+}
+
+.contenido-tareas .estadisticas-progreso span {
+    color: var(--text-primary, #ffffff);
+    font-weight: 600;
+}
+
+.contenido-tareas .aporte-item {
+    margin-bottom: 18px;
+}
+
+.contenido-tareas .aporte-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.contenido-tareas .aporte-nombre {
+    font-weight: 500;
+    color: var(--text-primary, #ffffff);
+}
+
+.contenido-tareas .aporte-cantidad {
+    color: var(--accent-purple, #bd5cff);
+    font-weight: 600;
+}
+
+/* TABLA DE TAREAS */
+
+.contenido-tareas .tabla-contenedor {
+    overflow-x: auto;
+}
+
+.contenido-tareas .tabla-tareas {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+.contenido-tareas .tabla-tareas thead th {
+    color: var(--text-secondary, #aaa0b8);
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    padding: 10px 14px;
+    text-align: left;
+}
+
+.contenido-tareas .tabla-tareas tbody tr {
+    background-color: var(--input-bg, #17101f);
+}
+
+.contenido-tareas .tabla-tareas tbody td {
+    border-top: 1px solid var(--card-border, #382052);
+    border-bottom: 1px solid var(--card-border, #382052);
+    padding: 15px 14px;
+    color: var(--text-primary, #eeeeee);
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.contenido-tareas .tabla-tareas tbody td:first-child {
+    border-left: 1px solid var(--card-border, #382052);
+    border-radius: 10px 0 0 10px;
+}
+
+.contenido-tareas .tabla-tareas tbody td:last-child {
+    border-right: 1px solid var(--card-border, #382052);
+    border-radius: 0 10px 10px 0;
+}
+
+/* INDICADORES */
+
+.contenido-tareas .indicador {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background-color: #2b1a40;
+    color: #d89cff;
+    text-align: center;
+}
+
+.contenido-tareas .indicador[data-indicador="EN TIEMPO"],
+.contenido-tareas .indicador[data-indicador="PREPARACIÓN ADECUADA"] {
+    background-color: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.contenido-tareas .indicador[data-indicador="PRÓXIMO A VENCER"],
+.contenido-tareas .indicador[data-indicador="REGULAR"] {
+    background-color: rgba(234, 179, 8, 0.2);
+    color: #fde047;
+    border: 1px solid rgba(234, 179, 8, 0.4);
+}
+
+.contenido-tareas .indicador[data-indicador="ATRASADO"],
+.contenido-tareas .indicador[data-indicador="INSUFICIENTE"] {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.contenido-tareas .indicador[data-indicador="COMPLETADO"] {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.4);
+}

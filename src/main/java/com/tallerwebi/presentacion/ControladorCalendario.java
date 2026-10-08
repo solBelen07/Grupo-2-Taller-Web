@@ -36,9 +36,6 @@ public class ControladorCalendario {
 
   /**
    * Muestra el calendario del usuario logueado; si no hay sesión, lo manda a loguearse primero.
-   *
-   * @param vista {@code mes} (por defecto) o {@code semana}
-   * @param fecha fecha ISO (aaaa-mm-dd) dentro del período a mostrar; por defecto, hoy
    */
   @RequestMapping(path = "/calendario", method = RequestMethod.GET)
   public ModelAndView verCalendario(

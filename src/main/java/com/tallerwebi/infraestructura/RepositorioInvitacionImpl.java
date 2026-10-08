@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository("repositorioInvitacion")
 public class RepositorioInvitacionImpl implements RepositorioInvitacion {
 
-  private SessionFactory sessionFactory;
+  private final SessionFactory sessionFactory;
 
   @Override
   public Invitacion enviarInvitacion(Invitacion invitacion) {
@@ -41,9 +41,11 @@ public class RepositorioInvitacionImpl implements RepositorioInvitacion {
       .setParameter("emisor", emailEmisor)
       .setParameter("receptor", emailReceptor)
       .setParameter("grupo", nombreGrupo)
+      .setMaxResults(1)
       .uniqueResult();
   }
 
+  @Override
   public void cambiarEstado(Invitacion invitacion, Estado estado) {
     invitacion.setVigente(false);
     invitacion.setEstadoInvitacion(estado);

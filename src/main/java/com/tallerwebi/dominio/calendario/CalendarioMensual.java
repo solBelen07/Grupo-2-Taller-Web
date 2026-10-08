@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Vista mensual: grilla de semanas completas que cubre el mes.
  *
- * @param titulo por ejemplo {@code septiembre de 2026}
+ * @param titulo por ejemplo septiembre de 2026
  * @param anterior primer día del mes anterior (para navegar)
  * @param siguiente primer día del mes siguiente (para navegar)
  * @param hoy fecha actual según el reloj de la aplicación

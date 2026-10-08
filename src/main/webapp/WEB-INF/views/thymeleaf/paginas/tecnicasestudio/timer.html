@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFlight - En Vuelo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body class="flight-screen-body"
+      th:with="estadoVuelo=${pomodoro.estado != null ? pomodoro.estado.name() : 'EN_CURSO'}"
+      th:classappend="${estadoVuelo == 'PAUSADO'} ? 'vuelo-pausado'">
+
+<!-- Sidebar Global -->
+<div th:replace="~{componentes/sidebar :: sidebar-nav('focusflight')}"></div>
+
+<div class="main-wrapper">
+    <!-- Header Global -->
+    <div th:replace="~{componentes/header :: header-principal}"></div>
+
+    <!-- Contenedor del Vuelo en Radar -->
+    <div class="flight-container">
+        <!-- BARRA SUPERIOR DEL RADAR -->
+        <header class="flight-topbar">
+            <div class="flight-status-badge">
+                <span class="status-dot"></span>
+                <span th:text="${(estadoVuelo == 'PAUSADO' ? 'EN PAUSA' : (estadoVuelo == 'COMPLETADO' ? 'ATERRIZADO' : (estadoVuelo == 'CANCELADO' ? 'VUELO CANCELADO' : 'EN VUELO'))) + ' · FF-' + #numbers.formatInteger(pomodoro.id, 4)}">EN VUELO · FF-0047</span>
+            </div>
+            <div class="flight-subject-tag">
+                <span th:text="${pomodoro.plan.materia}">Materia</span>
+                <span class="tag-status" th:text="${#strings.replace(estadoVuelo, '_', ' ')}">EN CURSO</span>
+            </div>
+        </header>
+
+        <!-- ÁREA PRINCIPAL: MAPA INTERACTIVO -->
+        <main class="radar-map-area">
+            <div class="map-grid-overlay"></div>
+
+            <!-- Puntos y Ruta trazada -->
+            <svg class="flight-path-svg" viewBox="0 0 1000 600" preserveAspectRatio="none">
+                <path d="M 200 500 Q 350 200 650 150" class="path-line-bg"></path>
+                <path d="M 200 500 Q 350 200 650 150" class="path-line-active"></path>
+            </svg>
+
+            <!-- Origen -->
+            <div class="city-marker origin-marker" style="left: 20%; top: 83%;">
+                <div class="marker-pulse"></div>
+                <div class="marker-icon"><i class="fa-solid fa-plane-departure"></i></div>
+                <span class="city-name" th:text="${pomodoro.plan.origen}">Origen</span>
+            </div>
+
+            <!-- Destino -->
+            <div class="city-marker destination-marker" style="left: 65%; top: 25%;">
+                <div class="marker-pulse active"></div>
+                <div class="marker-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <span class="city-name" th:text="${pomodoro.plan.destino}">Destino</span>
+            </div>
+
+            <!-- Referencias decorativas de fondo -->
+            <span class="deco-city" style="left: 12%; top: 30%;">América</span>
+            <span class="deco-city" style="left: 68%; top: 12%;">Europa</span>
+            <span class="deco-city" style="left: 71%; top: 42%;">África</span>
+            <span class="ocean-label" style="left: 22%; top: 58%;">OCÉANO ATLÁNTICO</span>
+        </main>
+
+        <!-- PANEL LATERAL DERECHO DE CONTROL -->
+        <aside class="flight-sidebar-panel">
+            <!-- Temporizador Circular -->
+            <div class="panel-card timer-card-widget">
+                <span class="panel-section-title">ENFOQUE EN VUELO</span>
+
+                <div class="circular-timer">
+                    <svg class="timer-ring" viewBox="0 0 120 120">
+                        <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+                        <circle id="timer-progress-ring" class="ring-active" cx="60" cy="60" r="52"></circle>
+                    </svg>
+                    <div class="timer-clock-text" id="timer-display">00:00</div>
+                </div>
+
+                <span class="flight-phase-text"
+                      th:text="${estadoVuelo == 'PAUSADO' ? 'Vuelo en pausa: el tiempo está detenido.' : (estadoVuelo == 'EN_CURSO' ? 'Nivel de crucero...' : 'Vuelo finalizado.')}">Nivel de crucero...</span>
+            </div>
+
+            <!-- Progreso del Vuelo -->
+            <div class="panel-card">
+                <div class="panel-row-header">
+                    <span>Progreso del vuelo</span>
+                    <span id="flight-percent-text">0%</span>
+                </div>
+                <div class="flight-progress-bar">
+                    <div id="flight-progress-fill" class="progress-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Controles del vuelo -->
+            <div class="panel-card flight-controls" th:if="${estadoVuelo == 'EN_CURSO' or estadoVuelo == 'PAUSADO'}">
+                <span class="panel-section-title">CONTROLES DE VUELO</span>
+
+                <form th:if="${estadoVuelo == 'EN_CURSO'}"
+                      th:action="@{/focusflight/timer/pausar/{id}(id=${pomodoro.id})}" method="POST">
+                    <button type="submit" id="btn-pausar" class="btn-flight btn-pausar">
+                        <i class="fa-solid fa-pause"></i>
+                        <span>Pausar vuelo</span>
+                    </button>
+                </form>
+
+                <form th:if="${estadoVuelo == 'PAUSADO'}"
+                      th:action="@{/focusflight/timer/reanudar/{id}(id=${pomodoro.id})}" method="POST">
+                    <button type="submit" id="btn-reanudar" class="btn-flight btn-reanudar">
+                        <i class="fa-solid fa-play"></i>
+                        <span>Reanudar vuelo</span>
+                    </button>
+                </form>
+
+                <form id="form-cancelar"
+                      th:action="@{/focusflight/timer/cancelar/{id}(id=${pomodoro.id})}" method="POST">
+                    <button type="submit" id="btn-cancelar" class="btn-flight btn-cancelar">
+                        <i class="fa-solid fa-ban"></i>
+                        <span>Cancelar vuelo</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Registro de Objetivo -->
+            <div class="panel-card">
+                <span class="panel-section-title">REGISTRO DE OBJETIVO</span>
+                <p class="goal-description"
+                   th:text="${pomodoro.plan.objetivo != null and !#strings.isEmpty(pomodoro.plan.objetivo) ? pomodoro.plan.objetivo : 'Sesión de estudio concentrada.'}">
+                    Sesión de estudio concentrada.
+                </p>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- Datos del servidor para JS -->
+<div id="timer-datos" hidden
+     th:data-pomodoro-id="${pomodoro.id}"
+     th:data-segundos-iniciales="${segundosRestantes}"
+     th:data-duracion-total-min="${pomodoro.duracionMinutos}"
+     th:data-estado="${estadoVuelo}"
+     th:data-url-estado="@{/FocusFlight/Timer/estado/{id}(id=${pomodoro.id})}"
+     th:data-url-inicio="@{/FocusFlight}"></div>
+
+<script th:src="@{/js/paginas/timer.js}"></script>
+</body>
+</html>

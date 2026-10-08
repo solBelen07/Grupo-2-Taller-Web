@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-/** Persistencia de eventos con Hibernate nativo (HQL). */
+/** Persistencia de eventos con Hibernate  */
 @Repository("repositorioEvento")
 public class RepositorioEventoImpl implements RepositorioEvento {
 
@@ -38,5 +38,15 @@ public class RepositorioEventoImpl implements RepositorioEvento {
   @Override
   public void guardar(Evento evento) {
     sessionFactory.getCurrentSession().persist(evento);
+  }
+
+  @Override
+  public void eliminarPorMateriaId(Integer materiaId) {
+    String hql = "delete from Evento e where e.materia.id = :materiaId";
+    sessionFactory
+      .getCurrentSession()
+      .createQuery(hql)
+      .setParameter("materiaId", materiaId)
+      .executeUpdate();
   }
 }

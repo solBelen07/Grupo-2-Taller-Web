@@ -2,10 +2,12 @@ package com.tallerwebi.infraestructura.SesionEstudio;
 
 import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
+import java.time.LocalDate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+//@SuppressWarnings("CPD-START")
 @Repository
 public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
 
@@ -17,24 +19,48 @@ public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
 
   @Override
   public void guardar(SesionEstudio sesionEstudio) {
-    Session session = sessionFactory.getCurrentSession();
-    session.persist(sesionEstudio);
+    sessionFactory.getCurrentSession().persist(sesionEstudio);
   }
 
   @Override
   public void modificar(SesionEstudio sesionEstudio) {
-    Session session = sessionFactory.getCurrentSession();
-    session.merge(sesionEstudio);
+    sessionFactory.getCurrentSession().update(sesionEstudio);
   }
 
   @Override
   public void eliminar(SesionEstudio sesionEstudio) {
-    Session session = sessionFactory.getCurrentSession();
-    session.remove(sesionEstudio);
+    sessionFactory.getCurrentSession().remove(sesionEstudio);
   }
 
   @Override
   public SesionEstudio buscarPorId(Integer id) {
-    return sessionFactory.getCurrentSession().get(SesionEstudio.class, id);
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery("from SesionEstudio where id = :id", SesionEstudio.class)
+      .setParameter("id", id)
+      .uniqueResult();
+  }
+
+  @Override
+  public void eliminarPorMateriaId(Integer materiaId) {
+    String hql = "delete from SesionEstudio s where s.parcial.materia.id = :materiaId";
+    sessionFactory
+      .getCurrentSession()
+      .createQuery(hql)
+      .setParameter("materiaId", materiaId)
+      .executeUpdate();
+  }
+
+  @Override
+  public SesionEstudio buscarProximaSesionEstudio(Long idUsuario) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "from SesionEstudio where fecha = :hoy and usuario.id = :idUsuario",
+        SesionEstudio.class
+      )
+      .setParameter("hoy", LocalDate.now())
+      .setParameter("idUsuario", idUsuario)
+      .uniqueResult();
   }
 }

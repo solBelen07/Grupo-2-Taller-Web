@@ -25,8 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 @ContextConfiguration(classes = { SpringWebTestConfig.class, HibernateTestConfig.class })
 public class ControladorInvitacionTest {
 
-  private Invitacion invitacionMock;
-
   @Autowired
   private WebApplicationContext wac;
 
@@ -35,7 +33,6 @@ public class ControladorInvitacionTest {
 
   @BeforeEach
   public void init() {
-    invitacionMock = mock(Invitacion.class);
     this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
   }
 
@@ -53,6 +50,6 @@ public class ControladorInvitacionTest {
   private void entoncesSeMuestraLaPantallaDeInvitacionesConDatosDeInvitaciones() {
     ModelAndView modelAndView = this.mvcResult.getModelAndView();
     assert modelAndView != null;
-    assert modelAndView.getViewName().equals("invitaciones");
+    assert modelAndView.getViewName().equals("paginas/grupo/invitaciones");
   }
 }

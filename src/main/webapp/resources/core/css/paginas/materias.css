@@ -4,7 +4,7 @@ body {
 }
 
 main.container {
-    padding-top: 100px;
+    padding-top: 20px;
     padding-left: 30px;
     padding-right: 30px;
 
@@ -31,6 +31,8 @@ main .text-muted {
     padding: 10px 20px;
 
     font-weight: 600;
+    width: auto;
+    flex-shrink: 0;
 }
 
 .btn-primary:hover {
@@ -204,6 +206,7 @@ main h4 span {
 }
 
 .contenido-principal {
-    margin-left: var(--sidebar-width);
+    margin-left: 260px;
+    width: calc(100% - 260px);
     min-height: 100vh;
 }
