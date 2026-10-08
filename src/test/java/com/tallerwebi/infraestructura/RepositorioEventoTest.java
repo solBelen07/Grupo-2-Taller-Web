@@ -74,10 +74,10 @@ public class RepositorioEventoTest {
   private List<Evento> cuandoBuscoLaSemana(Long usuario) {
     this.sessionFactory.getCurrentSession().flush();
     return this.repositorioEvento.buscarEnRango(
-      usuario,
-      LUNES.atStartOfDay(),
-      LUNES.plusDays(7).atStartOfDay()
-    );
+        usuario,
+        LUNES.atStartOfDay(),
+        LUNES.plusDays(7).atStartOfDay()
+      );
   }
 
   @Test

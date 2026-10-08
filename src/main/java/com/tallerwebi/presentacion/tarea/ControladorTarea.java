@@ -1,8 +1,11 @@
 package com.tallerwebi.presentacion.tarea;
 
+import com.tallerwebi.dominio.materia.Materia;
+import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
 import com.tallerwebi.dominio.tarea.Tarea;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +20,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class ControladorTarea {
 
   private ServicioTarea servicioTarea;
+  private ServicioMateria servicioMateria;
 
   @Autowired
-  public ControladorTarea(ServicioTarea servicioTarea) {
+  public ControladorTarea(ServicioTarea servicioTarea, ServicioMateria servicioMateria) {
     this.servicioTarea = servicioTarea;
+    this.servicioMateria = servicioMateria;
   }
 
   @RequestMapping("/tareas")
@@ -51,6 +56,16 @@ public class ControladorTarea {
     modelo.put("indicadores", indicadores);
 
     return new ModelAndView("paginas/materia/tareas", modelo);
+  }
+
+  @RequestMapping("/tareas/nueva")
+  public ModelAndView verNuevaTarea() {
+    Map<String, Object> modelo = new HashMap<>();
+
+    List<Materia> materias = this.servicioMateria.obtenerMaterias();
+    modelo.put("materias", materias);
+
+    return new ModelAndView("paginas/materia/nueva-tarea", modelo);
   }
 
   @RequestMapping("/tareas/crear")

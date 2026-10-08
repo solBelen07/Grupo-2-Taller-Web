@@ -6,12 +6,12 @@ import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.materia.Materia;
+import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
 import com.tallerwebi.dominio.tarea.Tarea;
 import com.tallerwebi.presentacion.tarea.ControladorTarea;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,11 +20,13 @@ public class ControladorTareaTest {
 
   private ControladorTarea controladorTarea;
   private ServicioTarea servicioTareaMock;
+  private ServicioMateria servicioMateriaMock;
 
   @BeforeEach
   public void init() {
     servicioTareaMock = mock(ServicioTarea.class);
-    controladorTarea = new ControladorTarea(servicioTareaMock);
+    servicioMateriaMock = mock(ServicioMateria.class);
+    controladorTarea = new ControladorTarea(servicioTareaMock, servicioMateriaMock);
   }
 
   @Test
@@ -92,5 +94,20 @@ public class ControladorTareaTest {
     assertThat(resultado.getViewName(), equalToIgnoringCase("redirect:/tareas"));
 
     verify(servicioTareaMock, times(1)).crearTarea(any(Tarea.class));
+  }
+
+  @Test
+  public void alPedirVerNuevaTareaDevuelvaLaVistaCorrecta() {
+    List<Materia> materias = new ArrayList<>();
+    materias.add(new Materia());
+
+    when(this.servicioMateriaMock.obtenerMaterias()).thenReturn(materias);
+
+    ModelAndView modelAndView = controladorTarea.verNuevaTarea();
+
+    assertThat(modelAndView.getViewName(), equalTo("paginas/materia/nueva-tarea"));
+    assertThat(modelAndView.getModel().get("materias"), equalTo(materias));
+
+    verify(servicioMateriaMock, times(1)).obtenerMaterias();
   }
 }

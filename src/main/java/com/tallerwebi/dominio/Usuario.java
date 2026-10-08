@@ -71,4 +71,28 @@ public class Usuario {
   public void setPuntos(int puntos) {
     this.puntos = puntos;
   }
+
+  public String getNombre() {
+    return nombre;
+  }
+
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
+
+  public String getApellido() {
+    return apellido;
+  }
+
+  public void setApellido(String apellido) {
+    this.apellido = apellido;
+  }
+
+  public boolean isActivo() {
+    return activo;
+  }
+
+  public void setActivo(boolean activo) {
+    this.activo = activo;
+  }
 }
