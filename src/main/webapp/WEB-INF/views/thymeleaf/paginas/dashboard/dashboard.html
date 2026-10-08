@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Fuentes e Iconos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body class="app-shell">
+
+<div th:replace="~{componentes/sidebar :: sidebar-nav('dashboard')}"></div>
+
+<div class="app-content">
+
+    <div th:replace="~{componentes/header :: header-principal}"></div>
+
+    <main class="dashboard-container">
+
+        <!-- Encabezado de la página -->
+        <header class="dashboard-header">
+            <div class="greeting-section">
+                <h1 class="greeting-title">
+                    ¡Buenos días, <span th:text="${usuario.nombre}">Pedro</span>!
+                </h1>
+                <p class="greeting-subtitle">
+                    Exito en esta semana de estudio
+                </p>
+            </div>
+            <div class="header-actions">
+                <a th:href="@{/ia}" class="btn-primary-purple">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Asistente IA</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Fila de Tarjetas KPI Top -->
+        <section class="kpi-grid">
+            <!-- Tarjeta 1: Tasa de cumplimiento -->
+            <article class="kpi-card">
+                <div class="kpi-card-header">
+                    <div class="kpi-icon-badge badge-green">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <span class="live-tag">EN VIVO</span>
+                </div>
+                <div class="kpi-value" th:text="${#numbers.formatDecimal(dashboardData.porcentajeCumplimiento, 1, 0) + '%'}">85%</div>
+                <div class="kpi-subtext subtext-green">Tasa de Cumplimiento</div>
+                <div class="kpi-progress-bar">
+                    <div class="progress-fill fill-green" th:style="'width: ' + ${dashboardData.porcentajeCumplimiento} + '%'"></div>
+                </div>
+            </article>
+
+            <!-- Tarjeta 2: Horas de Estudio -->
+            <article class="kpi-card">
+                <div class="kpi-card-header">
+                    <div class="kpi-icon-badge badge-purple">
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+                    <span class="live-tag">EN VIVO</span>
+                </div>
+                <div class="kpi-value" th:text="${dashboardData.horasEstudio + 'h'}">142h</div>
+                <div class="kpi-subtext subtext-purple">Horas de Estudio Registradas</div>
+                <div class="kpi-progress-bar">
+                    <div class="progress-fill fill-purple" style="width: 100%;"></div>
+                </div>
+            </article>
+
+            <!-- Tarjeta 3: Materias Activas -->
+            <article class="kpi-card">
+                <div class="kpi-card-header">
+                    <div class="kpi-icon-badge badge-cyan">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <span class="live-tag">EN VIVO</span>
+                </div>
+                <div class="kpi-value" th:text="${dashboardData.cantidadMaterias}">6</div>
+                <div class="kpi-subtext subtext-cyan">Materias Activas</div>
+                <div class="kpi-progress-bar">
+                    <div class="progress-fill fill-cyan" style="width: 100%;"></div>
+                </div>
+            </article>
+
+            <!-- Tarjeta 4: Próxima Sesión -->
+            <article class="kpi-card">
+                <div class="kpi-card-header">
+                    <div class="kpi-icon-badge badge-orange">
+                        <i class="fa-solid fa-plane-departure"></i>
+                    </div>
+                    <span class="live-tag">EN VIVO</span>
+                </div>
+                <div class="kpi-value" th:text="${dashboardData.proximaSesion != null ? dashboardData.proximaSesion.fecha : 'Hoy 18:30'}"></div>
+                <div class="kpi-label"></div>
+                <div class="kpi-subtext subtext-orange">
+                    Próxima Sesión
+                </div>
+            </article>
+        </section>
+
+        <!-- Sección Principal Inferior -->
+        <div class="dashboard-main-grid">
+
+            <!-- Columna Izquierda: Semana Académica -->
+            <section class="section-card academic-week-card">
+                <div class="section-card-header">
+                    <h2 class="section-title">Semana Académica</h2>
+                    <a th:href="@{/calendario}" class="link-full-calendar">
+                        <span>Ver calendario completo</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </div>
+
+                <div class="week-grid">
+                    <!-- Lunes -->
+                    <div class="week-day-column">
+                        <span class="day-name">Lun</span>
+                        <div class="day-number">8</div>
+                        <div class="day-events">
+                            <span class="event-pill event-pink">Diseño de Sistemas</span>
+                            <span class="event-pill event-blue">Tarea Álgebra</span>
+                        </div>
+                    </div>
+
+                    <!-- Martes -->
+                    <div class="week-day-column">
+                        <span class="day-name">Mar</span>
+                        <div class="day-number">9</div>
+                        <div class="day-events">
+                            <span class="event-pill event-cyan">Base de Datos II</span>
+                        </div>
+                    </div>
+
+                    <!-- Miércoles -->
+                    <div class="week-day-column">
+                        <span class="day-name">Mié</span>
+                        <div class="day-number">10</div>
+                        <div class="day-events">
+                            <span class="event-pill event-green">Ing. Software</span>
+                            <span class="event-pill event-brown">Redes</span>
+                        </div>
+                    </div>
+
+                    <!-- Jueves (Día Actual) -->
+                    <div class="week-day-column active-day">
+                        <span class="day-name">Jue</span>
+                        <div class="day-number">11</div>
+                        <div class="day-events">
+                            <span class="event-pill event-purple">Parcial BD II — 10:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Viernes -->
+                    <div class="week-day-column">
+                        <span class="day-name">Vie</span>
+                        <div class="day-number">12</div>
+                        <div class="day-events">
+                            <span class="event-pill event-dark-purple">Entrega TP1</span>
+                        </div>
+                    </div>
+
+                    <!-- Sábado -->
+                    <div class="week-day-column">
+                        <span class="day-name">Sáb</span>
+                        <div class="day-number">13</div>
+                        <div class="day-events"></div>
+                    </div>
+
+                    <!-- Domingo -->
+                    <div class="week-day-column">
+                        <span class="day-name">Dom</span>
+                        <div class="day-number">14</div>
+                        <div class="day-events">
+                            <span class="event-pill event-teal">Maratón Estudio 3h</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Columna Derecha: Widgets de Acción y Progreso -->
+            <aside class="sidebar-widgets">
+
+                <!-- Widget 1: Lanzar FocusFlight -->
+                <article class="widget-card launch-widget">
+                    <div class="widget-header">
+                        <div class="widget-icon">
+                            <i class="fa-solid fa-infinity"></i>
+                        </div>
+                        <div class="widget-info">
+                            <h3>Iniciar FocusFlight</h3>
+                            <p>Sesión de Pomodoro</p>
+                        </div>
+                    </div>
+
+                    <p class="next-session-info">
+                        Próxima: <span th:text="${dashboardData.proximaSesion != null ? dashboardData.proximaSesion.tema : 'Diseño de Sistemas - 45 min'}">Diseño de Sistemas - 45 min</span>
+                    </p>
+
+                    <a th:href="@{/focusflight}" class="btn-takeoff">
+                        <i class="fa-solid fa-rocket"></i>
+                        <span>Despegar ahora</span>
+                    </a>
+                </article>
+
+                <!-- Widget 2: Próximos Vencimientos -->
+                <article class="widget-card">
+                    <h3 class="widget-title">Próximos Vencimientos</h3>
+                    <ul class="deadlines-list">
+                        <li class="deadline-item">
+                            <span class="bullet bullet-red"></span>
+                            <div class="deadline-content">
+                                <strong>Parcial BD II</strong>
+                                <span class="deadline-time text-red">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> Hoy · 10:00
+                                </span>
+                            </div>
+                        </li>
+                        <li class="deadline-item">
+                            <span class="bullet bullet-purple"></span>
+                            <div class="deadline-content">
+                                <strong>Entrega TP1 Ing. SW</strong>
+                                <span class="deadline-time">14 Sep · 23:59</span>
+                            </div>
+                        </li>
+                        <li class="deadline-item">
+                            <span class="bullet bullet-orange"></span>
+                            <div class="deadline-content">
+                                <strong>Parcial Análisis Mat.</strong>
+                                <span class="deadline-time">18 Sep · 14:00</span>
+                            </div>
+                        </li>
+                    </ul>
+                </article>
+
+                <!-- Widget 3: Racha de Estudio -->
+                <article class="widget-card">
+                    <h3 class="widget-title">Racha de Estudio</h3>
+
+                    <div class="streak-boxes-container">
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
+                    </div>
+
+                    <div class="streak-count">
+                        <i class="fa-solid fa-fire"></i>
+                        <span>7 días consecutivos</span>
+                    </div>
+                    <div class="streak-record">
+                        Récord personal: 7 días
+                    </div>
+                </article>
+
+            </aside>
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>

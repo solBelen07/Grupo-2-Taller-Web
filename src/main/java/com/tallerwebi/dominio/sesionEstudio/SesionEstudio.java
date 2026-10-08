@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio.sesionEstudio;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.parcial.Parcial;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -22,6 +23,10 @@ public class SesionEstudio {
   @ManyToOne
   @JoinColumn(name = "parcial_id", nullable = false)
   private Parcial parcial;
+
+  @ManyToOne
+  @JoinColumn(name = "usuario")
+  private Usuario usuario;
 
   public SesionEstudio() {}
 
@@ -71,5 +76,13 @@ public class SesionEstudio {
 
   public void setParcial(Parcial parcial) {
     this.parcial = parcial;
+  }
+
+  public Usuario getUsuario() {
+    return usuario;
+  }
+
+  public void setUsuario(Usuario usuario) {
+    this.usuario = usuario;
   }
 }

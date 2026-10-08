@@ -63,7 +63,7 @@
                 <i class="fa-regular fa-calendar"></i> Calendario
             </a>
 
-            <a th:href="@{/ai-copilot}"
+            <a th:href="@{/ia}"
                class="nav-item"
                th:classappend="${activePage == 'ai' ? 'activo' : ''}">
                 <i class="fa-solid fa-wand-magic-sparkles"></i> AI
@@ -82,7 +82,7 @@
         <div class="avatar-circle sm" th:text="${usuario != null ? #strings.substring(usuario.nombre,0,1) + #strings.substring(usuario.apellido,0,1) : 'JM'}">JM</div>
         <div class="user-info">
             <h4 th:text="${usuario != null ? usuario.nombre + ' ' + usuario.apellido : 'Juan Méndez'}">Juan Méndez</h4>
-            <p th:text="${usuario != null ? usuario.carrera : 'Ing. en Sistemas'}">Ing. en Sistemas</p>
+            <p>Ing. en Sistemas</p>
         </div>
     </div>
 </aside>

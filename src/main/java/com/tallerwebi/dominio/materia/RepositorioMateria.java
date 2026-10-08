@@ -9,4 +9,5 @@ public interface RepositorioMateria {
   Materia buscarPorId(Integer id);
   void modificar(Materia materia);
   void eliminar(Materia materia);
+  Long obtenerCantidadMateriasPorUsuario(Long idUsuario);
 }
