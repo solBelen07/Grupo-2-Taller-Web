@@ -289,3 +289,15 @@ VALUES (
            3,
            3
        );
+
+INSERT INTO Logro(id, nombre, descripcion)
+VALUES (
+           null,
+           'Maratonista',
+           'Estudiaste más de 50 horas'
+       ),
+    (
+     null,
+        'Invitador',
+     'Fuiste invitado muchas veces a grupos'
+    );
