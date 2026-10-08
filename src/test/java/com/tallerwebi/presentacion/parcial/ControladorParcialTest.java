@@ -54,7 +54,7 @@ public class ControladorParcialTest {
 
     ModelAndView mav = controladorParcial.nuevoParcial();
 
-    assertThat(mav.getViewName(), equalTo("parcial-formulario"));
+    assertThat(mav.getViewName(), equalTo("paginas/materia/parcial-formulario"));
 
     assertThat(mav.getModel().get("materias"), equalTo(materias));
 
