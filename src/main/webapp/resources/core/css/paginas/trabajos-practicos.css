@@ -1,0 +1,223 @@
+/* ---------- Cabecera y filtro ---------- */
+.tp-filtro {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.tp-filtro select {
+    background-color: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 14px;
+    max-width: 280px;
+}
+
+.tp-btn-sec {
+    background-color: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tp-btn-sec:hover {
+    background-color: #231638;
+    color: var(--text-primary);
+}
+
+/* ---------- Tablero ---------- */
+.tp-tablero {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+
+@media (max-width: 992px) {
+    .tp-tablero {
+        grid-template-columns: 1fr;
+    }
+}
+
+.tp-columna {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.tp-columna-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.tp-columna-titulo {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.tp-contador {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--card-border);
+    background-color: var(--input-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* Colores por columna */
+.tp-pendiente .tp-columna-titulo { color: var(--text-secondary); }
+.tp-en-curso .tp-columna-titulo,
+.tp-en-curso .tp-contador { color: #c084fc; }
+.tp-finalizado .tp-columna-titulo,
+.tp-finalizado .tp-contador { color: #34d399; }
+
+/* ---------- Tarjeta ---------- */
+.tp-tarjeta {
+    background-color: var(--input-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+}
+
+.tp-tarjeta-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.tp-nombre {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.tp-punto {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    background-color: var(--text-secondary);
+}
+
+.tp-en-curso .tp-punto { background-color: #c084fc; }
+.tp-finalizado .tp-punto { background-color: #34d399; }
+
+.tp-materia {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 4px 0 10px;
+}
+
+.tp-etiqueta {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    border: 1px solid #3b235d;
+    background-color: #231638;
+    color: #d8b4fe;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.tp-acciones {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.tp-acciones form {
+    margin: 0;
+}
+
+.tp-btn-mini {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    border-radius: 8px;
+    padding: 4px 12px;
+    font-size: 12px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.tp-btn-mini:hover {
+    background-color: #231638;
+    color: var(--text-primary);
+}
+
+.tp-btn-mini.peligro:hover {
+    border-color: var(--error-acento);
+    color: var(--error-acento);
+    background-color: var(--error-fondo);
+}
+
+.tp-vacio {
+    border: 1px dashed var(--card-border);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+/* ---------- Formulario ---------- */
+.tp-form-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 28px;
+    max-width: 640px;
+}
+
+.tp-form-card label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.tp-form-card input[type="text"],
+.tp-form-card select {
+    width: 100%;
+    background-color: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    outline: none;
+}
+
+.tp-form-card input:focus,
+.tp-form-card select:focus {
+    border-color: var(--accent-purple);
+}
+
+.tp-campo {
+    margin-bottom: 18px;
+}
+
+.tp-form-botones {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}

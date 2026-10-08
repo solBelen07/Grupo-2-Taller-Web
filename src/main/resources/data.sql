@@ -1,44 +1,44 @@
 INSERT INTO Materia
 (id, nombre, descripcion, docente, color, dias, horario, materialBibliografico)
 VALUES
-(
-    null,
-    'Taller Web I',
-    'Desarrollo de aplicaciones web con Spring MVC, Hibernate y Thymeleaf.',
-    'Spizzirri',
-    '#8B5CF6',
-    'Lunes y Miércoles',
-    '18:00 - 22:00',
-    'Documentación de Spring'
-);
+    (
+        null,
+        'Taller Web I',
+        'Desarrollo de aplicaciones web con Spring MVC, Hibernate y Thymeleaf.',
+        'Spizzirri',
+        '#8B5CF6',
+        'Lunes y Miércoles',
+        '18:00 - 22:00',
+        'Documentación de Spring'
+    );
 
 INSERT INTO Materia
 (id, nombre, descripcion, docente, color, dias, horario, materialBibliografico)
 VALUES
-(
-    null,
-    'Base de Datos II',
-    'Diseño y administración de bases de datos.',
-    'Laura Ibáñez',
-    '#3B82F6',
-    'Martes y Jueves',
-    '16:00 - 20:00',
-    'Apuntes SQL'
-);
+    (
+        null,
+        'Base de Datos II',
+        'Diseño y administración de bases de datos.',
+        'Laura Ibáñez',
+        '#3B82F6',
+        'Martes y Jueves',
+        '16:00 - 20:00',
+        'Apuntes SQL'
+    );
 
 INSERT INTO Materia
 (id, nombre, descripcion, docente, color, dias, horario, materialBibliografico)
 VALUES
-(
-    null,
-    'Visualización e Interfaces',
-    'Diseño de interfaces y experiencia de usuario.',
-    'Mariana López',
-    '#EC4899',
-    'Viernes',
-    '14:00 - 18:00',
-    'Material de Figma'
-);
+    (
+        null,
+        'Visualización e Interfaces',
+        'Diseño de interfaces y experiencia de usuario.',
+        'Mariana López',
+        '#EC4899',
+        'Viernes',
+        '14:00 - 18:00',
+        'Material de Figma'
+    );
 
 INSERT INTO Parcial
 (id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
@@ -205,11 +205,11 @@ VALUES (
        );
 
 -- =====================================================================
--- CAL-02: Tareas de /tareas vinculadas a eventos del calendario, para
--- mostrar el badge de estado de seguimiento.
+-- CAL-02: Tarea de ejemplo de /tareas (esta pantalla no alimenta el
+-- calendario: los TPs del calendario salen de /trabajos-practicos).
 -- =====================================================================
 
--- Ejemplo 1, hoy: un TP con 40% de avance y 10 días para la entrega.
+-- Ejemplo: un TP con 40% de avance y 10 días para la entrega.
 -- Menos del 50% -> "En tiempo".
 INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento)
 VALUES (
@@ -224,68 +224,3 @@ VALUES (
            DATE_ADD(CURDATE(), INTERVAL 10 DAY)
        );
 
-INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id, tareaId)
-VALUES (
-           null,
-           1,
-           'Entrega TP de Taller Web I',
-           'TRABAJO_PRACTICO',
-           CONCAT(CURDATE(), ' 20:00:00'),
-           CONCAT(CURDATE(), ' 21:00:00'),
-           1,
-           1
-       );
-
--- Ejemplo 2, mañana: un Parcial con 70% de avance pero que vence en 2
--- días. La urgencia por fecha le gana al progreso -> "Próxima a vencer".
-INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento)
-VALUES (
-           null,
-           'Parcial de Base de Datos II',
-           'Base de Datos II',
-           'PENDIENTE',
-           7,
-           10,
-           'test@unlam.edu.ar',
-           'PARCIAL',
-           DATE_ADD(CURDATE(), INTERVAL 2 DAY)
-       );
-
-INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id, tareaId)
-VALUES (
-           null,
-           1,
-           'Parcial de Base de Datos II',
-           'PARCIAL',
-           CONCAT(DATE_ADD(CURDATE(), INTERVAL 1 DAY), ' 09:00:00'),
-           CONCAT(DATE_ADD(CURDATE(), INTERVAL 1 DAY), ' 11:00:00'),
-           2,
-           2
-       );
-
--- Ejemplo 3, pasado mañana: un Parcial con 60% de avance y 15 días
--- todavía. Acá gana el progreso -> "Parcialmente completada".
-INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento)
-VALUES (
-           null,
-           'Parcial de Visualización e Interfaces',
-           'Visualización e Interfaces',
-           'PENDIENTE',
-           6,
-           10,
-           'test@unlam.edu.ar',
-           'PARCIAL',
-           DATE_ADD(CURDATE(), INTERVAL 15 DAY)
-       );
-
-INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id, tareaId)
-VALUES (
-           null,
-           1,
-           'Parcial de Visualización e Interfaces',
-           'PARCIAL',
-           CONCAT(DATE_ADD(CURDATE(), INTERVAL 2 DAY), ' 14:00:00'),
-           CONCAT(DATE_ADD(CURDATE(), INTERVAL 2 DAY), ' 16:00:00'),
-           3,
-           3
-       );

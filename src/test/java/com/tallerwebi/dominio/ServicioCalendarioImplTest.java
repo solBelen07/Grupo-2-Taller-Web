@@ -19,6 +19,8 @@ import com.tallerwebi.dominio.calendario.CalendarioSemanal;
 import com.tallerwebi.dominio.calendario.DiaMensual;
 import com.tallerwebi.dominio.calendario.DiaSemanal;
 import com.tallerwebi.dominio.calendario.EstadoActividad;
+import com.tallerwebi.dominio.calendario.EventoConEstado;
+import com.tallerwebi.dominio.calendario.FuenteDeEventos;
 import com.tallerwebi.dominio.calendario.ResumenMateria;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.tarea.RepositorioTarea;
@@ -28,6 +30,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +44,7 @@ public class ServicioCalendarioImplTest {
 
   private RepositorioEvento repositorioEventoMock;
   private RepositorioTarea repositorioTareaMock;
+  private List<FuenteDeEventos> fuentes;
   private ServicioCalendario servicioCalendario;
   private Materia analisis;
   private Materia fisica;
@@ -56,6 +60,7 @@ public class ServicioCalendarioImplTest {
   public void init() {
     this.repositorioEventoMock = mock(RepositorioEvento.class);
     this.repositorioTareaMock = mock(RepositorioTarea.class);
+    this.fuentes = new ArrayList<>();
     this.analisis = materia("Análisis II", "#2F6FDE");
     this.fisica = materia("Física II", "#D98A00");
     when(
@@ -67,8 +72,17 @@ public class ServicioCalendarioImplTest {
     )
       .thenReturn(List.of());
     when(this.repositorioTareaMock.buscarTodas()).thenReturn(List.of());
+    armarServicio();
+  }
+
+  private void armarServicio() {
     this.servicioCalendario =
-      new ServicioCalendarioImpl(this.repositorioEventoMock, this.repositorioTareaMock, RELOJ);
+      new ServicioCalendarioImpl(
+        this.repositorioEventoMock,
+        this.repositorioTareaMock,
+        this.fuentes,
+        RELOJ
+      );
   }
 
   private void conEventos(Evento... eventos) {
@@ -251,7 +265,7 @@ public class ServicioCalendarioImplTest {
     assertThat(mes.materias(), is(empty()));
   }
 
-  // ---------------------------------------------------------------- vista semanal
+  //  vista semanal
 
   @Test
   public void deberiaIndicarQueLaSemanaEstaVaciaSinEventos() {
@@ -387,7 +401,7 @@ public class ServicioCalendarioImplTest {
     assertThat(semana.horaFin(), is(24));
   }
 
-  // ---------------------------------------------------------------- CAL-02: estado de actividades
+  //  CAL-02: estado de actividades
 
   private static Tarea tarea(Long id, String estado, LocalDate fechaVencimiento) {
     Tarea tarea = new Tarea();
@@ -482,5 +496,152 @@ public class ServicioCalendarioImplTest {
       semana.dias().get(1).bloques().get(0).segmento().estado(),
       is(EstadoActividad.PROXIMA_A_VENCER)
     );
+  }
+
+  //  fuentes de eventos
+
+  private static EventoConEstado derivado(
+    Materia materia,
+    TipoEvento tipo,
+    String titulo,
+    LocalDateTime desde,
+    EstadoActividad estado
+  ) {
+    return new EventoConEstado(
+      new Evento(USUARIO, materia, tipo, titulo, desde, desde.plusHours(2)),
+      estado
+    );
+  }
+
+  private void conFuente(EventoConEstado... eventos) {
+    FuenteDeEventos fuente = mock(FuenteDeEventos.class);
+    when(
+      fuente.eventosEntre(
+        eq(USUARIO),
+        any(LocalDateTime.class),
+        any(LocalDateTime.class),
+        any(LocalDate.class)
+      )
+    )
+      .thenReturn(List.of(eventos));
+    this.fuentes.add(fuente);
+    armarServicio();
+  }
+
+  @Test
+  public void sinFuentesElCalendarioSoloMuestraLosEventosReales() {
+    // preparacion
+    LocalDate lunes = LocalDate.of(2026, 9, 28);
+    conEventos(evento(this.fisica, "Clase", lunes.atTime(8, 0), lunes.atTime(10, 0)));
+
+    // ejecucion
+    CalendarioMensual mes = this.servicioCalendario.obtenerMes(USUARIO, lunes);
+
+    // validacion
+    assertThat(mes.totalEventos(), is(1));
+  }
+
+  @Test
+  public void losEventosDeUnaFuenteApareceEnElCalendarioConSuEstado() {
+    // preparacion
+    LocalDate lunes = LocalDate.of(2026, 9, 28);
+    conFuente(
+      derivado(
+        this.analisis,
+        TipoEvento.PARCIAL,
+        "Primer Parcial",
+        lunes.atTime(14, 0),
+        EstadoActividad.PROXIMA_A_VENCER
+      )
+    );
+
+    // ejecucion
+    CalendarioMensual mes = this.servicioCalendario.obtenerMes(USUARIO, lunes);
+
+    // validacion
+    assertThat(dia(mes, lunes).eventos(), hasSize(1));
+    assertThat(dia(mes, lunes).eventos().get(0).titulo(), is("Primer Parcial"));
+    assertThat(dia(mes, lunes).eventos().get(0).horaInicio(), is("14:00"));
+    assertThat(dia(mes, lunes).eventos().get(0).estado(), is(EstadoActividad.PROXIMA_A_VENCER));
+  }
+
+  @Test
+  public void losEventosDeUnaFuenteTambienApareceEnLaVistaSemanal() {
+    // preparacion
+    LocalDate lunes = LocalDate.of(2026, 9, 28);
+    conFuente(
+      derivado(
+        this.analisis,
+        TipoEvento.TRABAJO_PRACTICO,
+        "Entrega TP",
+        lunes.plusDays(2).atTime(20, 0),
+        EstadoActividad.EN_TIEMPO
+      )
+    );
+
+    // ejecucion
+    CalendarioSemanal semana = this.servicioCalendario.obtenerSemana(USUARIO, lunes);
+
+    // validacion
+    assertThat(semana.dias().get(2).bloques(), hasSize(1));
+    assertThat(
+      semana.dias().get(2).bloques().get(0).segmento().estado(),
+      is(EstadoActividad.EN_TIEMPO)
+    );
+    assertThat(semana.totalEventos(), is(1));
+  }
+
+  @Test
+  public void variasFuentesYEventosRealesConviven() {
+    // preparacion
+    LocalDate lunes = LocalDate.of(2026, 9, 28);
+    conEventos(evento(this.fisica, "Clase", lunes.atTime(8, 0), lunes.atTime(10, 0)));
+    conFuente(derivado(this.analisis, TipoEvento.PARCIAL, "Parcial", lunes.atTime(14, 0), null));
+    conFuente(
+      derivado(this.analisis, TipoEvento.TRABAJO_PRACTICO, "TP", lunes.atTime(20, 0), null)
+    );
+
+    // ejecucion
+    CalendarioMensual mes = this.servicioCalendario.obtenerMes(USUARIO, lunes);
+
+    // validacion
+    assertThat(dia(mes, lunes).eventos(), hasSize(3));
+    assertThat(mes.totalEventos(), is(3));
+  }
+
+  @Test
+  public void laMateriaDeUnEventoDeUnaFuenteSumaEnElResumenDeMaterias() {
+    // preparacion
+    LocalDate lunes = LocalDate.of(2026, 9, 28);
+    conEventos(evento(this.analisis, "Clase", lunes.atTime(8, 0), lunes.atTime(10, 0)));
+    conFuente(derivado(this.analisis, TipoEvento.PARCIAL, "Parcial", lunes.atTime(14, 0), null));
+
+    // ejecucion
+    CalendarioMensual mes = this.servicioCalendario.obtenerMes(USUARIO, lunes);
+
+    // validacion
+    assertThat(mes.materias(), hasSize(1));
+    assertThat(mes.materias().get(0).cantidadEventos(), is(2));
+  }
+
+  @Test
+  public void deberiaPedirleALasFuentesElMismoRangoQueAlRepositorio() {
+    // preparacion
+    FuenteDeEventos fuente = mock(FuenteDeEventos.class);
+    when(fuente.eventosEntre(any(), any(), any(), any())).thenReturn(List.of());
+    this.fuentes.add(fuente);
+    armarServicio();
+
+    // ejecucion
+    this.servicioCalendario.obtenerSemana(USUARIO, LocalDate.of(2026, 9, 30));
+
+    // validacion
+    verify(fuente)
+      .eventosEntre(
+        USUARIO,
+        LocalDate.of(2026, 9, 28).atStartOfDay(),
+        LocalDate.of(2026, 10, 5).atStartOfDay(),
+        LocalDate.of(2026, 9, 28)
+      );
   }
 }
