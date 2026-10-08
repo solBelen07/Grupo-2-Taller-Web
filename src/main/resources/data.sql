@@ -40,12 +40,6 @@ VALUES
     'Material de Figma'
 );
 
-INSERT INTO materia_usuario (materia_id, usuario_id)
-VALUES
-    (1, 1),
-    (2, 1),
-    (3, 1);
-
 INSERT INTO Parcial
 (id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
 VALUES
@@ -175,6 +169,12 @@ INSERT INTO Usuario(id, nombre, apellido, email, password, rol, activo, puntos)
 VALUES
     (null, 'Juan', 'Mendez','test@unlam.edu.ar', 'test', 'ADMIN', true, 0),
     (null,'user','nose','user@test.com','1234','ADMIN', true, 0);
+
+INSERT INTO materia_usuario (materia_id, usuario_id)
+VALUES
+    (1, 1),
+    (2, 1),
+    (3, 1);
 
 INSERT INTO Grupo (id, nombre)
 VALUES
