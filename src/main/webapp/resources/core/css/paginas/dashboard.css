@@ -1,0 +1,457 @@
+/* ==========================================================================
+   DASHBOARD CONTENEDOR Y ENCABEZADO
+   ========================================================================== */
+
+.dashboard-container {
+    padding: 2rem;
+    color: #FFFFFF;
+    background-color: #0B0713;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.greeting-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin: 0 0 0.35rem 0;
+    color: #FFFFFF;
+}
+
+.greeting-subtitle {
+    font-size: 0.875rem;
+    color: #9A95AA;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Botones principales */
+.btn-primary-purple {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #A855F7;
+    color: #FFFFFF;
+    padding: 0.65rem 1.25rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary-purple:hover {
+    background-color: #9333EA;
+}
+
+.btn-secondary-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: 1px solid #322B42;
+    color: #FFFFFF;
+    padding: 0.65rem 1.25rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-secondary-outline:hover {
+    background-color: #1A1326;
+}
+
+/* ==========================================================================
+   TARJETAS KPI INICIALES
+   ========================================================================== */
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background-color: #130D1E;
+    border: 1px solid #231B30;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.kpi-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.kpi-icon-badge {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.badge-green { background-color: rgba(34, 197, 94, 0.15); color: #22C55E; }
+.badge-purple { background-color: rgba(168, 85, 247, 0.15); color: #A855F7; }
+.badge-cyan { background-color: rgba(6, 182, 212, 0.15); color: #06B6D4; }
+.badge-orange { background-color: rgba(249, 115, 22, 0.15); color: #F97316; }
+
+.live-tag {
+    background-color: #1E162B;
+    color: #8B859E;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.35rem;
+    letter-spacing: 0.05em;
+}
+
+.kpi-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 0.25rem;
+}
+
+.kpi-label {
+    font-size: 0.75rem;
+    color: #9A95AA;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-subtext {
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.subtext-green { color: #22C55E; }
+.subtext-purple { color: #A855F7; }
+.subtext-cyan { color: #06B6D4; }
+.subtext-orange { color: #F97316; }
+
+.kpi-progress-bar {
+    width: 100%;
+    height: 0.25rem;
+    background-color: #231B30;
+    border-radius: 1rem;
+    overflow: hidden;
+    margin-top: auto;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 1rem;
+}
+
+.fill-green { background-color: #22C55E; }
+.fill-purple { background-color: #A855F7; }
+.fill-cyan { background-color: #06B6D4; }
+
+/* ==========================================================================
+   ESTRUCTURA PRINCIPAL (GRILLA)
+   ========================================================================== */
+
+.dashboard-main-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+}
+
+.section-card {
+    background-color: #130D1E;
+    border: 1px solid #231B30;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.section-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0;
+}
+
+.link-full-calendar {
+    color: #A855F7;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.link-full-calendar:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   SEMANA ACADÉMICA
+   ========================================================================== */
+
+.week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.75rem;
+}
+
+.week-day-column {
+    background-color: #181126;
+    border: 1px solid #281F38;
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 220px;
+}
+
+.week-day-column.active-day {
+    border-color: #A855F7;
+    background-color: #1C132E;
+}
+
+.day-name {
+    font-size: 0.75rem;
+    color: #8B859E;
+    margin-bottom: 0.25rem;
+}
+
+.day-number {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 1rem;
+}
+
+.day-events {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.event-pill {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.35rem 0.4rem;
+    border-radius: 0.35rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    text-align: center;
+}
+
+.event-pink { background-color: rgba(236, 72, 153, 0.2); color: #F472B6; }
+.event-blue { background-color: rgba(59, 130, 246, 0.2); color: #60A5FA; }
+.event-cyan { background-color: rgba(6, 182, 212, 0.2); color: #22D3EE; }
+.event-green { background-color: rgba(34, 197, 94, 0.2); color: #4ADE80; }
+.event-brown { background-color: rgba(217, 119, 6, 0.2); color: #FBBF24; }
+.event-purple { background-color: rgba(168, 85, 247, 0.25); color: #C084FC; border: 1px solid rgba(168, 85, 247, 0.4); }
+.event-dark-purple { background-color: rgba(107, 33, 168, 0.25); color: #A855F7; }
+.event-teal { background-color: rgba(20, 184, 166, 0.2); color: #2DD4BF; }
+
+/* ==========================================================================
+   BARRA LATERAL DE WIDGETS
+   ========================================================================== */
+
+.sidebar-widgets {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.widget-card {
+    background-color: #130D1E;
+    border: 1px solid #231B30;
+    border-radius: 1rem;
+    padding: 1.25rem;
+}
+
+.widget-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0 0 1rem 0;
+}
+
+/* Widget Iniciar FocusFlight */
+.launch-widget {
+    background-color: #170F26;
+}
+
+.widget-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.widget-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    background-color: #A855F7;
+    border-radius: 0.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+}
+
+.widget-info h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.widget-info p {
+    font-size: 0.75rem;
+    color: #9A95AA;
+    margin: 0;
+}
+
+.next-session-info {
+    font-size: 0.75rem;
+    color: #9A95AA;
+    margin-bottom: 1rem;
+}
+
+.btn-takeoff {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    background-color: #A855F7;
+    color: #FFFFFF;
+    padding: 0.75rem;
+    border-radius: 0.6rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease;
+}
+
+.btn-takeoff:hover {
+    background-color: #9333EA;
+}
+
+/* Lista de Próximos Vencimientos */
+.deadlines-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.deadline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+}
+
+.bullet {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    margin-top: 0.35rem;
+    flex-shrink: 0;
+}
+
+.bullet-red { background-color: #EF4444; }
+.bullet-purple { background-color: #A855F7; }
+.bullet-orange { background-color: #F97316; }
+
+.deadline-content {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+}
+
+.deadline-content strong {
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.deadline-time {
+    font-size: 0.725rem;
+    color: #8B859E;
+    margin-top: 0.15rem;
+}
+
+.text-red {
+    color: #EF4444;
+}
+
+/* Widget Racha de Estudio */
+.streak-boxes-container {
+    display: flex;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.streak-box {
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 0.2rem;
+}
+
+.streak-box.filled {
+    background-color: #A855F7;
+}
+
+.streak-box.empty {
+    background-color: #231B30;
+}
+
+.streak-count {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 0.25rem;
+}
+
+.streak-count i {
+    color: #A855F7;
+}
+
+.streak-record {
+    font-size: 0.725rem;
+    color: #8B859E;
+}

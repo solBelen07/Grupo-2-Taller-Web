@@ -2,11 +2,12 @@ package com.tallerwebi.infraestructura.SesionEstudio;
 
 import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
+import java.time.LocalDate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-@SuppressWarnings("CPD-START")
+//@SuppressWarnings("CPD-START")
 @Repository
 public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
 
@@ -48,5 +49,18 @@ public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
       .createQuery(hql)
       .setParameter("materiaId", materiaId)
       .executeUpdate();
+  }
+
+  @Override
+  public SesionEstudio buscarProximaSesionEstudio(Long idUsuario) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "from SesionEstudio where fecha = :hoy and usuario.id = :idUsuario",
+        SesionEstudio.class
+      )
+      .setParameter("hoy", LocalDate.now())
+      .setParameter("idUsuario", idUsuario)
+      .uniqueResult();
   }
 }

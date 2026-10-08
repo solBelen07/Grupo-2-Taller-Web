@@ -6,4 +6,5 @@ public interface RepositorioSesionEstudio {
   void eliminar(SesionEstudio sesionEstudio);
   SesionEstudio buscarPorId(Integer id);
   void eliminarPorMateriaId(Integer materiaId);
+  SesionEstudio buscarProximaSesionEstudio(Long idUsuario);
 }

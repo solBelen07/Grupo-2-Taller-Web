@@ -65,7 +65,7 @@ public class ControladorPomodoroTest {
     when(this.servicioPomodoroMock.obtenerSegundosRestantes(ID_SESION)).thenReturn(900L);
     when(this.servicioPomodoroMock.buscarPorId(ID_SESION)).thenReturn(pomodoro);
 
-    this.mockMvc.perform(get("/FocusFlight/Timer/1"))
+    this.mockMvc.perform(get("/focusflight/timer/1"))
       .andExpect(status().isOk())
       .andExpect(view().name(VISTA_TIMER))
       .andExpect(model().attribute("pomodoro", sameInstance(pomodoro)))
@@ -78,7 +78,7 @@ public class ControladorPomodoroTest {
     when(this.servicioPomodoroMock.obtenerSegundosRestantes(ID_SESION)).thenReturn(1500L);
     when(this.servicioPomodoroMock.buscarPorId(ID_SESION)).thenReturn(pomodoro);
 
-    this.mockMvc.perform(post("/FocusFlight/Timer/1"))
+    this.mockMvc.perform(post("/focusflight/timer/1"))
       .andExpect(status().isOk())
       .andExpect(view().name(VISTA_TIMER))
       .andExpect(model().attribute("segundosRestantes", 1500L));
@@ -88,9 +88,9 @@ public class ControladorPomodoroTest {
   public void deberiaRedirigirAlInicioSiLaSesionDelTimerNoExiste() throws Exception {
     when(this.servicioPomodoroMock.buscarPorId(ID_SESION)).thenReturn(null);
 
-    this.mockMvc.perform(get("/FocusFlight/Timer/1"))
+    this.mockMvc.perform(get("/focusflight/timer/1"))
       .andExpect(status().is3xxRedirection())
-      .andExpect(redirectedUrl("/FocusFlight"));
+      .andExpect(redirectedUrl("/focusflight"));
   }
 
   @Test
@@ -100,7 +100,7 @@ public class ControladorPomodoroTest {
     when(this.servicioPomodoroMock.buscarPorId(ID_SESION))
       .thenReturn(this.crearPomodoro(Estado.PAUSADO));
 
-    this.mockMvc.perform(get("/FocusFlight/Timer/estado/1"))
+    this.mockMvc.perform(get("/focusflight/timer/estado/1"))
       .andExpect(status().isOk())
       .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
       .andExpect(content().string(containsString("\"segundosRestantes\":900")))
@@ -113,7 +113,7 @@ public class ControladorPomodoroTest {
     when(this.servicioPomodoroMock.obtenerSegundosRestantes(ID_SESION)).thenReturn(0L);
     when(this.servicioPomodoroMock.buscarPorId(ID_SESION)).thenReturn(null);
 
-    this.mockMvc.perform(get("/FocusFlight/Timer/estado/1"))
+    this.mockMvc.perform(get("/focusflight/timer/estado/1"))
       .andExpect(status().isOk())
       .andExpect(content().string(containsString("\"segundosRestantes\":0")))
       .andExpect(content().string(containsString("\"estado\":\"INEXISTENTE\"")));
@@ -121,42 +121,42 @@ public class ControladorPomodoroTest {
 
   @Test
   public void noDeberiaPermitirConsultarElEstadoPorAjaxConPost() throws Exception {
-    this.mockMvc.perform(post("/FocusFlight/Timer/estado/1"))
+    this.mockMvc.perform(post("/focusflight/timer/estado/1"))
       .andExpect(status().isMethodNotAllowed());
   }
 
   @Test
   public void deberiaPausarLaSesionYRedirigirAlTimer() throws Exception {
-    this.mockMvc.perform(post("/FocusFlight/Timer/pausar/1"))
+    this.mockMvc.perform(post("/focusflight/timer/pausar/1"))
       .andExpect(status().is3xxRedirection())
-      .andExpect(redirectedUrl("/FocusFlight/Timer/1"));
+      .andExpect(redirectedUrl("/focusflight/timer/1"));
 
     verify(this.servicioPomodoroMock, times(1)).pausarSesion(ID_SESION);
   }
 
   @Test
   public void deberiaReanudarLaSesionYRedirigirAlTimer() throws Exception {
-    this.mockMvc.perform(post("/FocusFlight/Timer/reanudar/1"))
+    this.mockMvc.perform(post("/focusflight/timer/reanudar/1"))
       .andExpect(status().is3xxRedirection())
-      .andExpect(redirectedUrl("/FocusFlight/Timer/1"));
+      .andExpect(redirectedUrl("/focusflight/timer/1"));
 
     verify(this.servicioPomodoroMock, times(1)).reanudarSesion(ID_SESION);
   }
 
   @Test
   public void deberiaCancelarLaSesionYRedirigirAlInicioDeFocusFlight() throws Exception {
-    this.mockMvc.perform(post("/FocusFlight/Timer/cancelar/1"))
+    this.mockMvc.perform(post("/focusflight/timer/cancelar/1"))
       .andExpect(status().is3xxRedirection())
-      .andExpect(redirectedUrl("/FocusFlight"));
+      .andExpect(redirectedUrl("/focusflight"));
 
     verify(this.servicioPomodoroMock, times(1)).modificarEstadoCancelada(ID_SESION);
   }
 
   @Test
   public void noDeberiaPermitirPausarNiCancelarConGet() throws Exception {
-    this.mockMvc.perform(get("/FocusFlight/Timer/pausar/1"))
+    this.mockMvc.perform(get("/focusflight/timer/pausar/1"))
       .andExpect(status().isMethodNotAllowed());
-    this.mockMvc.perform(get("/FocusFlight/Timer/cancelar/1"))
+    this.mockMvc.perform(get("/focusflight/timer/cancelar/1"))
       .andExpect(status().isMethodNotAllowed());
 
     verify(this.servicioPomodoroMock, never()).pausarSesion(ID_SESION);
@@ -172,7 +172,7 @@ public class ControladorPomodoroTest {
     when(this.servicioPomodoroMock.buscarSesionActiva(usuario)).thenReturn(Optional.empty());
     when(this.servicioMateriaMock.obtenerMaterias()).thenReturn(materias);
 
-    this.mockMvc.perform(get("/FocusFlight"))
+    this.mockMvc.perform(get("/focusflight"))
       .andExpect(status().isOk())
       .andExpect(view().name("paginas/tecnicasestudio/pomodoro"))
       .andExpect(model().attribute("materias", materias))
@@ -187,9 +187,9 @@ public class ControladorPomodoroTest {
     when(this.servicioPomodoroMock.buscarSesionActiva(usuario))
       .thenReturn(Optional.of(sesionActiva));
 
-    this.mockMvc.perform(get("/FocusFlight"))
+    this.mockMvc.perform(get("/focusflight"))
       .andExpect(status().is3xxRedirection())
-      .andExpect(redirectedUrl("/FocusFlight/Timer/1"));
+      .andExpect(redirectedUrl("/focusflight/timer/1"));
 
     verify(this.servicioMateriaMock, never()).obtenerMaterias();
   }
@@ -215,7 +215,7 @@ public class ControladorPomodoroTest {
       .thenReturn(registrada);
 
     this.mockMvc.perform(
-        post("/FocusFlight/Boleto")
+        post("/focusflight/boleto")
           .param("origen", "ARG")
           .param("destino", "ESP")
           .param("duracion", "25")

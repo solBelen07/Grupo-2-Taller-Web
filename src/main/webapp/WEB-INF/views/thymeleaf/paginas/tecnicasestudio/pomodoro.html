@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusFlight - Configurar Flight</title>
+    <title>Configurar vuelo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/main.css}" />
 </head>
 <body>
 
-<div th:replace="~{componentes/sidebar :: sidebar-nav}"></div>
+<div th:replace="~{componentes/sidebar :: sidebar-nav('focusflight')}"></div>
 
 <div class="main-wrapper">
 
@@ -20,7 +20,7 @@
         <h1 class="page-title">Configurar Vuelo</h1>
         <p class="page-subtitle">Configura tu sesión de concentración como un vuelo académico.</p>
 
-        <form id="form-vuelo" th:action="@{/FocusFlight/Boleto}" method="POST" accept-charset="UTF-8" th:object="${datosPomodoro}" novalidate>
+        <form id="form-vuelo" th:action="@{/focusflight/boleto}" method="POST" accept-charset="UTF-8" th:object="${datosPomodoro}" novalidate>
             <div class="flight-card">
                 <div class="card-header-title">
                     <i class="fa-solid fa-plane-flight"></i>
@@ -52,13 +52,14 @@
                             <option value="25">25 min</option>
                             <option value="45">45 min</option>
                             <option value="60">60 min</option>
+                            <option value="120">120 min</option>
                         </select>
                     </div>
 
                 <div class="form-group">
                     <label>Materia</label>
                     <select name="materia" class="custom-select">
-                        <option value="" disabled selected>Seleccionar materia...</option>
+                        <option value="" disabled selected>Seleccionar materia</option>
                         <option th:each="materia : ${materias}"
                                 th:value="${materia.id}"
                                 th:text="${materia.nombre}"></option>

@@ -12,7 +12,7 @@
       th:classappend="${estadoVuelo == 'PAUSADO'} ? 'vuelo-pausado'">
 
 <!-- Sidebar Global -->
-<div th:replace="~{componentes/sidebar :: sidebar-nav}"></div>
+<div th:replace="~{componentes/sidebar :: sidebar-nav('focusflight')}"></div>
 
 <div class="main-wrapper">
     <!-- Header Global -->
@@ -97,7 +97,7 @@
                 <span class="panel-section-title">CONTROLES DE VUELO</span>
 
                 <form th:if="${estadoVuelo == 'EN_CURSO'}"
-                      th:action="@{/FocusFlight/Timer/pausar/{id}(id=${pomodoro.id})}" method="POST">
+                      th:action="@{/focusflight/timer/pausar/{id}(id=${pomodoro.id})}" method="POST">
                     <button type="submit" id="btn-pausar" class="btn-flight btn-pausar">
                         <i class="fa-solid fa-pause"></i>
                         <span>Pausar vuelo</span>
@@ -105,7 +105,7 @@
                 </form>
 
                 <form th:if="${estadoVuelo == 'PAUSADO'}"
-                      th:action="@{/FocusFlight/Timer/reanudar/{id}(id=${pomodoro.id})}" method="POST">
+                      th:action="@{/focusflight/timer/reanudar/{id}(id=${pomodoro.id})}" method="POST">
                     <button type="submit" id="btn-reanudar" class="btn-flight btn-reanudar">
                         <i class="fa-solid fa-play"></i>
                         <span>Reanudar vuelo</span>
@@ -113,7 +113,7 @@
                 </form>
 
                 <form id="form-cancelar"
-                      th:action="@{/FocusFlight/Timer/cancelar/{id}(id=${pomodoro.id})}" method="POST">
+                      th:action="@{/focusflight/timer/cancelar/{id}(id=${pomodoro.id})}" method="POST">
                     <button type="submit" id="btn-cancelar" class="btn-flight btn-cancelar">
                         <i class="fa-solid fa-ban"></i>
                         <span>Cancelar vuelo</span>

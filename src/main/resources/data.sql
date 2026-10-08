@@ -40,6 +40,12 @@ VALUES
     'Material de Figma'
 );
 
+INSERT INTO materia_usuario (materia_id, usuario_id)
+VALUES
+    (1, 1),
+    (2, 1),
+    (3, 1);
+
 INSERT INTO Parcial
 (id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
 VALUES

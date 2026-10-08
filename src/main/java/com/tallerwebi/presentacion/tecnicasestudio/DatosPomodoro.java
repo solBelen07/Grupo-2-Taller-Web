@@ -4,7 +4,6 @@ import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.tecnicasestudio.Estado;
 
-@SuppressWarnings("CPD-START")
 public class DatosPomodoro {
 
   private String origen;

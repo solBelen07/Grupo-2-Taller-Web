@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Tarea</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+
+<body>
+<div th:replace="~{componentes/sidebar :: sidebar-nav('tareas')}"></div>
+
+<div class="main-wrapper">
+
+    <div th:replace="~{componentes/header :: header-principal}"></div>
+
+    <!-- Vista del Formulario -->
+    <main class="contenido-crear-tarea">
+
+        <!-- HEADER CON BOTÓN VOLVER -->
+        <div class="header-seccion">
+            <div>
+                <a th:href="@{/tareas}" class="btn-volver">
+                    ← Volver a Tareas
+                </a>
+                <h1 class="titulo-principal">Crear Nueva Tarea</h1>
+                <p class="subtitulo">Ingresá los detalles para asignar una nueva tarea al grupo.</p>
+            </div>
+        </div>
+
+        <!-- TARJETA DEL FORMULARIO -->
+        <div class="tarjeta-formulario">
+            <form th:action="@{/tareas/crear}" method="post" accept-charset="UTF-8">
+
+                <div class="mb-4">
+                    <label for="titulo" class="form-label">Título de la Tarea</label>
+                    <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Ej. Práctica 1" required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label for="materia" class="form-label">Materia</label>
+                        <select class="form-select" id="materia" name="materia" required>
+                            <option value="" disabled selected>Seleccionar materia</option>
+                            <option th:each="materia : ${materias}"
+                                    th:value="${materia.id}"
+                                    th:text="${materia.nombre}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label for="tipo" class="form-label">Tipo de Actividad</label>
+                        <select class="form-select" id="tipo" name="tipo" required>
+                            <option value="">Seleccionar tipo</option>
+                            <option value="PARCIAL">Parcial</option>
+                            <option value="TP">Trabajo Práctico</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label for="responsable" class="form-label">Responsable</label>
+                        <input type="text" class="form-control" id="responsable" name="responsable" placeholder="Ej. Juan Pérez" required>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label for="estado" class="form-label">Estado Inicial</label>
+                        <select class="form-select" id="estado" name="estado" required>
+                            <option value="PENDIENTE">Pendiente</option>
+                            <option value="COMPLETADA">Completada</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <label for="fechaVencimiento" class="form-label">Fecha de Vencimiento</label>
+                        <input type="date" class="form-control input-fecha" id="fechaVencimiento" name="fechaVencimiento" required>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="horasPlanificadas" class="form-label">Hs. Planificadas</label>
+                        <input type="number" class="form-control" id="horasPlanificadas" name="horasPlanificadas" min="0" placeholder="0" required>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="horasRealizadas" class="form-label">Hs. Realizadas</label>
+                        <input type="number" class="form-control" id="horasRealizadas" name="horasRealizadas" min="0" placeholder="0" required>
+                    </div>
+                </div>
+
+                <!-- BOTONES -->
+                <div class="acciones-form">
+                    <a th:href="@{/tareas}" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-guardar">
+                        + Crear Tarea
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+
+</html>
