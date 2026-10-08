@@ -7,9 +7,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.tallerwebi.dominio.RepositorioUsuario;
-import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.excepcion.UsuarioNoEncontrado;
 import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaNoEncontrada;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.RepositorioMateria;
@@ -57,6 +54,10 @@ public class RepositorioMateriaTest {
 
   private Materia cuandoBuscoUnaMateriaPorNombre(String nombre) {
     return repositorioMateria.buscarPorNombre(nombre);
+  }
+
+  private Materia cuandoBuscoUnaMateriaPorId(Integer id) {
+    return repositorioMateria.buscarPorId(id);
   }
 
   private void cuandoModificoUnaMateria(Materia materia) {
@@ -195,5 +196,33 @@ public class RepositorioMateriaTest {
     Materia materiaModificada = this.sessionFactory.getCurrentSession().find(Materia.class, id);
 
     assertThat(materiaModificada.getNombre(), is(equalTo(nombreNuevo)));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaBuscarUnaMateriaPorId() {
+    String nombre = "Taller Web I";
+
+    Materia materia = this.dadoQueTengoUnaMateria(nombre);
+    this.dadoQueExisteLaMateria(materia);
+
+    Integer id = materia.getId();
+
+    Materia materiaObtenida = this.cuandoBuscoUnaMateriaPorId(id);
+
+    assertThat(materiaObtenida.getId(), is(equalTo(id)));
+    assertThat(materiaObtenida.getNombre(), is(equalTo(nombre)));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaLanzarMateriaNoEncontradaAlModificarUnaMateriaQueNoExiste() {
+    Materia materia = this.dadoQueTengoUnaMateria("Materia inexistente");
+
+    materia.setId(999);
+
+    this.entoncesSeLanzaUnaMateriaNoEncontrada(materia);
   }
 }
