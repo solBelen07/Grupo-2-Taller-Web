@@ -4,8 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -52,6 +51,33 @@ public class ServicioLogroTest {
     entoncesSeObtienenNull(logros);
   }
 
+  @Test
+  public void deberiaObtenerLogroSiRecibe6Invitaciones() {
+    dadoQueExistenLogros();
+    when(repositorioInvitacionMock.cantidadDeInvitacionesHistoricoPorReceptor(any())).thenReturn(6);
+
+    List<Logro> logrosObtenidos = servicioLogro.obtenerProgresos(mock(Usuario.class));
+
+    entoncesSeObtienenLosLogrosDelUsuario(logrosObtenidos);
+  }
+
+  @Test
+  public void deberiaObtenerLogroSiCompleta4000Minutos() {
+    dadoQueExistenLogros();
+    when(repositorioPomodoroMock.calcularMinutosCompletados(anyLong())).thenReturn(4000L);
+
+    List<Logro> logrosObtenidos = servicioLogro.obtenerProgresos(mock(Usuario.class));
+
+    entoncesSeObtienenLosLogrosDelUsuario(logrosObtenidos);
+  }
+
+  @Test
+  public void deberiaObtenerListadoDeLogrosAlLlamarAlRepositorio() {
+    dadoQueExistenLogros();
+    List<Logro> logros = servicioLogro.obtenerLogros();
+    assertThat(logros.get(0), instanceOf(Logro.class));
+  }
+
   private void entoncesSeObtienenNull(List<Logro> logros) {
     assertTrue(logros.isEmpty());
   }
@@ -73,6 +99,7 @@ public class ServicioLogroTest {
   }
 
   private void dadoQueExistenLogros() {
+    when(repositorioLogroMock.listar()).thenReturn(List.of(new Logro()));
     when(repositorioLogroMock.buscar(anyString())).thenReturn(new Logro());
   }
 }

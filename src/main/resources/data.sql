@@ -304,6 +304,6 @@ VALUES (
        ),
     (
      null,
-        'Invitador',
+        'Popular',
      'Fuiste invitado muchas veces a grupos'
     );

@@ -95,6 +95,31 @@ public class RepositorioInvitacionTest {
     entoncesLaInvitacionEsInvalidaEnElRepositorio();
   }
 
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaContarLasInvitacionesHistoricasDeUnReceptor() {
+    Usuario receptor = this.dadoQueExisteUnUsuario("receptor@test.com");
+    Invitacion invitacion1 =
+      this.dadoQueExisteUnaInvitacionVigente(
+          this.dadoQueExisteUnUsuario("emisor1@test.com"),
+          receptor,
+          this.dadoQueExisteUnGrupo("grupo-test")
+        );
+    Invitacion invitacion2 =
+      this.dadoQueExisteUnaInvitacionExpirada(
+          this.dadoQueExisteUnUsuario("emisor2@test.com"),
+          receptor,
+          this.dadoQueExisteUnGrupo("grupo-test")
+        );
+
+    int cantidadInvitaciones = repositorioInvitacion.cantidadDeInvitacionesHistoricoPorReceptor(
+      receptor.getEmail()
+    );
+
+    assertThat(cantidadInvitaciones, equalTo(2));
+  }
+
   private Usuario dadoQueExisteUnUsuario(String email) {
     Usuario usuario = new Usuario();
     usuario.setEmail(email);
@@ -116,6 +141,17 @@ public class RepositorioInvitacionTest {
   ) {
     Invitacion invitacion = new Invitacion(emisor, receptor, grupo);
     invitacion.setVigente(true);
+    this.sessionFactory.getCurrentSession().save(invitacion);
+    return invitacion;
+  }
+
+  private Invitacion dadoQueExisteUnaInvitacionExpirada(
+    Usuario emisor,
+    Usuario receptor,
+    Grupo grupo
+  ) {
+    Invitacion invitacion = new Invitacion(emisor, receptor, grupo);
+    invitacion.setVigente(false);
     this.sessionFactory.getCurrentSession().save(invitacion);
     return invitacion;
   }
