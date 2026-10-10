@@ -2,6 +2,7 @@ package com.tallerwebi.dominio.parcial;
 
 import com.tallerwebi.dominio.sesionEstudio.ServicioSesionEstudio;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
+import com.tallerwebi.dominio.tecnicasestudio.RepositorioPomodoro;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;

@@ -1,0 +1,163 @@
+/* ==========================================
+   PÁGINA CREAR TAREA (paginas/nueva-tarea.css)
+   ========================================== */
+
+/* Layout general de la vista */
+.contenido-crear-tarea {
+    padding: 30px 40px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 900px;
+}
+
+/* HEADER Y BOTÓN VOLVER */
+
+.contenido-crear-tarea .header-seccion {
+    margin-bottom: 25px;
+}
+
+.contenido-crear-tarea .btn-volver {
+    color: var(--text-secondary, #aaa0b8);
+    font-size: 13px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 12px;
+    transition: color 0.2s ease;
+}
+
+.contenido-crear-tarea .btn-volver:hover {
+    color: var(--accent-purple, #bd5cff);
+}
+
+.contenido-crear-tarea .titulo-principal {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-primary, #ffffff);
+}
+
+.contenido-crear-tarea .subtitulo {
+    color: var(--text-secondary, #aaa0b8);
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+/* TARJETA DEL FORMULARIO */
+
+.contenido-crear-tarea .tarjeta-formulario {
+    background-color: var(--card-bg, #161022);
+    border: 1px solid var(--card-border, #36224d);
+    border-radius: 18px;
+    padding: 30px;
+}
+
+/* GRILLA Y COLUMNAS (REEMPLAZO NATIVO DE BOOTSTRAP) */
+
+.contenido-crear-tarea .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.contenido-crear-tarea .col-md-6 {
+    flex: 1 1 calc(50% - 16px);
+    min-width: 250px;
+}
+
+.contenido-crear-tarea .col-md-4 {
+    flex: 1 1 calc(33.333% - 16px);
+    min-width: 180px;
+}
+
+.contenido-crear-tarea .mb-4 {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+/* LABELS E INPUTS (FORZAR CAJAS ABAJO) */
+
+.contenido-crear-tarea .form-label {
+    display: block !important; /* Fuerza que el input se ponga abajo */
+    width: 100%;
+    color: var(--text-secondary, #aaa0b8);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.contenido-crear-tarea .form-control,
+.contenido-crear-tarea .form-select {
+    display: block !important;
+    width: 100% !important; /* Expande la caja de input a todo el ancho */
+    box-sizing: border-box !important;
+    background-color: var(--input-bg, #100b1a) !important;
+    border: 1px solid var(--card-border, #382052) !important;
+    color: var(--text-primary, #ffffff) !important;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+}
+
+.contenido-crear-tarea .form-control:focus,
+.contenido-crear-tarea .form-select:focus {
+    background-color: var(--input-bg, #100b1a) !important;
+    color: var(--text-primary, #ffffff) !important;
+    border-color: var(--accent-purple, #bd5cff) !important;
+    box-shadow: 0 0 0 0.2rem rgba(189, 92, 255, 0.15) !important;
+}
+
+.contenido-crear-tarea .input-fecha {
+    color-scheme: dark;
+}
+
+.contenido-crear-tarea .form-select option {
+    background-color: #161022;
+    color: #ffffff;
+}
+
+/* BOTONES DE ACCIÓN */
+
+.contenido-crear-tarea .acciones-form {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--card-border, #36224d);
+}
+
+.contenido-crear-tarea .btn-cancelar {
+    color: var(--text-secondary, #aaa0b8);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: color 0.2s ease;
+}
+
+.contenido-crear-tarea .btn-cancelar:hover {
+    color: #ffffff;
+}
+
+.contenido-crear-tarea .btn-guardar {
+    background-color: var(--accent-purple, #9333ea);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.contenido-crear-tarea .btn-guardar:hover {
+    background-color: var(--accent-hover, #7e22ce);
+    color: #ffffff;
+}

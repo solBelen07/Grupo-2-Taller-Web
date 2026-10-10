@@ -9,7 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/main.css}" />
 </head>
 <body>
-<div th:replace="~{componentes/sidebar :: sidebar-nav}"></div>
+<div th:replace="~{componentes/sidebar :: sidebar-nav('focusflight')}"></div>
 
 <div class="main-wrapper">
     <div th:replace="~{componentes/header :: header-principal}"></div>
@@ -105,7 +105,7 @@
 
         </div>
 
-        <form th:action="@{/FocusFlight/Timer/{id}(id=${pomodoroId})}" method="POST" style="display: inline;" class="action-container">
+        <form th:action="@{/focusflight/timer/{id}(id=${pomodoroId})}" method="POST" style="display: inline;" class="action-container">
             <button type="submit" class="btn-cut">
                 <i data-lucide="scissors"></i>
                 <span>Cortar Boleto</span>

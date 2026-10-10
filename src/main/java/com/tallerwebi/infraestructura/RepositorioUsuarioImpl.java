@@ -55,4 +55,13 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
     }
     sessionFactory.getCurrentSession().merge(usuario);
   }
+
+  @Override
+  public String obtenerNombre(Long idUsuario) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery("select nombre from Usuario where id = :id", String.class)
+      .setParameter("id", idUsuario)
+      .uniqueResult();
+  }
 }

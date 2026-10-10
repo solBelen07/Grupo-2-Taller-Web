@@ -66,4 +66,16 @@ public class RepositorioMateriaImpl implements RepositorioMateria {
   public void eliminar(Materia materia) {
     sessionFactory.getCurrentSession().remove(materia);
   }
+
+  @Override
+  public Long obtenerCantidadMateriasPorUsuario(Long idUsuario) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "select count(m) from Materia m join m.usuarios u where u.id = :idUsuario",
+        Long.class
+      )
+      .setParameter("idUsuario", idUsuario)
+      .uniqueResult();
+  }
 }

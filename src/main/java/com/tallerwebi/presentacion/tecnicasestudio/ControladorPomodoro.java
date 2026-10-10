@@ -22,8 +22,8 @@ public class ControladorPomodoro {
   private static final String VISTA_CONFIGURACION = "paginas/tecnicasestudio/pomodoro";
   private static final String VISTA_BOLETO = "paginas/tecnicasestudio/boleto";
   private static final String VISTA_TIMER = "paginas/tecnicasestudio/timer";
-  private static final String REDIRECCION_INICIO = "redirect:/FocusFlight";
-  private static final String REDIRECCION_TIMER = "redirect:/FocusFlight/Timer/";
+  private static final String REDIRECCION_INICIO = "redirect:/focusflight";
+  private static final String REDIRECCION_TIMER = "redirect:/focusflight/timer/";
   private static final String ESTADO_INEXISTENTE = "INEXISTENTE";
 
   private final ServicioPomodoro servicioPomodoro;
@@ -41,7 +41,7 @@ public class ControladorPomodoro {
     this.servicioMateria = servicioMateria;
   }
 
-  @RequestMapping("/FocusFlight")
+  @RequestMapping("/focusflight")
   public ModelAndView mostrarConfigPomodoro() {
     Usuario usuario = this.obtenerUsuarioActual();
 
@@ -61,7 +61,7 @@ public class ControladorPomodoro {
     return new ModelAndView(VISTA_CONFIGURACION, modelo);
   }
 
-  @RequestMapping(value = "/FocusFlight/Boleto", method = RequestMethod.POST)
+  @RequestMapping(value = "/focusflight/boleto", method = RequestMethod.POST)
   public ModelAndView mostrarBoletoPomodoro(
     @ModelAttribute("datosPomodoro") DatosPomodoro datosPomodoro
   ) {
@@ -91,7 +91,7 @@ public class ControladorPomodoro {
   }
 
   @RequestMapping(
-    value = "/FocusFlight/Timer/{id}",
+    value = "/focusflight/timer/{id}",
     method = { RequestMethod.GET, RequestMethod.POST }
   )
   public ModelAndView mostrarTimer(@PathVariable("id") long id) {
@@ -108,7 +108,7 @@ public class ControladorPomodoro {
   }
 
   @ResponseBody
-  @RequestMapping(value = "/FocusFlight/Timer/estado/{id}", method = RequestMethod.GET)
+  @RequestMapping(value = "/focusflight/timer/estado/{id}", method = RequestMethod.GET)
   public Map<String, Object> obtenerEstadoTimer(@PathVariable("id") long id) {
     long segundos = this.servicioPomodoro.obtenerSegundosRestantes(id);
     Pomodoro pomodoro = this.servicioPomodoro.buscarPorId(id);
@@ -122,19 +122,19 @@ public class ControladorPomodoro {
     return respuesta;
   }
 
-  @RequestMapping(value = "/FocusFlight/Timer/pausar/{id}", method = RequestMethod.POST)
+  @RequestMapping(value = "/focusflight/timer/pausar/{id}", method = RequestMethod.POST)
   public ModelAndView pausarSesion(@PathVariable("id") long id) {
     this.servicioPomodoro.pausarSesion(id);
     return new ModelAndView(REDIRECCION_TIMER + id);
   }
 
-  @RequestMapping(value = "/FocusFlight/Timer/reanudar/{id}", method = RequestMethod.POST)
+  @RequestMapping(value = "/focusflight/timer/reanudar/{id}", method = RequestMethod.POST)
   public ModelAndView reanudarSesion(@PathVariable("id") long id) {
     this.servicioPomodoro.reanudarSesion(id);
     return new ModelAndView(REDIRECCION_TIMER + id);
   }
 
-  @RequestMapping(value = "/FocusFlight/Timer/cancelar/{id}", method = RequestMethod.POST)
+  @RequestMapping(value = "/focusflight/timer/cancelar/{id}", method = RequestMethod.POST)
   public ModelAndView cancelarSesion(@PathVariable("id") long id) {
     this.servicioPomodoro.modificarEstadoCancelada(id);
     return new ModelAndView(REDIRECCION_INICIO);
