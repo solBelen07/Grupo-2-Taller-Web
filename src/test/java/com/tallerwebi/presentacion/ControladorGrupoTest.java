@@ -10,6 +10,7 @@ import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import com.tallerwebi.presentacion.grupo.ControladorGrupo;
+import com.tallerwebi.presentacion.grupo.DatosGrupo;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,9 +31,11 @@ public class ControladorGrupoTest {
   }
 
   @Test
-  public void irAGrupoDeberiaRetornarVistaGrupo() {
-    ModelAndView modelAndView = controladorGrupo.verGrupo("grupo1");
-
+  public void irAGrupoDeberiaRetornarVistaGrupo() throws GrupoNoEncontrado {
+    String nombre = "grupo1";
+    grupoMock.setNombre(nombre);
+    when(servicioGrupoMock.buscarPorNombre(nombre)).thenReturn(grupoMock);
+    ModelAndView modelAndView = controladorGrupo.verGrupo(nombre);
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/grupo/grupo-detalle"));
   }
 
@@ -67,12 +70,13 @@ public class ControladorGrupoTest {
 
   @Test
   public void alHacerClicEnInvitarDebeLlevarALaPantallaDeInvitacion() throws GrupoNoEncontrado {
+    grupoMock.setNombre("grupo-existente");
     when(servicioGrupoMock.buscarPorNombre("grupo-existente")).thenReturn(grupoMock);
     ModelAndView modelAndView = controladorGrupo.irAInvitar("grupo-existente");
-    when(modelAndView.getModel().get("datosGrupo")).thenReturn(grupoMock);
+    DatosGrupo datosGrupo = (DatosGrupo) modelAndView.getModel().get("datosGrupo");
 
     assertEquals("paginas/grupo/grupo-invitar", modelAndView.getViewName());
-    assertEquals(grupoMock, modelAndView.getModel().get("datosGrupo"));
+    assertEquals(datosGrupo, modelAndView.getModel().get("datosGrupo"));
   }
 
   @Test

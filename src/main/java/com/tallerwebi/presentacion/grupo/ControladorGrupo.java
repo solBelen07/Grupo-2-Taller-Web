@@ -33,6 +33,7 @@ public class ControladorGrupo {
       Grupo grupo = servicioGrupo.buscarPorNombre(nombre);
       DatosGrupo datosGrupo = new DatosGrupo();
       datosGrupo.setNombre(grupo.getNombre());
+      datosGrupo.setCantidadDeIntegrantes(servicioGrupo.cantidadParticipantes(nombre));
       modelo.put("datosGrupo", datosGrupo);
       return new ModelAndView("paginas/grupo/grupo-detalle", modelo);
     } catch (GrupoNoEncontrado e) {

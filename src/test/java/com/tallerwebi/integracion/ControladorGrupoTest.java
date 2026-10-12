@@ -69,6 +69,7 @@ public class ControladorGrupoTest {
   private void cuandoNavegoALaPaginaDeUnGrupo(String nombre) throws Exception {
     DatosGrupo datosGrupo = new DatosGrupo();
     datosGrupo.setNombre(nombre);
+    datosGrupo.setCantidadDeIntegrantes(2);
     this.mvcResult =
       this.mockMvc.perform(get("/grupos/" + nombre)).andExpect(status().isOk()).andReturn();
   }

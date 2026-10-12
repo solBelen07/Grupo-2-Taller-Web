@@ -43,4 +43,18 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
       .setParameter("estadoAceptada", Estado.ACEPTADA)
       .list();
   }
+
+  @Override
+  public Integer cantidadParticipantes(String nombre) {
+    Long count = sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "SELECT COUNT(i.receptor) FROM Invitacion i WHERE i.grupo.nombre = :nombreGrupo AND i.estado = 'ACEPTADA'",
+        Long.class
+      )
+      .setParameter("nombreGrupo", nombre)
+      .uniqueResult();
+
+    return count != null ? count.intValue() : 0;
+  }
 }
