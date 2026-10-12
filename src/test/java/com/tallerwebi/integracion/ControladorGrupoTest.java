@@ -1,7 +1,5 @@
 package com.tallerwebi.integracion;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,6 +10,7 @@ import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import com.tallerwebi.integracion.config.HibernateTestConfig;
 import com.tallerwebi.integracion.config.SpringWebTestConfig;
 import com.tallerwebi.presentacion.grupo.DatosGrupo;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,11 +22,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.ui.Model;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.Arrays;
 
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
@@ -35,6 +31,7 @@ import java.util.Arrays;
 public class ControladorGrupoTest {
 
   private Grupo grupoMock;
+
   @MockitoBean
   private ServicioGrupo servicioGrupoMock;
 
@@ -72,9 +69,8 @@ public class ControladorGrupoTest {
   private void cuandoNavegoALaPaginaDeUnGrupo(String nombre) throws Exception {
     DatosGrupo datosGrupo = new DatosGrupo();
     datosGrupo.setNombre(nombre);
-    this.mvcResult = this.mockMvc.perform(get("/grupos/" + nombre))
-            .andExpect(status().isOk())
-            .andReturn();
+    this.mvcResult =
+      this.mockMvc.perform(get("/grupos/" + nombre)).andExpect(status().isOk()).andReturn();
   }
 
   private void cuandoNavegoALaPaginaDeGrupos() throws Exception {
