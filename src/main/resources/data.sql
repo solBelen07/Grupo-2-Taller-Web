@@ -301,3 +301,44 @@ VALUES (
         'Invitador',
      'Fuiste invitado muchas veces a grupos'
     );
+
+-- =====================================================================
+-- Universidades, carreras e intereses
+-- =====================================================================
+INSERT INTO Universidad (id, nombre) VALUES
+                                         (null, 'Universidad Nacional de La Matanza (UNLaM)'),
+                                         (null, 'Universidad de Buenos Aires (UBA)'),
+                                         (null, 'Universidad Tecnológica Nacional (UTN)'),
+                                         (null, 'Universidad Nacional de La Plata (UNLP)'),
+                                         (null, 'Universidad Nacional de Córdoba (UNC)'),
+                                         (null, 'Universidad Argentina de la Empresa (UADE)'),
+                                         (null, 'Instituto Tecnológico de Buenos Aires (ITBA)');
+
+INSERT INTO Carrera (id, nombre) VALUES
+                                     (null, 'Ingeniería en Informática'),
+                                     (null, 'Ingeniería en Sistemas'),
+                                     (null, 'Licenciatura en Sistemas'),
+                                     (null, 'Tecnicatura en Programación'),
+                                     (null, 'Ingeniería Industrial'),
+                                     (null, 'Ingeniería Electrónica');
+
+INSERT INTO Interes (id, nombre) VALUES
+                                     (null, 'JavaScript'),
+                                     (null, 'Java'),
+                                     (null, 'Python'),
+                                     (null, 'C#'),
+                                     (null, 'PHP'),
+                                     (null, 'SQL'),
+                                     (null, 'HTML y CSS'),
+                                     (null, 'React'),
+                                     (null, 'Spring'),
+                                     (null, 'Node.js'),
+                                     (null, 'Docker'),
+                                     (null, 'Git'),
+                                     (null, 'Inteligencia Artificial'),
+                                     (null, 'Ciberseguridad'),
+                                     (null, 'Redes'),
+                                     (null, 'Desarrollo móvil'),
+                                     (null, 'DevOps'),
+                                     (null, 'UX/UI'),
+                                     (null, 'Testing');

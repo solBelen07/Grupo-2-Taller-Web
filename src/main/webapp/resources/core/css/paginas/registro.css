@@ -1,0 +1,142 @@
+.registro-body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+.registro-contenedor {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 40px 16px;
+}
+
+.registro-marca {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.registro-marca-icono {
+    font-size: 28px;
+    color: var(--accent-purple);
+}
+
+.registro-marca h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 8px 0 4px;
+}
+
+.registro-marca p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin: 0;
+}
+
+.registro-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 28px;
+}
+
+.registro-fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 576px) {
+    .registro-fila {
+        grid-template-columns: 1fr;
+    }
+}
+
+.registro-campo {
+    margin-bottom: 18px;
+}
+
+.registro-campo > label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.registro-campo input[type="text"],
+.registro-campo input[type="email"],
+.registro-campo input[type="password"],
+.registro-campo select {
+    width: 100%;
+    background-color: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    outline: none;
+}
+
+.registro-campo input:focus,
+.registro-campo select:focus {
+    border-color: var(--accent-purple);
+}
+
+.registro-intereses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.registro-chip {
+    cursor: pointer;
+    margin: 0;
+}
+
+.registro-chip input {
+    display: none;
+}
+
+.registro-chip span {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    background-color: var(--input-bg);
+    color: var(--text-secondary);
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.registro-chip input:checked + span {
+    border-color: var(--accent-purple);
+    background-color: #231638;
+    color: #d8b4fe;
+}
+
+.registro-boton {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.registro-login {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 16px 0 0;
+}
+
+.registro-login a {
+    color: #c084fc;
+    text-decoration: none;
+}
+
+.registro-error {
+    background-color: var(--error-fondo);
+    border: 1px solid var(--error-acento);
+    color: var(--error-acento);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}

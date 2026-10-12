@@ -7,22 +7,34 @@
 
 <!-- Fragmento del Header Superior -->
 <header th:fragment="header-principal" class="header-navbar">
-    <!-- Buscador -->
-    <div class="search-box">
+
+    <!-- Buscador: solo con sesión iniciada -->
+    <div class="search-box" th:if="${usuario != null}">
         <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
         <input type="text" placeholder="Buscar asignaturas, tareas, exámenes..." />
     </div>
 
-    <!-- Widget de Estado / Streak y Perfil -->
     <div class="user-widgets">
-        <div class="streak-badge">
-            <i class="fa-solid fa-fire text-purple-400"></i>
-            <span th:text="${usuario != null && usuario.streak != null ? 'Racha de ' + usuario.streak + ' dias' : 'Racha de 7 días'}">Racha de 7 días</span>
-        </div>
 
-        <div class="avatar-circle" th:text="${usuario != null ? #strings.substring(usuario.nombre,0,1) + #strings.substring(usuario.apellido,0,1) : 'JM'}">
-            JM
-        </div>
+        <!-- Usuario con sesión iniciada -->
+        <th:block th:if="${usuario != null}">
+            <div class="streak-badge">
+                <i class="fa-solid fa-fire text-purple-400"></i>
+                <span th:text="'Racha de ' + ${usuario.streak} + ' días'">Racha de 7 días</span>
+            </div>
+
+            <div class="avatar-circle"
+                 th:text="${#strings.substring(usuario.nombre,0,1) + #strings.substring(usuario.apellido,0,1)}">
+                JM
+            </div>
+        </th:block>
+
+        <!-- Usuario sin sesión iniciada -->
+        <th:block th:unless="${usuario != null}">
+            <a th:href="@{/login}" class="tp-btn-sec">Iniciar sesión</a>
+            <a th:href="@{/registro}" class="btn btn-primary">Registrarse</a>
+        </th:block>
+
     </div>
 </header>
 

@@ -1,16 +1,20 @@
 package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
-import com.tallerwebi.dominio.excepcion.UsuarioNoEncontrado;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service("servicioLogin")
 @Transactional
 public class ServicioLoginImpl implements ServicioLogin {
 
-  private RepositorioUsuario repositorioUsuario;
+  private static final String PREFIJO_BCRYPT = "$2";
+
+  private final RepositorioUsuario repositorioUsuario;
+  private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   @Autowired
   public ServicioLoginImpl(RepositorioUsuario repositorioUsuario) {
@@ -19,18 +23,31 @@ public class ServicioLoginImpl implements ServicioLogin {
 
   @Override
   public Usuario consultarUsuario(String email, String password) {
-    return repositorioUsuario.buscarUsuario(email, password);
+    if (email == null || password == null) {
+      return null;
+    }
+    Usuario usuario = repositorioUsuario.buscar(email.trim().toLowerCase());
+    if (usuario == null && !email.equals(email.trim().toLowerCase())) {
+      usuario = repositorioUsuario.buscar(email);
+    }
+    if (usuario == null || usuario.getPassword() == null) {
+      return null;
+    }
+    return coincide(password, usuario.getPassword()) ? usuario : null;
   }
 
   @Override
   public void registrar(Usuario usuario) throws UsuarioExistente {
-    Usuario usuarioEncontrado = repositorioUsuario.buscarUsuario(
-      usuario.getEmail(),
-      usuario.getPassword()
-    );
-    if (usuarioEncontrado != null) {
+    if (repositorioUsuario.buscar(usuario.getEmail()) != null) {
       throw new UsuarioExistente();
     }
     repositorioUsuario.guardar(usuario);
+  }
+
+  private boolean coincide(String ingresada, String guardada) {
+    if (guardada.startsWith(PREFIJO_BCRYPT)) {
+      return passwordEncoder.matches(ingresada, guardada);
+    }
+    return guardada.equals(ingresada);
   }
 }
