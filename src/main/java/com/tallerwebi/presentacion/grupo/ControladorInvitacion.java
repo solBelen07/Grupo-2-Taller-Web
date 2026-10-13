@@ -3,9 +3,7 @@ package com.tallerwebi.presentacion.grupo;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.InvitacionInvalida;
 import com.tallerwebi.dominio.invitacion.ServicioInvitacion;
-import com.tallerwebi.presentacion.grupo.DatosInvitacion;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -68,7 +66,7 @@ public class ControladorInvitacion {
       datosInvitacion.setReceptor(obtenerUsuarioLogueado(request).getEmail());
       servicioInvitacion.aceptarInvitacion(datosInvitacion);
       redirectAttrs.addFlashAttribute("exito", "Invitación aceptada");
-    } catch (Exception e) {
+    } catch (InvitacionInvalida e) {
       redirigirMensajeDeError(redirectAttrs, "No se pudo aceptar la invitación");
     }
     return new ModelAndView("redirect:/invitaciones");
@@ -88,7 +86,7 @@ public class ControladorInvitacion {
       servicioInvitacion.rechazarInvitacion(datosInvitacion);
 
       redirectAttributes.addFlashAttribute("exito", "Invitación rechazada");
-    } catch (Exception e) {
+    } catch (InvitacionInvalida e) {
       redirigirMensajeDeError(redirectAttributes, "No se pudo rechazar la invitación");
     }
     return new ModelAndView("redirect:/invitaciones");

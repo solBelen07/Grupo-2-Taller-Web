@@ -27,4 +27,12 @@ public class ServicioGrupoImpl implements ServicioGrupo {
   public List<Grupo> listarGrupos() {
     return repositorioGrupo.listar();
   }
+
+  @Override
+  public Integer cantidadParticipantes(String nombre) throws GrupoNoEncontrado {
+    if (repositorioGrupo.buscar(nombre) == null) {
+      throw new GrupoNoEncontrado();
+    }
+    return repositorioGrupo.cantidadParticipantes(nombre);
+  }
 }

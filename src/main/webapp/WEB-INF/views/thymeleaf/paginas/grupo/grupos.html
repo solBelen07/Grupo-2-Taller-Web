@@ -24,6 +24,17 @@
             border-color: #a855f7;
             color: white;
         }
+        .btn-purple {
+            background-color: #a855f7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .btn-purple:hover {
+            background-color: #9333ea;
+            color: white;
+        }
     </style>
 </head>
 
@@ -60,6 +71,9 @@
                     <p class="text-muted small mb-4">Espacio de trabajo colaborativo.</p>
 
                     <div class="mt-auto d-flex gap-2">
+                        <a th:href="@{/grupos/{nombre}(nombre=${grupo.nombre})}" class="btn btn-purple btn-sm w-100">
+                            <i class="fa-solid fa-eye me-1"></i> Ver grupo
+                        </a>
                         <a th:href="@{/grupos/{nombre}/invitar(nombre=${grupo.nombre})}" class="btn btn-outline-light btn-sm w-100">
                             <i class="fa-solid fa-user-plus me-1"></i> Invitar
                         </a>

@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 public interface RepositorioGrupo {
   Grupo buscar(String nombre);
   List<Grupo> listar();
+  List<Grupo> listarGruposPorUsuario(String nombreUsuario);
+  Integer cantidadParticipantes(String nombre);
 }
