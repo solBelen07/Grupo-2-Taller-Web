@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
@@ -54,8 +55,8 @@ public class ServicioGeminiImpl implements ServicioGemini {
     }
 
     try {
-      HttpHeaders headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
+      MultiValueMap<String, String> headers = new HttpHeaders();
+      headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
       headers.set("x-goog-api-key", apiKey);
 
       Map<String, Object> body = new HashMap<>();
