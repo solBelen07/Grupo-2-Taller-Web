@@ -31,6 +31,16 @@ public class RepositorioInvitacionImpl implements RepositorioInvitacion {
   }
 
   @Override
+  public Integer cantidadDeInvitacionesHistoricoPorReceptor(String emailReceptor) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery("select count(*) from Invitacion where receptor.email = :email", Long.class)
+      .setParameter("email", emailReceptor)
+      .uniqueResult()
+      .intValue();
+  }
+
+  @Override
   public Invitacion buscar(String emailEmisor, String emailReceptor, String nombreGrupo) {
     return sessionFactory
       .getCurrentSession()

@@ -47,7 +47,7 @@ public class ControladorLogro {
         case "Maratonista":
           claseIcono = "fa-person-running";
           break;
-        case "Invitador":
+        case "Popular":
           claseIcono = "fa-user-plus";
           break;
         default:

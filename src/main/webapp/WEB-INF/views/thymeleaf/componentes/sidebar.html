@@ -57,6 +57,14 @@
                 <i class="fa-solid fa-users"></i> Grupos
             </a>
 
+            <a th:href="@{/invitaciones}" class="nav-item">
+                <i class="fa-solid fa-envelope"></i> Invitaciones
+            </a>
+
+            <a th:href="@{/logros}" class="nav-item">
+                <i class="fa-solid fa-trophy"></i> Logros
+            </a>
+
             <a th:href="@{/calendario}"
                class="nav-item"
                th:classappend="${activePage == 'calendario' ? 'activo' : ''}">
