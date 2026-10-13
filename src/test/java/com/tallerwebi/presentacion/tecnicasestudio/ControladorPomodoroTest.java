@@ -12,16 +12,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.tallerwebi.dominio.ServicioLogin;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
+import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.tecnicasestudio.Estado;
 import com.tallerwebi.dominio.tecnicasestudio.PlanDeVuelo;
 import com.tallerwebi.dominio.tecnicasestudio.Pomodoro;
@@ -42,6 +39,7 @@ public class ControladorPomodoroTest {
   private ServicioPomodoro servicioPomodoroMock;
   private ServicioLogin servicioLoginMock;
   private ServicioMateria servicioMateriaMock;
+  private ServicioRacha servicioRachaMock;
   private MockMvc mockMvc;
 
   @BeforeEach
@@ -49,11 +47,13 @@ public class ControladorPomodoroTest {
     this.servicioPomodoroMock = mock(ServicioPomodoro.class);
     this.servicioLoginMock = mock(ServicioLogin.class);
     this.servicioMateriaMock = mock(ServicioMateria.class);
+    this.servicioRachaMock = mock(ServicioRacha.class);
 
     ControladorPomodoro controlador = new ControladorPomodoro(
       this.servicioPomodoroMock,
       this.servicioLoginMock,
-      this.servicioMateriaMock
+      this.servicioMateriaMock,
+      this.servicioRachaMock
     );
     this.mockMvc = MockMvcBuilders.standaloneSetup(controlador).build();
   }
@@ -168,11 +168,12 @@ public class ControladorPomodoroTest {
     throws Exception {
     Usuario usuario = this.crearUsuario();
     List<Materia> materias = List.of(new Materia());
-    when(this.servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(usuario);
-    when(this.servicioPomodoroMock.buscarSesionActiva(usuario)).thenReturn(Optional.empty());
+
+    when(this.servicioPomodoroMock.buscarSesionActiva(any(Usuario.class)))
+      .thenReturn(Optional.empty());
     when(this.servicioMateriaMock.obtenerMaterias()).thenReturn(materias);
 
-    this.mockMvc.perform(get("/focusflight"))
+    this.mockMvc.perform(get("/focusflight").sessionAttr("USUARIO", usuario))
       .andExpect(status().isOk())
       .andExpect(view().name("paginas/tecnicasestudio/pomodoro"))
       .andExpect(model().attribute("materias", materias))
@@ -183,13 +184,13 @@ public class ControladorPomodoroTest {
   public void deberiaRedirigirAlTimerSiElUsuarioYaTieneUnaSesionActiva() throws Exception {
     Usuario usuario = this.crearUsuario();
     Pomodoro sesionActiva = this.crearPomodoro(Estado.PAUSADO);
-    when(this.servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(usuario);
-    when(this.servicioPomodoroMock.buscarSesionActiva(usuario))
+
+    when(this.servicioPomodoroMock.buscarSesionActiva(any(Usuario.class)))
       .thenReturn(Optional.of(sesionActiva));
 
-    this.mockMvc.perform(get("/focusflight"))
+    this.mockMvc.perform(get("/focusflight").sessionAttr("USUARIO", usuario))
       .andExpect(status().is3xxRedirection())
-      .andExpect(redirectedUrl("/focusflight/timer/1"));
+      .andExpect(redirectedUrl("/focusflight/timer/" + sesionActiva.getId()));
 
     verify(this.servicioMateriaMock, never()).obtenerMaterias();
   }
@@ -200,7 +201,7 @@ public class ControladorPomodoroTest {
     Materia materia = new Materia();
     materia.setNombre("Taller Web I");
     Pomodoro registrada = this.crearPomodoro(Estado.EN_CURSO);
-    when(this.servicioLoginMock.consultarUsuario(anyString(), anyString())).thenReturn(usuario);
+
     when(this.servicioMateriaMock.buscarMateriaPorId(3)).thenReturn(materia);
     when(
       this.servicioPomodoroMock.registrarSesionEstudio(
@@ -208,7 +209,7 @@ public class ControladorPomodoroTest {
           eq("ESP"),
           eq(25),
           eq(materia),
-          eq(usuario),
+          any(Usuario.class),
           eq("Repasar patrones")
         )
     )
@@ -216,6 +217,7 @@ public class ControladorPomodoroTest {
 
     this.mockMvc.perform(
         post("/focusflight/boleto")
+          .sessionAttr("USUARIO", usuario)
           .param("origen", "ARG")
           .param("destino", "ESP")
           .param("duracion", "25")
@@ -229,6 +231,73 @@ public class ControladorPomodoroTest {
 
     verify(this.servicioPomodoroMock, times(1))
       .registrarSesionEstudio(any(), any(), eq(25), any(), any(), any());
+  }
+
+  @Test
+  public void deberiaRegistrarLaRachaYActualizarLaSesionAlCompletarseElPomodoro() throws Exception {
+    Usuario usuario = this.crearUsuario();
+    Pomodoro pomodoro = this.crearPomodoro(Estado.COMPLETADO);
+    when(this.servicioPomodoroMock.obtenerSegundosRestantes(ID_SESION)).thenReturn(0L);
+    when(this.servicioPomodoroMock.buscarPorId(ID_SESION)).thenReturn(pomodoro);
+
+    this.mockMvc.perform(get("/focusflight/timer/1").sessionAttr("USUARIO", usuario))
+      .andExpect(status().isOk())
+      .andExpect(view().name(VISTA_TIMER))
+      .andExpect(request().sessionAttribute("USUARIO", usuario));
+
+    verify(this.servicioRachaMock, times(1)).registrarRacha(usuario);
+  }
+
+  @Test
+  public void noDeberiaRegistrarLaRachaSiElPomodoroNoEstaCompletado() throws Exception {
+    Usuario usuario = this.crearUsuario();
+    when(this.servicioPomodoroMock.obtenerSegundosRestantes(ID_SESION)).thenReturn(0L);
+    when(this.servicioPomodoroMock.buscarPorId(ID_SESION))
+      .thenReturn(this.crearPomodoro(Estado.EN_CURSO));
+
+    this.mockMvc.perform(get("/focusflight/timer/1").sessionAttr("USUARIO", usuario))
+      .andExpect(status().isOk());
+
+    verify(this.servicioRachaMock, never()).registrarRacha(any(Usuario.class));
+  }
+
+  @Test
+  public void noDeberiaRegistrarLaRachaSiAunQuedanSegundosRestantes() throws Exception {
+    Usuario usuario = this.crearUsuario();
+    when(this.servicioPomodoroMock.obtenerSegundosRestantes(ID_SESION)).thenReturn(900L);
+    when(this.servicioPomodoroMock.buscarPorId(ID_SESION))
+      .thenReturn(this.crearPomodoro(Estado.COMPLETADO));
+
+    this.mockMvc.perform(get("/focusflight/timer/1").sessionAttr("USUARIO", usuario))
+      .andExpect(status().isOk());
+
+    verify(this.servicioRachaMock, never()).registrarRacha(any(Usuario.class));
+  }
+
+  @Test
+  public void noDeberiaRegistrarLaRachaSiNoHayUsuarioEnSesion() throws Exception {
+    when(this.servicioPomodoroMock.obtenerSegundosRestantes(ID_SESION)).thenReturn(0L);
+    when(this.servicioPomodoroMock.buscarPorId(ID_SESION))
+      .thenReturn(this.crearPomodoro(Estado.COMPLETADO));
+
+    this.mockMvc.perform(get("/focusflight/timer/1"))
+      .andExpect(status().isOk())
+      .andExpect(view().name(VISTA_TIMER));
+
+    verify(this.servicioRachaMock, never()).registrarRacha(any(Usuario.class));
+  }
+
+  @Test
+  public void noDeberiaRegistrarLaRachaSiLaSesionDelTimerNoExiste() throws Exception {
+    Usuario usuario = this.crearUsuario();
+    when(this.servicioPomodoroMock.obtenerSegundosRestantes(ID_SESION)).thenReturn(0L);
+    when(this.servicioPomodoroMock.buscarPorId(ID_SESION)).thenReturn(null);
+
+    this.mockMvc.perform(get("/focusflight/timer/1").sessionAttr("USUARIO", usuario))
+      .andExpect(status().is3xxRedirection())
+      .andExpect(redirectedUrl("/focusflight"));
+
+    verify(this.servicioRachaMock, never()).registrarRacha(any(Usuario.class));
   }
 
   private Usuario crearUsuario() {

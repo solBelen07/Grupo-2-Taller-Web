@@ -1,10 +1,13 @@
 package com.tallerwebi.presentacion.parcial;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.parcial.Parcial;
 import com.tallerwebi.dominio.parcial.ServicioParcial;
+import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.sesionEstudio.ServicioSesionEstudio;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -25,16 +28,19 @@ public class ControladorParcial {
   private final ServicioMateria servicioMateria;
   private final ServicioParcial servicioParcial;
   private final ServicioSesionEstudio servicioSesionEstudio;
+  private final ServicioRacha servicioRacha;
 
   @Autowired
   public ControladorParcial(
     ServicioMateria servicioMateria,
     ServicioParcial servicioParcial,
-    ServicioSesionEstudio servicioSesionEstudio
+    ServicioSesionEstudio servicioSesionEstudio,
+    ServicioRacha servicioRacha
   ) {
     this.servicioMateria = servicioMateria;
     this.servicioParcial = servicioParcial;
     this.servicioSesionEstudio = servicioSesionEstudio;
+    this.servicioRacha = servicioRacha;
   }
 
   @RequestMapping(path = "/nuevo", method = RequestMethod.GET)
@@ -93,8 +99,18 @@ public class ControladorParcial {
   }
 
   @RequestMapping(path = "/sesion/completar", method = RequestMethod.POST)
-  public ModelAndView cambiarEstadoSesion(@RequestParam("id") Integer id) {
+  public ModelAndView cambiarEstadoSesion(
+    @RequestParam("id") Integer id,
+    HttpServletRequest request
+  ) {
     servicioSesionEstudio.cambiarEstado(id);
+
+    Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
+    if (usuario != null) {
+      servicioRacha.registrarRacha(usuario);
+      request.getSession().setAttribute("USUARIO", usuario);
+    }
+
     return new ModelAndView("redirect:/parciales");
   }
 }
