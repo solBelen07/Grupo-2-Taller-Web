@@ -251,7 +251,7 @@ public class ControladorPomodoroTest {
   @Test
   public void noDeberiaRegistrarLaRachaSiElPomodoroNoEstaCompletado() throws Exception {
     Usuario usuario = this.crearUsuario();
-    when(this.servicioPomodoroMock.obtenerSegundosRestantes(ID_SESION)).thenReturn(0L);
+    when(this.servicioPomodoroMock.obtenerSegundosRestantes(ID_SESION)).thenReturn(300L);
     when(this.servicioPomodoroMock.buscarPorId(ID_SESION))
       .thenReturn(this.crearPomodoro(Estado.EN_CURSO));
 
