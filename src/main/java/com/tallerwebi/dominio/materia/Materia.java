@@ -1,10 +1,10 @@
 package com.tallerwebi.dominio.materia;
 
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.tecnicasestudio.Pomodoro;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.tallerwebi.dominio.materialBibliografico.MaterialBibliografico;
 
 @Entity
 public class Materia {
@@ -29,8 +29,11 @@ public class Materia {
   )
   private List<Usuario> usuarios = new ArrayList<>();
 
-  public Integer getId() {
-    return id;
+  @OneToMany(mappedBy = "materia")
+  private List<MaterialBibliografico> materiales = new ArrayList<>();
+
+    public Integer getId() {
+      return id;
   }
 
   public String getNombre() {
@@ -101,5 +104,15 @@ public class Materia {
 
   public void setUsuarios(List<Usuario> usuarios) {
     this.usuarios = usuarios;
+  }
+
+  public List<MaterialBibliografico> getMateriales() {
+      return materiales;
+  }
+  
+  public void setMateriales(
+      List<MaterialBibliografico> materiales
+  ) {
+      this.materiales = materiales;
   }
 }
