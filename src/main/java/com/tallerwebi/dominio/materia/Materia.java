@@ -1,10 +1,10 @@
 package com.tallerwebi.dominio.materia;
 
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.materialBibliografico.MaterialBibliografico;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import com.tallerwebi.dominio.materialBibliografico.MaterialBibliografico;
 
 @Entity
 public class Materia {
@@ -32,8 +32,8 @@ public class Materia {
   @OneToMany(mappedBy = "materia")
   private List<MaterialBibliografico> materiales = new ArrayList<>();
 
-    public Integer getId() {
-      return id;
+  public Integer getId() {
+    return id;
   }
 
   public String getNombre() {
@@ -107,12 +107,10 @@ public class Materia {
   }
 
   public List<MaterialBibliografico> getMateriales() {
-      return materiales;
+    return materiales;
   }
-  
-  public void setMateriales(
-      List<MaterialBibliografico> materiales
-  ) {
-      this.materiales = materiales;
+
+  public void setMateriales(List<MaterialBibliografico> materiales) {
+    this.materiales = materiales;
   }
 }

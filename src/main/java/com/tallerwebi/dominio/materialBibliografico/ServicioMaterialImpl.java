@@ -1,15 +1,12 @@
-
 package com.tallerwebi.dominio.materialBibliografico;
 
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.infraestructura.r2.AlmacenamientoR2;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,153 +14,116 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ServicioMaterialImpl implements ServicioMaterial {
 
-    private static final long TAMANIO_MAXIMO =
-        50L * 1024 * 1024;
+  private static final long TAMANIO_MAXIMO = 50L * 1024 * 1024;
 
-    private static final Set<String> EXTENSIONES =
-        Set.of(".pdf", ".doc", ".docx");
+  private static final Set<String> EXTENSIONES = Set.of(".pdf", ".doc", ".docx");
 
-    private final RepositorioMaterial repositorioMaterial;
-    private final ServicioMateria servicioMateria;
-    private final AlmacenamientoR2 almacenamientoR2;
+  private final RepositorioMaterial repositorioMaterial;
+  private final ServicioMateria servicioMateria;
+  private final AlmacenamientoR2 almacenamientoR2;
 
-    public ServicioMaterialImpl(
-        RepositorioMaterial repositorioMaterial,
-        ServicioMateria servicioMateria,
-        AlmacenamientoR2 almacenamientoR2
-    ) {
-        this.repositorioMaterial = repositorioMaterial;
-        this.servicioMateria = servicioMateria;
-        this.almacenamientoR2 = almacenamientoR2;
+  public ServicioMaterialImpl(
+    RepositorioMaterial repositorioMaterial,
+    ServicioMateria servicioMateria,
+    AlmacenamientoR2 almacenamientoR2
+  ) {
+    this.repositorioMaterial = repositorioMaterial;
+    this.servicioMateria = servicioMateria;
+    this.almacenamientoR2 = almacenamientoR2;
+  }
+
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void subirMaterial(Integer materiaId, MultipartFile archivo) throws IOException {
+    Materia materia = servicioMateria.buscarMateriaPorId(materiaId);
+
+    if (materia == null) {
+      throw new IllegalArgumentException("La materia no existe");
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void subirMaterial(
-        Integer materiaId,
-        MultipartFile archivo
-    ) throws IOException {
+    validarArchivo(archivo);
 
-        Materia materia = servicioMateria.buscarMateriaPorId(materiaId);
+    String claveR2 = almacenamientoR2.subirArchivo(archivo, materiaId);
 
-        if (materia == null) {
-            throw new IllegalArgumentException(
-                "La materia no existe"
-            );
-        }
+    try {
+      MaterialBibliografico material = new MaterialBibliografico(
+        archivo.getOriginalFilename(),
+        archivo.getContentType(),
+        archivo.getSize(),
+        claveR2,
+        materia
+      );
 
-        validarArchivo(archivo);
+      repositorioMaterial.guardar(material);
+    } catch (RuntimeException e) {
+      try {
+        almacenamientoR2.eliminarArchivo(claveR2);
+      } catch (RuntimeException errorR2) {
+        e.addSuppressed(errorR2);
+      }
+      throw e;
+    }
+  }
 
-        String claveR2 = almacenamientoR2.subirArchivo(
-            archivo, materiaId
-        );
+  @Override
+  @Transactional(readOnly = true)
+  public List<MaterialBibliografico> obtenerPorMateria(Integer materiaId) {
+    return repositorioMaterial.buscarPorMateria(materiaId);
+  }
 
-        try {
-            MaterialBibliografico material =
-                new MaterialBibliografico(
-                    archivo.getOriginalFilename(),
-                    archivo.getContentType(),
-                    archivo.getSize(),
-                    claveR2,
-                    materia
-                );
+  @Override
+  @Transactional(readOnly = true)
+  public MaterialBibliografico buscarPorId(Integer id) {
+    return repositorioMaterial.buscarPorId(id);
+  }
 
-            repositorioMaterial.guardar(material);
+  @Override
+  @Transactional(readOnly = true)
+  public byte[] descargarMaterial(Integer id) {
+    MaterialBibliografico material = repositorioMaterial.buscarPorId(id);
 
-        } catch (RuntimeException e) {
-            try {
-                almacenamientoR2.eliminarArchivo(claveR2);
-            } catch (RuntimeException errorR2) {
-                e.addSuppressed(errorR2);
-            }
-            throw e;
-        }
+    if (material == null) {
+      throw new IllegalArgumentException("El material no existe");
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<MaterialBibliografico> obtenerPorMateria(
-        Integer materiaId
-    ) {
-        return repositorioMaterial.buscarPorMateria(materiaId);
+    return almacenamientoR2.descargarArchivo(material.getClaveR2());
+  }
+
+  @Override
+  @Transactional
+  public void eliminarMaterial(Integer id) {
+    MaterialBibliografico material = repositorioMaterial.buscarPorId(id);
+
+    if (material == null) {
+      throw new IllegalArgumentException("El material no existe");
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public MaterialBibliografico buscarPorId(Integer id) {
-        return repositorioMaterial.buscarPorId(id);
+    almacenamientoR2.eliminarArchivo(material.getClaveR2());
+
+    repositorioMaterial.eliminar(material);
+  }
+
+  private void validarArchivo(MultipartFile archivo) {
+    if (archivo == null || archivo.isEmpty()) {
+      throw new IllegalArgumentException("No se selecciono ningun archivo");
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public byte[] descargarMaterial(Integer id) {
-
-        MaterialBibliografico material =
-            repositorioMaterial.buscarPorId(id);
-
-        if (material == null) {
-            throw new IllegalArgumentException(
-                "El material no existe"
-            );
-        }
-
-        return almacenamientoR2.descargarArchivo(
-            material.getClaveR2()
-        );
+    if (archivo.getSize() > TAMANIO_MAXIMO) {
+      throw new IllegalArgumentException("El archivo supera los 50 MB");
     }
 
-    @Override
-    @Transactional
-    public void eliminarMaterial(Integer id) {
+    String nombre = archivo.getOriginalFilename();
 
-        MaterialBibliografico material =
-            repositorioMaterial.buscarPorId(id);
-
-        if (material == null) {
-            throw new IllegalArgumentException(
-                "El material no existe"
-            );
-        }
-
-        almacenamientoR2.eliminarArchivo(
-            material.getClaveR2()
-        );
-
-        repositorioMaterial.eliminar(material);
+    if (nombre == null || nombre.isBlank()) {
+      throw new IllegalArgumentException("El archivo debe tener un nombre");
     }
 
-    private void validarArchivo(MultipartFile archivo) {
+    String nombreNormalizado = nombre.toLowerCase(Locale.ROOT);
 
-        if (archivo == null || archivo.isEmpty()) {
-            throw new IllegalArgumentException(
-                "No se selecciono ningun archivo"
-            );
-        }
+    boolean extensionValida = EXTENSIONES.stream().anyMatch(nombreNormalizado::endsWith);
 
-        if (archivo.getSize() > TAMANIO_MAXIMO) {
-            throw new IllegalArgumentException(
-                "El archivo supera los 50 MB"
-            );
-        }
-
-        String nombre = archivo.getOriginalFilename();
-
-        if (nombre == null || nombre.isBlank()) {
-            throw new IllegalArgumentException(
-                "El archivo debe tener un nombre"
-            );
-        }
-
-        String nombreNormalizado =
-            nombre.toLowerCase(Locale.ROOT);
-
-        boolean extensionValida = EXTENSIONES.stream()
-            .anyMatch(nombreNormalizado::endsWith);
-
-        if (!extensionValida) {
-            throw new IllegalArgumentException(
-                "Solo se permiten archivos PDF, DOC y DOCX"
-            );
-        }
+    if (!extensionValida) {
+      throw new IllegalArgumentException("Solo se permiten archivos PDF, DOC y DOCX");
     }
+  }
 }
