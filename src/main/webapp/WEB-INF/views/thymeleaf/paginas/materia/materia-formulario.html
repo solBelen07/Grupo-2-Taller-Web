@@ -24,7 +24,7 @@
                 </h1>
                 <p class="text-muted">Completá los datos de la materia.</p>
                 <div th:if="${error != null}" class="alert alert-danger" th:text="${error}"></div>
-                <form th:object="${datosMateria}" th:action="${datosMateria.id == null} ? @{/materias/guardar} : @{/materias/modificar}" method="POST">
+                <form th:object="${datosMateria}" th:action="${datosMateria.id == null} ? @{/materias/guardar} : @{/materias/modificar}" enctype="multipart/form-data" method="POST">
                     
                     <input type="hidden" th:field="*{id}">
 
@@ -77,13 +77,26 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="materialBibliografico" class="form-label">
-                            Material bibliográfico
+                        <label for="archivos" class="form-label">
+                            Adjuntar archivos (opcional)
                         </label>
-                        <input id="materialBibliografico" type="text" th:field="*{materialBibliografico}" class="form-control" placeholder="Ej: https://... o nombre del material">
+                    
+                        <input type="file" id="archivos" name="archivos" class="form-control" accept=".pdf,.doc,.docx" multiple>
+                    
                         <small class="text-muted">
-                            Por ahora este campo permite guardar texto o un enlace.
+                            Podés adjuntar archivos PDF o Word.
                         </small>
+                    </div>
+
+                    <div th:if="${materiales != null}" class="mb-4">
+                                        
+                        <h5>Archivos cargados</h5>
+                                        
+                        <div th:each="material : ${materiales}">
+                            <a th:href="@{/materias/material/{id}(id=${material.id})}" th:text="${material.nombreArchivo}" target="_blank" rel="noopener noreferrer">
+                            </a>
+                        </div>
+                    
                     </div>
 
                     <div class="d-flex gap-2">

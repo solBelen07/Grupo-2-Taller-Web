@@ -63,10 +63,16 @@
                         </div>
 
                         <div class="mb-4">
-                            <h5>Material bibliográfico</h5>
-                            <p th:text="${materia.materialBibliografico}">
-                                Material bibliográfico
+                            <h5>Archivos adjuntos</h5>
+                                                
+                            <p th:if="${#lists.isEmpty(materiales)}">
+                                No hay archivos cargados.
                             </p>
+                        
+                            <div th:each="material : ${materiales}">
+                                <a th:href="@{/materias/material/{id}(id=${material.id})}" th:text="${material.nombreArchivo}" target="_blank" rel="noopener noreferrer">
+                                </a>
+                            </div>
                         </div>
 
                         <div class="d-flex gap-2">

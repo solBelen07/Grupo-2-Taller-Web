@@ -3,6 +3,8 @@ package com.tallerwebi.presentacion.materia;
 import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaExistente;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
+import com.tallerwebi.dominio.materialBibliografico.ServicioMaterial;
+
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,15 +13,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
+import com.tallerwebi.dominio.materialBibliografico.MaterialBibliografico;
+import java.nio.charset.StandardCharsets;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class ControladorMateria {
 
   private static final String DATOS_MATERIA = "datosMateria";
   private final ServicioMateria servicioMateria;
+  private final ServicioMaterial servicioMaterial;
 
-  public ControladorMateria(ServicioMateria servicioMateria) {
+  public ControladorMateria(ServicioMateria servicioMateria, ServicioMaterial servicioMaterial) {
     this.servicioMateria = servicioMateria;
+    this.servicioMaterial = servicioMaterial;
   }
 
   @RequestMapping(path = "/materias/nueva", method = RequestMethod.GET)
@@ -31,31 +45,38 @@ public class ControladorMateria {
     return new ModelAndView("paginas/materia/materia-formulario", model);
   }
 
+  
   @RequestMapping(path = "/materias/guardar", method = RequestMethod.POST)
-  public ModelAndView guardarMateria(@ModelAttribute(DATOS_MATERIA) DatosMateria datosMateria) {
-    Materia materia = new Materia();
-
-    materia.setNombre(datosMateria.getNombre());
-    materia.setDescripcion(datosMateria.getDescripcion());
-    materia.setDocente(datosMateria.getDocente());
-    materia.setColor(datosMateria.getColor());
-    materia.setDias(datosMateria.getDias());
-    materia.setHorario(datosMateria.getHorario());
-    materia.setMaterialBibliografico(datosMateria.getMaterialBibliografico());
-
-    try {
-      servicioMateria.crearMateria(materia);
-    } catch (MateriaExistente e) {
-      Map<String, Object> model = new ModelMap();
-
-      model.put("error", "Ya existe una materia con ese nombre");
-      model.put(DATOS_MATERIA, datosMateria);
-
-      return new ModelAndView("paginas/materia/materia-formulario", model);
-    }
-
-    return new ModelAndView("redirect:/materias");
+  public ModelAndView guardarMateria(@ModelAttribute(DATOS_MATERIA) DatosMateria datosMateria,
+      @RequestParam(value = "archivos", required = false)MultipartFile[] archivos ) throws IOException {
+  
+      Materia materia = new Materia();
+  
+      materia.setNombre(datosMateria.getNombre());
+      materia.setDescripcion(datosMateria.getDescripcion());
+      materia.setDocente(datosMateria.getDocente());
+      materia.setColor(datosMateria.getColor());
+      materia.setDias(datosMateria.getDias());
+      materia.setHorario(datosMateria.getHorario());
+      materia.setMaterialBibliografico(datosMateria.getMaterialBibliografico());
+    
+      try {
+          servicioMateria.crearMateria(materia);
+      
+      } catch (MateriaExistente e) {
+          Map<String, Object> model = new ModelMap();
+      
+          model.put("error", "Ya existe una materia con ese nombre");
+          model.put(DATOS_MATERIA, datosMateria);
+      
+          return new ModelAndView("paginas/materia/materia-formulario", model);
+      }
+    
+      agregarArchivos(materia.getId(), archivos);
+    
+      return new ModelAndView("redirect:/materias");
   }
+
 
   @RequestMapping(path = "/materias", method = RequestMethod.GET)
   public ModelAndView listarMaterias() {
@@ -66,15 +87,18 @@ public class ControladorMateria {
     return new ModelAndView("paginas/materia/materias", model);
   }
 
+  
   @RequestMapping(path = "/materias/detalle", method = RequestMethod.GET)
-  public ModelAndView verMateria(@RequestParam("id") Integer id) {
-    Materia materia = servicioMateria.buscarMateriaPorId(id);
+  public ModelAndView verMateria(@RequestParam("id") Integer id){
+      Materia materia = servicioMateria.buscarMateriaPorId(id);
 
-    Map<String, Object> model = new ModelMap();
+      Map<String, Object> model = new ModelMap();
 
-    model.put("materia", materia);
+      model.put("materia", materia);
 
-    return new ModelAndView("paginas/materia/materia-detalle", model);
+      model.put("materiales", servicioMaterial.obtenerPorMateria(id));
+
+      return new ModelAndView("paginas/materia/materia-detalle", model);
   }
 
   @RequestMapping(path = "/materias/editar", method = RequestMethod.GET)
@@ -94,36 +118,32 @@ public class ControladorMateria {
 
     Map<String, Object> model = new ModelMap();
     model.put(DATOS_MATERIA, datosMateria);
+    model.put("materiales", servicioMaterial.obtenerPorMateria(id));
 
     return new ModelAndView("paginas/materia/materia-formulario", model);
   }
 
+  
   @RequestMapping(path = "/materias/modificar", method = RequestMethod.POST)
-  public ModelAndView guardarMateriaModificada(
-    @ModelAttribute(DATOS_MATERIA) DatosMateria datosMateria
-  ) {
-    Materia materia = new Materia();
+  public ModelAndView guardarMateriaModificada(@ModelAttribute(DATOS_MATERIA) DatosMateria datosMateria,
+      @RequestParam(value = "archivos", required = false)MultipartFile[] archivos) throws IOException {
 
-    materia.setId(datosMateria.getId());
+      Materia materia = new Materia();
 
-    materia.setNombre(datosMateria.getNombre());
-    materia.setDescripcion(datosMateria.getDescripcion());
-    materia.setDocente(datosMateria.getDocente());
-    materia.setColor(datosMateria.getColor());
-    materia.setDias(datosMateria.getDias());
-    materia.setHorario(datosMateria.getHorario());
-    materia.setMaterialBibliografico(datosMateria.getMaterialBibliografico());
+      materia.setId(datosMateria.getId());
+      materia.setNombre(datosMateria.getNombre());
+      materia.setDescripcion(datosMateria.getDescripcion());
+      materia.setDocente(datosMateria.getDocente());
+      materia.setColor(datosMateria.getColor());
+      materia.setDias(datosMateria.getDias());
+      materia.setHorario(datosMateria.getHorario());
+      materia.setMaterialBibliografico(datosMateria.getMaterialBibliografico());
 
-    servicioMateria.editarMateria(materia);
+      servicioMateria.editarMateria(materia);
 
-    return new ModelAndView("redirect:/materias");
-  }
+      agregarArchivos(materia.getId(), archivos);
 
-  @RequestMapping(path = "/materias/eliminar", method = RequestMethod.POST)
-  public ModelAndView eliminarMateria(@RequestParam("nombre") String nombre) {
-    servicioMateria.eliminarMateria(nombre);
-
-    return new ModelAndView("redirect:/materias");
+      return new ModelAndView("redirect:/materias");
   }
 
   @RequestMapping(path = "/materias/buscar", method = RequestMethod.GET)
@@ -137,4 +157,56 @@ public class ControladorMateria {
 
     return new ModelAndView("paginas/materia/materias", model);
   }
+ 
+  @GetMapping("/materias/material/{id}")
+  public ResponseEntity<byte[]> verMaterial(
+      @PathVariable Integer id
+  ) {
+
+      MaterialBibliografico material =
+          servicioMaterial.buscarPorId(id);
+
+      if (material == null) {
+          return ResponseEntity.notFound().build();
+      }
+
+      byte[] contenido = servicioMaterial.descargarMaterial(id);
+
+      boolean esPdf = "application/pdf".equalsIgnoreCase(
+          material.getTipoArchivo()
+      );
+
+      MediaType tipoContenido = esPdf
+          ? MediaType.APPLICATION_PDF
+          : MediaType.APPLICATION_OCTET_STREAM;
+
+      String disposicion = ContentDisposition
+          .builder(esPdf ? "inline" : "attachment")
+          .filename(
+              material.getNombreArchivo(),
+              StandardCharsets.UTF_8
+          )
+          .build()
+          .toString();
+
+      return ResponseEntity.ok()
+          .header(HttpHeaders.CONTENT_DISPOSITION, disposicion)
+          .header("X-Content-Type-Options", "nosniff")
+          .contentType(tipoContenido)
+          .body(contenido);
+  }
+  
+  private void agregarArchivos(Integer materiaId, MultipartFile[] archivos) throws IOException {
+
+      if (archivos == null) {
+          return;
+      }
+
+      for (MultipartFile archivo : archivos) {
+          if (archivo != null && !archivo.isEmpty()) {
+              servicioMaterial.subirMaterial(materiaId, archivo);
+          }
+      }
+  }
+
 }
