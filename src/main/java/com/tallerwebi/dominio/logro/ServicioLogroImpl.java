@@ -47,6 +47,7 @@ public class ServicioLogroImpl implements ServicioLogro {
     return logros;
   }
 
+  @Override
   public List<Logro> obtenerLogros() {
     return repositorioLogro.listar();
   }
