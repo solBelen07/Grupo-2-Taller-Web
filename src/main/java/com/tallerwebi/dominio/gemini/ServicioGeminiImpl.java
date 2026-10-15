@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ServicioGeminiImpl implements ServicioGemini {
 
-  private static final String MODELO = "gemini-2.5-flash-lite";
+  private static final String MODELO = "gemini-3.5-flash-lite";
   private static final String URL =
     "https://generativelanguage.googleapis.com/v1beta/models/" + MODELO + ":generateContent";
 
