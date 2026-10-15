@@ -2,8 +2,11 @@ package com.tallerwebi;
 
 import com.tallerwebi.config.DatabaseInitializationConfig;
 import com.tallerwebi.config.HibernateConfig;
+import com.tallerwebi.config.R2Config;
 import com.tallerwebi.config.SpringWebConfig;
 import jakarta.servlet.Filter;
+import jakarta.servlet.MultipartConfigElement;
+import jakarta.servlet.ServletRegistration;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -22,6 +25,7 @@ public class MyServletInitializer extends AbstractAnnotationConfigDispatcherServ
       SpringWebConfig.class,
       HibernateConfig.class,
       DatabaseInitializationConfig.class,
+      R2Config.class,
     };
   }
 
@@ -39,5 +43,13 @@ public class MyServletInitializer extends AbstractAnnotationConfigDispatcherServ
     characterEncodingFilter.setForceEncoding(true);
 
     return new Filter[] { characterEncodingFilter };
+  }
+
+  @Override
+  protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+    long maxFileSize = 50L * 1024 * 1024;
+    long maxRequestSize = 55L * 1024 * 1024;
+
+    registration.setMultipartConfig(new MultipartConfigElement("", maxFileSize, maxRequestSize, 0));
   }
 }

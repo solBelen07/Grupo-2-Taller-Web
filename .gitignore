@@ -27,3 +27,5 @@ hs_err_pid*
 
 # Variables de entorno y credenciales
 .env
+
+/config-r2/application.properties
