@@ -1,6 +1,7 @@
 package com.tallerwebi.config;
 
 import java.net.URI;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -12,26 +13,17 @@ import software.amazon.awssdk.services.s3.S3Configuration;
 @Configuration
 public class R2Config {
 
-  private String obtenerConfiguracion(String nombre) {
-    String valor = System.getenv(nombre);
+  @Value("${R2_ACCESS_KEY}")
+  private String accessKey;
 
-    if (valor == null || valor.isBlank()) {
-      valor = System.getProperty(nombre);
-    }
+  @Value("${R2_SECRET_KEY}")
+  private String secretKey;
 
-    if (valor == null || valor.isBlank()) {
-      throw new IllegalStateException("Falta configurar: " + nombre);
-    }
-
-    return valor;
-  }
+  @Value("${R2_ENDPOINT}")
+  private String endpoint;
 
   @Bean
   public S3Client s3Client() {
-    String accessKey = obtenerConfiguracion("R2_ACCESS_KEY");
-    String secretKey = obtenerConfiguracion("R2_SECRET_KEY");
-    String endpoint = obtenerConfiguracion("R2_ENDPOINT");
-
     AwsBasicCredentials credenciales = AwsBasicCredentials.create(accessKey, secretKey);
 
     return S3Client
