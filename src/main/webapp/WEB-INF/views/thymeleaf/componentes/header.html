@@ -17,7 +17,7 @@
     <div class="user-widgets">
         <div class="streak-badge">
             <i class="fa-solid fa-fire text-purple-400"></i>
-            <span>Racha de 7 días</span>
+            <span th:text="${racha != null ? 'Racha de ' + racha + ' dias' : 'Racha de 0 dia'}">Racha de 0 dia</span>
         </div>
 
         <div class="avatar-circle" th:text="${usuario != null ? #strings.substring(usuario.nombre,0,1) + #strings.substring(usuario.apellido,0,1) : 'JM'}">

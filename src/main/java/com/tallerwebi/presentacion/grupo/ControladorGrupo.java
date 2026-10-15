@@ -31,7 +31,10 @@ public class ControladorGrupo {
     Map<String, Object> modelo = new ModelMap();
     try {
       Grupo grupo = servicioGrupo.buscarPorNombre(nombre);
-      modelo.put("datosGrupo", grupo);
+      DatosGrupo datosGrupo = new DatosGrupo();
+      datosGrupo.setNombre(grupo.getNombre());
+      datosGrupo.setCantidadDeIntegrantes(servicioGrupo.cantidadParticipantes(nombre));
+      modelo.put("datosGrupo", datosGrupo);
       return new ModelAndView("paginas/grupo/grupo-detalle", modelo);
     } catch (GrupoNoEncontrado e) {
       modelo.put("error", "El grupo no existe");
@@ -44,7 +47,9 @@ public class ControladorGrupo {
     Map<String, Object> modelo = new ModelMap();
     try {
       Grupo grupo = servicioGrupo.buscarPorNombre(grupoAInvitar);
-      modelo.put("datosGrupo", grupo);
+      DatosGrupo datosGrupo = new DatosGrupo();
+      datosGrupo.setNombre(grupo.getNombre());
+      modelo.put("datosGrupo", datosGrupo);
       return new ModelAndView("paginas/grupo/grupo-invitar", modelo);
     } catch (GrupoNoEncontrado e) {
       modelo.put("error", "El grupo no existe");

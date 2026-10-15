@@ -168,7 +168,13 @@ VALUES
 INSERT INTO Usuario(id, nombre, apellido, email, password, rol, activo, puntos)
 VALUES
     (null, 'Juan', 'Mendez','test@unlam.edu.ar', 'test', 'ADMIN', true, 0),
-    (null,'user','nose','user@test.com','1234','ADMIN', true, 0);
+    (null, 'Usuario', 'Test', 'user@test.com', 'USER', 'ADMIN', true, 0),
+    (null, 'Usuario1', 'Test', 'user1@test.com', '1234', 'ADMIN', true, 0),
+    (null, 'Usuario2', 'Test', 'user2@test.com', '1234', 'ADMIN', true, 0),
+    (null, 'Usuario3', 'Test', 'user3@test.com', '1234', 'ADMIN', true, 0),
+    (null, 'Usuario4', 'Test', 'user4@test.com', '1234', 'ADMIN', true, 0),
+    (null, 'Usuario5', 'Test', 'user5@test.com', '1234', 'ADMIN', true, 0),
+    (null, 'Usuario6', 'Test', 'user6@test.com', '1234', 'ADMIN', true, 0);
 
 INSERT INTO materia_usuario (materia_id, usuario_id)
 VALUES
@@ -180,7 +186,10 @@ INSERT INTO Grupo (id, nombre)
 VALUES
     (null, 'grupo1'),
     (null, 'grupo2'),
-    (null, 'grupo3');
+    (null, 'grupo3'),
+    (null, 'grupo4'),
+    (null, 'grupo5'),
+    (null, 'grupo6');
 
 -- =====================================================================
 -- CAL-01: eventos de ejemplo para el calendario, del usuario
@@ -304,6 +313,68 @@ VALUES (
        ),
     (
      null,
-        'Invitador',
+        'Popular',
      'Fuiste invitado muchas veces a grupos'
     );
+
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'ACEPTADA', false,
+        (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar'),
+        (SELECT id FROM Usuario WHERE email = 'user1@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo1'));
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'PENDIENTE', true,
+        (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar'),
+        (SELECT id FROM Usuario WHERE email = 'user2@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo1'));
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'ACEPTADA', false,
+        (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar'),
+        (SELECT id FROM Usuario WHERE email = 'user3@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo2'));
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'PENDIENTE', true,
+        (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar'),
+        (SELECT id FROM Usuario WHERE email = 'user4@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo2'));
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'ACEPTADA', false,
+        (SELECT id FROM Usuario WHERE email = 'user@test.com'),
+        (SELECT id FROM Usuario WHERE email = 'user5@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'PENDIENTE', true,
+        (SELECT id FROM Usuario WHERE email = 'user@test.com'),
+        (SELECT id FROM Usuario WHERE email = 'user6@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'ACEPTADA', false,
+        (SELECT id FROM Usuario WHERE email = 'user1@test.com'),
+        (SELECT id FROM Usuario WHERE email = 'user2@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo4'));
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'PENDIENTE', true,
+        (SELECT id FROM Usuario WHERE email = 'user1@test.com'),
+        (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo4'));
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'ACEPTADA', false,
+        (SELECT id FROM Usuario WHERE email = 'user3@test.com'),
+        (SELECT id FROM Usuario WHERE email = 'user4@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo5'));
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'PENDIENTE', true,
+        (SELECT id FROM Usuario WHERE email = 'user3@test.com'),
+        (SELECT id FROM Usuario WHERE email = 'user@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo5'));
+
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'ACEPTADA', false,
+        (SELECT id FROM Usuario WHERE email = 'user5@test.com'),
+        (SELECT id FROM Usuario WHERE email = 'user6@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo6'));
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'PENDIENTE', true,
+        (SELECT id FROM Usuario WHERE email = 'user5@test.com'),
+        (SELECT id FROM Usuario WHERE email = 'user1@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo6'));

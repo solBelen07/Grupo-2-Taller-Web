@@ -33,11 +33,10 @@ public class ServicioLogroImpl implements ServicioLogro {
   @Override
   public List<Logro> obtenerProgresos(Usuario usuario) {
     List<Logro> logros = new ArrayList<>();
-    List<Invitacion> invitaciones = repositorioInvitacion.buscarInvitacionesPorReceptor(
-      usuario.getEmail()
-    );
-    if (invitaciones.size() > CANTIDAD_INVITACIONES_PARA_LOGRO_INVITADOR) {
-      logros.add(repositorioLogro.buscar("Invitador"));
+    Integer cantInvitacionesRecibidas =
+      repositorioInvitacion.cantidadDeInvitacionesHistoricoPorReceptor(usuario.getEmail());
+    if (cantInvitacionesRecibidas > CANTIDAD_INVITACIONES_PARA_LOGRO_INVITADOR) {
+      logros.add(repositorioLogro.buscar("Popular"));
     }
 
     Long minutosPomodoro = repositorioPomodoro.calcularMinutosCompletados(usuario.getId());
@@ -48,6 +47,7 @@ public class ServicioLogroImpl implements ServicioLogro {
     return logros;
   }
 
+  @Override
   public List<Logro> obtenerLogros() {
     return repositorioLogro.listar();
   }

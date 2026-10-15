@@ -86,6 +86,84 @@ public class ControladorInvitacionTest {
     entoncesRedirigeAlLogin(vistaDeLogin);
   }
 
+  @Test
+  public void deberiaRedirigirAlLoginSiElUsuarioNoEstaLogueadoAlIntentarAceptarInvitacion() {
+    dadoQueElUsuarioNoEstaLogueado();
+    ModelAndView vistaDeLogin = cuandoAceptaLaInvitacion();
+    entoncesRedirigeAlLogin(vistaDeLogin);
+  }
+
+  @Test
+  public void deberiaRedirigirAInvitacionesConMensajeDeErrorSiLaInvitacionEsInvalida()
+    throws InvitacionInvalida {
+    Usuario usuarioLogueado = new Usuario();
+    usuarioLogueado.setEmail("usuario@test.com");
+    DatosInvitacion datosInvitacionInvalida = new DatosInvitacion();
+    datosInvitacionInvalida.setReceptor(usuarioLogueado.getEmail());
+    datosInvitacionInvalida.setEmisor("prueba@test.com");
+    datosInvitacionInvalida.setGrupo("grupo-test");
+
+    when(requestMock.getSession()).thenReturn(sessionMock);
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioLogueado);
+    doThrow(InvitacionInvalida.class)
+      .when(servicioInvitacionMock)
+      .aceptarInvitacion(datosInvitacionInvalida);
+
+    ModelAndView modelAndView = controladorInvitacion.aceptar(
+      datosInvitacionInvalida,
+      requestMock,
+      redirectAttributesMock
+    );
+
+    assertEquals("redirect:/invitaciones", modelAndView.getViewName());
+    verify(redirectAttributesMock).addFlashAttribute("error", "No se pudo aceptar la invitación");
+  }
+
+  @Test
+  public void deberiaRedirigirAPantallaDeLoginSiElUsuarioNoLogueadoRechazaInvitacion() {
+    dadoQueElUsuarioNoEstaLogueado();
+    ModelAndView vistaDeLogin = cuandoRechazaLaInvitacion();
+    entoncesRedirigeAlLogin(vistaDeLogin);
+  }
+
+  @Test
+  public void deberiaRedirigirAPantallaDeInvitacionesAlRechazarInvitacion()
+    throws InvitacionInvalida {
+    doNothing().when(servicioInvitacionMock).rechazarInvitacion(datosInvitacion);
+    ModelAndView vistaDeInvitaciones = controladorInvitacion.rechazar(
+      datosInvitacion,
+      requestMock,
+      redirectAttributesMock
+    );
+    assertEquals("redirect:/invitaciones", vistaDeInvitaciones.getViewName());
+  }
+
+  @Test
+  public void deberiaRedirigirAInvitacionesConMensajeDeErrorSiLaInvitacionRechazadaEsInvalida()
+    throws InvitacionInvalida {
+    Usuario usuarioLogueado = new Usuario();
+    usuarioLogueado.setEmail("usuario@test.com");
+    DatosInvitacion datosInvitacionInvalida = new DatosInvitacion();
+    datosInvitacionInvalida.setReceptor(usuarioLogueado.getEmail());
+    datosInvitacionInvalida.setEmisor("prueba@test.com");
+    datosInvitacionInvalida.setGrupo("grupo-test");
+
+    when(requestMock.getSession()).thenReturn(sessionMock);
+    when(sessionMock.getAttribute("USUARIO")).thenReturn(usuarioLogueado);
+    doThrow(InvitacionInvalida.class)
+      .when(servicioInvitacionMock)
+      .rechazarInvitacion(datosInvitacionInvalida);
+
+    ModelAndView modelAndView = controladorInvitacion.rechazar(
+      datosInvitacionInvalida,
+      requestMock,
+      redirectAttributesMock
+    );
+
+    assertEquals("redirect:/invitaciones", modelAndView.getViewName());
+    verify(redirectAttributesMock).addFlashAttribute("error", "No se pudo rechazar la invitación");
+  }
+
   private void dadoQueElUsuarioNoEstaLogueado() {
     when(sessionMock.getAttribute("USUARIO")).thenReturn(null);
   }
@@ -96,7 +174,6 @@ public class ControladorInvitacionTest {
 
   private void dadoQueLaInvitacionEsValida() throws InvitacionInvalida {
     Invitacion invitacionCreada = new Invitacion();
-
     when(servicioInvitacionMock.validarInvitacion(datosInvitacion)).thenReturn(invitacionCreada);
   }
 
@@ -107,6 +184,10 @@ public class ControladorInvitacionTest {
 
   private ModelAndView cuandoAceptaLaInvitacion() {
     return controladorInvitacion.aceptar(datosInvitacion, requestMock, redirectAttributesMock);
+  }
+
+  private ModelAndView cuandoRechazaLaInvitacion() {
+    return controladorInvitacion.rechazar(datosInvitacion, requestMock, redirectAttributesMock);
   }
 
   private ModelAndView cuandoEnviaUnaInvitacionAUnUsuario() {

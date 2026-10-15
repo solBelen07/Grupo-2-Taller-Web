@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 public interface RepositorioInvitacion {
   Invitacion enviarInvitacion(Invitacion invitacion);
   List<Invitacion> buscarInvitacionesPorReceptor(String emailReceptor);
+  Integer cantidadDeInvitacionesHistoricoPorReceptor(String emailReceptor);
   Invitacion buscar(String emailEmisor, String emailReceptor, String nombreGrupo);
   void cambiarEstado(Invitacion invitacion, Estado estado);
 }

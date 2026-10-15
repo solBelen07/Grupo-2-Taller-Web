@@ -64,4 +64,13 @@ public class RepositorioUsuarioImpl implements RepositorioUsuario {
       .setParameter("id", idUsuario)
       .uniqueResult();
   }
+
+  @Override
+  public Usuario buscarPorId(Long idUsuario) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery("from Usuario where id = :id", Usuario.class)
+      .setParameter("id", idUsuario)
+      .uniqueResult();
+  }
 }

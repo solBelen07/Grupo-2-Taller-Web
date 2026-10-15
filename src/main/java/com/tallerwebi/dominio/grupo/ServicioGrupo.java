@@ -6,4 +6,5 @@ import java.util.List;
 public interface ServicioGrupo {
   Grupo buscarPorNombre(String nombre) throws GrupoNoEncontrado;
   List<Grupo> listarGrupos();
+  Integer cantidadParticipantes(String nombre) throws GrupoNoEncontrado;
 }

@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura;
 
 import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.RepositorioGrupo;
+import com.tallerwebi.dominio.invitacion.Estado;
 import java.util.List;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -28,5 +29,32 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
   @Override
   public List<Grupo> listar() {
     return sessionFactory.getCurrentSession().createQuery("from Grupo", Grupo.class).list();
+  }
+
+  @Override
+  public List<Grupo> listarGruposPorUsuario(String email) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "select i.grupo from Invitacion i where i.receptor.email = :email and i.estado = :estadoAceptada",
+        Grupo.class
+      )
+      .setParameter("email", email)
+      .setParameter("estadoAceptada", Estado.ACEPTADA)
+      .list();
+  }
+
+  @Override
+  public Integer cantidadParticipantes(String nombre) {
+    Long count = sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "SELECT COUNT(i.receptor) FROM Invitacion i WHERE i.grupo.nombre = :nombreGrupo AND i.estado = 'ACEPTADA'",
+        Long.class
+      )
+      .setParameter("nombreGrupo", nombre)
+      .uniqueResult();
+
+    return count != null ? count.intValue() : 0;
   }
 }
