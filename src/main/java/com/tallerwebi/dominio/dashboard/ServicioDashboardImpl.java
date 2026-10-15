@@ -55,7 +55,10 @@ public class ServicioDashboardImpl implements ServicioDashboard {
 
   @Override
   public Double porcentajeCumplimiento(Long idUsuario) {
-    String nombreUsuario = this.repositorioUsuario.obtenerNombre(idUsuario);
+    // Las tareas guardan el EMAIL del responsable, así que hay que buscar el aporte por email.
+    Usuario usuario = this.repositorioUsuario.buscarPorId(idUsuario);
+    if (usuario == null) return 0.0;
+    String emailUsuario = usuario.getEmail();
 
     Map<String, Long> aportes = this.servicioTarea.calcularAporteIndividual();
 
@@ -63,7 +66,7 @@ public class ServicioDashboardImpl implements ServicioDashboard {
 
     if (total == null || total == 0) return 0.0;
 
-    Long cumplimiento = aportes.getOrDefault(nombreUsuario, 0L);
+    Long cumplimiento = aportes.getOrDefault(emailUsuario, 0L);
     return ((double) cumplimiento / total) * 100;
   }
 

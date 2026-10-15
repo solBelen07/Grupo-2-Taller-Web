@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 public class ServicioDashboardTest {
 
   private static final Long ID_USUARIO = 1L;
-  private static final String NOMBRE_USUARIO = "Juan";
+  private static final String NOMBRE_USUARIO = "test@unlam.edu.ar";
 
   private RepositorioPomodoro repositorioPomodoroMock;
   private RepositorioMateria repositorioMateriaMock;
@@ -77,7 +77,7 @@ public class ServicioDashboardTest {
 
   @Test
   public void porcentajeCumplimientoDeberiaCalcularElPorcentajeCorrectamente() {
-    when(this.repositorioUsuarioMock.obtenerNombre(ID_USUARIO)).thenReturn(NOMBRE_USUARIO);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(usuarioConEmail());
 
     Map<String, Long> aportes = new HashMap<>();
     aportes.put(NOMBRE_USUARIO, 3L);
@@ -87,13 +87,13 @@ public class ServicioDashboardTest {
     Double porcentaje = this.servicioDashboard.porcentajeCumplimiento(ID_USUARIO);
 
     assertThat(porcentaje, equalTo(75.0));
-    verify(this.repositorioUsuarioMock, times(1)).obtenerNombre(ID_USUARIO);
+    verify(this.repositorioUsuarioMock, times(1)).buscarPorId(ID_USUARIO);
     verify(this.servicioTareaMock, times(1)).calcularAporteIndividual();
   }
 
   @Test
   public void porcentajeCumplimientoDeberiaDevolverCeroSiNoHayTareasCompletadasEnGeneral() {
-    when(this.repositorioUsuarioMock.obtenerNombre(ID_USUARIO)).thenReturn(NOMBRE_USUARIO);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(usuarioConEmail());
     when(this.servicioTareaMock.calcularAporteIndividual()).thenReturn(Collections.emptyMap());
 
     Double porcentaje = this.servicioDashboard.porcentajeCumplimiento(ID_USUARIO);
@@ -103,7 +103,7 @@ public class ServicioDashboardTest {
 
   @Test
   public void porcentajeCumplimientoDeberiaDevolverCeroSiElUsuarioNoTieneTareasCompletadas() {
-    when(this.repositorioUsuarioMock.obtenerNombre(ID_USUARIO)).thenReturn(NOMBRE_USUARIO);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(usuarioConEmail());
 
     Map<String, Long> aportes = new HashMap<>();
     aportes.put("Mateo", 5L); // El usuario buscado no está en la lista de aportes
@@ -186,5 +186,11 @@ public class ServicioDashboardTest {
     assertThat(recordObtenido, equalTo(recordEsperado));
     verify(this.repositorioUsuarioMock, times(1)).buscarPorId(ID_USUARIO);
     verify(this.servicioRachaMock, times(1)).obtenerRecordRacha(usuarioMock);
+  }
+
+  private static Usuario usuarioConEmail() {
+    Usuario usuario = new Usuario();
+    usuario.setEmail(NOMBRE_USUARIO);
+    return usuario;
   }
 }
