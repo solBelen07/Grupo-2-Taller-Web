@@ -21,6 +21,7 @@
         <hsqldb.version>2.7.4</hsqldb.version>
         <checkstyle.version>3.6.0</checkstyle.version>
         <checkstyle.runtime.version>13.8.0</checkstyle.runtime.version>
+        <aws.sdk.version>2.38.0</aws.sdk.version>
     </properties>
     <dependencyManagement>
         <dependencies>
