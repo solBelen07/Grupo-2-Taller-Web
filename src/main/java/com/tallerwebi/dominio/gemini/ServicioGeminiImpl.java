@@ -39,7 +39,18 @@ public class ServicioGeminiImpl implements ServicioGemini {
     try {
       Map<String, Object> bodyMap = Map.of(
         "contents",
-        List.of(Map.of("parts", List.of(Map.of("text", pregunta))))
+        List.of(
+          Map.of(
+            "parts",
+            List.of(
+              Map.of(
+                "text",
+                "Quiero que hagas un resumen breve del siguiente fragmento de texto, marcando en items los temas principales:" +
+                pregunta
+              )
+            )
+          )
+        )
       );
 
       ObjectMapper mapper = new ObjectMapper();
