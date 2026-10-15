@@ -1,5 +1,7 @@
 package com.tallerwebi.presentacion.tecnicasestudio;
 
+import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.tecnicasestudio.Estado;
 
 public class DatosPomodoro {
@@ -9,7 +11,7 @@ public class DatosPomodoro {
   private Integer duracion;
   private Estado estado;
   private Integer materia;
-  private UsuarioDTO usuario;
+  private Usuario usuario;
   private String objetivo;
 
   public DatosPomodoro(
@@ -18,7 +20,7 @@ public class DatosPomodoro {
     Integer duracion,
     Estado estado,
     Integer materia,
-    UsuarioDTO usuario,
+    Usuario usuario,
     String objetivo
   ) {
     this.origen = origen;
@@ -64,11 +66,11 @@ public class DatosPomodoro {
     this.materia = materia;
   }
 
-  public UsuarioDTO getUsuario() {
+  public Usuario getUsuario() {
     return usuario;
   }
 
-  public void setUsuario(UsuarioDTO usuario) {
+  public void setUsuario(Usuario usuario) {
     this.usuario = usuario;
   }
 

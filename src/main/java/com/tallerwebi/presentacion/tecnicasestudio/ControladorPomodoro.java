@@ -4,11 +4,8 @@ import com.tallerwebi.dominio.ServicioLogin;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
-import com.tallerwebi.dominio.racha.ServicioRacha;
-import com.tallerwebi.dominio.tecnicasestudio.Estado;
 import com.tallerwebi.dominio.tecnicasestudio.Pomodoro;
 import com.tallerwebi.dominio.tecnicasestudio.ServicioPomodoro;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,30 +29,28 @@ public class ControladorPomodoro {
   private final ServicioPomodoro servicioPomodoro;
   private final ServicioLogin servicioUsuario;
   private final ServicioMateria servicioMateria;
-  private final ServicioRacha servicioRacha;
 
   @Autowired
   public ControladorPomodoro(
     ServicioPomodoro servicioPomodoro,
     ServicioLogin servicioUsuario,
-    ServicioMateria servicioMateria,
-    ServicioRacha servicioRacha
+    ServicioMateria servicioMateria
   ) {
     this.servicioPomodoro = servicioPomodoro;
     this.servicioUsuario = servicioUsuario;
     this.servicioMateria = servicioMateria;
-    this.servicioRacha = servicioRacha;
   }
 
   @RequestMapping("/focusflight")
-  public ModelAndView mostrarConfigPomodoro(HttpServletRequest request) {
-    Usuario usuario = obtenerUsuarioLogueado(request);
-    if (usuario == null) return new ModelAndView("redirect:/login");
+  public ModelAndView mostrarConfigPomodoro() {
+    Usuario usuario = this.obtenerUsuarioActual();
 
-    Optional<Pomodoro> sesionActiva = this.servicioPomodoro.buscarSesionActiva(usuario);
-    if (sesionActiva.isPresent()) return new ModelAndView(
-      REDIRECCION_TIMER + sesionActiva.get().getId()
-    );
+    if (usuario != null) {
+      Optional<Pomodoro> sesionActiva = this.servicioPomodoro.buscarSesionActiva(usuario);
+      if (sesionActiva.isPresent()) {
+        return new ModelAndView(REDIRECCION_TIMER + sesionActiva.get().getId());
+      }
+    }
 
     Map<String, Object> modelo = new ModelMap();
     List<Materia> materias = this.servicioMateria.obtenerMaterias();
@@ -68,23 +63,15 @@ public class ControladorPomodoro {
 
   @RequestMapping(value = "/focusflight/boleto", method = RequestMethod.POST)
   public ModelAndView mostrarBoletoPomodoro(
-    HttpServletRequest request,
     @ModelAttribute("datosPomodoro") DatosPomodoro datosPomodoro
   ) {
     Map<String, Object> modelo = new ModelMap();
 
     Materia materia = this.servicioMateria.buscarMateriaPorId(datosPomodoro.getMateria());
-
-    if (materia == null) throw new RuntimeException("La materia seleccionada no existe.");
-
-    Usuario usuario = obtenerUsuarioLogueado(request);
-    if (usuario == null) return new ModelAndView("redirect:/login");
-
-    UsuarioDTO usuarioDTO = new UsuarioDTO(
-      usuario.getId(),
-      usuario.getNombre(),
-      usuario.getApellido()
-    );
+    if (materia == null) {
+      throw new RuntimeException("La materia seleccionada no existe.");
+    }
+    Usuario usuario = this.obtenerUsuarioActual();
 
     Pomodoro sesion =
       this.servicioPomodoro.registrarSesionEstudio(
@@ -95,8 +82,6 @@ public class ControladorPomodoro {
           usuario,
           datosPomodoro.getObjetivo()
         );
-
-    datosPomodoro.setUsuario(usuarioDTO);
 
     modelo.put("datosPomodoro", datosPomodoro);
     modelo.put("materia", materia);
@@ -109,20 +94,11 @@ public class ControladorPomodoro {
     value = "/focusflight/timer/{id}",
     method = { RequestMethod.GET, RequestMethod.POST }
   )
-  public ModelAndView mostrarTimer(HttpServletRequest request, @PathVariable("id") long id) {
-    Usuario usuario = obtenerUsuarioLogueado(request);
-
+  public ModelAndView mostrarTimer(@PathVariable("id") long id) {
     long segundosRestantes = this.servicioPomodoro.obtenerSegundosRestantes(id);
     Pomodoro pomodoro = this.servicioPomodoro.buscarPorId(id);
 
     if (pomodoro == null) return new ModelAndView(REDIRECCION_INICIO);
-
-    if (segundosRestantes == 0) pomodoro.setEstado(Estado.COMPLETADO);
-
-    if (segundosRestantes == 0 && usuario != null && pomodoro.getEstado() == Estado.COMPLETADO) {
-      servicioRacha.registrarRacha(usuario);
-      request.getSession().setAttribute("USUARIO", usuario);
-    }
 
     Map<String, Object> modelo = new ModelMap();
     modelo.put("pomodoro", pomodoro);
@@ -164,7 +140,7 @@ public class ControladorPomodoro {
     return new ModelAndView(REDIRECCION_INICIO);
   }
 
-  private Usuario obtenerUsuarioLogueado(HttpServletRequest request) {
-    return (Usuario) request.getSession().getAttribute("USUARIO");
+  private Usuario obtenerUsuarioActual() {
+    return this.servicioUsuario.consultarUsuario("test@unlam.edu.ar", "test");
   }
 }

@@ -1,10 +1,16 @@
 package com.tallerwebi.presentacion.gemini;
 
-public class GeminiDto {
+public class DatosGemini {
 
   private String pregunta;
   private String respuesta;
-  private String reglaAdicional;
+
+  public DatosGemini(String respuesta, String pregunta) {
+    this.respuesta = respuesta;
+    this.pregunta = pregunta;
+  }
+
+  public DatosGemini() {}
 
   public String getPregunta() {
     return pregunta;
@@ -20,13 +26,5 @@ public class GeminiDto {
 
   public void setRespuesta(String respuesta) {
     this.respuesta = respuesta;
-  }
-
-  public String getReglaAdicional() {
-    return reglaAdicional;
-  }
-
-  public void setReglaAdicional(String reglaAdicional) {
-    this.reglaAdicional = reglaAdicional;
   }
 }

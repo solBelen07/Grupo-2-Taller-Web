@@ -1,7 +1,9 @@
 package com.tallerwebi.dominio;
 
-import com.tallerwebi.dominio.racha.Racha;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Usuario {
@@ -15,10 +17,6 @@ public class Usuario {
   private String email;
   private String password;
   private String rol;
-
-  @Embedded
-  private Racha racha;
-
   private boolean activo = false;
   private int puntos;
 
@@ -96,16 +94,5 @@ public class Usuario {
 
   public void setActivo(boolean activo) {
     this.activo = activo;
-  }
-
-  public Racha getRacha() {
-    if (this.racha == null) {
-      this.racha = new Racha(0, 0, null);
-    }
-    return this.racha;
-  }
-
-  public void setRacha(Racha racha) {
-    this.racha = racha;
   }
 }
