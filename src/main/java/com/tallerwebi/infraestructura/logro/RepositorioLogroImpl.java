@@ -20,6 +20,7 @@ public class RepositorioLogroImpl implements RepositorioLogro {
       .uniqueResult();
   }
 
+  @Override
   public List<Logro> listar() {
     return sessionFactory.getCurrentSession().createQuery("from Logro", Logro.class).list();
   }

@@ -29,12 +29,15 @@ public class ServicioSesionEstudioImpl implements ServicioSesionEstudio {
   }
 
   @Override
-  public void cambiarEstado(Integer id) {
+  public Boolean cambiarEstado(Integer id) {
     SesionEstudio sesion = repositorioSesionEstudio.buscarPorId(id);
 
-    if (sesion != null) {
-      sesion.setCompletada(!Boolean.TRUE.equals(sesion.getCompletada()));
-      repositorioSesionEstudio.modificar(sesion);
+    if (sesion == null) {
+      return null;
     }
+    boolean completada = !Boolean.TRUE.equals(sesion.getCompletada());
+    sesion.setCompletada(completada);
+    repositorioSesionEstudio.modificar(sesion);
+    return completada;
   }
 }

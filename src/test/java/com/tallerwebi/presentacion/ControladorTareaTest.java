@@ -6,6 +6,9 @@ import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
@@ -14,6 +17,7 @@ import com.tallerwebi.presentacion.tarea.ControladorTarea;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.web.servlet.ModelAndView;
 
 public class ControladorTareaTest {
@@ -21,12 +25,15 @@ public class ControladorTareaTest {
   private ControladorTarea controladorTarea;
   private ServicioTarea servicioTareaMock;
   private ServicioMateria servicioMateriaMock;
+  private ServicioGrupo servicioGrupoMock;
 
   @BeforeEach
   public void init() {
     servicioTareaMock = mock(ServicioTarea.class);
     servicioMateriaMock = mock(ServicioMateria.class);
-    controladorTarea = new ControladorTarea(servicioTareaMock, servicioMateriaMock);
+    servicioGrupoMock = mock(ServicioGrupo.class);
+    controladorTarea =
+      new ControladorTarea(servicioTareaMock, servicioMateriaMock, servicioGrupoMock);
   }
 
   @Test
@@ -77,7 +84,10 @@ public class ControladorTareaTest {
   }
 
   @Test
-  public void crearTareaDeberiaCrearYGuardarLaTarea() {
+  public void crearTareaDeberiaCrearYGuardarLaTarea() throws GrupoNoEncontrado {
+    // preparacion
+    when(servicioGrupoMock.buscarPorNombre("grupo1")).thenReturn(new Grupo());
+
     // ejecucion
     ModelAndView resultado = controladorTarea.crearTarea(
       "Estudiar parcial",
@@ -87,7 +97,8 @@ public class ControladorTareaTest {
       10,
       5,
       "PARCIAL",
-      java.time.LocalDate.of(2026, 10, 10)
+      java.time.LocalDate.of(2026, 10, 10),
+      "grupo1"
     );
 
     // validacion
@@ -109,5 +120,92 @@ public class ControladorTareaTest {
     assertThat(modelAndView.getModel().get("materias"), equalTo(materias));
 
     verify(servicioMateriaMock, times(1)).obtenerMaterias();
+  }
+
+  @Test
+  public void crearTareaDeberiaAsociarLaTareaAlGrupoElegido() throws GrupoNoEncontrado {
+    // preparacion
+    Grupo grupo = new Grupo();
+    grupo.setNombre("grupo2");
+    when(servicioGrupoMock.buscarPorNombre("grupo2")).thenReturn(grupo);
+
+    // ejecucion
+    controladorTarea.crearTarea(
+      "Entrega TP",
+      "Taller Web",
+      "PENDIENTE",
+      "Camila",
+      10,
+      0,
+      "TP",
+      java.time.LocalDate.of(2026, 10, 10),
+      "grupo2"
+    );
+
+    // validacion
+    ArgumentCaptor<Tarea> captor = ArgumentCaptor.forClass(Tarea.class);
+    verify(servicioTareaMock, times(1)).crearTarea(captor.capture());
+    assertThat(captor.getValue().getGrupo(), equalTo(grupo));
+  }
+
+  @Test
+  public void crearTareaConUnGrupoInexistenteNoDeberiaGuardarYDeberiaMostrarUnError()
+    throws GrupoNoEncontrado {
+    // preparacion
+    when(servicioGrupoMock.buscarPorNombre("noExiste")).thenThrow(new GrupoNoEncontrado());
+
+    // ejecucion
+    ModelAndView resultado = controladorTarea.crearTarea(
+      "Entrega TP",
+      "Taller Web",
+      "PENDIENTE",
+      "Camila",
+      10,
+      0,
+      "TP",
+      java.time.LocalDate.of(2026, 10, 10),
+      "noExiste"
+    );
+
+    // validacion
+    assertThat(resultado.getViewName(), equalTo("paginas/materia/nueva-tarea"));
+    assertThat(resultado.getModel().containsKey("error"), equalTo(true));
+    verify(servicioTareaMock, never()).crearTarea(any(Tarea.class));
+  }
+
+  @Test
+  public void verNuevaTareaDeberiaCargarLosGruposParaElSelect() {
+    // preparacion
+    List<Grupo> grupos = new ArrayList<>();
+    grupos.add(new Grupo());
+    when(servicioGrupoMock.listarGrupos()).thenReturn(grupos);
+
+    // ejecucion
+    ModelAndView modelAndView = controladorTarea.verNuevaTarea();
+
+    // validacion
+    assertThat(modelAndView.getModel().get("grupos"), equalTo(grupos));
+    verify(servicioGrupoMock, times(1)).listarGrupos();
+  }
+
+  @Test
+  public void verTareasDeberiaEnviarLasTareasAgrupadasYElProgresoDeCadaGrupo() {
+    // preparacion
+    Tarea tarea = new Tarea();
+    Map<String, List<Tarea>> tareasPorGrupo = new HashMap<>();
+    tareasPorGrupo.put("grupo1", Arrays.asList(tarea));
+    Map<String, Double> progresoPorGrupo = new HashMap<>();
+    progresoPorGrupo.put("grupo1", 50.0);
+
+    when(servicioTareaMock.obtenerTodas()).thenReturn(Arrays.asList(tarea));
+    when(servicioTareaMock.agruparPorGrupo()).thenReturn(tareasPorGrupo);
+    when(servicioTareaMock.calcularProgresoPorGrupo()).thenReturn(progresoPorGrupo);
+
+    // ejecucion
+    ModelAndView modelAndView = controladorTarea.verTareas();
+
+    // validacion
+    assertThat(modelAndView.getModel().get("tareasPorGrupo"), equalTo(tareasPorGrupo));
+    assertThat(modelAndView.getModel().get("progresoPorGrupo"), equalTo(progresoPorGrupo));
   }
 }
