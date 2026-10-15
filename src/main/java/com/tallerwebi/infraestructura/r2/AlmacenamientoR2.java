@@ -2,6 +2,7 @@ package com.tallerwebi.infraestructura.r2;
 
 import java.io.IOException;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -14,22 +15,12 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 public class AlmacenamientoR2 {
 
   private final S3Client s3Client;
-  private final String bucketName;
+
+  @Value("${R2_BUCKET_NAME}")
+  private String bucketName;
 
   public AlmacenamientoR2(S3Client s3Client) {
     this.s3Client = s3Client;
-
-    String bucket = System.getenv("R2_BUCKET_NAME");
-
-    if (bucket == null || bucket.isBlank()) {
-      bucket = System.getProperty("R2_BUCKET_NAME");
-    }
-
-    if (bucket == null || bucket.isBlank()) {
-      throw new IllegalStateException("Falta configurar R2_BUCKET_NAME");
-    }
-
-    this.bucketName = bucket;
   }
 
   public String subirArchivo(MultipartFile archivo, Integer materiaId) throws IOException {
