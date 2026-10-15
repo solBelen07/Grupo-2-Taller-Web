@@ -6,6 +6,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ public class ServicioTareaImpl implements ServicioTarea {
 
   private static final String ESTADO_COMPLETADA = "COMPLETADA";
   private static final String TIPO_PARCIAL = "PARCIAL";
+  static final String SIN_GRUPO = "Sin grupo";
 
   // Constantes utilizadas para evitar números escritos directamente
   // dentro de las condiciones y facilitar la lectura del código.
@@ -100,6 +103,39 @@ public class ServicioTareaImpl implements ServicioTarea {
       });
 
     return aporte;
+  }
+
+  @Override
+  public Map<String, List<Tarea>> agruparPorGrupo() {
+    // TreeMap para que los grupos salgan siempre ordenados por nombre en la pantalla.
+    return repositorioTarea
+      .buscarTodas()
+      .stream()
+      .collect(Collectors.groupingBy(this::nombreDeGrupo, TreeMap::new, Collectors.toList()));
+  }
+
+  @Override
+  public Map<String, Double> calcularProgresoPorGrupo() {
+    Map<String, Double> progresoPorGrupo = new TreeMap<>();
+
+    // Cada grupo se calcula solo con sus tareas: completadas / total del grupo.
+    agruparPorGrupo()
+      .forEach((grupo, tareas) -> {
+        long completadas = tareas
+          .stream()
+          .filter(tarea -> ESTADO_COMPLETADA.equals(tarea.getEstado()))
+          .count();
+        progresoPorGrupo.put(grupo, (completadas * 100.0) / tareas.size());
+      });
+
+    return progresoPorGrupo;
+  }
+
+  private String nombreDeGrupo(Tarea tarea) {
+    if (tarea.getGrupo() == null || tarea.getGrupo().getNombre() == null) {
+      return SIN_GRUPO;
+    }
+    return tarea.getGrupo().getNombre();
   }
 
   // Calcula qué porcentaje de las horas planificadas ya fueron realizadas.

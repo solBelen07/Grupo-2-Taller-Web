@@ -1,9 +1,11 @@
 package com.tallerwebi.dominio.tarea;
 
+import com.tallerwebi.dominio.grupo.Grupo;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 
 @Entity
@@ -26,6 +28,11 @@ public class Tarea {
   // Fecha límite de entrega de la tarea.
   //  para determinar si un TP está en tiempo, próximo a vencer o atrasado.
   private LocalDate fechaVencimiento;
+
+  // Grupo al que pertenece la tarea (GRP-02). Permite agrupar las tareas y calcular
+  // el progreso de cada grupo por separado.
+  @ManyToOne
+  private Grupo grupo;
 
   public Long getId() {
     return id;
@@ -97,5 +104,13 @@ public class Tarea {
 
   public void setFechaVencimiento(LocalDate fechaVencimiento) {
     this.fechaVencimiento = fechaVencimiento;
+  }
+
+  public Grupo getGrupo() {
+    return grupo;
+  }
+
+  public void setGrupo(Grupo grupo) {
+    this.grupo = grupo;
   }
 }

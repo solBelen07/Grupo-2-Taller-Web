@@ -1,44 +1,44 @@
 INSERT INTO Materia
 (id, nombre, descripcion, docente, color, dias, horario, materialBibliografico)
 VALUES
-(
-    null,
-    'Taller Web I',
-    'Desarrollo de aplicaciones web con Spring MVC, Hibernate y Thymeleaf.',
-    'Spizzirri',
-    '#8B5CF6',
-    'Lunes y Miércoles',
-    '18:00 - 22:00',
-    'Documentación de Spring'
-);
+    (
+        null,
+        'Taller Web I',
+        'Desarrollo de aplicaciones web con Spring MVC, Hibernate y Thymeleaf.',
+        'Spizzirri',
+        '#8B5CF6',
+        'Lunes y Miércoles',
+        '18:00 - 22:00',
+        'Documentación de Spring'
+    );
 
 INSERT INTO Materia
 (id, nombre, descripcion, docente, color, dias, horario, materialBibliografico)
 VALUES
-(
-    null,
-    'Base de Datos II',
-    'Diseño y administración de bases de datos.',
-    'Laura Ibáñez',
-    '#3B82F6',
-    'Martes y Jueves',
-    '16:00 - 20:00',
-    'Apuntes SQL'
-);
+    (
+        null,
+        'Base de Datos II',
+        'Diseño y administración de bases de datos.',
+        'Laura Ibáñez',
+        '#3B82F6',
+        'Martes y Jueves',
+        '16:00 - 20:00',
+        'Apuntes SQL'
+    );
 
 INSERT INTO Materia
 (id, nombre, descripcion, docente, color, dias, horario, materialBibliografico)
 VALUES
-(
-    null,
-    'Visualización e Interfaces',
-    'Diseño de interfaces y experiencia de usuario.',
-    'Mariana López',
-    '#EC4899',
-    'Viernes',
-    '14:00 - 18:00',
-    'Material de Figma'
-);
+    (
+        null,
+        'Visualización e Interfaces',
+        'Diseño de interfaces y experiencia de usuario.',
+        'Mariana López',
+        '#EC4899',
+        'Viernes',
+        '14:00 - 18:00',
+        'Material de Figma'
+    );
 
 INSERT INTO Parcial
 (id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
@@ -226,7 +226,7 @@ VALUES (
 
 -- Ejemplo 1, hoy: un TP con 40% de avance y 10 días para la entrega.
 -- Menos del 50% -> "En tiempo".
-INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento)
+INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento, grupo_id)
 VALUES (
            null,
            'Entrega TP de Taller Web I',
@@ -236,7 +236,8 @@ VALUES (
            10,
            'test@unlam.edu.ar',
            'TP',
-           DATE_ADD(CURDATE(), INTERVAL 10 DAY)
+           DATE_ADD(CURDATE(), INTERVAL 10 DAY),
+           (SELECT id FROM Grupo WHERE nombre = 'grupo1')
        );
 
 INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id, tareaId)
@@ -253,7 +254,7 @@ VALUES (
 
 -- Ejemplo 2, mañana: un Parcial con 70% de avance pero que vence en 2
 -- días. La urgencia por fecha le gana al progreso -> "Próxima a vencer".
-INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento)
+INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento, grupo_id)
 VALUES (
            null,
            'Parcial de Base de Datos II',
@@ -263,7 +264,8 @@ VALUES (
            10,
            'test@unlam.edu.ar',
            'PARCIAL',
-           DATE_ADD(CURDATE(), INTERVAL 2 DAY)
+           DATE_ADD(CURDATE(), INTERVAL 2 DAY),
+           (SELECT id FROM Grupo WHERE nombre = 'grupo1')
        );
 
 INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id, tareaId)
@@ -280,7 +282,7 @@ VALUES (
 
 -- Ejemplo 3, pasado mañana: un Parcial con 60% de avance y 15 días
 -- todavía. Acá gana el progreso -> "Parcialmente completada".
-INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento)
+INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento, grupo_id)
 VALUES (
            null,
            'Parcial de Visualización e Interfaces',
@@ -290,7 +292,8 @@ VALUES (
            10,
            'test@unlam.edu.ar',
            'PARCIAL',
-           DATE_ADD(CURDATE(), INTERVAL 15 DAY)
+           DATE_ADD(CURDATE(), INTERVAL 15 DAY),
+           (SELECT id FROM Grupo WHERE nombre = 'grupo2')
        );
 
 INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id, tareaId)
@@ -305,17 +308,31 @@ VALUES (
            3
        );
 
+-- =====================================================================
+-- GRP-02: tareas de ejemplo repartidas entre grupos, para ver el tablero
+-- grupal con una barra de progreso distinta por grupo.
+-- (Las 3 tareas de arriba quedan en grupo1, grupo1 y grupo2)
+-- =====================================================================
+INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento, grupo_id)
+VALUES
+    (null, 'Práctica 1 de Taller Web I', 'Taller Web I', 'COMPLETADA', 6, 6, 'test@unlam.edu.ar', 'TP',
+     DATE_ADD(CURDATE(), INTERVAL 5 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo1')),
+    (null, 'Informe de Base de Datos II', 'Base de Datos II', 'COMPLETADA', 8, 8, 'user@test.com', 'TP',
+     DATE_ADD(CURDATE(), INTERVAL 7 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo2')),
+    (null, 'Prototipo de Visualización e Interfaces', 'Visualización e Interfaces', 'PENDIENTE', 2, 10, 'user@test.com', 'TP',
+     DATE_ADD(CURDATE(), INTERVAL 12 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
+
 INSERT INTO Logro(id, nombre, descripcion)
 VALUES (
            null,
            'Maratonista',
            'Estudiaste más de 50 horas'
        ),
-    (
-     null,
-        'Popular',
-     'Fuiste invitado muchas veces a grupos'
-    );
+       (
+           null,
+           'Popular',
+           'Fuiste invitado muchas veces a grupos'
+       );
 
 INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
 VALUES (null, 'ACEPTADA', false,

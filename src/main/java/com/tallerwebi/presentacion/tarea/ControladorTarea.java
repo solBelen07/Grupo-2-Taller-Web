@@ -1,11 +1,13 @@
 package com.tallerwebi.presentacion.tarea;
 
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
 import com.tallerwebi.dominio.tarea.Tarea;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +23,17 @@ public class ControladorTarea {
 
   private ServicioTarea servicioTarea;
   private ServicioMateria servicioMateria;
+  private ServicioGrupo servicioGrupo;
 
   @Autowired
-  public ControladorTarea(ServicioTarea servicioTarea, ServicioMateria servicioMateria) {
+  public ControladorTarea(
+    ServicioTarea servicioTarea,
+    ServicioMateria servicioMateria,
+    ServicioGrupo servicioGrupo
+  ) {
     this.servicioTarea = servicioTarea;
     this.servicioMateria = servicioMateria;
+    this.servicioGrupo = servicioGrupo;
   }
 
   @RequestMapping("/tareas")
@@ -55,17 +63,16 @@ public class ControladorTarea {
     modelo.put("aporteIndividual", aporteIndividual);
     modelo.put("indicadores", indicadores);
 
+    // GRP-02: las tareas se muestran agrupadas por grupo, cada una con su propio progreso.
+    modelo.put("tareasPorGrupo", servicioTarea.agruparPorGrupo());
+    modelo.put("progresoPorGrupo", servicioTarea.calcularProgresoPorGrupo());
+
     return new ModelAndView("paginas/materia/tareas", modelo);
   }
 
   @RequestMapping("/tareas/nueva")
   public ModelAndView verNuevaTarea() {
-    Map<String, Object> modelo = new HashMap<>();
-
-    List<Materia> materias = this.servicioMateria.obtenerMaterias();
-    modelo.put("materias", materias);
-
-    return new ModelAndView("paginas/materia/nueva-tarea", modelo);
+    return armarFormularioNuevaTarea(new HashMap<>());
   }
 
   @RequestMapping("/tareas/crear")
@@ -77,8 +84,19 @@ public class ControladorTarea {
     @RequestParam(name = "horasPlanificadas") Integer horasPlanificadas,
     @RequestParam(name = "horasRealizadas") Integer horasRealizadas,
     @RequestParam(name = "tipo") String tipo,
-    @RequestParam(name = "fechaVencimiento") LocalDate fechaVencimiento
+    @RequestParam(name = "fechaVencimiento") LocalDate fechaVencimiento,
+    @RequestParam(name = "grupo") String nombreGrupo
   ) {
+    // GRP-02: toda tarea nueva tiene que quedar asociada a un grupo existente.
+    Grupo grupo;
+    try {
+      grupo = servicioGrupo.buscarPorNombre(nombreGrupo);
+    } catch (GrupoNoEncontrado e) {
+      Map<String, Object> modelo = new HashMap<>();
+      modelo.put("error", "El grupo seleccionado no existe. Elegí uno de la lista.");
+      return armarFormularioNuevaTarea(modelo);
+    }
+
     Tarea tarea = new Tarea();
     tarea.setTitulo(titulo);
     tarea.setMateria(materia);
@@ -88,9 +106,20 @@ public class ControladorTarea {
     tarea.setHorasRealizadas(horasRealizadas);
     tarea.setTipo(tipo);
     tarea.setFechaVencimiento(fechaVencimiento);
+    tarea.setGrupo(grupo);
 
     servicioTarea.crearTarea(tarea);
 
     return new ModelAndView("redirect:/tareas");
+  }
+
+  // Arma la pantalla del formulario con las materias y los grupos para los selects.
+  private ModelAndView armarFormularioNuevaTarea(Map<String, Object> modelo) {
+    List<Materia> materias = this.servicioMateria.obtenerMaterias();
+    List<Grupo> grupos = this.servicioGrupo.listarGrupos();
+    modelo.put("materias", materias);
+    modelo.put("grupos", grupos);
+
+    return new ModelAndView("paginas/materia/nueva-tarea", modelo);
   }
 }
