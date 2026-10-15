@@ -1,7 +1,7 @@
 package com.tallerwebi.dominio.materia;
 
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.tecnicasestudio.Pomodoro;
+import com.tallerwebi.dominio.materialBibliografico.MaterialBibliografico;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +28,9 @@ public class Materia {
     inverseJoinColumns = @JoinColumn(name = "usuario_id")
   )
   private List<Usuario> usuarios = new ArrayList<>();
+
+  @OneToMany(mappedBy = "materia")
+  private List<MaterialBibliografico> materiales = new ArrayList<>();
 
   public Integer getId() {
     return id;
@@ -101,5 +104,13 @@ public class Materia {
 
   public void setUsuarios(List<Usuario> usuarios) {
     this.usuarios = usuarios;
+  }
+
+  public List<MaterialBibliografico> getMateriales() {
+    return materiales;
+  }
+
+  public void setMateriales(List<MaterialBibliografico> materiales) {
+    this.materiales = materiales;
   }
 }
