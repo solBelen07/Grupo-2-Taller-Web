@@ -262,6 +262,7 @@ public class ControladorParcialTest {
     usuario.setId(1L);
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.getSession().setAttribute("USUARIO", usuario);
+    when(servicioSesionEstudioMock.cambiarEstado(idSesion)).thenReturn(true);
 
     ModelAndView mav = controladorParcial.cambiarEstadoSesion(idSesion, request);
 
@@ -283,5 +284,19 @@ public class ControladorParcialTest {
     verify(servicioSesionEstudioMock, times(1)).cambiarEstado(idSesion);
     verify(servicioRachaMock, never()).registrarRacha(any(Usuario.class));
     assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
+  }
+
+  @Test
+  public void queAlDesmarcarUnaSesionNoSeRegistreLaRacha() {
+    Integer idSesion = 3;
+    Usuario usuario = new Usuario();
+    usuario.setId(1L);
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.getSession().setAttribute("USUARIO", usuario);
+    when(servicioSesionEstudioMock.cambiarEstado(idSesion)).thenReturn(false);
+
+    controladorParcial.cambiarEstadoSesion(idSesion, request);
+
+    verify(servicioRachaMock, never()).registrarRacha(any(Usuario.class));
   }
 }

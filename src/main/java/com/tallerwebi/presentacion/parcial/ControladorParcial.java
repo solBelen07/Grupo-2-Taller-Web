@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -103,10 +102,11 @@ public class ControladorParcial {
     @RequestParam("id") Integer id,
     HttpServletRequest request
   ) {
-    servicioSesionEstudio.cambiarEstado(id);
+    Boolean quedoCompletada = servicioSesionEstudio.cambiarEstado(id);
 
+    // La racha solo suma cuando la sesión queda COMPLETADA. Desmarcarla no cuenta como día de estudio.
     Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
-    if (usuario != null) {
+    if (usuario != null && Boolean.TRUE.equals(quedoCompletada)) {
       servicioRacha.registrarRacha(usuario);
       request.getSession().setAttribute("USUARIO", usuario);
     }
