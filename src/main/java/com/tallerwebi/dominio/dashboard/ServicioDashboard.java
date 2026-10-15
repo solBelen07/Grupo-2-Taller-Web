@@ -10,6 +10,4 @@ public interface ServicioDashboard {
   Long obtenerCantidadMaterias(Long idUsuario);
   CalendarioSemanal obtenerCalendarioSemanal(Long idUsuario, LocalDate referencia);
   SesionEstudio obtenerProximaSesion(Long idUsuario);
-  Integer obtenerRacha(Long idUsuario);
-  Integer obtenerRecordRacha(Long idUsuario);
 }

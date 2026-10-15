@@ -11,10 +11,8 @@ import static org.mockito.Mockito.when;
 
 import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.ServicioCalendario;
-import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.calendario.CalendarioSemanal;
 import com.tallerwebi.dominio.materia.RepositorioMateria;
-import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
@@ -38,7 +36,6 @@ public class ServicioDashboardTest {
 
   private ServicioCalendario servicioCalendarioMock;
   private ServicioTarea servicioTareaMock;
-  private ServicioRacha servicioRachaMock;
 
   private ServicioDashboard servicioDashboard;
 
@@ -51,7 +48,6 @@ public class ServicioDashboardTest {
 
     this.servicioCalendarioMock = mock(ServicioCalendario.class);
     this.servicioTareaMock = mock(ServicioTarea.class);
-    this.servicioRachaMock = mock(ServicioRacha.class);
 
     this.servicioDashboard =
       new ServicioDashboardImpl(
@@ -60,8 +56,7 @@ public class ServicioDashboardTest {
         this.repositorioUsuarioMock,
         this.repositorioSesionEstudioMock,
         this.servicioCalendarioMock,
-        this.servicioTareaMock,
-        this.servicioRachaMock
+        this.servicioTareaMock
       );
   }
 
@@ -156,35 +151,5 @@ public class ServicioDashboardTest {
     SesionEstudio resultado = this.servicioDashboard.obtenerProximaSesion(ID_USUARIO);
 
     assertThat(resultado, is(nullValue()));
-  }
-
-  @Test
-  public void obtenerRachaDeberiaDevolverLaRachaDelUsuario() {
-    Usuario usuarioMock = mock(Usuario.class);
-    Integer rachaEsperada = 5;
-
-    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(usuarioMock);
-    when(this.servicioRachaMock.obtenerRacha(usuarioMock)).thenReturn(rachaEsperada);
-
-    Integer rachaObtenida = this.servicioDashboard.obtenerRacha(ID_USUARIO);
-
-    assertThat(rachaObtenida, equalTo(rachaEsperada));
-    verify(this.repositorioUsuarioMock, times(1)).buscarPorId(ID_USUARIO);
-    verify(this.servicioRachaMock, times(1)).obtenerRacha(usuarioMock);
-  }
-
-  @Test
-  public void obtenerRecordRachaDeberiaDevolverElRecordDelUsuario() {
-    Usuario usuarioMock = mock(Usuario.class);
-    Integer recordEsperado = 10;
-
-    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(usuarioMock);
-    when(this.servicioRachaMock.obtenerRecordRacha(usuarioMock)).thenReturn(recordEsperado);
-
-    Integer recordObtenido = this.servicioDashboard.obtenerRecordRacha(ID_USUARIO);
-
-    assertThat(recordObtenido, equalTo(recordEsperado));
-    verify(this.repositorioUsuarioMock, times(1)).buscarPorId(ID_USUARIO);
-    verify(this.servicioRachaMock, times(1)).obtenerRecordRacha(usuarioMock);
   }
 }

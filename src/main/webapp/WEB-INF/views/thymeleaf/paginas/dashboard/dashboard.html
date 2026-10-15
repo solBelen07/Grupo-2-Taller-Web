@@ -107,36 +107,76 @@
         <div class="dashboard-main-grid">
 
             <!-- Columna Izquierda: Semana Académica -->
-            <!-- Sección Principal Inferior: Semana Académica -->
             <section class="section-card academic-week-card">
                 <div class="section-card-header">
-                    <h2 class="section-title" th:text="${dashboardData.calendarioSemanal.titulo}">Semana Académica</h2>
-                    <a th:href="@{/calendario(vista='semana')}" class="link-full-calendar">
+                    <h2 class="section-title">Semana Académica</h2>
+                    <a th:href="@{/calendario}" class="link-full-calendar">
                         <span>Ver calendario completo</span>
                         <i class="fa-solid fa-chevron-right"></i>
                     </a>
                 </div>
 
                 <div class="week-grid">
-                    <div th:each="dia : ${dashboardData.calendarioSemanal.dias}"
-                         class="week-day-column"
-                         th:classappend="${dia.esHoy()} ? 'active-day'">
-
-                        <!-- Nombre abreviado del día -->
-                        <span class="day-name" th:text="${dia.abreviatura()}">Lun</span>
-
-                        <!-- Número del día del mes -->
-                        <div class="day-number" th:text="${dia.fecha().dayOfMonth}">8</div>
-
-                        <!-- Lista de eventos asociados al día -->
+                    <!-- Lunes -->
+                    <div class="week-day-column">
+                        <span class="day-name">Lun</span>
+                        <div class="day-number">8</div>
                         <div class="day-events">
-                <span th:each="bloque : ${dia.bloques()}"
-                      class="event-pill"
-                      th:style="|--materia:${bloque.segmento().color()}; background-color: var(--materia);|"
-                      th:title="${bloque.segmento().materia() + ' - ' + bloque.segmento().titulo()}"
-                      th:text="${bloque.segmento().titulo()}">
-                    Evento
-                </span>
+                            <span class="event-pill event-pink">Diseño de Sistemas</span>
+                            <span class="event-pill event-blue">Tarea Álgebra</span>
+                        </div>
+                    </div>
+
+                    <!-- Martes -->
+                    <div class="week-day-column">
+                        <span class="day-name">Mar</span>
+                        <div class="day-number">9</div>
+                        <div class="day-events">
+                            <span class="event-pill event-cyan">Base de Datos II</span>
+                        </div>
+                    </div>
+
+                    <!-- Miércoles -->
+                    <div class="week-day-column">
+                        <span class="day-name">Mié</span>
+                        <div class="day-number">10</div>
+                        <div class="day-events">
+                            <span class="event-pill event-green">Ing. Software</span>
+                            <span class="event-pill event-brown">Redes</span>
+                        </div>
+                    </div>
+
+                    <!-- Jueves (Día Actual) -->
+                    <div class="week-day-column active-day">
+                        <span class="day-name">Jue</span>
+                        <div class="day-number">11</div>
+                        <div class="day-events">
+                            <span class="event-pill event-purple">Parcial BD II — 10:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Viernes -->
+                    <div class="week-day-column">
+                        <span class="day-name">Vie</span>
+                        <div class="day-number">12</div>
+                        <div class="day-events">
+                            <span class="event-pill event-dark-purple">Entrega TP1</span>
+                        </div>
+                    </div>
+
+                    <!-- Sábado -->
+                    <div class="week-day-column">
+                        <span class="day-name">Sáb</span>
+                        <div class="day-number">13</div>
+                        <div class="day-events"></div>
+                    </div>
+
+                    <!-- Domingo -->
+                    <div class="week-day-column">
+                        <span class="day-name">Dom</span>
+                        <div class="day-number">14</div>
+                        <div class="day-events">
+                            <span class="event-pill event-teal">Maratón Estudio 3h</span>
                         </div>
                     </div>
                 </div>
@@ -149,7 +189,7 @@
                 <article class="widget-card launch-widget">
                     <div class="widget-header">
                         <div class="widget-icon">
-                            <i class="fa-solid fa-plane-departure"></i>
+                            <i class="fa-solid fa-infinity"></i>
                         </div>
                         <div class="widget-info">
                             <h3>Iniciar FocusFlight</h3>
@@ -202,20 +242,24 @@
                     <h3 class="widget-title">Racha de Estudio</h3>
 
                     <div class="streak-boxes-container">
-                        <span th:each="i : ${#numbers.sequence(1, 7)}"
-                              class="streak-box"
-                              th:classappend="${dashboardData.racha != null and i <= dashboardData.racha} ? 'filled' : ''"></span>
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
+                        <span class="streak-box filled"></span>
                     </div>
 
                     <div class="streak-count">
                         <i class="fa-solid fa-fire"></i>
-                        <span th:text="${dashboardData.racha == 1 ? '1 día consecutivo' : (dashboardData.racha) + ' días consecutivos'}">0 días consecutivos</span>
+                        <span>7 días consecutivos</span>
                     </div>
-
-                    <div class="streak-record" th:text="'Récord personal: ' + ${dashboardData.recordRacha} + (${dashboardData.recordRacha == 1} ? ' día' : ' días')">
-                        Récord personal: 0 días
+                    <div class="streak-record">
+                        Récord personal: 7 días
                     </div>
                 </article>
+
             </aside>
         </div>
 

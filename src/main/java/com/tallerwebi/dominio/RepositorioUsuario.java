@@ -6,5 +6,4 @@ public interface RepositorioUsuario {
   Usuario buscar(String email);
   void modificar(Usuario usuario);
   String obtenerNombre(Long idUsuario);
-  Usuario buscarPorId(Long idUsuario);
 }

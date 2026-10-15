@@ -2,24 +2,22 @@ package com.tallerwebi.presentacion.parcial;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.parcial.Parcial;
 import com.tallerwebi.dominio.parcial.ServicioParcial;
-import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.sesionEstudio.ServicioSesionEstudio;
+import com.tallerwebi.presentacion.parcial.ControladorParcial;
+import com.tallerwebi.presentacion.parcial.DatosParcial;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 public class ControladorParcialTest {
@@ -27,7 +25,6 @@ public class ControladorParcialTest {
   private ServicioMateria servicioMateriaMock;
   private ServicioParcial servicioParcialMock;
   private ServicioSesionEstudio servicioSesionEstudioMock;
-  private ServicioRacha servicioRachaMock;
 
   private ControladorParcial controladorParcial;
 
@@ -39,15 +36,8 @@ public class ControladorParcialTest {
 
     servicioSesionEstudioMock = mock(ServicioSesionEstudio.class);
 
-    servicioRachaMock = mock(ServicioRacha.class);
-
     controladorParcial =
-      new ControladorParcial(
-        servicioMateriaMock,
-        servicioParcialMock,
-        servicioSesionEstudioMock,
-        servicioRachaMock
-      );
+      new ControladorParcial(servicioMateriaMock, servicioParcialMock, servicioSesionEstudioMock);
   }
 
   @Test
@@ -246,42 +236,11 @@ public class ControladorParcialTest {
   @Test
   public void queSePuedaCambiarElEstadoDeUnaSesion() {
     Integer idSesion = 3;
-    MockHttpServletRequest request = new MockHttpServletRequest();
 
-    ModelAndView mav = controladorParcial.cambiarEstadoSesion(idSesion, request);
-
-    verify(servicioSesionEstudioMock, times(1)).cambiarEstado(idSesion);
-
-    assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
-  }
-
-  @Test
-  public void queAlCambiarElEstadoDeUnaSesionSeRegistreLaRachaDelUsuarioLogueado() {
-    Integer idSesion = 3;
-    Usuario usuario = new Usuario();
-    usuario.setId(1L);
-    MockHttpServletRequest request = new MockHttpServletRequest();
-    request.getSession().setAttribute("USUARIO", usuario);
-
-    ModelAndView mav = controladorParcial.cambiarEstadoSesion(idSesion, request);
-
-    InOrder orden = inOrder(servicioSesionEstudioMock, servicioRachaMock);
-    orden.verify(servicioSesionEstudioMock, times(1)).cambiarEstado(idSesion);
-    orden.verify(servicioRachaMock, times(1)).registrarRacha(usuario);
-
-    assertThat((Usuario) request.getSession().getAttribute("USUARIO"), sameInstance(usuario));
-    assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
-  }
-
-  @Test
-  public void queAlCambiarElEstadoDeUnaSesionNoSeRegistreLaRachaSiNoHayUsuarioEnSesion() {
-    Integer idSesion = 3;
-    MockHttpServletRequest request = new MockHttpServletRequest();
-
-    ModelAndView mav = controladorParcial.cambiarEstadoSesion(idSesion, request);
+    ModelAndView mav = controladorParcial.cambiarEstadoSesion(idSesion);
 
     verify(servicioSesionEstudioMock, times(1)).cambiarEstado(idSesion);
-    verify(servicioRachaMock, never()).registrarRacha(any(Usuario.class));
+
     assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
   }
 }

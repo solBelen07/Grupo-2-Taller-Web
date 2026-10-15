@@ -62,7 +62,7 @@
             <div class="info-grid">
                 <div class="info-item">
                     <span class="label">PASAJERO/A</span>
-                    <span class="value" th:text="${datosPomodoro.usuario != null ? datosPomodoro.usuario.nombre + ' ' + datosPomodoro.usuario.apellido : 'Juan Méndez'}">Juan Méndez</span>
+                    <span class="value" th:text="${datosPomodoro.usuario != null ? datosPomodoro.usuario : 'Juan Méndez'}">Juan Méndez</span>
                 </div>
                 <div class="info-item">
                     <span class="label">ASIENTO</span>
