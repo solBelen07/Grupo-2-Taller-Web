@@ -48,7 +48,7 @@ public class ControladorMateria {
   @RequestMapping(path = "/materias/guardar", method = RequestMethod.POST)
   public ModelAndView guardarMateria(
     @ModelAttribute(DATOS_MATERIA) DatosMateria datosMateria,
-    @RequestParam(value = "archivos", required = false) MultipartFile[] archivos
+    @RequestParam(value = "archivos", required = false) MultipartFile... archivos
   ) throws IOException {
     Materia materia = new Materia();
 
@@ -123,7 +123,7 @@ public class ControladorMateria {
   @RequestMapping(path = "/materias/modificar", method = RequestMethod.POST)
   public ModelAndView guardarMateriaModificada(
     @ModelAttribute(DATOS_MATERIA) DatosMateria datosMateria,
-    @RequestParam(value = "archivos", required = false) MultipartFile[] archivos
+    @RequestParam(value = "archivos", required = false) MultipartFile... archivos
   ) throws IOException {
     Materia materia = new Materia();
 
@@ -198,7 +198,7 @@ public class ControladorMateria {
     return new ModelAndView("redirect:/materias/detalle?id=" + materiaId);
   }
 
-  private void agregarArchivos(Integer materiaId, MultipartFile[] archivos) throws IOException {
+  private void agregarArchivos(Integer materiaId, MultipartFile... archivos) throws IOException {
     if (archivos == null) {
       return;
     }

@@ -104,14 +104,24 @@ public class ServicioMaterialImpl implements ServicioMaterial {
   }
 
   private void validarArchivo(MultipartFile archivo) {
+    validarArchivoNoVacio(archivo);
+    validarTamanio(archivo);
+    validarExtension(archivo);
+  }
+
+  private void validarArchivoNoVacio(MultipartFile archivo) {
     if (archivo == null || archivo.isEmpty()) {
       throw new IllegalArgumentException("No se selecciono ningun archivo");
     }
+  }
 
+  private void validarTamanio(MultipartFile archivo) {
     if (archivo.getSize() > TAMANIO_MAXIMO) {
       throw new IllegalArgumentException("El archivo supera los 50 MB");
     }
+  }
 
+  private void validarExtension(MultipartFile archivo) {
     String nombre = archivo.getOriginalFilename();
 
     if (nombre == null || nombre.isBlank()) {
