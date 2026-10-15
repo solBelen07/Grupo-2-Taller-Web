@@ -17,6 +17,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -155,7 +157,7 @@ public class ControladorMateria {
   }
 
   @GetMapping("/materias/material/{id}")
-  public ResponseEntity<byte[]> verMaterial(@PathVariable Integer id) {
+  public ResponseEntity<byte[]> verMaterial(@PathVariable("id") Integer id) {
     MaterialBibliografico material = servicioMaterial.buscarPorId(id);
 
     if (material == null) {
@@ -163,16 +165,15 @@ public class ControladorMateria {
     }
 
     byte[] contenido = servicioMaterial.descargarMaterial(id);
-
-    boolean esPdf = "application/pdf".equalsIgnoreCase(material.getTipoArchivo());
-
+    String nombre = material.getNombreArchivo();
+    boolean esPdf = nombre != null && nombre.toLowerCase(java.util.Locale.ROOT).endsWith(".pdf");
     MediaType tipoContenido = esPdf
       ? MediaType.APPLICATION_PDF
       : MediaType.APPLICATION_OCTET_STREAM;
 
     String disposicion = ContentDisposition
       .builder(esPdf ? "inline" : "attachment")
-      .filename(material.getNombreArchivo(), StandardCharsets.UTF_8)
+      .filename(nombre, StandardCharsets.UTF_8)
       .build()
       .toString();
 
@@ -181,7 +182,21 @@ public class ControladorMateria {
       .header(HttpHeaders.CONTENT_DISPOSITION, disposicion)
       .header("X-Content-Type-Options", "nosniff")
       .contentType(tipoContenido)
+      .contentLength(contenido.length)
       .body(contenido);
+  }
+
+  @PostMapping("/materias/material/eliminar")
+  public ModelAndView eliminarMaterial(@RequestParam("id") Integer id) {
+    MaterialBibliografico material = servicioMaterial.buscarPorId(id);
+
+    if (material == null) {
+      return new ModelAndView("redirect:/materias");
+    }
+
+    Integer materiaId = material.getMateria().getId();
+    servicioMaterial.eliminarMaterial(id);
+    return new ModelAndView("redirect:/materias/detalle?id=" + materiaId);
   }
 
   private void agregarArchivos(Integer materiaId, MultipartFile[] archivos) throws IOException {

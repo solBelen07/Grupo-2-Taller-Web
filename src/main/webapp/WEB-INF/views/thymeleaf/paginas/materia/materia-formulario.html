@@ -81,22 +81,13 @@
                             Adjuntar archivos (opcional)
                         </label>
                     
-                        <input type="file" id="archivos" name="archivos" class="form-control" accept=".pdf,.doc,.docx" multiple>
+                        <input type="file" id="archivos" name="archivos" class="form-control" accept=".pdf,.doc,.docx" multiple >
                     
                         <small class="text-muted">
-                            Podés adjuntar archivos PDF o Word.
+                            Podés seleccionar varios archivos PDF o Word.
                         </small>
-                    </div>
-
-                    <div th:if="${materiales != null}" class="mb-4">
-                                        
-                        <h5>Archivos cargados</h5>
-                                        
-                        <div th:each="material : ${materiales}">
-                            <a th:href="@{/materias/material/{id}(id=${material.id})}" th:text="${material.nombreArchivo}" target="_blank" rel="noopener noreferrer">
-                            </a>
-                        </div>
                     
+                        <div id="archivos-seleccionados" class="mt-3"></div>
                     </div>
 
                     <div class="d-flex gap-2">
@@ -108,6 +99,27 @@
                         </a>
                     </div>
                 </form>
+
+                <div th:if="${datosMateria.id != null}" class="mt-4">
+
+                    <h5>Material bibliográfico cargado</h5>
+                                
+                    <div th:each="material : ${materiales}" class="d-flex justify-content-between align-items-center mb-2">
+                    
+                        <a th:href="@{/materias/material/{id}(id=${material.id})}" th:text="${material.nombreArchivo}" target="_blank" rel="noopener noreferrer">
+                        </a>
+                    
+                        <form th:action="@{/materias/material/eliminar}" method="POST" onsubmit="return confirm('¿Eliminar archivo?');">
+                        
+                            <input type="hidden" name="id" th:value="${material.id}">
+                        
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                Eliminar
+                            </button>
+                        </form>
+                    
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -118,6 +130,67 @@
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
     crossorigin="anonymous"
 ></script>
+<script>
+    
+    const inputArchivos = document.getElementById("archivos");
+    const listaArchivos = document.getElementById("archivos-seleccionados");
+    
+    const archivosAcumulados = new DataTransfer();
+    
+    inputArchivos.addEventListener("change", function (evento) {
+    
+        for (const archivo of evento.target.files) {
+        
+            const repetido = Array.from(archivosAcumulados.files
+            ).some(existente => existente.name === archivo.name && existente.size === archivo.size && existente.lastModified === archivo.lastModified);
+        
+            if (!repetido) {
+                archivosAcumulados.items.add(archivo);
+            }
+        }
+    
+        actualizarLista();
+    });
+    
+    function eliminarArchivoSeleccionado(indice) {
+    
+        archivosAcumulados.items.remove(indice);
+    
+        actualizarLista();
+    }
+    
+    function actualizarLista() {
+    
+        inputArchivos.files = archivosAcumulados.files;
+    
+        listaArchivos.innerHTML = "";
+    
+        Array.from(archivosAcumulados.files).forEach(
+            (archivo, indice) => {
+            
+                const fila = document.createElement("div");
+                fila.className = "d-flex justify-content-between align-items-center mb-2";
+            
+                const nombre = document.createElement("span");
+                nombre.textContent = archivo.name;
+            
+                const boton = document.createElement("button");
+                boton.type = "button";
+                boton.className = "btn btn-outline-danger btn-sm";
+                boton.textContent = "Quitar";
+            
+                boton.addEventListener("click", function () {
+                    eliminarArchivoSeleccionado(indice);
+                });
+            
+                fila.appendChild(nombre);
+                fila.appendChild(boton);
+            
+                listaArchivos.appendChild(fila);
+            }
+        );
+    }
 
+</script>
 </body>
 </html>
