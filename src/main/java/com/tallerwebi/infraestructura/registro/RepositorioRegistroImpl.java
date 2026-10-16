@@ -1,6 +1,5 @@
 package com.tallerwebi.infraestructura.registro;
 
-import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.catalogo.Carrera;
 import com.tallerwebi.dominio.catalogo.Interes;
 import com.tallerwebi.dominio.catalogo.Universidad;
@@ -18,16 +17,6 @@ public class RepositorioRegistroImpl implements RepositorioRegistro {
     @Autowired
     public RepositorioRegistroImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
-    }
-
-    @Override
-    public boolean existeEmail(String email) {
-        Long cantidad = sessionFactory
-                .getCurrentSession()
-                .createQuery("select count(u) from Usuario u where u.email = :email", Long.class)
-                .setParameter("email", email)
-                .getSingleResult();
-        return cantidad > 0;
     }
 
     @Override
@@ -50,10 +39,5 @@ public class RepositorioRegistroImpl implements RepositorioRegistro {
                 .createQuery("FROM Interes i WHERE i.id IN (:ids)", Interes.class)
                 .setParameterList("ids", ids)
                 .list();
-    }
-
-    @Override
-    public void guardar(Usuario usuario) {
-        sessionFactory.getCurrentSession().persist(usuario);
     }
 }

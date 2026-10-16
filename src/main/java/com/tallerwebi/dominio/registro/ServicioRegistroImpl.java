@@ -55,7 +55,9 @@ public class ServicioRegistroImpl implements ServicioRegistro {
         usuario.setRol(ROL_USUARIO);
         usuario.setUniversidad(universidad);
         usuario.setCarrera(carrera);
-        usuario.setIntereses(new HashSet<>(repositorioRegistro.buscarIntereses(registro.getInteresesIds())));
+        usuario.setIntereses(
+                new HashSet<>(repositorioRegistro.buscarIntereses(registro.getInteresesIds()))
+        );
         usuario.activar();
 
         repositorioUsuario.guardar(usuario);
@@ -65,7 +67,10 @@ public class ServicioRegistroImpl implements ServicioRegistro {
         if (estaVacio(registro.getNombre()) || estaVacio(registro.getApellido())) {
             throw new IllegalArgumentException("Completá nombre y apellido");
         }
-        if (estaVacio(registro.getEmail()) || !registro.getEmail().matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+        if (
+                estaVacio(registro.getEmail()) ||
+                        !registro.getEmail().trim().matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")
+        ) {
             throw new IllegalArgumentException("Ingresá un email válido");
         }
         if (registro.getPassword() == null || registro.getPassword().length() < LARGO_MINIMO_PASSWORD) {
