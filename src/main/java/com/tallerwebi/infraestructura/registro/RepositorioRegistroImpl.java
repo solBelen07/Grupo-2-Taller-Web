@@ -12,32 +12,32 @@ import org.springframework.stereotype.Repository;
 @Repository("repositorioRegistro")
 public class RepositorioRegistroImpl implements RepositorioRegistro {
 
-    private final SessionFactory sessionFactory;
+  private final SessionFactory sessionFactory;
 
-    @Autowired
-    public RepositorioRegistroImpl(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+  @Autowired
+  public RepositorioRegistroImpl(SessionFactory sessionFactory) {
+    this.sessionFactory = sessionFactory;
+  }
 
-    @Override
-    public Universidad buscarUniversidad(Long id) {
-        return sessionFactory.getCurrentSession().get(Universidad.class, id);
-    }
+  @Override
+  public Universidad buscarUniversidad(Long id) {
+    return sessionFactory.getCurrentSession().get(Universidad.class, id);
+  }
 
-    @Override
-    public Carrera buscarCarrera(Long id) {
-        return sessionFactory.getCurrentSession().get(Carrera.class, id);
-    }
+  @Override
+  public Carrera buscarCarrera(Long id) {
+    return sessionFactory.getCurrentSession().get(Carrera.class, id);
+  }
 
-    @Override
-    public List<Interes> buscarIntereses(List<Long> ids) {
-        if (ids == null || ids.isEmpty()) {
-            return List.of();
-        }
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("FROM Interes i WHERE i.id IN (:ids)", Interes.class)
-                .setParameterList("ids", ids)
-                .list();
+  @Override
+  public List<Interes> buscarIntereses(List<Long> ids) {
+    if (ids == null || ids.isEmpty()) {
+      return List.of();
     }
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery("FROM Interes i WHERE i.id IN (:ids)", Interes.class)
+      .setParameterList("ids", ids)
+      .list();
+  }
 }

@@ -1,0 +1,98 @@
+.login-body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-contenedor {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 16px;
+}
+
+.login-marca {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.login-marca-icono {
+    font-size: 28px;
+    color: var(--accent-purple);
+}
+
+.login-marca h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 8px 0 4px;
+}
+
+.login-marca p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin: 0;
+}
+
+.login-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 28px;
+}
+
+.login-campo {
+    margin-bottom: 18px;
+}
+
+.login-campo label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.login-campo input[type="email"],
+.login-campo input[type="password"] {
+    width: 100%;
+    background-color: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    outline: none;
+}
+
+.login-campo input:focus {
+    border-color: var(--accent-purple);
+}
+
+.login-boton {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.login-registro {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 16px 0 0;
+}
+
+.login-registro a {
+    color: #c084fc;
+    text-decoration: none;
+}
+
+.login-error {
+    background-color: var(--error-fondo);
+    border: 1px solid var(--error-acento);
+    color: var(--error-acento);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}

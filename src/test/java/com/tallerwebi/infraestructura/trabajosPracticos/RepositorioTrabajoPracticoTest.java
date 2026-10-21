@@ -77,7 +77,7 @@ public class RepositorioTrabajoPracticoTest {
   public void deberiaEncontrarTrabajosPracticosPorTipoIndividualOGrupal() {
     // Ejecución
     List<TrabajoPractico> resultadosGrupal = repositorioTrabajoPractico.buscarPorTipo(
-            TipoTrabajo.GRUPAL
+      TipoTrabajo.GRUPAL
     );
 
     // Verificación
@@ -110,7 +110,7 @@ public class RepositorioTrabajoPracticoTest {
   public void deberiaRetornarListaVaciaSiLaMateriaNoExiste() {
     // Ejecución
     List<TrabajoPractico> resultados = repositorioTrabajoPractico.buscarPorMateria(
-            "Materia Inexistente"
+      "Materia Inexistente"
     );
 
     // Verificación

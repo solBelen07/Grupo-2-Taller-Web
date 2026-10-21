@@ -2,6 +2,7 @@ package com.tallerwebi.dominio;
 
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import jakarta.transaction.Transactional;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,8 +27,9 @@ public class ServicioLoginImpl implements ServicioLogin {
     if (email == null || password == null) {
       return null;
     }
-    Usuario usuario = repositorioUsuario.buscar(email.trim().toLowerCase());
-    if (usuario == null && !email.equals(email.trim().toLowerCase())) {
+    String emailNormalizado = email.trim().toLowerCase(Locale.ROOT);
+    Usuario usuario = repositorioUsuario.buscar(emailNormalizado);
+    if (usuario == null && !email.equals(emailNormalizado)) {
       usuario = repositorioUsuario.buscar(email);
     }
     if (usuario == null || usuario.getPassword() == null) {

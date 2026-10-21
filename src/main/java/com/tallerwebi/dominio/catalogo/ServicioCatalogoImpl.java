@@ -9,25 +9,25 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class ServicioCatalogoImpl implements ServicioCatalogo {
 
-    private final RepositorioCatalogo repositorioCatalogo;
+  private final RepositorioCatalogo repositorioCatalogo;
 
-    @Autowired
-    public ServicioCatalogoImpl(RepositorioCatalogo repositorioCatalogo) {
-        this.repositorioCatalogo = repositorioCatalogo;
-    }
+  @Autowired
+  public ServicioCatalogoImpl(RepositorioCatalogo repositorioCatalogo) {
+    this.repositorioCatalogo = repositorioCatalogo;
+  }
 
-    @Override
-    public List<Universidad> obtenerUniversidades() {
-        return repositorioCatalogo.obtenerUniversidades();
-    }
+  @Override
+  public List<Universidad> obtenerUniversidades() {
+    return repositorioCatalogo.obtenerUniversidades();
+  }
 
-    @Override
-    public List<Carrera> obtenerCarreras() {
-        return repositorioCatalogo.obtenerCarreras();
-    }
+  @Override
+  public List<Carrera> obtenerCarreras() {
+    return repositorioCatalogo.obtenerCarreras();
+  }
 
-    @Override
-    public List<Interes> obtenerIntereses() {
-        return repositorioCatalogo.obtenerIntereses();
-    }
+  @Override
+  public List<Interes> obtenerIntereses() {
+    return repositorioCatalogo.obtenerIntereses();
+  }
 }

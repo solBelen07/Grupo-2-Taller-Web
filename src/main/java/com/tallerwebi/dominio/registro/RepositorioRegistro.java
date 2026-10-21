@@ -7,7 +7,7 @@ import com.tallerwebi.dominio.catalogo.Universidad;
 import java.util.List;
 
 public interface RepositorioRegistro {
-    Universidad buscarUniversidad(Long id);
-    Carrera buscarCarrera(Long id);
-    List<Interes> buscarIntereses(List<Long> ids);
+  Universidad buscarUniversidad(Long id);
+  Carrera buscarCarrera(Long id);
+  List<Interes> buscarIntereses(List<Long> ids);
 }

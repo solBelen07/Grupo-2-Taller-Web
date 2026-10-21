@@ -16,6 +16,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ControladorLogin {
 
+  private static final String CLAVE_ERROR = "error";
+  private static final String CLAVE_DATOS_LOGIN = "datosLogin";
+
   private ServicioLogin servicioLogin;
 
   @Autowired
@@ -26,13 +29,13 @@ public class ControladorLogin {
   @RequestMapping("/login")
   public ModelAndView irALogin() {
     Map<String, Object> modelo = new ModelMap();
-    modelo.put("datosLogin", new DatosLogin());
+    modelo.put(CLAVE_DATOS_LOGIN, new DatosLogin());
     return new ModelAndView("login", modelo);
   }
 
   @RequestMapping(path = "/validar-login", method = RequestMethod.POST)
   public ModelAndView validarLogin(
-    @ModelAttribute("datosLogin") DatosLogin datosLogin,
+    @ModelAttribute(CLAVE_DATOS_LOGIN) DatosLogin datosLogin,
     HttpServletRequest request
   ) {
     Usuario usuarioBuscado = servicioLogin.consultarUsuario(
@@ -42,11 +45,11 @@ public class ControladorLogin {
     if (usuarioBuscado != null) {
       request.getSession().setAttribute("USUARIO", usuarioBuscado);
       return new ModelAndView("redirect:/home");
-    } else {
-      Map<String, Object> model = new ModelMap();
-      model.put("error", "Usuario o clave incorrecta");
-      return new ModelAndView("login", model);
     }
+    Map<String, Object> model = new ModelMap();
+    model.put(CLAVE_DATOS_LOGIN, new DatosLogin());
+    model.put(CLAVE_ERROR, "Usuario o clave incorrecta");
+    return new ModelAndView("login", model);
   }
 
   @RequestMapping(path = "/registrarme", method = RequestMethod.POST)
@@ -55,10 +58,10 @@ public class ControladorLogin {
     try {
       servicioLogin.registrar(usuario);
     } catch (UsuarioExistente e) {
-      model.put("error", "El usuario ya existe");
+      model.put(CLAVE_ERROR, "El usuario ya existe");
       return new ModelAndView("nuevo-usuario", model);
     } catch (Exception e) {
-      model.put("error", "Error al registrar el nuevo usuario");
+      model.put(CLAVE_ERROR, "Error al registrar el nuevo usuario");
       return new ModelAndView("nuevo-usuario", model);
     }
     return new ModelAndView("redirect:/login");

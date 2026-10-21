@@ -4,16 +4,11 @@ import com.tallerwebi.dominio.catalogo.Carrera;
 import com.tallerwebi.dominio.catalogo.Interes;
 import com.tallerwebi.dominio.catalogo.Universidad;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -34,21 +29,8 @@ public class Usuario {
   private boolean activo = false;
   private int puntos;
 
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "universidad_id")
-  private Universidad universidad;
-
-  @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "carrera_id")
-  private Carrera carrera;
-
-  @ManyToMany(fetch = FetchType.EAGER)
-  @JoinTable(
-          name = "usuario_interes",
-          joinColumns = @JoinColumn(name = "usuario_id"),
-          inverseJoinColumns = @JoinColumn(name = "interes_id")
-  )
-  private Set<Interes> intereses = new HashSet<>();
+  @Embedded
+  private PerfilAcademico perfilAcademico = new PerfilAcademico();
 
   public Long getId() {
     return id;
@@ -119,26 +101,33 @@ public class Usuario {
   }
 
   public Universidad getUniversidad() {
-    return universidad;
+    return perfil().getUniversidad();
   }
 
   public void setUniversidad(Universidad universidad) {
-    this.universidad = universidad;
+    perfil().setUniversidad(universidad);
   }
 
   public Carrera getCarrera() {
-    return carrera;
+    return perfil().getCarrera();
   }
 
   public void setCarrera(Carrera carrera) {
-    this.carrera = carrera;
+    perfil().setCarrera(carrera);
   }
 
   public Set<Interes> getIntereses() {
-    return intereses;
+    return perfil().getIntereses();
   }
 
   public void setIntereses(Set<Interes> intereses) {
-    this.intereses = intereses;
+    perfil().setIntereses(intereses);
+  }
+
+  private PerfilAcademico perfil() {
+    if (perfilAcademico == null) {
+      perfilAcademico = new PerfilAcademico();
+    }
+    return perfilAcademico;
   }
 }

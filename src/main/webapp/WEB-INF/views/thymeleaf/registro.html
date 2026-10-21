@@ -20,7 +20,7 @@
         <p>Creá tu cuenta para empezar a organizarte.</p>
     </div>
 
-    <form th:action="@{/src/main/webapp/WEB-INF/views/thymeleaf/paginas/registro}" th:object="${registro}" method="POST"
+    <form th:action="@{/registro}" th:object="${registro}" method="POST"
           accept-charset="UTF-8" class="registro-card">
 
         <div th:if="${error != null}" class="registro-error" th:text="${error}">Error</div>

@@ -32,115 +32,115 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class ControladorRegistroTest {
 
-    private static final String EMAIL = "Ana.Perez@Test.com";
+  private static final String EMAIL = "Ana.Perez@Test.com";
 
-    @Autowired
-    private WebApplicationContext wac;
+  @Autowired
+  private WebApplicationContext wac;
 
-    @Autowired
-    private SessionFactory sessionFactory;
+  @Autowired
+  private SessionFactory sessionFactory;
 
-    private MockMvc mockMvc;
-    private Universidad universidad;
-    private Carrera carrera;
-    private Interes interes;
+  private MockMvc mockMvc;
+  private Universidad universidad;
+  private Carrera carrera;
+  private Interes interes;
 
-    @BeforeEach
-    public void init() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+  @BeforeEach
+  public void init() {
+    this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        universidad = new Universidad("UNLaM Test");
-        carrera = new Carrera("Ingeniería Test");
-        interes = new Interes("Java Test");
-        sessionFactory.getCurrentSession().persist(universidad);
-        sessionFactory.getCurrentSession().persist(carrera);
-        sessionFactory.getCurrentSession().persist(interes);
-    }
+    universidad = new Universidad("UNLaM Test");
+    carrera = new Carrera("Ingeniería Test");
+    interes = new Interes("Java Test");
+    sessionFactory.getCurrentSession().persist(universidad);
+    sessionFactory.getCurrentSession().persist(carrera);
+    sessionFactory.getCurrentSession().persist(interes);
+  }
 
-    @Test
-    public void debeMostrarElFormularioConLosCatalogosCargados() throws Exception {
-        this.mockMvc.perform(get("/registro"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("registro"))
-                .andExpect(model().attributeExists("registro", "universidades", "carreras", "intereses"))
-                .andExpect(model().attribute("universidades", hasSize(1)))
-                .andExpect(model().attribute("carreras", hasSize(1)))
-                .andExpect(model().attribute("intereses", hasSize(1)));
-    }
+  @Test
+  public void debeMostrarElFormularioConLosCatalogosCargados() throws Exception {
+    this.mockMvc.perform(get("/registro"))
+      .andExpect(status().isOk())
+      .andExpect(view().name("registro"))
+      .andExpect(model().attributeExists("registro", "universidades", "carreras", "intereses"))
+      .andExpect(model().attribute("universidades", hasSize(1)))
+      .andExpect(model().attribute("carreras", hasSize(1)))
+      .andExpect(model().attribute("intereses", hasSize(1)));
+  }
 
-    @Test
-    public void debeRegistrarUsuarioConHashRolYDatosAcademicosYRedirigirALogin() throws Exception {
-        this.mockMvc.perform(registroValido())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login"));
+  @Test
+  public void debeRegistrarUsuarioConHashRolYDatosAcademicosYRedirigirALogin() throws Exception {
+    this.mockMvc.perform(registroValido())
+      .andExpect(status().is3xxRedirection())
+      .andExpect(redirectedUrl("/login"));
 
-        Usuario guardado = buscarPorEmail("ana.perez@test.com");
-        assertThat(guardado, notNullValue());
-        assertThat(guardado.getNombre(), equalTo("Ana"));
-        assertThat(guardado.getRol(), equalTo("USER"));
-        assertThat(guardado.getActivo(), is(true));
-        assertThat(guardado.getPassword(), not(equalTo("clave12345")));
-        assertThat(guardado.getPassword(), startsWith("$2"));
-        assertThat(guardado.getUniversidad().getNombre(), equalTo("UNLaM Test"));
-        assertThat(guardado.getCarrera().getNombre(), equalTo("Ingeniería Test"));
-        assertThat(guardado.getIntereses(), hasSize(1));
-    }
+    Usuario guardado = buscarPorEmail("ana.perez@test.com");
+    assertThat(guardado, notNullValue());
+    assertThat(guardado.getNombre(), equalTo("Ana"));
+    assertThat(guardado.getRol(), equalTo("USER"));
+    assertThat(guardado.getActivo(), is(true));
+    assertThat(guardado.getPassword(), not(equalTo("clave12345")));
+    assertThat(guardado.getPassword(), startsWith("$2"));
+    assertThat(guardado.getUniversidad().getNombre(), equalTo("UNLaM Test"));
+    assertThat(guardado.getCarrera().getNombre(), equalTo("Ingeniería Test"));
+    assertThat(guardado.getIntereses(), hasSize(1));
+  }
 
-    @Test
-    public void debeRechazarUnEmailYaRegistrado() throws Exception {
-        this.mockMvc.perform(registroValido()).andExpect(status().is3xxRedirection());
+  @Test
+  public void debeRechazarUnEmailYaRegistrado() throws Exception {
+    this.mockMvc.perform(registroValido()).andExpect(status().is3xxRedirection());
 
-        this.mockMvc.perform(registroValido())
-                .andExpect(status().isOk())
-                .andExpect(view().name("registro"))
-                .andExpect(model().attribute("error", "Ese email ya está registrado"))
-                .andExpect(model().attributeExists("universidades", "carreras", "intereses"));
-    }
+    this.mockMvc.perform(registroValido())
+      .andExpect(status().isOk())
+      .andExpect(view().name("registro"))
+      .andExpect(model().attribute("error", "Ese email ya está registrado"))
+      .andExpect(model().attributeExists("universidades", "carreras", "intereses"));
+  }
 
-    @Test
-    public void debeRechazarUnEmailInvalido() throws Exception {
-        this.mockMvc.perform(registro("no-es-un-email", "clave12345", carrera.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("registro"))
-                .andExpect(model().attribute("error", "Ingresá un email válido"));
-    }
+  @Test
+  public void debeRechazarUnEmailInvalido() throws Exception {
+    this.mockMvc.perform(registro("no-es-un-email", "clave12345", carrera.getId()))
+      .andExpect(status().isOk())
+      .andExpect(view().name("registro"))
+      .andExpect(model().attribute("error", "Ingresá un email válido"));
+  }
 
-    @Test
-    public void debeRechazarUnaContrasenaCorta() throws Exception {
-        this.mockMvc.perform(registro(EMAIL, "corta", carrera.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("registro"))
-                .andExpect(model().attribute("error", containsString("al menos 8 caracteres")));
-    }
+  @Test
+  public void debeRechazarUnaContrasenaCorta() throws Exception {
+    this.mockMvc.perform(registro(EMAIL, "corta", carrera.getId()))
+      .andExpect(status().isOk())
+      .andExpect(view().name("registro"))
+      .andExpect(model().attribute("error", containsString("al menos 8 caracteres")));
+  }
 
-    @Test
-    public void debeRechazarUnaCarreraInexistente() throws Exception {
-        this.mockMvc.perform(registro(EMAIL, "clave12345", 999999L))
-                .andExpect(status().isOk())
-                .andExpect(view().name("registro"))
-                .andExpect(model().attributeExists("error"));
-    }
+  @Test
+  public void debeRechazarUnaCarreraInexistente() throws Exception {
+    this.mockMvc.perform(registro(EMAIL, "clave12345", 999999L))
+      .andExpect(status().isOk())
+      .andExpect(view().name("registro"))
+      .andExpect(model().attributeExists("error"));
+  }
 
-    private MockHttpServletRequestBuilder registro(String email, String password, Long carreraId) {
-        return post("/registro")
-                .param("nombre", "Ana")
-                .param("apellido", "Pérez")
-                .param("email", email)
-                .param("password", password)
-                .param("universidadId", universidad.getId().toString())
-                .param("carreraId", carreraId.toString())
-                .param("interesesIds", interes.getId().toString());
-    }
+  private MockHttpServletRequestBuilder registro(String email, String password, Long carreraId) {
+    return post("/registro")
+      .param("nombre", "Ana")
+      .param("apellido", "Pérez")
+      .param("email", email)
+      .param("password", password)
+      .param("universidadId", universidad.getId().toString())
+      .param("carreraId", carreraId.toString())
+      .param("interesesIds", interes.getId().toString());
+  }
 
-    private MockHttpServletRequestBuilder registroValido() {
-        return registro(EMAIL, "clave12345", carrera.getId());
-    }
+  private MockHttpServletRequestBuilder registroValido() {
+    return registro(EMAIL, "clave12345", carrera.getId());
+  }
 
-    private Usuario buscarPorEmail(String email) {
-        return sessionFactory
-                .getCurrentSession()
-                .createQuery("from Usuario where email = :email", Usuario.class)
-                .setParameter("email", email)
-                .uniqueResult();
-    }
+  private Usuario buscarPorEmail(String email) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery("from Usuario where email = :email", Usuario.class)
+      .setParameter("email", email)
+      .uniqueResult();
+  }
 }
