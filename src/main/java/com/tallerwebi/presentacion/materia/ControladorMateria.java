@@ -35,6 +35,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class ControladorMateria {
 
   private static final String DATOS_MATERIA = "datosMateria";
+  private static final String REDIRECT_LOGIN = "redirect:/login";
+  private static final String REDIRECT_MATERIAS = "redirect:/materias";
 
   private final ServicioMateria servicioMateria;
   private final ServicioMaterial servicioMaterial;
@@ -49,7 +51,7 @@ public class ControladorMateria {
     Usuario usuario = obtenerUsuarioLogueado(request);
 
     if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+      return new ModelAndView(REDIRECT_LOGIN);
     }
 
     Map<String, Object> model = new ModelMap();
@@ -67,7 +69,7 @@ public class ControladorMateria {
     Usuario usuario = obtenerUsuarioLogueado(request);
 
     if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+      return new ModelAndView(REDIRECT_LOGIN);
     }
 
     Materia materia = new Materia();
@@ -94,7 +96,7 @@ public class ControladorMateria {
 
     agregarArchivos(materia.getId(), archivos);
 
-    return new ModelAndView("redirect:/materias");
+    return new ModelAndView(REDIRECT_MATERIAS);
   }
 
   @RequestMapping(path = "/materias", method = RequestMethod.GET)
@@ -102,7 +104,7 @@ public class ControladorMateria {
     Usuario usuario = obtenerUsuarioLogueado(request);
 
     if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+      return new ModelAndView(REDIRECT_LOGIN);
     }
 
     Map<String, Object> model = new ModelMap();
@@ -116,13 +118,13 @@ public class ControladorMateria {
     Usuario usuario = obtenerUsuarioLogueado(request);
 
     if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+      return new ModelAndView(REDIRECT_LOGIN);
     }
 
     Materia materia = servicioMateria.buscarMateriaPorIdYUsuario(id, usuario.getId());
 
     if (materia == null) {
-      return new ModelAndView("redirect:/materias");
+      return new ModelAndView(REDIRECT_MATERIAS);
     }
 
     Map<String, Object> model = new ModelMap();
@@ -137,13 +139,13 @@ public class ControladorMateria {
     Usuario usuario = obtenerUsuarioLogueado(request);
 
     if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+      return new ModelAndView(REDIRECT_LOGIN);
     }
 
     Materia materia = servicioMateria.buscarMateriaPorIdYUsuario(id, usuario.getId());
 
     if (materia == null) {
-      return new ModelAndView("redirect:/materias");
+      return new ModelAndView(REDIRECT_MATERIAS);
     }
 
     DatosMateria datosMateria = new DatosMateria();
@@ -173,7 +175,7 @@ public class ControladorMateria {
     Usuario usuario = obtenerUsuarioLogueado(request);
 
     if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+      return new ModelAndView(REDIRECT_LOGIN);
     }
 
     Materia materia = servicioMateria.buscarMateriaPorIdYUsuario(
@@ -182,7 +184,7 @@ public class ControladorMateria {
     );
 
     if (materia == null) {
-      return new ModelAndView("redirect:/materias");
+      return new ModelAndView(REDIRECT_MATERIAS);
     }
 
     materia.setNombre(datosMateria.getNombre());
@@ -197,7 +199,7 @@ public class ControladorMateria {
 
     agregarArchivos(materia.getId(), archivos);
 
-    return new ModelAndView("redirect:/materias");
+    return new ModelAndView(REDIRECT_MATERIAS);
   }
 
   @RequestMapping(path = "/materias/buscar", method = RequestMethod.GET)
@@ -208,7 +210,7 @@ public class ControladorMateria {
     Usuario usuario = obtenerUsuarioLogueado(request);
 
     if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+      return new ModelAndView(REDIRECT_LOGIN);
     }
 
     Materia materia = servicioMateria.buscarMateriaPorNombreYUsuario(nombre, usuario.getId());
@@ -271,19 +273,19 @@ public class ControladorMateria {
     Usuario usuario = obtenerUsuarioLogueado(request);
 
     if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+      return new ModelAndView(REDIRECT_LOGIN);
     }
 
     MaterialBibliografico material = servicioMaterial.buscarPorId(id);
 
     if (material == null || material.getMateria() == null) {
-      return new ModelAndView("redirect:/materias");
+      return new ModelAndView(REDIRECT_MATERIAS);
     }
 
     Materia materia = material.getMateria();
 
     if (!perteneceAlUsuario(materia, usuario)) {
-      return new ModelAndView("redirect:/materias");
+      return new ModelAndView(REDIRECT_MATERIAS);
     }
 
     Integer materiaId = materia.getId();

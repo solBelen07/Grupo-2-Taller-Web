@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository("repositorioMateria")
 public class RepositorioMateriaImpl implements RepositorioMateria {
 
+  private static final String PARAM_ID_USUARIO = "idUsuario";
+
   private SessionFactory sessionFactory;
 
   @Autowired
@@ -36,7 +38,7 @@ public class RepositorioMateriaImpl implements RepositorioMateria {
     return sessionFactory
       .getCurrentSession()
       .createQuery("from Materia m join m.usuarios u where u.id = :idUsuario", Materia.class)
-      .setParameter("idUsuario", idUsuario)
+      .setParameter(PARAM_ID_USUARIO, idUsuario)
       .getResultList();
   }
 
@@ -59,7 +61,7 @@ public class RepositorioMateriaImpl implements RepositorioMateria {
         Materia.class
       )
       .setParameter("nombre", nombre)
-      .setParameter("idUsuario", idUsuario)
+      .setParameter(PARAM_ID_USUARIO, idUsuario)
       .uniqueResult();
   }
 
@@ -82,7 +84,7 @@ public class RepositorioMateriaImpl implements RepositorioMateria {
         Materia.class
       )
       .setParameter("id", id)
-      .setParameter("idUsuario", idUsuario)
+      .setParameter(PARAM_ID_USUARIO, idUsuario)
       .uniqueResult();
   }
 
@@ -93,9 +95,11 @@ public class RepositorioMateriaImpl implements RepositorioMateria {
       .createQuery("from Materia where id = :id", Materia.class)
       .setParameter("id", materia.getId())
       .uniqueResult();
+
     if (existente == null) {
       throw new MateriaNoEncontrada();
     }
+
     sessionFactory.getCurrentSession().merge(materia);
   }
 
@@ -112,7 +116,7 @@ public class RepositorioMateriaImpl implements RepositorioMateria {
         "select count(m) from Materia m join m.usuarios u where u.id = :idUsuario",
         Long.class
       )
-      .setParameter("idUsuario", idUsuario)
+      .setParameter(PARAM_ID_USUARIO, idUsuario)
       .uniqueResult();
   }
 }
