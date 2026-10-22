@@ -14,10 +14,12 @@ import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
 import com.tallerwebi.dominio.tarea.Tarea;
 import com.tallerwebi.presentacion.tarea.ControladorTarea;
+import jakarta.servlet.http.HttpSession;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 public class ControladorTareaTest {
@@ -26,6 +28,13 @@ public class ControladorTareaTest {
   private ServicioTarea servicioTareaMock;
   private ServicioMateria servicioMateriaMock;
   private ServicioGrupo servicioGrupoMock;
+
+  private MockHttpServletRequest crearRequestConUsuarioLogueado() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    HttpSession session = request.getSession();
+    session.setAttribute("USUARIO", new com.tallerwebi.dominio.Usuario());
+    return request;
+  }
 
   @BeforeEach
   public void init() {
@@ -58,7 +67,8 @@ public class ControladorTareaTest {
     when(servicioTareaMock.calcularAporteIndividual()).thenReturn(aporteIndividual);
 
     // ejecucion
-    ModelAndView modelAndView = controladorTarea.verTareas();
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+    ModelAndView modelAndView = controladorTarea.verTareas(request);
 
     // validacion
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/materia/tareas"));
@@ -89,6 +99,8 @@ public class ControladorTareaTest {
     when(servicioGrupoMock.buscarPorNombre("grupo1")).thenReturn(new Grupo());
 
     // ejecucion
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+
     ModelAndView resultado = controladorTarea.crearTarea(
       "Estudiar parcial",
       "Programación Web",
@@ -98,7 +110,8 @@ public class ControladorTareaTest {
       5,
       "PARCIAL",
       java.time.LocalDate.of(2026, 10, 10),
-      "grupo1"
+      "grupo1",
+      request
     );
 
     // validacion
@@ -114,7 +127,8 @@ public class ControladorTareaTest {
 
     when(this.servicioMateriaMock.obtenerMaterias()).thenReturn(materias);
 
-    ModelAndView modelAndView = controladorTarea.verNuevaTarea();
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+    ModelAndView modelAndView = controladorTarea.verNuevaTarea(request);
 
     assertThat(modelAndView.getViewName(), equalTo("paginas/materia/nueva-tarea"));
     assertThat(modelAndView.getModel().get("materias"), equalTo(materias));
@@ -130,6 +144,8 @@ public class ControladorTareaTest {
     when(servicioGrupoMock.buscarPorNombre("grupo2")).thenReturn(grupo);
 
     // ejecucion
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+
     controladorTarea.crearTarea(
       "Entrega TP",
       "Taller Web",
@@ -139,7 +155,8 @@ public class ControladorTareaTest {
       0,
       "TP",
       java.time.LocalDate.of(2026, 10, 10),
-      "grupo2"
+      "grupo2",
+      request
     );
 
     // validacion
@@ -155,6 +172,8 @@ public class ControladorTareaTest {
     when(servicioGrupoMock.buscarPorNombre("noExiste")).thenThrow(new GrupoNoEncontrado());
 
     // ejecucion
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+
     ModelAndView resultado = controladorTarea.crearTarea(
       "Entrega TP",
       "Taller Web",
@@ -164,7 +183,8 @@ public class ControladorTareaTest {
       0,
       "TP",
       java.time.LocalDate.of(2026, 10, 10),
-      "noExiste"
+      "noExiste",
+      request
     );
 
     // validacion
@@ -181,7 +201,8 @@ public class ControladorTareaTest {
     when(servicioGrupoMock.listarGrupos()).thenReturn(grupos);
 
     // ejecucion
-    ModelAndView modelAndView = controladorTarea.verNuevaTarea();
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+    ModelAndView modelAndView = controladorTarea.verNuevaTarea(request);
 
     // validacion
     assertThat(modelAndView.getModel().get("grupos"), equalTo(grupos));
@@ -202,8 +223,8 @@ public class ControladorTareaTest {
     when(servicioTareaMock.calcularProgresoPorGrupo()).thenReturn(progresoPorGrupo);
 
     // ejecucion
-    ModelAndView modelAndView = controladorTarea.verTareas();
-
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+    ModelAndView modelAndView = controladorTarea.verTareas(request);
     // validacion
     assertThat(modelAndView.getModel().get("tareasPorGrupo"), equalTo(tareasPorGrupo));
     assertThat(modelAndView.getModel().get("progresoPorGrupo"), equalTo(progresoPorGrupo));
