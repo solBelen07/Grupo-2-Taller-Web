@@ -32,6 +32,15 @@ public class RepositorioMateriaImpl implements RepositorioMateria {
   }
 
   @Override
+  public List<Materia> obtenerPorUsuario(Long idUsuario) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery("from Materia m join m.usuarios u where u.id = :idUsuario", Materia.class)
+      .setParameter("idUsuario", idUsuario)
+      .getResultList();
+  }
+
+  @Override
   public Materia buscarPorNombre(String nombre) {
     return sessionFactory
       .getCurrentSession()
@@ -41,11 +50,39 @@ public class RepositorioMateriaImpl implements RepositorioMateria {
   }
 
   @Override
+  public Materia buscarPorNombreYUsuario(String nombre, Long idUsuario) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "select distinct m from Materia m join m.usuarios u " +
+        "where LOWER(m.nombre) = LOWER(:nombre) and u.id = :idUsuario",
+        Materia.class
+      )
+      .setParameter("nombre", nombre)
+      .setParameter("idUsuario", idUsuario)
+      .uniqueResult();
+  }
+
+  @Override
   public Materia buscarPorId(Integer id) {
     return sessionFactory
       .getCurrentSession()
       .createQuery("from Materia where id = :id", Materia.class)
       .setParameter("id", id)
+      .uniqueResult();
+  }
+
+  @Override
+  public Materia buscarPorIdYUsuario(Integer id, Long idUsuario) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "select distinct m from Materia m join m.usuarios u " +
+        "where m.id = :id and u.id = :idUsuario",
+        Materia.class
+      )
+      .setParameter("id", id)
+      .setParameter("idUsuario", idUsuario)
       .uniqueResult();
   }
 

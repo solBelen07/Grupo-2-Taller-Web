@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaExistente;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,6 +29,8 @@ public class ControladorMateriaTest {
   private ServicioMateria servicioMateriaMock;
   private ServicioMaterial servicioMaterialMock;
   private ControladorMateria controladorMateria;
+  private Usuario usuarioMock;
+  private MockHttpServletRequest request;
 
   @BeforeEach
   public void setUp() {
@@ -34,6 +38,20 @@ public class ControladorMateriaTest {
     servicioMaterialMock = mock(ServicioMaterial.class);
 
     controladorMateria = new ControladorMateria(servicioMateriaMock, servicioMaterialMock);
+
+    usuarioMock = mock(Usuario.class);
+    when(usuarioMock.getId()).thenReturn(1L);
+
+    request = new MockHttpServletRequest();
+    request.getSession().setAttribute("USUARIO", usuarioMock);
+  }
+
+  private Materia crearMateriaDePrueba(Integer id, String nombre) {
+    Materia materia = new Materia();
+    materia.setId(id);
+    materia.setNombre(nombre);
+    materia.setUsuarios(List.of(usuarioMock));
+    return materia;
   }
 
   @Test
@@ -41,9 +59,15 @@ public class ControladorMateriaTest {
     DatosMateria datos = new DatosMateria();
     datos.setNombre("Taller Web I");
 
-    ModelAndView resultado = controladorMateria.guardarMateria(datos, null);
+    ModelAndView resultado = controladorMateria.guardarMateria(datos, null, request);
 
-    verify(servicioMateriaMock).crearMateria(any(Materia.class));
+    verify(servicioMateriaMock)
+      .crearMateria(
+        argThat(materia ->
+          materia.getUsuarios() != null &&
+          materia.getUsuarios().stream().anyMatch(usuario -> usuario.getId().equals(1L))
+        )
+      );
     verifyNoInteractions(servicioMaterialMock);
     assertEquals("redirect:/materias", resultado.getViewName());
   }
@@ -70,7 +94,8 @@ public class ControladorMateriaTest {
 
     ModelAndView resultado = controladorMateria.guardarMateria(
       datos,
-      new MultipartFile[] { archivo }
+      new MultipartFile[] { archivo },
+      request
     );
 
     verify(servicioMateriaMock).crearMateria(any(Materia.class));
@@ -105,7 +130,7 @@ public class ControladorMateriaTest {
       .when(servicioMateriaMock)
       .crearMateria(any(Materia.class));
 
-    controladorMateria.guardarMateria(datos, new MultipartFile[] { archivo1, archivo2 });
+    controladorMateria.guardarMateria(datos, new MultipartFile[] { archivo1, archivo2 }, request);
 
     verify(servicioMaterialMock).subirMaterial(5, archivo1);
     verify(servicioMaterialMock).subirMaterial(5, archivo2);
@@ -124,7 +149,7 @@ public class ControladorMateriaTest {
       new byte[0]
     );
 
-    controladorMateria.guardarMateria(datos, new MultipartFile[] { archivoVacio });
+    controladorMateria.guardarMateria(datos, new MultipartFile[] { archivoVacio }, request);
 
     verify(servicioMateriaMock).crearMateria(any(Materia.class));
     verifyNoInteractions(servicioMaterialMock);
@@ -146,7 +171,8 @@ public class ControladorMateriaTest {
 
     ModelAndView resultado = controladorMateria.guardarMateria(
       datos,
-      new MultipartFile[] { archivo }
+      new MultipartFile[] { archivo },
+      request
     );
 
     verifyNoInteractions(servicioMaterialMock);
@@ -160,12 +186,14 @@ public class ControladorMateriaTest {
     datos.setId(3);
     datos.setNombre("Taller Web I");
 
-    ModelAndView resultado = controladorMateria.guardarMateriaModificada(datos, null);
+    Materia materia = crearMateriaDePrueba(3, "Taller Web I");
 
-    verify(servicioMateriaMock).editarMateria(any(Materia.class));
+    when(servicioMateriaMock.buscarMateriaPorIdYUsuario(3, 1L)).thenReturn(materia);
 
+    ModelAndView resultado = controladorMateria.guardarMateriaModificada(datos, null, request);
+
+    verify(servicioMateriaMock).editarMateria(materia);
     verifyNoInteractions(servicioMaterialMock);
-
     assertEquals("redirect:/materias", resultado.getViewName());
   }
 
@@ -189,32 +217,35 @@ public class ControladorMateriaTest {
       "Ejercicios".getBytes(StandardCharsets.UTF_8)
     );
 
-    controladorMateria.guardarMateriaModificada(datos, new MultipartFile[] { archivo1, archivo2 });
+    Materia materia = crearMateriaDePrueba(3, "Taller Web I");
 
-    verify(servicioMateriaMock).editarMateria(any(Materia.class));
+    when(servicioMateriaMock.buscarMateriaPorIdYUsuario(3, 1L)).thenReturn(materia);
 
+    controladorMateria.guardarMateriaModificada(
+      datos,
+      new MultipartFile[] { archivo1, archivo2 },
+      request
+    );
+
+    verify(servicioMateriaMock).editarMateria(materia);
     verify(servicioMaterialMock).subirMaterial(3, archivo1);
-
     verify(servicioMaterialMock).subirMaterial(3, archivo2);
-
     verify(servicioMaterialMock, times(2)).subirMaterial(eq(3), any(MultipartFile.class));
   }
 
   @Test
   public void queSeMuestrenLosMaterialesEnElDetalle() {
-    Materia materia = new Materia();
-    materia.setId(2);
-    materia.setNombre("Taller Web I");
+    Materia materia = crearMateriaDePrueba(2, "Taller Web I");
 
     MaterialBibliografico material = new MaterialBibliografico();
-
     material.setId(10);
     material.setNombreArchivo("unidad1.pdf");
+    material.setMateria(materia);
 
-    when(servicioMateriaMock.buscarMateriaPorId(2)).thenReturn(materia);
+    when(servicioMateriaMock.buscarMateriaPorIdYUsuario(2, 1L)).thenReturn(materia);
     when(servicioMaterialMock.obtenerPorMateria(2)).thenReturn(List.of(material));
 
-    ModelAndView resultado = controladorMateria.verMateria(2);
+    ModelAndView resultado = controladorMateria.verMateria(2, request);
 
     assertEquals("paginas/materia/materia-detalle", resultado.getViewName());
     assertEquals(materia, resultado.getModel().get("materia"));
@@ -223,19 +254,17 @@ public class ControladorMateriaTest {
 
   @Test
   public void queSeMuestrenLosArchivosAlEditarUnaMateria() {
-    Materia materia = new Materia();
-    materia.setId(3);
-    materia.setNombre("Taller Web I");
+    Materia materia = crearMateriaDePrueba(3, "Taller Web I");
 
     MaterialBibliografico material = new MaterialBibliografico();
-
     material.setId(8);
     material.setNombreArchivo("apuntes.pdf");
+    material.setMateria(materia);
 
-    when(servicioMateriaMock.buscarMateriaPorId(3)).thenReturn(materia);
+    when(servicioMateriaMock.buscarMateriaPorIdYUsuario(3, 1L)).thenReturn(materia);
     when(servicioMaterialMock.obtenerPorMateria(3)).thenReturn(List.of(material));
 
-    ModelAndView resultado = controladorMateria.editarMateria(3);
+    ModelAndView resultado = controladorMateria.editarMateria(3, request);
 
     assertEquals("paginas/materia/materia-formulario", resultado.getViewName());
     assertEquals(List.of(material), resultado.getModel().get("materiales"));
@@ -243,19 +272,20 @@ public class ControladorMateriaTest {
 
   @Test
   public void queSePuedaVisualizarUnPdf() {
-    MaterialBibliografico material = new MaterialBibliografico();
+    Materia materia = crearMateriaDePrueba(1, "Taller Web I");
 
+    MaterialBibliografico material = new MaterialBibliografico();
     material.setId(10);
     material.setNombreArchivo("unidad1.pdf");
     material.setTipoArchivo("application/pdf");
+    material.setMateria(materia);
 
     byte[] contenido = "Contenido de prueba".getBytes(StandardCharsets.UTF_8);
 
     when(servicioMaterialMock.buscarPorId(10)).thenReturn(material);
-
     when(servicioMaterialMock.descargarMaterial(10)).thenReturn(contenido);
 
-    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(10);
+    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(10, request);
 
     assertEquals(200, respuesta.getStatusCode().value());
     assertEquals(MediaType.APPLICATION_PDF, respuesta.getHeaders().getContentType());
@@ -268,7 +298,7 @@ public class ControladorMateriaTest {
   public void queDevuelva404SiElMaterialNoExiste() {
     when(servicioMaterialMock.buscarPorId(99)).thenReturn(null);
 
-    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(99);
+    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(99, request);
 
     assertEquals(404, respuesta.getStatusCode().value());
     verify(servicioMaterialMock, never()).descargarMaterial(anyInt());
@@ -276,36 +306,36 @@ public class ControladorMateriaTest {
 
   @Test
   public void queUnDocumentoWordSeDescargue() {
-    MaterialBibliografico material = new MaterialBibliografico();
+    Materia materia = crearMateriaDePrueba(1, "Taller Web I");
 
+    MaterialBibliografico material = new MaterialBibliografico();
     material.setId(20);
     material.setNombreArchivo("ejercicios.docx");
+    material.setMateria(materia);
 
     byte[] contenido = "Prueba".getBytes(StandardCharsets.UTF_8);
 
     when(servicioMaterialMock.buscarPorId(20)).thenReturn(material);
-
     when(servicioMaterialMock.descargarMaterial(20)).thenReturn(contenido);
 
-    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(20);
+    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(20, request);
+
     assertEquals(MediaType.APPLICATION_OCTET_STREAM, respuesta.getHeaders().getContentType());
     assertTrue(respuesta.getHeaders().getFirst("Content-Disposition").startsWith("attachment"));
   }
 
   @Test
   public void queSePuedaEliminarUnMaterial() {
-    Materia materia = new Materia();
-    materia.setId(3);
+    Materia materia = crearMateriaDePrueba(3, "Taller Web I");
 
     MaterialBibliografico material = new MaterialBibliografico();
-
     material.setId(10);
     material.setNombreArchivo("unidad1.pdf");
     material.setMateria(materia);
 
     when(servicioMaterialMock.buscarPorId(10)).thenReturn(material);
 
-    ModelAndView resultado = controladorMateria.eliminarMaterial(10);
+    ModelAndView resultado = controladorMateria.eliminarMaterial(10, request);
 
     verify(servicioMaterialMock).eliminarMaterial(10);
     assertEquals("redirect:/materias/detalle?id=3", resultado.getViewName());
@@ -315,7 +345,7 @@ public class ControladorMateriaTest {
   public void queNoSeElimineUnMaterialInexistente() {
     when(servicioMaterialMock.buscarPorId(99)).thenReturn(null);
 
-    ModelAndView resultado = controladorMateria.eliminarMaterial(99);
+    ModelAndView resultado = controladorMateria.eliminarMaterial(99, request);
 
     verify(servicioMaterialMock, never()).eliminarMaterial(anyInt());
     assertEquals("redirect:/materias", resultado.getViewName());
@@ -323,31 +353,35 @@ public class ControladorMateriaTest {
 
   @Test
   public void queSeMuestreElFormularioParaCrearUnaMateria() {
-    ModelAndView resultado = controladorMateria.nuevaMateria();
+    ModelAndView resultado = controladorMateria.nuevaMateria(request);
+
     assertEquals("paginas/materia/materia-formulario", resultado.getViewName());
     assertInstanceOf(DatosMateria.class, resultado.getModel().get("datosMateria"));
   }
 
   @Test
   public void queSePuedanListarMaterias() {
-    Materia materia = new Materia();
-    materia.setNombre("Taller Web I");
-    when(servicioMateriaMock.obtenerMaterias()).thenReturn(List.of(materia));
+    Materia materia = crearMateriaDePrueba(1, "Taller Web I");
 
-    ModelAndView resultado = controladorMateria.listarMaterias();
+    when(servicioMateriaMock.obtenerMateriasPorUsuario(1L)).thenReturn(List.of(materia));
+
+    ModelAndView resultado = controladorMateria.listarMaterias(request);
 
     assertEquals("paginas/materia/materias", resultado.getViewName());
     assertEquals(List.of(materia), resultado.getModel().get("materias"));
-    verify(servicioMateriaMock).obtenerMaterias();
+    verify(servicioMateriaMock).obtenerMateriasPorUsuario(1L);
   }
 
   @Test
   public void queSePuedaBuscarUnaMateriaPorNombre() {
-    Materia materia = new Materia();
-    materia.setNombre("Taller Web I");
-    when(servicioMateriaMock.buscarMateriaPorNombre("Taller Web I")).thenReturn(materia);
+    Materia materia = crearMateriaDePrueba(1, "Taller Web I");
 
-    ModelAndView resultado = controladorMateria.buscarMateria("Taller Web I");
+    when(servicioMateriaMock.buscarMateriaPorNombreYUsuario("Taller Web I", 1L))
+      .thenReturn(materia);
+
+    when(servicioMateriaMock.obtenerMateriasPorUsuario(1L)).thenReturn(List.of(materia));
+
+    ModelAndView resultado = controladorMateria.buscarMateria("Taller Web I", request);
 
     assertEquals("paginas/materia/materias", resultado.getViewName());
     assertSame(materia, resultado.getModel().get("materiaBuscada"));
