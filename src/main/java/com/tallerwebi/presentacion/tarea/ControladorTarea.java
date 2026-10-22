@@ -1,5 +1,6 @@
 package com.tallerwebi.presentacion.tarea;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
@@ -7,6 +8,8 @@ import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
 import com.tallerwebi.dominio.tarea.Tarea;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -37,10 +40,15 @@ public class ControladorTarea {
   }
 
   @RequestMapping("/tareas")
-  public ModelAndView verTareas() {
+  public ModelAndView verTareas(HttpServletRequest request) {
+    if (!tieneUsuarioAutenticado(request)) {
+      return new ModelAndView("redirect:/login");
+    }
+
     List<Tarea> tareas = servicioTarea.obtenerTodas();
     double progreso = servicioTarea.calcularProgreso();
-    // Calculamos el indicador de seguimiento para cada tarea, el resultado depende de si es un parcial o un TP.
+    // Calculamos el indicador de seguimiento para cada tarea, el resultado depende
+    // de si es un parcial o un TP.
     Map<Long, String> indicadores = new HashMap<>();
 
     for (Tarea tarea : tareas) {
@@ -63,7 +71,8 @@ public class ControladorTarea {
     modelo.put("aporteIndividual", aporteIndividual);
     modelo.put("indicadores", indicadores);
 
-    // GRP-02: las tareas se muestran agrupadas por grupo, cada una con su propio progreso.
+    // GRP-02: las tareas se muestran agrupadas por grupo, cada una con su propio
+    // progreso.
     modelo.put("tareasPorGrupo", servicioTarea.agruparPorGrupo());
     modelo.put("progresoPorGrupo", servicioTarea.calcularProgresoPorGrupo());
 
@@ -71,7 +80,11 @@ public class ControladorTarea {
   }
 
   @RequestMapping("/tareas/nueva")
-  public ModelAndView verNuevaTarea() {
+  public ModelAndView verNuevaTarea(HttpServletRequest request) {
+    if (!tieneUsuarioAutenticado(request)) {
+      return new ModelAndView("redirect:/login");
+    }
+
     return armarFormularioNuevaTarea(new HashMap<>());
   }
 
@@ -85,8 +98,13 @@ public class ControladorTarea {
     @RequestParam(name = "horasRealizadas") Integer horasRealizadas,
     @RequestParam(name = "tipo") String tipo,
     @RequestParam(name = "fechaVencimiento") LocalDate fechaVencimiento,
-    @RequestParam(name = "grupo") String nombreGrupo
+    @RequestParam(name = "grupo") String nombreGrupo,
+    HttpServletRequest request
   ) {
+    if (!tieneUsuarioAutenticado(request)) {
+      return new ModelAndView("redirect:/login");
+    }
+
     // GRP-02: toda tarea nueva tiene que quedar asociada a un grupo existente.
     Grupo grupo;
     try {
@@ -113,7 +131,6 @@ public class ControladorTarea {
     return new ModelAndView("redirect:/tareas");
   }
 
-  // Arma la pantalla del formulario con las materias y los grupos para los selects.
   private ModelAndView armarFormularioNuevaTarea(Map<String, Object> modelo) {
     List<Materia> materias = this.servicioMateria.obtenerMaterias();
     List<Grupo> grupos = this.servicioGrupo.listarGrupos();
@@ -121,5 +138,11 @@ public class ControladorTarea {
     modelo.put("grupos", grupos);
 
     return new ModelAndView("paginas/materia/nueva-tarea", modelo);
+  }
+
+  private boolean tieneUsuarioAutenticado(HttpServletRequest request) {
+    HttpSession session = request.getSession(false);
+
+    return session != null && session.getAttribute("USUARIO") instanceof Usuario;
   }
 }
