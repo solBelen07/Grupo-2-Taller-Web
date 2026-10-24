@@ -38,6 +38,19 @@
                     <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Ej. Práctica 1" required>
                 </div>
 
+                <!-- GRP-02: toda tarea nueva queda asociada a un grupo -->
+                <p th:if="${error}" th:text="${error}" style="color: #f87171; margin-bottom: 16px;">Error</p>
+
+                <div class="mb-4">
+                    <label for="grupo" class="form-label">Grupo</label>
+                    <select class="form-select" id="grupo" name="grupo" required>
+                        <option value="" disabled selected>Seleccionar grupo</option>
+                        <option th:each="grupo : ${grupos}"
+                                th:value="${grupo.nombre}"
+                                th:text="${grupo.nombre}"></option>
+                    </select>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6 mb-4">
                         <label for="materia" class="form-label">Materia</label>

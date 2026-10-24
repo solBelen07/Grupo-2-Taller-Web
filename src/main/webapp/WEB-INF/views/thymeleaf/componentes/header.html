@@ -14,14 +14,17 @@
     </div>
 
     <!-- Widget de Estado / Streak y Perfil -->
-    <div class="user-widgets">
+    <!-- El usuario sale siempre de la sesión, así se ve igual en todas las páginas -->
+    <div class="user-widgets"
+         th:with="u=${session.USUARIO},
+                  dias=${u != null and u.racha != null and u.racha.rachaActual != null ? u.racha.rachaActual : 0}">
         <div class="streak-badge">
             <i class="fa-solid fa-fire text-purple-400"></i>
-            <span>Racha de 7 días</span>
+            <span th:text="'Racha de ' + ${dias} + (${dias == 1} ? ' día' : ' días')">Racha de 0 días</span>
         </div>
 
-        <div class="avatar-circle" th:text="${usuario != null ? #strings.substring(usuario.nombre,0,1) + #strings.substring(usuario.apellido,0,1) : 'JM'}">
-            JM
+        <div class="avatar-circle"
+             th:text="${u == null ? '' : (#strings.isEmpty(u.nombre) ? '' : #strings.substring(u.nombre,0,1)) + (#strings.isEmpty(u.apellido) ? '' : #strings.substring(u.apellido,0,1))}">
         </div>
     </div>
 </header>

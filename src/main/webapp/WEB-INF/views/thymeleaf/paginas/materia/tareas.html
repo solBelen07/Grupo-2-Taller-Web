@@ -49,50 +49,48 @@
             </div>
         </div>
 
-        <!-- SECCIÓN DE PROGRESO Y APORTE (FILA DUAL) -->
-        <div class="fila-doble">
-            <!-- PROGRESO DEL GRUPO -->
-            <div class="tarjeta">
-                <h2 class="titulo-tarjeta">Progreso del grupo</h2>
-                <div class="progreso-header">
-                    <div>
-                        <small style="color: #aaa0b8;">Avance de las tareas del grupo</small>
-                    </div>
-                    <span class="porcentaje" th:text="${progreso + '%'}">0%</span>
+        <!-- APORTE INDIVIDUAL -->
+        <div class="tarjeta">
+            <h2 class="titulo-tarjeta">Aporte individual</h2>
+            <div class="aporte-item" th:each="aporte : ${aporteIndividual}">
+                <div class="aporte-header">
+                    <span class="aporte-nombre" th:text="${aporte.key}">Usuario</span>
+                    <span class="aporte-cantidad"
+                          th:text="${aporte.value + ' tareas completadas - ' + (total > 0 ? (aporte.value * 100 / total) : 0) + '%'}">
+                                0 tareas completadas - 0%
+                        </span>
                 </div>
-
-                <div class="barra-progreso">
-                    <div class="barra-progreso-interna" th:style="|width: ${progreso}%;|"></div>
-                </div>
-
-                <div class="estadisticas-progreso">
-                    <div>Completadas: <span th:text="${completadas}">0</span></div>
-                    <div>Pendientes: <span th:text="${pendientes}">0</span></div>
-                    <div>Total: <span th:text="${total}">0</span></div>
-                </div>
-            </div>
-
-            <!-- APORTE INDIVIDUAL -->
-            <div class="tarjeta">
-                <h2 class="titulo-tarjeta">Aporte individual</h2>
-                <div class="aporte-item" th:each="aporte : ${aporteIndividual}">
-                    <div class="aporte-header">
-                        <span class="aporte-nombre" th:text="${aporte.key}">Usuario</span>
-                        <span class="aporte-cantidad"
-                              th:text="${aporte.value + ' tareas completadas - ' + (total > 0 ? (aporte.value * 100 / total) : 0) + '%'}">
-                                    0 tareas completadas - 0%
-                            </span>
-                    </div>
-                    <div class="barra-aporte">
-                        <div class="barra-aporte-interna" th:style="|width: ${total > 0 ? (aporte.value * 100 / total) : 0}%;|"></div>
-                    </div>
+                <div class="barra-aporte">
+                    <div class="barra-aporte-interna" th:style="|width: ${total > 0 ? (aporte.value * 100 / total) : 0}%;|"></div>
                 </div>
             </div>
         </div>
 
-        <!-- LISTADO DE TAREAS A ANCHO COMPLETO -->
-        <div class="tarjeta">
-            <h2 class="titulo-tarjeta">Tareas</h2>
+        <p th:if="${#maps.isEmpty(tareasPorGrupo)}" style="color: #aaa0b8;">Todavía no hay tareas cargadas.</p>
+
+        <!-- GRP-02: TABLERO GRUPAL. Un bloque por grupo, con su propia barra de progreso y sus tareas -->
+        <div class="tarjeta" th:each="entrada : ${tareasPorGrupo}">
+            <h2 class="titulo-tarjeta" th:text="${entrada.key}">Grupo</h2>
+
+            <div class="progreso-header">
+                <div>
+                    <small style="color: #aaa0b8;">Avance de las tareas de este grupo</small>
+                </div>
+                <span class="porcentaje"
+                      th:text="${#numbers.formatDecimal(progresoPorGrupo[entrada.key], 1, 0) + '%'}">0%</span>
+            </div>
+
+            <div class="barra-progreso">
+                <div class="barra-progreso-interna"
+                     th:style="|width: ${#numbers.formatDecimal(progresoPorGrupo[entrada.key], 1, 0)}%;|"></div>
+            </div>
+
+            <div class="estadisticas-progreso">
+                <div>Completadas: <span th:text="${#lists.size(entrada.value.?[estado == 'COMPLETADA'])}">0</span></div>
+                <div>Pendientes: <span th:text="${#lists.size(entrada.value.?[estado != 'COMPLETADA'])}">0</span></div>
+                <div>Total: <span th:text="${#lists.size(entrada.value)}">0</span></div>
+            </div>
+
             <div class="tabla-contenedor">
                 <table class="tabla-tareas">
                     <thead>
@@ -106,7 +104,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="tarea : ${tareas}">
+                    <tr th:each="tarea : ${entrada.value}">
                         <td th:text="${tarea.titulo}">Tarea</td>
                         <td th:text="${tarea.tipo}">Tipo</td>
                         <td th:text="${tarea.estado}">Estado</td>

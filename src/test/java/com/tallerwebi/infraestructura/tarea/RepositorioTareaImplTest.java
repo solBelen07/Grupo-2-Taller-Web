@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
+import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.tarea.RepositorioTarea;
 import com.tallerwebi.dominio.tarea.Tarea;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
@@ -73,5 +74,27 @@ public class RepositorioTareaImplTest {
 
     // validacion
     assertThat(tareas.size(), is(equalTo(2)));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaGuardarUnaTareaAsociadaAUnGrupo() {
+    // preparacion
+    Grupo grupo = new Grupo();
+    grupo.setNombre("grupoDePrueba");
+    sessionFactory.getCurrentSession().persist(grupo);
+
+    Tarea tarea = new Tarea();
+    tarea.setTitulo("Tarea del grupo");
+    tarea.setGrupo(grupo);
+
+    // ejecucion
+    repositorioTarea.guardar(tarea);
+
+    // validacion
+    Tarea tareaObtenida = sessionFactory.getCurrentSession().find(Tarea.class, tarea.getId());
+
+    assertThat(tareaObtenida.getGrupo().getNombre(), is(equalTo("grupoDePrueba")));
   }
 }

@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.calendario.CalendarioSemanal;
 import com.tallerwebi.dominio.dashboard.ServicioDashboard;
+import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
 import com.tallerwebi.presentacion.dashboard.DashboardDTO;
 import java.time.LocalDate;
@@ -35,13 +36,18 @@ public class ControladorDashboardTest {
   private static final String VISTA_DASHBOARD = "paginas/dashboard/dashboard";
 
   private ServicioDashboard servicioDashboardMock;
+  private ServicioRacha servicioRachaMock;
   private MockMvc mockMvc;
 
   @BeforeEach
   public void init() {
     this.servicioDashboardMock = mock(ServicioDashboard.class);
+    this.servicioRachaMock = mock(ServicioRacha.class);
 
-    ControladorDashboard controlador = new ControladorDashboard(this.servicioDashboardMock);
+    ControladorDashboard controlador = new ControladorDashboard(
+      this.servicioDashboardMock,
+      this.servicioRachaMock
+    );
     this.mockMvc = MockMvcBuilders.standaloneSetup(controlador).build();
   }
 

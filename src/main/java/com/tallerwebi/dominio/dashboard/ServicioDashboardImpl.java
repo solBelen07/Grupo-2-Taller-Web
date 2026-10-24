@@ -2,8 +2,10 @@ package com.tallerwebi.dominio.dashboard;
 
 import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.ServicioCalendario;
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.calendario.CalendarioSemanal;
 import com.tallerwebi.dominio.materia.RepositorioMateria;
+import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
@@ -26,6 +28,7 @@ public class ServicioDashboardImpl implements ServicioDashboard {
 
   private final ServicioCalendario servicioCalendario;
   private final ServicioTarea servicioTarea;
+  private final ServicioRacha servicioRacha;
 
   public ServicioDashboardImpl(
     RepositorioPomodoro repositorioPomodoro,
@@ -33,7 +36,8 @@ public class ServicioDashboardImpl implements ServicioDashboard {
     RepositorioUsuario repositorioUsuario,
     RepositorioSesionEstudio repositorioSesionEstudio,
     ServicioCalendario servicioCalendario,
-    ServicioTarea servicioTarea
+    ServicioTarea servicioTarea,
+    ServicioRacha servicioRacha
   ) {
     this.repositorioPomodoro = repositorioPomodoro;
     this.repositorioMateria = repositorioMateria;
@@ -41,6 +45,7 @@ public class ServicioDashboardImpl implements ServicioDashboard {
     this.repositorioSesionEstudio = repositorioSesionEstudio;
     this.servicioCalendario = servicioCalendario;
     this.servicioTarea = servicioTarea;
+    this.servicioRacha = servicioRacha;
   }
 
   @Override
@@ -50,7 +55,10 @@ public class ServicioDashboardImpl implements ServicioDashboard {
 
   @Override
   public Double porcentajeCumplimiento(Long idUsuario) {
-    String nombreUsuario = this.repositorioUsuario.obtenerNombre(idUsuario);
+    // Las tareas guardan el EMAIL del responsable, así que hay que buscar el aporte por email.
+    Usuario usuario = this.repositorioUsuario.buscarPorId(idUsuario);
+    if (usuario == null) return 0.0;
+    String emailUsuario = usuario.getEmail();
 
     Map<String, Long> aportes = this.servicioTarea.calcularAporteIndividual();
 
@@ -58,7 +66,7 @@ public class ServicioDashboardImpl implements ServicioDashboard {
 
     if (total == null || total == 0) return 0.0;
 
-    Long cumplimiento = aportes.getOrDefault(nombreUsuario, 0L);
+    Long cumplimiento = aportes.getOrDefault(emailUsuario, 0L);
     return ((double) cumplimiento / total) * 100;
   }
 
@@ -75,5 +83,17 @@ public class ServicioDashboardImpl implements ServicioDashboard {
   @Override
   public SesionEstudio obtenerProximaSesion(Long idUsuario) {
     return this.repositorioSesionEstudio.buscarProximaSesionEstudio(idUsuario);
+  }
+
+  @Override
+  public Integer obtenerRacha(Long idUsuario) {
+    Usuario usuario = this.repositorioUsuario.buscarPorId(idUsuario);
+    return this.servicioRacha.obtenerRacha(usuario);
+  }
+
+  @Override
+  public Integer obtenerRecordRacha(Long idUsuario) {
+    Usuario usuario = this.repositorioUsuario.buscarPorId(idUsuario);
+    return this.servicioRacha.obtenerRecordRacha(usuario);
   }
 }

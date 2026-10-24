@@ -86,11 +86,12 @@
     </div>
 
     <!-- Usuario Footer Bottom -->
-    <div class="sidebar-user">
-        <div class="avatar-circle sm" th:text="${usuario != null ? #strings.substring(usuario.nombre,0,1) + #strings.substring(usuario.apellido,0,1) : 'JM'}">JM</div>
+    <div class="sidebar-user" th:if="${session.USUARIO != null}" th:with="u=${session.USUARIO}">
+        <div class="avatar-circle sm"
+             th:text="${(#strings.isEmpty(u.nombre) ? '' : #strings.substring(u.nombre,0,1)) + (#strings.isEmpty(u.apellido) ? '' : #strings.substring(u.apellido,0,1))}"></div>
         <div class="user-info">
-            <h4 th:text="${usuario != null ? usuario.nombre + ' ' + usuario.apellido : 'Juan Méndez'}">Juan Méndez</h4>
-            <p>Ing. en Sistemas</p>
+            <h4 th:text="${#strings.trim((u.nombre != null ? u.nombre : '') + ' ' + (u.apellido != null ? u.apellido : ''))}">Usuario</h4>
+            <p th:text="${u.email}">email</p>
         </div>
     </div>
 </aside>

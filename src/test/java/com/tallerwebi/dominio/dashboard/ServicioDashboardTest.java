@@ -11,8 +11,10 @@ import static org.mockito.Mockito.when;
 
 import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.ServicioCalendario;
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.calendario.CalendarioSemanal;
 import com.tallerwebi.dominio.materia.RepositorioMateria;
+import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
@@ -27,7 +29,7 @@ import org.junit.jupiter.api.Test;
 public class ServicioDashboardTest {
 
   private static final Long ID_USUARIO = 1L;
-  private static final String NOMBRE_USUARIO = "Juan";
+  private static final String NOMBRE_USUARIO = "test@unlam.edu.ar";
 
   private RepositorioPomodoro repositorioPomodoroMock;
   private RepositorioMateria repositorioMateriaMock;
@@ -36,6 +38,7 @@ public class ServicioDashboardTest {
 
   private ServicioCalendario servicioCalendarioMock;
   private ServicioTarea servicioTareaMock;
+  private ServicioRacha servicioRachaMock;
 
   private ServicioDashboard servicioDashboard;
 
@@ -48,6 +51,7 @@ public class ServicioDashboardTest {
 
     this.servicioCalendarioMock = mock(ServicioCalendario.class);
     this.servicioTareaMock = mock(ServicioTarea.class);
+    this.servicioRachaMock = mock(ServicioRacha.class);
 
     this.servicioDashboard =
       new ServicioDashboardImpl(
@@ -56,7 +60,8 @@ public class ServicioDashboardTest {
         this.repositorioUsuarioMock,
         this.repositorioSesionEstudioMock,
         this.servicioCalendarioMock,
-        this.servicioTareaMock
+        this.servicioTareaMock,
+        this.servicioRachaMock
       );
   }
 
@@ -72,7 +77,7 @@ public class ServicioDashboardTest {
 
   @Test
   public void porcentajeCumplimientoDeberiaCalcularElPorcentajeCorrectamente() {
-    when(this.repositorioUsuarioMock.obtenerNombre(ID_USUARIO)).thenReturn(NOMBRE_USUARIO);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(usuarioConEmail());
 
     Map<String, Long> aportes = new HashMap<>();
     aportes.put(NOMBRE_USUARIO, 3L);
@@ -82,13 +87,13 @@ public class ServicioDashboardTest {
     Double porcentaje = this.servicioDashboard.porcentajeCumplimiento(ID_USUARIO);
 
     assertThat(porcentaje, equalTo(75.0));
-    verify(this.repositorioUsuarioMock, times(1)).obtenerNombre(ID_USUARIO);
+    verify(this.repositorioUsuarioMock, times(1)).buscarPorId(ID_USUARIO);
     verify(this.servicioTareaMock, times(1)).calcularAporteIndividual();
   }
 
   @Test
   public void porcentajeCumplimientoDeberiaDevolverCeroSiNoHayTareasCompletadasEnGeneral() {
-    when(this.repositorioUsuarioMock.obtenerNombre(ID_USUARIO)).thenReturn(NOMBRE_USUARIO);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(usuarioConEmail());
     when(this.servicioTareaMock.calcularAporteIndividual()).thenReturn(Collections.emptyMap());
 
     Double porcentaje = this.servicioDashboard.porcentajeCumplimiento(ID_USUARIO);
@@ -98,7 +103,7 @@ public class ServicioDashboardTest {
 
   @Test
   public void porcentajeCumplimientoDeberiaDevolverCeroSiElUsuarioNoTieneTareasCompletadas() {
-    when(this.repositorioUsuarioMock.obtenerNombre(ID_USUARIO)).thenReturn(NOMBRE_USUARIO);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(usuarioConEmail());
 
     Map<String, Long> aportes = new HashMap<>();
     aportes.put("Mateo", 5L); // El usuario buscado no está en la lista de aportes
@@ -151,5 +156,41 @@ public class ServicioDashboardTest {
     SesionEstudio resultado = this.servicioDashboard.obtenerProximaSesion(ID_USUARIO);
 
     assertThat(resultado, is(nullValue()));
+  }
+
+  @Test
+  public void obtenerRachaDeberiaDevolverLaRachaDelUsuario() {
+    Usuario usuarioMock = mock(Usuario.class);
+    Integer rachaEsperada = 5;
+
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(usuarioMock);
+    when(this.servicioRachaMock.obtenerRacha(usuarioMock)).thenReturn(rachaEsperada);
+
+    Integer rachaObtenida = this.servicioDashboard.obtenerRacha(ID_USUARIO);
+
+    assertThat(rachaObtenida, equalTo(rachaEsperada));
+    verify(this.repositorioUsuarioMock, times(1)).buscarPorId(ID_USUARIO);
+    verify(this.servicioRachaMock, times(1)).obtenerRacha(usuarioMock);
+  }
+
+  @Test
+  public void obtenerRecordRachaDeberiaDevolverElRecordDelUsuario() {
+    Usuario usuarioMock = mock(Usuario.class);
+    Integer recordEsperado = 10;
+
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(usuarioMock);
+    when(this.servicioRachaMock.obtenerRecordRacha(usuarioMock)).thenReturn(recordEsperado);
+
+    Integer recordObtenido = this.servicioDashboard.obtenerRecordRacha(ID_USUARIO);
+
+    assertThat(recordObtenido, equalTo(recordEsperado));
+    verify(this.repositorioUsuarioMock, times(1)).buscarPorId(ID_USUARIO);
+    verify(this.servicioRachaMock, times(1)).obtenerRecordRacha(usuarioMock);
+  }
+
+  private static Usuario usuarioConEmail() {
+    Usuario usuario = new Usuario();
+    usuario.setEmail(NOMBRE_USUARIO);
+    return usuario;
   }
 }

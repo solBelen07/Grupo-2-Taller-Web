@@ -10,19 +10,25 @@ public class DashboardDTO {
   private Long cantidadMaterias;
   private CalendarioSemanal calendarioSemanal;
   private SesionEstudio proximaSesion;
+  private Integer racha;
+  private Integer recordRacha;
 
   public DashboardDTO(
     Long horasEstudio,
     Double porcentajeCumplimiento,
     Long cantidadMaterias,
     CalendarioSemanal calendarioSemanal,
-    SesionEstudio proximaSesion
+    SesionEstudio proximaSesion,
+    Integer racha,
+    Integer recordRacha
   ) {
     this.horasEstudio = horasEstudio;
     this.porcentajeCumplimiento = porcentajeCumplimiento;
     this.cantidadMaterias = cantidadMaterias;
     this.calendarioSemanal = calendarioSemanal;
     this.proximaSesion = proximaSesion;
+    this.racha = racha;
+    this.recordRacha = recordRacha;
   }
 
   public Long getHorasEstudio() {
@@ -63,5 +69,21 @@ public class DashboardDTO {
 
   public void setProximaSesion(SesionEstudio proximaSesion) {
     this.proximaSesion = proximaSesion;
+  }
+
+  public Integer getRacha() {
+    return racha;
+  }
+
+  public void setRacha(Integer racha) {
+    this.racha = racha;
+  }
+
+  public Integer getRecordRacha() {
+    return recordRacha;
+  }
+
+  public void setRecordRacha(Integer recordRacha) {
+    this.recordRacha = recordRacha;
   }
 }
