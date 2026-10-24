@@ -1,7 +1,6 @@
 package com.tallerwebi.dominio.invitacion;
 
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.grupo.Grupo;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
@@ -44,50 +43,62 @@ public class Invitacion {
     this.grupo = grupo;
   }
 
+  @SuppressWarnings("all")
   public Long getId() {
     return id;
   }
 
+  @SuppressWarnings("all")
   public void setId(Long id) {
     this.id = id;
   }
 
+  @SuppressWarnings("all")
   public Usuario getEmisor() {
     return emisor;
   }
 
+  @SuppressWarnings("all")
   public void setEmisor(Usuario emisor) {
     this.emisor = emisor;
   }
 
+  @SuppressWarnings("all")
   public Usuario getReceptor() {
     return receptor;
   }
 
+  @SuppressWarnings("all")
   public void setReceptor(Usuario receptor) {
     this.receptor = receptor;
   }
 
+  @SuppressWarnings("all")
   public Grupo getGrupo() {
     return grupo;
   }
 
+  @SuppressWarnings("all")
   public void setGrupo(Grupo grupo) {
     this.grupo = grupo;
   }
 
+  @SuppressWarnings("all")
   public Boolean getVigente() {
     return vigente;
   }
 
+  @SuppressWarnings("all")
   public void setVigente(Boolean vigente) {
     this.vigente = vigente;
   }
 
+  @SuppressWarnings("all")
   public Estado getEstadoInvitacion() {
     return estado;
   }
 
+  @SuppressWarnings("all")
   public void setEstadoInvitacion(Estado estado) {
     this.estado = estado;
   }

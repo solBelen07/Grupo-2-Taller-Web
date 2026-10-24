@@ -84,34 +84,42 @@ public class Evento {
     }
   }
 
+  @SuppressWarnings("all")
   public Long getId() {
     return id;
   }
 
+  @SuppressWarnings("all")
   public Long getUsuarioId() {
     return usuarioId;
   }
 
+  @SuppressWarnings("all")
   public String getTitulo() {
     return titulo;
   }
 
+  @SuppressWarnings("all")
   public TipoEvento getTipo() {
     return tipo;
   }
 
+  @SuppressWarnings("all")
   public LocalDateTime getInicio() {
     return inicio;
   }
 
+  @SuppressWarnings("all")
   public LocalDateTime getFin() {
     return fin;
   }
 
+  @SuppressWarnings("all")
   public Materia getMateria() {
     return materia;
   }
 
+  @SuppressWarnings("all")
   public Long getTareaId() {
     return tareaId;
   }

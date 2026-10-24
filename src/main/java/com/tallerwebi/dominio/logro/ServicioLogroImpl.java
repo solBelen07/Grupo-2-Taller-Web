@@ -1,7 +1,6 @@
 package com.tallerwebi.dominio.logro;
 
 import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.invitacion.Invitacion;
 import com.tallerwebi.dominio.invitacion.RepositorioInvitacion;
 import com.tallerwebi.dominio.tecnicasestudio.RepositorioPomodoro;
 import jakarta.transaction.Transactional;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class ServicioLogroImpl implements ServicioLogro {
 
   static final Long MINUTOS_PARA_LOGRO_MARATONISTA = 3000L;
-  static final int CANTIDAD_INVITACIONES_PARA_LOGRO_INVITADOR = 5;
+  static final int CANTIDAD_INVITACIONES_PARA_LOGRO_POPULAR = 5;
 
   private RepositorioLogro repositorioLogro;
   private RepositorioInvitacion repositorioInvitacion;
@@ -35,7 +34,7 @@ public class ServicioLogroImpl implements ServicioLogro {
     List<Logro> logros = new ArrayList<>();
     Integer cantInvitacionesRecibidas =
       repositorioInvitacion.cantidadDeInvitacionesHistoricoPorReceptor(usuario.getEmail());
-    if (cantInvitacionesRecibidas > CANTIDAD_INVITACIONES_PARA_LOGRO_INVITADOR) {
+    if (cantInvitacionesRecibidas > CANTIDAD_INVITACIONES_PARA_LOGRO_POPULAR) {
       logros.add(repositorioLogro.buscar("Popular"));
     }
 

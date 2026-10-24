@@ -11,18 +11,22 @@ public class Grupo {
 
   private String nombre;
 
+  @SuppressWarnings("all")
   public Long getId() {
     return id;
   }
 
+  @SuppressWarnings("all")
   public void setId(Long id) {
     this.id = id;
   }
 
+  @SuppressWarnings("all")
   public String getNombre() {
     return nombre;
   }
 
+  @SuppressWarnings("all")
   public void setNombre(String nombre) {
     this.nombre = nombre;
   }

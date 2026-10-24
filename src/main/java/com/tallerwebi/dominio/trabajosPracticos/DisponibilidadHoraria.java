@@ -15,18 +15,22 @@ public class DisponibilidadHoraria {
 
   public DisponibilidadHoraria() {}
 
+  @SuppressWarnings("all")
   public String getDia() {
     return dia;
   }
 
+  @SuppressWarnings("all")
   public void setDia(String dia) {
     this.dia = dia;
   }
 
+  @SuppressWarnings("all")
   public int getHoras() {
     return horas;
   }
 
+  @SuppressWarnings("all")
   public void setHoras(int horas) {
     this.horas = horas;
   }

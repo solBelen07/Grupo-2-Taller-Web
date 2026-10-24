@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.logro.Logro;
 import com.tallerwebi.dominio.logro.ServicioLogro;
 import com.tallerwebi.presentacion.logro.ControladorLogro;
 import com.tallerwebi.presentacion.logro.DatosLogro;

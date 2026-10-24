@@ -15,26 +15,32 @@ public class Logro {
   private String nombre;
   private String descripcion;
 
+  @SuppressWarnings("all")
   public String getDescripcion() {
     return descripcion;
   }
 
+  @SuppressWarnings("all")
   public void setDescripcion(String descripcion) {
     this.descripcion = descripcion;
   }
 
+  @SuppressWarnings("all")
   public Long getId() {
     return id;
   }
 
+  @SuppressWarnings("all")
   public void setId(Long id) {
     this.id = id;
   }
 
+  @SuppressWarnings("all")
   public String getNombre() {
     return nombre;
   }
 
+  @SuppressWarnings("all")
   public void setNombre(String nombre) {
     this.nombre = nombre;
   }

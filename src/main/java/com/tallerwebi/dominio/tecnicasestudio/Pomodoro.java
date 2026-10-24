@@ -46,66 +46,82 @@ public class Pomodoro {
   @Column(name = "fecha_fin")
   private LocalDateTime fechaFin;
 
+  @SuppressWarnings("all")
   public Long getId() {
     return id;
   }
 
+  @SuppressWarnings("all")
   public void setId(Long id) {
     this.id = id;
   }
 
+  @SuppressWarnings("all")
   public Usuario getUsuario() {
     return usuario;
   }
 
+  @SuppressWarnings("all")
   public void setUsuario(Usuario usuario) {
     this.usuario = usuario;
   }
 
+  @SuppressWarnings("all")
   public PlanDeVuelo getPlan() {
     return plan;
   }
 
+  @SuppressWarnings("all")
   public void setPlan(PlanDeVuelo plan) {
     this.plan = plan;
   }
 
+  @SuppressWarnings("all")
   public int getDuracionMinutos() {
     return duracionMinutos;
   }
 
+  @SuppressWarnings("all")
   public void setDuracionMinutos(int duracionMinutos) {
     this.duracionMinutos = duracionMinutos;
   }
 
+  @SuppressWarnings("all")
   public Estado getEstado() {
     return estado;
   }
 
+  @SuppressWarnings("all")
   public void setEstado(Estado estado) {
     this.estado = estado;
   }
 
+  @SuppressWarnings("all")
   public LocalDateTime getFechaInicio() {
     return fechaInicio;
   }
 
+  @SuppressWarnings("all")
   public void setFechaInicio(LocalDateTime fechaInicio) {
     this.fechaInicio = fechaInicio;
   }
 
+  @SuppressWarnings("all")
   public LocalDateTime getFechaPausa() {
     return fechaPausa;
   }
 
+  @SuppressWarnings("all")
   public void setFechaPausa(LocalDateTime fechaPausa) {
     this.fechaPausa = fechaPausa;
   }
 
+  @SuppressWarnings("all")
   public LocalDateTime getFechaFin() {
     return fechaFin;
   }
 
+  @SuppressWarnings("all")
   public void setFechaFin(LocalDateTime fechaFin) {
     this.fechaFin = fechaFin;
   }

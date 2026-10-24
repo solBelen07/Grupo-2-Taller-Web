@@ -20,34 +20,42 @@ public class Usuario {
   private boolean activo = false;
   private int puntos;
 
+  @SuppressWarnings("all")
   public Long getId() {
     return id;
   }
 
+  @SuppressWarnings("all")
   public void setId(Long id) {
     this.id = id;
   }
 
+  @SuppressWarnings("all")
   public String getEmail() {
     return email;
   }
 
+  @SuppressWarnings("all")
   public void setEmail(String email) {
     this.email = email;
   }
 
+  @SuppressWarnings("all")
   public String getPassword() {
     return password;
   }
 
+  @SuppressWarnings("all")
   public void setPassword(String password) {
     this.password = password;
   }
 
+  @SuppressWarnings("all")
   public String getRol() {
     return rol;
   }
 
+  @SuppressWarnings("all")
   public void setRol(String rol) {
     this.rol = rol;
   }

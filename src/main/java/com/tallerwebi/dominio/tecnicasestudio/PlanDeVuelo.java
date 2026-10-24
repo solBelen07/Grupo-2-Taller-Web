@@ -27,34 +27,42 @@ public class PlanDeVuelo {
     this.objetivo = objetivo;
   }
 
+  @SuppressWarnings("all")
   public String getMateria() {
     return materia;
   }
 
+  @SuppressWarnings("all")
   public void setMateria(String materia) {
     this.materia = materia;
   }
 
+  @SuppressWarnings("all")
   public String getOrigen() {
     return origen;
   }
 
+  @SuppressWarnings("all")
   public void setOrigen(String origen) {
     this.origen = origen;
   }
 
+  @SuppressWarnings("all")
   public String getDestino() {
     return destino;
   }
 
+  @SuppressWarnings("all")
   public void setDestino(String destino) {
     this.destino = destino;
   }
 
+  @SuppressWarnings("all")
   public String getObjetivo() {
     return objetivo;
   }
 
+  @SuppressWarnings("all")
   public void setObjetivo(String objetivo) {
     this.objetivo = objetivo;
   }
