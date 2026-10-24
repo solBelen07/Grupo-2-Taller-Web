@@ -12,6 +12,7 @@ import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import com.tallerwebi.presentacion.grupo.ControladorGrupo;
 import com.tallerwebi.presentacion.grupo.DatosGrupo;
+import com.tallerwebi.presentacion.grupo.DatosIntegrante;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -122,5 +123,36 @@ public class ControladorGrupoTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.getSession().setAttribute("USUARIO", usuario);
     return request;
+  }
+
+  @Test
+  public void elDetalleDelGrupoDeberiaMostrarLosIntegrantesReales() throws GrupoNoEncontrado {
+    Usuario integrante = new Usuario();
+    integrante.setNombre("Juan");
+    integrante.setApellido("Mendez");
+    integrante.setEmail(EMAIL_USUARIO);
+    when(servicioGrupoMock.buscarPorNombre("grupo1")).thenReturn(grupoMock);
+    when(servicioGrupoMock.cantidadParticipantes("grupo1")).thenReturn(1);
+    when(servicioGrupoMock.listarIntegrantes("grupo1")).thenReturn(List.of(integrante));
+
+    ModelAndView mav = controladorGrupo.verGrupo("grupo1");
+
+    DatosGrupo datos = (DatosGrupo) mav.getModel().get("datosGrupo");
+    assertEquals(1, datos.getIntegrantes().size());
+    DatosIntegrante primero = datos.getIntegrantes().get(0);
+    assertEquals("Juan", primero.getNombre());
+    assertEquals("Mendez", primero.getApellido());
+    assertEquals(EMAIL_USUARIO, primero.getEmail());
+  }
+
+  @Test
+  public void siElServicioNoDevuelveIntegrantesLaListaQuedaVacia() throws GrupoNoEncontrado {
+    when(servicioGrupoMock.buscarPorNombre("grupo1")).thenReturn(grupoMock);
+    when(servicioGrupoMock.listarIntegrantes("grupo1")).thenReturn(null);
+
+    ModelAndView mav = controladorGrupo.verGrupo("grupo1");
+
+    DatosGrupo datos = (DatosGrupo) mav.getModel().get("datosGrupo");
+    assertEquals(0, datos.getIntegrantes().size());
   }
 }

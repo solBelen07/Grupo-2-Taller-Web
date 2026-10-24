@@ -77,4 +77,40 @@ public class ServicioGrupoTest {
     verify(repositorioGrupoMock).listarGruposPorUsuario("test@unlam.edu.ar");
     verify(repositorioGrupoMock, never()).listar();
   }
+
+  @Test
+  public void cantidadParticipantesDeberiaDevolverLoQueCuentaElRepositorio()
+    throws GrupoNoEncontrado {
+    when(repositorioGrupoMock.buscar("grupo1")).thenReturn(new Grupo());
+    when(repositorioGrupoMock.cantidadParticipantes("grupo1")).thenReturn(3);
+
+    Integer cantidad = servicioGrupo.cantidadParticipantes("grupo1");
+
+    assertThat(cantidad, equalTo(3));
+  }
+
+  @Test
+  public void cantidadParticipantesDeUnGrupoQueNoExisteDeberiaLanzarExcepcion() {
+    when(repositorioGrupoMock.buscar("no-existe")).thenReturn(null);
+
+    assertThrows(GrupoNoEncontrado.class, () -> servicioGrupo.cantidadParticipantes("no-existe"));
+    verify(repositorioGrupoMock, never()).cantidadParticipantes("no-existe");
+  }
+
+  @Test
+  public void listarIntegrantesDeberiaDevolverLosDelRepositorio() throws GrupoNoEncontrado {
+    Usuario integrante = new Usuario();
+    integrante.setEmail("test@unlam.edu.ar");
+    when(repositorioGrupoMock.buscar("grupo1")).thenReturn(new Grupo());
+    when(repositorioGrupoMock.listarIntegrantes("grupo1")).thenReturn(List.of(integrante));
+
+    assertThat(servicioGrupo.listarIntegrantes("grupo1"), equalTo(List.of(integrante)));
+  }
+
+  @Test
+  public void listarIntegrantesDeUnGrupoQueNoExisteDeberiaLanzarExcepcion() {
+    when(repositorioGrupoMock.buscar("no-existe")).thenReturn(null);
+
+    assertThrows(GrupoNoEncontrado.class, () -> servicioGrupo.listarIntegrantes("no-existe"));
+  }
 }

@@ -5,6 +5,8 @@ import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +21,7 @@ public class ControladorGrupo {
 
   @RequestMapping(value = "/grupos", method = RequestMethod.GET)
   public ModelAndView verGrupos(HttpServletRequest request) {
-    // GRP-04: solo se listan los grupos del usuario logueado.
+    // solo se listan los grupos del usuario logueado.
     Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
     if (usuario == null) {
       return new ModelAndView("redirect:/login");
@@ -42,6 +44,7 @@ public class ControladorGrupo {
       DatosGrupo datosGrupo = new DatosGrupo();
       datosGrupo.setNombre(grupo.getNombre());
       datosGrupo.setCantidadDeIntegrantes(servicioGrupo.cantidadParticipantes(nombre));
+      datosGrupo.setIntegrantes(armarIntegrantes(servicioGrupo.listarIntegrantes(nombre)));
       modelo.put("datosGrupo", datosGrupo);
       return new ModelAndView("paginas/grupo/grupo-detalle", modelo);
     } catch (GrupoNoEncontrado e) {
@@ -68,5 +71,17 @@ public class ControladorGrupo {
   @Autowired
   public ControladorGrupo(ServicioGrupo servicioGrupo) {
     this.servicioGrupo = servicioGrupo;
+  }
+
+  private List<DatosIntegrante> armarIntegrantes(List<Usuario> usuarios) {
+    List<DatosIntegrante> integrantes = new ArrayList<>();
+    if (usuarios != null) {
+      for (Usuario usuario : usuarios) {
+        integrantes.add(
+          new DatosIntegrante(usuario.getNombre(), usuario.getApellido(), usuario.getEmail())
+        );
+      }
+    }
+    return integrantes;
   }
 }

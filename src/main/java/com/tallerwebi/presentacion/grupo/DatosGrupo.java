@@ -1,9 +1,13 @@
 package com.tallerwebi.presentacion.grupo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DatosGrupo {
 
   private String nombre;
   private Integer cantidadDeIntegrantes;
+  private List<DatosIntegrante> integrantes = new ArrayList<>();
 
   public DatosGrupo(String nombre, Integer cantidadDeIntegrantes) {
     this.nombre = nombre;
@@ -26,5 +30,13 @@ public class DatosGrupo {
 
   public void setCantidadDeIntegrantes(Integer cantidadDeIntegrantes) {
     this.cantidadDeIntegrantes = cantidadDeIntegrantes;
+  }
+
+  public List<DatosIntegrante> getIntegrantes() {
+    return integrantes;
+  }
+
+  public void setIntegrantes(List<DatosIntegrante> integrantes) {
+    this.integrantes = integrantes;
   }
 }

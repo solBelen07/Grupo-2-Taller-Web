@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio.grupo;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -39,5 +40,13 @@ public class ServicioGrupoImpl implements ServicioGrupo {
   @Override
   public List<Grupo> listarGruposDelUsuario(String email) {
     return repositorioGrupo.listarGruposPorUsuario(email);
+  }
+
+  @Override
+  public List<Usuario> listarIntegrantes(String nombre) throws GrupoNoEncontrado {
+    if (repositorioGrupo.buscar(nombre) == null) {
+      throw new GrupoNoEncontrado();
+    }
+    return repositorioGrupo.listarIntegrantes(nombre);
   }
 }

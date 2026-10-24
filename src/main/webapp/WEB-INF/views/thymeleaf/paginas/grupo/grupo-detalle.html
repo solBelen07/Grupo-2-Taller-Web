@@ -87,7 +87,8 @@
                             <span class="badge badge-live rounded-pill">Activo</span>
                         </div>
                         <p class="text-muted mb-0">
-                            <i class="fa-solid fa-user-group me-1"></i><span th:text="${datosGrupo.cantidadDeIntegrantes}">0</span> integrante/s.
+                            <i class="fa-solid fa-user-group me-1"></i><span th:text="${datosGrupo.cantidadDeIntegrantes}">0</span>
+                            <span th:text="${datosGrupo.cantidadDeIntegrantes == 1} ? 'integrante' : 'integrantes'">integrantes</span>
                         </p>
                     </div>
                 </div>
@@ -108,34 +109,27 @@
                             <h5 class="fw-bold text-light mb-0">Integrantes del grupo</h5>
                         </div>
                         <div class="lista-integrantes">
-                            <div class="integrante-item d-flex align-items-center justify-content-between p-4">
+                            <!-- Integrantes reales del grupo (antes eran "Tú" y "Juan Pérez" escritos a mano) -->
+                            <div th:each="integrante : ${datosGrupo.integrantes}"
+                                 th:with="esVos=${session.USUARIO != null and integrante.email == session.USUARIO.email}"
+                                 class="integrante-item d-flex align-items-center justify-content-between p-4">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="avatar-usuario fs-5">
-                                        <i class="fa-solid fa-user-astronaut"></i>
+                                        <i class="fa-solid" th:classappend="${esVos} ? 'fa-user-astronaut' : 'fa-user'"></i>
                                     </div>
                                     <div>
-                                        <h6 class="text-light mb-0 fw-bold">Tú (Usuario Actual)</h6>
-                                        <small class="text-muted">tu.email@ejemplo.com</small>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span class="badge badge-live rounded-pill px-3">Creador</span>
-                                </div>
-                            </div>
-                            <div class="integrante-item d-flex align-items-center justify-content-between p-4">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="avatar-usuario fs-5">
-                                        <i class="fa-solid fa-user"></i>
-                                    </div>
-                                    <div>
-                                        <h6 class="text-light mb-0 fw-bold">Juan Pérez</h6>
-                                        <small class="text-muted">juan.perez@ejemplo.com</small>
+                                        <h6 class="text-light mb-0 fw-bold"
+                                            th:text="${integrante.nombre + ' ' + integrante.apellido} + (${esVos} ? ' (vos)' : '')">Nombre Apellido</h6>
+                                        <small class="text-muted" th:text="${integrante.email}">email@ejemplo.com</small>
                                     </div>
                                 </div>
                                 <div>
                                     <span class="badge bg-secondary bg-opacity-25 text-light border border-secondary rounded-pill px-3">Miembro</span>
                                 </div>
                             </div>
+                            <p th:if="${#lists.isEmpty(datosGrupo.integrantes)}" class="text-muted p-4 mb-0">
+                                Este grupo todavía no tiene integrantes confirmados.
+                            </p>
                         </div>
                     </div>
                 </div>
