@@ -57,6 +57,10 @@
             Mensaje de confirmación.
         </div>
 
+        <p th:if="${datosGrupo == null or #lists.isEmpty(datosGrupo)}" class="text-muted">
+            Todavía no pertenecés a ningún grupo ni tenés invitaciones.
+        </p>
+
         <div class="row g-4">
             <div th:each="grupo : ${datosGrupo}" class="col-md-4">
                 <div class="tp-form-card card-custom h-100 p-3 shadow-sm d-flex flex-column">

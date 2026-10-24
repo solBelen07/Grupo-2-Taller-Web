@@ -35,4 +35,9 @@ public class ServicioGrupoImpl implements ServicioGrupo {
     }
     return repositorioGrupo.cantidadParticipantes(nombre);
   }
+
+  @Override
+  public List<Grupo> listarGruposDelUsuario(String email) {
+    return repositorioGrupo.listarGruposPorUsuario(email);
+  }
 }

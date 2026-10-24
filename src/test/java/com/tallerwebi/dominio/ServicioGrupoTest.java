@@ -10,6 +10,7 @@ import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.RepositorioGrupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupoImpl;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -61,5 +62,19 @@ public class ServicioGrupoTest {
 
     assertThat(grupoObtenido, equalTo(grupoEsperado));
     verify(repositorioGrupoMock, times(2)).buscar(nombreGrupo);
+  }
+
+  @Test
+  public void listarGruposDelUsuarioDeberiaPedirleAlRepositorioLosGruposDeEseUsuario() {
+    Grupo grupo = new Grupo();
+    grupo.setNombre("grupo-del-usuario");
+    when(repositorioGrupoMock.listarGruposPorUsuario("test@unlam.edu.ar"))
+      .thenReturn(List.of(grupo));
+
+    List<Grupo> grupos = servicioGrupo.listarGruposDelUsuario("test@unlam.edu.ar");
+
+    assertThat(grupos, equalTo(List.of(grupo)));
+    verify(repositorioGrupoMock).listarGruposPorUsuario("test@unlam.edu.ar");
+    verify(repositorioGrupoMock, never()).listar();
   }
 }

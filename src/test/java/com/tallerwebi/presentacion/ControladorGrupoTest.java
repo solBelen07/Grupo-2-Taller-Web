@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
@@ -14,6 +15,7 @@ import com.tallerwebi.presentacion.grupo.DatosGrupo;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 public class ControladorGrupoTest {
@@ -21,6 +23,7 @@ public class ControladorGrupoTest {
   private ControladorGrupo controladorGrupo;
   private ServicioGrupo servicioGrupoMock;
   private Grupo grupoMock;
+  private static final String EMAIL_USUARIO = "test@unlam.edu.ar";
 
   @BeforeEach
   public void init() {
@@ -41,15 +44,16 @@ public class ControladorGrupoTest {
 
   @Test
   public void irAGruposDeberiaRetornarVistaGruposYDatosGrupo() {
-    when(servicioGrupoMock.listarGrupos()).thenReturn(java.util.Arrays.asList(grupoMock));
-    ModelAndView modelAndView = controladorGrupo.verGrupos();
+    when(servicioGrupoMock.listarGruposDelUsuario(EMAIL_USUARIO))
+      .thenReturn(java.util.Arrays.asList(grupoMock));
+    ModelAndView modelAndView = controladorGrupo.verGrupos(requestConUsuarioLogueado());
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/grupo/grupos"));
     assertThat(modelAndView.getModel().get("datosGrupo"), instanceOf(List.class));
   }
 
   @Test
   public void irAGruposDeberiaRetornarVistaGrupos() {
-    ModelAndView modelAndView = controladorGrupo.verGrupos();
+    ModelAndView modelAndView = controladorGrupo.verGrupos(requestConUsuarioLogueado());
 
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/grupo/grupos"));
   }
@@ -90,5 +94,33 @@ public class ControladorGrupoTest {
       modelAndView.getModel().get("error").toString(),
       equalToIgnoringCase("El grupo no existe")
     );
+  }
+
+  @Test
+  public void irAGruposSinEstarLogueadoDeberiaRedirigirAlLogin() {
+    ModelAndView modelAndView = controladorGrupo.verGrupos(new MockHttpServletRequest());
+
+    assertThat(modelAndView.getViewName(), equalToIgnoringCase("redirect:/login"));
+    verifyNoInteractions(servicioGrupoMock);
+  }
+
+  @Test
+  public void irAGruposDeberiaListarSoloLosGruposDelUsuarioLogueado() {
+    List<Grupo> gruposDelUsuario = java.util.Arrays.asList(grupoMock);
+    when(servicioGrupoMock.listarGruposDelUsuario(EMAIL_USUARIO)).thenReturn(gruposDelUsuario);
+
+    ModelAndView modelAndView = controladorGrupo.verGrupos(requestConUsuarioLogueado());
+
+    assertEquals(gruposDelUsuario, modelAndView.getModel().get("datosGrupo"));
+    verify(servicioGrupoMock).listarGruposDelUsuario(EMAIL_USUARIO);
+    verify(servicioGrupoMock, never()).listarGrupos();
+  }
+
+  private MockHttpServletRequest requestConUsuarioLogueado() {
+    Usuario usuario = new Usuario();
+    usuario.setEmail(EMAIL_USUARIO);
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.getSession().setAttribute("USUARIO", usuario);
+    return request;
   }
 }

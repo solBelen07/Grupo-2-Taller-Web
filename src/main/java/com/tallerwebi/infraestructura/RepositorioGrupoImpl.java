@@ -33,14 +33,19 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
 
   @Override
   public List<Grupo> listarGruposPorUsuario(String email) {
+    // GRP-04: grupos a los que el usuario pertenece o fue invitado.
+    // - Como invitado: invitaciones ACEPTADAS (pertenece) o PENDIENTES (fue invitado). Las RECHAZADAS no.
+    // - Como emisor: si invitó a alguien a un grupo, es porque forma parte de ese grupo.
     return sessionFactory
       .getCurrentSession()
       .createQuery(
-        "select i.grupo from Invitacion i where i.receptor.email = :email and i.estado = :estadoAceptada",
+        "select distinct i.grupo from Invitacion i " +
+        "where (i.receptor.email = :email and i.estado in (:estadosVisibles)) " +
+        "or i.emisor.email = :email",
         Grupo.class
       )
       .setParameter("email", email)
-      .setParameter("estadoAceptada", Estado.ACEPTADA)
+      .setParameter("estadosVisibles", List.of(Estado.ACEPTADA, Estado.PENDIENTE))
       .list();
   }
 

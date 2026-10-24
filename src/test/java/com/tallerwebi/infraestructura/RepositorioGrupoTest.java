@@ -105,4 +105,93 @@ public class RepositorioGrupoTest {
   private void entoncesElGrupoObtenidoDeberiaSerNull(Grupo grupoObtenido) {
     assertThat(grupoObtenido, equalTo(null));
   }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaIncluirLosGruposConInvitacionPendiente() {
+    Usuario emisor = crearUsuario("emisor@prueba.com");
+    dadoQueExisteElUsuario(usuario);
+    dadoQueExisteElGrupo(grupo);
+    dadoQueExisteUnaInvitacion(crearInvitacion(emisor, usuario, grupo, Estado.PENDIENTE));
+
+    List<Grupo> grupos = this.repositorioGrupo.listarGruposPorUsuario(usuario.getEmail());
+
+    assertThat(grupos.size(), equalTo(1));
+    assertThat(grupos.get(0).getNombre(), equalTo("grupo-existente"));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void noDeberiaIncluirLosGruposConInvitacionRechazada() {
+    Usuario emisor = crearUsuario("emisor@prueba.com");
+    dadoQueExisteElUsuario(usuario);
+    dadoQueExisteElGrupo(grupo);
+    dadoQueExisteUnaInvitacion(crearInvitacion(emisor, usuario, grupo, Estado.RECHAZADA));
+
+    List<Grupo> grupos = this.repositorioGrupo.listarGruposPorUsuario(usuario.getEmail());
+
+    assertThat(grupos.size(), equalTo(0));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaIncluirLosGruposDondeElUsuarioInvitoAAlguien() {
+    Usuario invitado = crearUsuario("invitado@prueba.com");
+    dadoQueExisteElUsuario(usuario);
+    dadoQueExisteElGrupo(grupo);
+    dadoQueExisteUnaInvitacion(crearInvitacion(usuario, invitado, grupo, Estado.PENDIENTE));
+
+    List<Grupo> grupos = this.repositorioGrupo.listarGruposPorUsuario(usuario.getEmail());
+
+    assertThat(grupos.size(), equalTo(1));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void noDeberiaIncluirGruposDeOtrosUsuarios() {
+    Usuario otro = crearUsuario("otro@prueba.com");
+    Usuario emisor = crearUsuario("emisor@prueba.com");
+    dadoQueExisteElUsuario(usuario);
+    dadoQueExisteElGrupo(grupo);
+    dadoQueExisteUnaInvitacion(crearInvitacion(emisor, otro, grupo, Estado.ACEPTADA));
+
+    List<Grupo> grupos = this.repositorioGrupo.listarGruposPorUsuario(usuario.getEmail());
+
+    assertThat(grupos.size(), equalTo(0));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void noDeberiaRepetirUnGrupoAunqueTengaVariasInvitaciones() {
+    Usuario otro = crearUsuario("otro@prueba.com");
+    dadoQueExisteElUsuario(usuario);
+    dadoQueExisteElGrupo(grupo);
+    dadoQueExisteUnaInvitacion(crearInvitacion(otro, usuario, grupo, Estado.ACEPTADA));
+    dadoQueExisteUnaInvitacion(crearInvitacion(usuario, otro, grupo, Estado.PENDIENTE));
+
+    List<Grupo> grupos = this.repositorioGrupo.listarGruposPorUsuario(usuario.getEmail());
+
+    assertThat(grupos.size(), equalTo(1));
+  }
+
+  private Usuario crearUsuario(String email) {
+    Usuario nuevo = new Usuario();
+    nuevo.setEmail(email);
+    dadoQueExisteElUsuario(nuevo);
+    return nuevo;
+  }
+
+  private Invitacion crearInvitacion(Usuario emisor, Usuario receptor, Grupo grupo, Estado estado) {
+    Invitacion invitacion = new Invitacion();
+    invitacion.setEmisor(emisor);
+    invitacion.setReceptor(receptor);
+    invitacion.setGrupo(grupo);
+    invitacion.setEstadoInvitacion(estado);
+    return invitacion;
+  }
 }
