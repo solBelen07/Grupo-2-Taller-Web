@@ -9,6 +9,7 @@ import com.tallerwebi.dominio.grupo.RepositorioGrupo;
 import com.tallerwebi.dominio.invitacion.Estado;
 import com.tallerwebi.dominio.invitacion.Invitacion;
 import com.tallerwebi.dominio.invitacion.RepositorioInvitacion;
+import com.tallerwebi.dominio.tarea.Tarea;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -318,5 +319,114 @@ public class RepositorioGrupoTest {
       this.repositorioGrupo.listarIntegrantes("grupo-existente").size(),
       equalTo(this.repositorioGrupo.cantidadParticipantes("grupo-existente"))
     );
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaGuardarUnGrupoConSuCreador() {
+    dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
+
+    this.repositorioGrupo.guardar(grupo);
+
+    Grupo guardado = this.repositorioGrupo.buscar("grupo-existente");
+    assertThat(guardado.getCreador().getEmail(), equalTo("usuario@prueba.com"));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void elCreadorVeSuGrupoAunqueTodaviaNoHayaInvitadoANadie() {
+    dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
+    dadoQueExisteElGrupo(grupo);
+
+    List<Grupo> grupos = this.repositorioGrupo.listarGruposPorUsuario(usuario.getEmail());
+
+    assertThat(grupos.size(), equalTo(1));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void elCreadorCuentaComoIntegranteUnaSolaVez() {
+    Usuario aceptado = crearUsuario("aceptado@prueba.com");
+    dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
+    dadoQueExisteElGrupo(grupo);
+    // el creador además invitó a alguien: igual tiene que contarse una sola vez
+    dadoQueExisteUnaInvitacion(crearInvitacion(usuario, aceptado, grupo, Estado.ACEPTADA));
+
+    assertThat(this.repositorioGrupo.cantidadParticipantes("grupo-existente"), equalTo(2));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void unGrupoRecienCreadoTieneUnIntegrante() {
+    dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
+    dadoQueExisteElGrupo(grupo);
+
+    assertThat(this.repositorioGrupo.cantidadParticipantes("grupo-existente"), equalTo(1));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaModificarElNombreDelGrupo() {
+    dadoQueExisteElGrupo(grupo);
+    grupo.setNombre("nombre-nuevo");
+
+    this.repositorioGrupo.modificar(grupo);
+
+    assertThat(this.repositorioGrupo.buscar("nombre-nuevo").getId(), equalTo(grupo.getId()));
+    assertThat(this.repositorioGrupo.buscar("grupo-existente"), equalTo(null));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void alEliminarUnGrupoSeBorranSusInvitacionesYSusTareasQuedanSinGrupo() {
+    Usuario invitado = crearUsuario("invitado@prueba.com");
+    dadoQueExisteElUsuario(usuario);
+    dadoQueExisteElGrupo(grupo);
+    dadoQueExisteUnaInvitacion(crearInvitacion(usuario, invitado, grupo, Estado.PENDIENTE));
+    Tarea tarea = new Tarea();
+    tarea.setTitulo("Tarea del grupo");
+    tarea.setGrupo(grupo);
+    this.sessionFactory.getCurrentSession().persist(tarea);
+    // como en la app: el grupo se busca en una sesión nueva y recién ahí se elimina
+    this.sessionFactory.getCurrentSession().flush();
+    this.sessionFactory.getCurrentSession().clear();
+    Grupo grupoAEliminar = this.repositorioGrupo.buscar("grupo-existente");
+
+    this.repositorioGrupo.eliminar(grupoAEliminar);
+    this.sessionFactory.getCurrentSession().flush();
+    this.sessionFactory.getCurrentSession().clear();
+
+    assertThat(this.repositorioGrupo.buscar("grupo-existente"), equalTo(null));
+    Long invitaciones =
+      this.sessionFactory.getCurrentSession()
+        .createQuery("select count(i) from Invitacion i", Long.class)
+        .uniqueResult();
+    assertThat(invitaciones, equalTo(0L));
+    Tarea tareaGuardada = this.sessionFactory.getCurrentSession().get(Tarea.class, tarea.getId());
+    assertThat(tareaGuardada.getGrupo(), equalTo(null));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void listarIntegrantesDeberiaIncluirAlCreadorAunqueNoHayaInvitadoANadie() {
+    dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
+    dadoQueExisteElGrupo(grupo);
+
+    List<Usuario> integrantes = this.repositorioGrupo.listarIntegrantes("grupo-existente");
+
+    assertThat(integrantes.size(), equalTo(1));
+    assertThat(integrantes.get(0).getEmail(), equalTo("usuario@prueba.com"));
   }
 }

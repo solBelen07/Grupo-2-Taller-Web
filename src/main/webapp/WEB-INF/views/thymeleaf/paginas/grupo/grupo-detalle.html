@@ -124,7 +124,11 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <span class="badge bg-secondary bg-opacity-25 text-light border border-secondary rounded-pill px-3">Miembro</span>
+                                    <!-- GRP-06: el creador del grupo es el administrador -->
+                                    <span th:if="${integrante.administrador}" class="badge bg-warning text-dark rounded-pill px-3">
+                                        <i class="fa-solid fa-crown me-1"></i>Administrador/a
+                                    </span>
+                                    <span th:unless="${integrante.administrador}" class="badge bg-secondary bg-opacity-25 text-light border border-secondary rounded-pill px-3">Miembro</span>
                                 </div>
                             </div>
                             <p th:if="${#lists.isEmpty(datosGrupo.integrantes)}" class="text-muted p-4 mb-0">

@@ -182,14 +182,15 @@ VALUES
     (2, 1),
     (3, 1);
 
-INSERT INTO Grupo (id, nombre)
+-- GRP-06: cada grupo tiene un creador (administrador). Es el mismo usuario que invita en los datos de abajo.
+INSERT INTO Grupo (id, nombre, creador_id)
 VALUES
-    (null, 'grupo1'),
-    (null, 'grupo2'),
-    (null, 'grupo3'),
-    (null, 'grupo4'),
-    (null, 'grupo5'),
-    (null, 'grupo6');
+    (null, 'grupo1', (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')),
+    (null, 'grupo2', (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')),
+    (null, 'grupo3', (SELECT id FROM Usuario WHERE email = 'user@test.com')),
+    (null, 'grupo4', (SELECT id FROM Usuario WHERE email = 'user1@test.com')),
+    (null, 'grupo5', (SELECT id FROM Usuario WHERE email = 'user3@test.com')),
+    (null, 'grupo6', (SELECT id FROM Usuario WHERE email = 'user5@test.com'));
 
 -- =====================================================================
 -- CAL-01: eventos de ejemplo para el calendario, del usuario

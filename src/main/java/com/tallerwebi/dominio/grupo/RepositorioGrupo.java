@@ -10,5 +10,8 @@ public interface RepositorioGrupo {
   List<Grupo> listar();
   List<Grupo> listarGruposPorUsuario(String nombreUsuario);
   Integer cantidadParticipantes(String nombre);
+  void guardar(Grupo grupo);
+  void modificar(Grupo grupo);
+  void eliminar(Grupo grupo);
   List<Usuario> listarIntegrantes(String nombre);
 }

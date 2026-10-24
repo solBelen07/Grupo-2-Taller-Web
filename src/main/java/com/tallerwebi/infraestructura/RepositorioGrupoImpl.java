@@ -35,14 +35,17 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
   @Override
   public List<Grupo> listarGruposPorUsuario(String email) {
     // grupos a los que el usuario pertenece o fue invitado.
+    // - Como creador: es el administrador del grupo.
     // - Como invitado: invitaciones ACEPTADAS (pertenece) o PENDIENTES (fue invitado). Las RECHAZADAS no.
     // - Como emisor: si invitó a alguien a un grupo, es porque forma parte de ese grupo.
     return sessionFactory
       .getCurrentSession()
       .createQuery(
-        "select distinct i.grupo from Invitacion i " +
-        "where (i.receptor.email = :email and i.estado in (:estadosVisibles)) " +
-        "or i.emisor.email = :email",
+        "select distinct g from Grupo g left join g.creador c " +
+        "where c.email = :email " +
+        "or g in (select i.grupo from Invitacion i " +
+        "         where (i.receptor.email = :email and i.estado in (:estadosVisibles)) " +
+        "         or i.emisor.email = :email)",
         Grupo.class
       )
       .setParameter("email", email)
@@ -52,7 +55,8 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
 
   @Override
   public Integer cantidadParticipantes(String nombre) {
-    // GRP-05: cuenta los usuarios confirmados del grupo, sin repetir:
+    // cuenta los usuarios confirmados del grupo, sin repetir:
+    // - el creador del grupo,
     // - los que aceptaron una invitación (receptor con estado ACEPTADA), y
     // - los que invitaron a alguien (emisor): si invitaron, forman parte del grupo.
     // Las invitaciones PENDIENTES o RECHAZADAS no suman.
@@ -60,7 +64,8 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
       .getCurrentSession()
       .createQuery(
         "select count(distinct u) from Usuario u " +
-        "where u in (select i.receptor from Invitacion i " +
+        "where u in (select g.creador from Grupo g where g.nombre = :nombreGrupo) " +
+        "or u in (select i.receptor from Invitacion i " +
         "            where i.grupo.nombre = :nombreGrupo and i.estado = :aceptada) " +
         "or u in (select i.emisor from Invitacion i where i.grupo.nombre = :nombreGrupo)",
         Long.class
@@ -74,13 +79,14 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
 
   @Override
   public List<Usuario> listarIntegrantes(String nombre) {
-    // Mismo criterio que cantidadParticipantes: los que aceptaron una invitación
-    // y los que invitaron a alguien al grupo, sin repetir.
+    // Mismo criterio que cantidadParticipantes: el creador, los que aceptaron
+    // una invitación y los que invitaron a alguien al grupo, sin repetir.
     return sessionFactory
       .getCurrentSession()
       .createQuery(
         "select distinct u from Usuario u " +
-        "where u in (select i.receptor from Invitacion i " +
+        "where u in (select g.creador from Grupo g where g.nombre = :nombreGrupo) " +
+        "or u in (select i.receptor from Invitacion i " +
         "            where i.grupo.nombre = :nombreGrupo and i.estado = :aceptada) " +
         "or u in (select i.emisor from Invitacion i where i.grupo.nombre = :nombreGrupo) " +
         "order by u.nombre",
@@ -89,5 +95,32 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
       .setParameter("nombreGrupo", nombre)
       .setParameter("aceptada", Estado.ACEPTADA)
       .list();
+  }
+
+  @Override
+  public void guardar(Grupo grupo) {
+    sessionFactory.getCurrentSession().persist(grupo);
+  }
+
+  @Override
+  public void modificar(Grupo grupo) {
+    sessionFactory.getCurrentSession().merge(grupo);
+  }
+
+  @Override
+  public void eliminar(Grupo grupo) {
+    // Antes de borrar el grupo hay que soltar lo que lo referencia en la base:
+    // sus invitaciones se borran y sus tareas quedan "Sin grupo".
+    sessionFactory
+      .getCurrentSession()
+      .createMutationQuery("delete from Invitacion i where i.grupo = :grupo")
+      .setParameter("grupo", grupo)
+      .executeUpdate();
+    sessionFactory
+      .getCurrentSession()
+      .createMutationQuery("update Tarea t set t.grupo = null where t.grupo = :grupo")
+      .setParameter("grupo", grupo)
+      .executeUpdate();
+    sessionFactory.getCurrentSession().remove(grupo);
   }
 }

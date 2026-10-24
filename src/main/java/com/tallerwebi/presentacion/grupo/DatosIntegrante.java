@@ -6,11 +6,21 @@ public class DatosIntegrante {
   private String nombre;
   private String apellido;
   private String email;
+  private boolean administrador;
 
   public DatosIntegrante(String nombre, String apellido, String email) {
+    this(nombre, apellido, email, false);
+  }
+
+  public DatosIntegrante(String nombre, String apellido, String email, boolean administrador) {
     this.nombre = nombre;
     this.apellido = apellido;
     this.email = email;
+    this.administrador = administrador;
+  }
+
+  public boolean isAdministrador() {
+    return administrador;
   }
 
   public String getNombre() {
