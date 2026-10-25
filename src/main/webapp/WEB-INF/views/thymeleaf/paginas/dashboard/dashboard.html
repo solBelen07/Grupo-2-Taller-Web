@@ -26,10 +26,10 @@
         <header class="dashboard-header">
             <div class="greeting-section">
                 <h1 class="greeting-title">
-                    ¡Buenos días, <span th:text="${usuario.nombre}">Pedro</span>!
+                    ¡<span th:text="${saludo}">Hola</span>, <span th:text="${usuario.nombre}">Pedro</span>!
                 </h1>
                 <p class="greeting-subtitle">
-                    Exito en esta semana de estudio
+                    Éxito en esta semana de estudio
                 </p>
             </div>
             <div class="header-actions">
@@ -48,7 +48,6 @@
                     <div class="kpi-icon-badge badge-green">
                         <i class="fa-solid fa-trophy"></i>
                     </div>
-                    <span class="live-tag">EN VIVO</span>
                 </div>
                 <div class="kpi-value" th:text="${#numbers.formatDecimal(dashboardData.porcentajeCumplimiento, 1, 0) + '%'}">85%</div>
                 <div class="kpi-subtext subtext-green">Tasa de Cumplimiento</div>
@@ -63,7 +62,6 @@
                     <div class="kpi-icon-badge badge-purple">
                         <i class="fa-regular fa-clock"></i>
                     </div>
-                    <span class="live-tag">EN VIVO</span>
                 </div>
                 <div class="kpi-value" th:text="${dashboardData.horasEstudio + 'h'}">142h</div>
                 <div class="kpi-subtext subtext-purple">Horas de Estudio Registradas</div>
@@ -78,7 +76,6 @@
                     <div class="kpi-icon-badge badge-cyan">
                         <i class="fa-solid fa-book"></i>
                     </div>
-                    <span class="live-tag">EN VIVO</span>
                 </div>
                 <div class="kpi-value" th:text="${dashboardData.cantidadMaterias}">6</div>
                 <div class="kpi-subtext subtext-cyan">Materias Activas</div>
@@ -93,7 +90,6 @@
                     <div class="kpi-icon-badge badge-orange">
                         <i class="fa-solid fa-plane-departure"></i>
                     </div>
-                    <span class="live-tag">EN VIVO</span>
                 </div>
                 <div class="kpi-value" th:text="${dashboardData.proximaSesion != null ? #temporals.format(dashboardData.proximaSesion.fecha, 'dd/MM') : 'Sin sesiones'}"></div>
                 <div class="kpi-label"></div>

@@ -106,4 +106,24 @@ public class ControladorDashboardTest {
     usuario.setEmail("test@unlam.edu.ar");
     return usuario;
   }
+
+  @Test
+  public void elSaludoCambiaSegunLaHora() {
+    assertThat(
+      ControladorDashboard.saludoSegunHora(java.time.LocalTime.of(9, 0)),
+      equalTo("Buenos días")
+    );
+    assertThat(
+      ControladorDashboard.saludoSegunHora(java.time.LocalTime.of(15, 30)),
+      equalTo("Buenas tardes")
+    );
+    assertThat(
+      ControladorDashboard.saludoSegunHora(java.time.LocalTime.of(21, 0)),
+      equalTo("Buenas noches")
+    );
+    assertThat(
+      ControladorDashboard.saludoSegunHora(java.time.LocalTime.of(3, 50)),
+      equalTo("Buenas noches")
+    );
+  }
 }
