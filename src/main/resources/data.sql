@@ -333,7 +333,22 @@ VALUES (
            null,
            'Popular',
            'Fuiste invitado muchas veces a grupos'
-       );
+       ),
+       -- Más logros, que se pueden ganar usando la app
+       (null, 'Primeros pasos', 'Cargaste tu primera materia'),
+       (null, 'Primer vuelo', 'Completaste tu primera sesión en FocusFlight'),
+       (null, 'Piloto frecuente', 'Estudiaste 5 horas con FocusFlight'),
+       (null, 'Constante', 'Estudiaste 3 días seguidos'),
+       (null, 'Imparable', 'Estudiaste 7 días seguidos'),
+       (null, 'Plan cumplido', 'Completaste todas las sesiones de un plan de parcial'),
+       (null, 'Líder de grupo', 'Creaste tu primer grupo de estudio');
+
+-- GAM-02: logro obtenido de ejemplo (quién obtuvo qué logro y cuándo)
+INSERT INTO LogroObtenido (id, usuario_id, logro_id, fechaObtencion)
+VALUES (null,
+        (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar'),
+        (SELECT id FROM Logro WHERE nombre = 'Popular'),
+        DATE_SUB(CURDATE(), INTERVAL 3 DAY));
 
 INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
 VALUES (null, 'ACEPTADA', false,
