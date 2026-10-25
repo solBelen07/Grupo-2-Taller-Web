@@ -4,11 +4,15 @@ import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoExistente;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsAdministradorDelGrupo;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsIntegranteDelGrupo;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.NombreDeGrupoInvalido;
 import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.SalidaDeGrupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,7 @@ public class ControladorGrupo {
   private static final String MENSAJE_EXITO = "exito";
   private static final String MENSAJE_ERROR = "error";
   private static final String NOMBRE = "nombre";
+  private static final String NOMBRE_ACTUAL = "nombreActual";
   private static final String GRUPO_NO_EXISTE = "El grupo no existe";
 
   private ServicioGrupo servicioGrupo;
@@ -49,7 +54,11 @@ public class ControladorGrupo {
   }
 
   @GetMapping("/grupos/{nombre}")
-  public ModelAndView verGrupo(@PathVariable(NOMBRE) String nombre) {
+  public ModelAndView verGrupo(@PathVariable(NOMBRE) String nombre, HttpServletRequest request) {
+    Usuario usuario = obtenerUsuarioLogueado(request);
+    if (usuario == null) {
+      return new ModelAndView(REDIRECCION_LOGIN);
+    }
     Map<String, Object> modelo = new ModelMap();
     try {
       Grupo grupo = servicioGrupo.buscarPorNombre(nombre);
@@ -57,6 +66,9 @@ public class ControladorGrupo {
       datosGrupo.setNombre(grupo.getNombre());
       datosGrupo.setCantidadDeIntegrantes(servicioGrupo.cantidadParticipantes(nombre));
       datosGrupo.setIntegrantes(armarIntegrantes(servicioGrupo.listarIntegrantes(nombre), grupo));
+      // Para el panel "Opciones": solo los integrantes pueden editar o salir.
+      datosGrupo.setSoyIntegrante(servicioGrupo.esIntegrante(grupo, usuario));
+      datosGrupo.setSoyAdministrador(grupo.esAdministradoPor(usuario));
       modelo.put("datosGrupo", datosGrupo);
       return new ModelAndView("paginas/grupo/grupo-detalle", modelo);
     } catch (GrupoNoEncontrado e) {
@@ -104,7 +116,7 @@ public class ControladorGrupo {
 
   //  ABM de grupo
 
-  // Alta: muestra el formulario vacío.
+  // Alta: muestra el formulario vacio.
   @GetMapping("/grupos/nuevo")
   public ModelAndView irANuevoGrupo(HttpServletRequest request) {
     if (obtenerUsuarioLogueado(request) == null) {
@@ -136,10 +148,10 @@ public class ControladorGrupo {
     }
   }
 
-  // Modificación: muestra el formulario con el nombre actual (solo el administrador).
+  // Modificacion: muestra el formulario con el nombre actual (solo el administrador).
   @GetMapping("/grupos/{nombreActual}/editar")
   public ModelAndView irAEditarGrupo(
-    @PathVariable("nombreActual") String nombreActual,
+    @PathVariable(NOMBRE_ACTUAL) String nombreActual,
     HttpServletRequest request,
     RedirectAttributes redirectAttributes
   ) {
@@ -148,20 +160,20 @@ public class ControladorGrupo {
       return new ModelAndView(REDIRECCION_LOGIN);
     }
     try {
-      Grupo grupo = servicioGrupo.buscarGrupoAdministrado(nombreActual, usuario);
+      Grupo grupo = servicioGrupo.buscarGrupoDeIntegrante(nombreActual, usuario);
       return armarFormulario(grupo.getNombre(), grupo.getNombre(), null);
     } catch (GrupoNoEncontrado e) {
       redirectAttributes.addFlashAttribute(MENSAJE_ERROR, GRUPO_NO_EXISTE);
-    } catch (NoEsAdministradorDelGrupo e) {
+    } catch (NoEsIntegranteDelGrupo e) {
       redirectAttributes.addFlashAttribute(MENSAJE_ERROR, e.getMessage());
     }
     return new ModelAndView(REDIRECCION_GRUPOS);
   }
 
-  // Modificación: guarda el nombre nuevo.
+  // Modificacion: guarda el nombre nuevo.
   @PostMapping("/grupos/{nombreActual}/editar")
   public ModelAndView editarGrupo(
-    @PathVariable("nombreActual") String nombreActual,
+    @PathVariable(NOMBRE_ACTUAL) String nombreActual,
     @RequestParam(NOMBRE) String nombreNuevo,
     HttpServletRequest request,
     RedirectAttributes redirectAttributes
@@ -172,12 +184,16 @@ public class ControladorGrupo {
     }
     try {
       servicioGrupo.modificarGrupo(nombreActual, nombreNuevo, usuario);
-      redirectAttributes.addFlashAttribute(MENSAJE_EXITO, "Grupo actualizado");
+      redirectAttributes.addFlashAttribute(MENSAJE_EXITO, "Nombre del grupo actualizado");
+      // Vuelve al detalle del grupo, ya con el nombre nuevo. Se pasa como atributo para que
+      // Spring arme bien la dirección aunque el nombre tenga espacios o tildes.
+      redirectAttributes.addAttribute(NOMBRE, nombreNuevo.trim());
+      return new ModelAndView("redirect:/grupos/{nombre}");
     } catch (NombreDeGrupoInvalido | GrupoExistente e) {
       return armarFormulario(nombreActual, nombreNuevo, e.getMessage());
     } catch (GrupoNoEncontrado e) {
       redirectAttributes.addFlashAttribute(MENSAJE_ERROR, GRUPO_NO_EXISTE);
-    } catch (NoEsAdministradorDelGrupo e) {
+    } catch (NoEsIntegranteDelGrupo e) {
       redirectAttributes.addFlashAttribute(MENSAJE_ERROR, e.getMessage());
     }
     return new ModelAndView(REDIRECCION_GRUPOS);
@@ -186,7 +202,7 @@ public class ControladorGrupo {
   // Baja: elimina el grupo (solo el administrador).
   @PostMapping("/grupos/{nombreActual}/eliminar")
   public ModelAndView eliminarGrupo(
-    @PathVariable("nombreActual") String nombreActual,
+    @PathVariable(NOMBRE_ACTUAL) String nombreActual,
     HttpServletRequest request,
     RedirectAttributes redirectAttributes
   ) {
@@ -205,7 +221,46 @@ public class ControladorGrupo {
     return new ModelAndView(REDIRECCION_GRUPOS);
   }
 
-  // nombreOriginal == null significa alta; si tiene valor, es la edición de ese grupo.
+  // Salir del grupo: si sale el administrador, la administracion pasa a otro integrante.
+  @PostMapping("/grupos/{nombreActual}/salir")
+  public ModelAndView salirDelGrupo(
+    @PathVariable(NOMBRE_ACTUAL) String nombreActual,
+    HttpServletRequest request,
+    RedirectAttributes redirectAttributes
+  ) {
+    Usuario usuario = obtenerUsuarioLogueado(request);
+    if (usuario == null) {
+      return new ModelAndView(REDIRECCION_LOGIN);
+    }
+    try {
+      SalidaDeGrupo salida = servicioGrupo.salirDelGrupo(nombreActual, usuario);
+      redirectAttributes.addFlashAttribute(MENSAJE_EXITO, mensajeDeSalida(salida));
+    } catch (GrupoNoEncontrado e) {
+      redirectAttributes.addFlashAttribute(MENSAJE_ERROR, GRUPO_NO_EXISTE);
+    } catch (NoEsIntegranteDelGrupo e) {
+      redirectAttributes.addFlashAttribute(MENSAJE_ERROR, e.getMessage());
+    }
+    return new ModelAndView(REDIRECCION_GRUPOS);
+  }
+
+  private String mensajeDeSalida(SalidaDeGrupo salida) {
+    if (salida.isGrupoEliminado()) {
+      return "Saliste del grupo. Como eras el único integrante, el grupo se eliminó.";
+    }
+    Usuario nuevo = salida.getNuevoAdministrador();
+    if (nuevo != null) {
+      return (
+        "Saliste del grupo. Ahora " +
+        nuevo.getNombre() +
+        " " +
+        nuevo.getApellido() +
+        " es administrador/a."
+      );
+    }
+    return "Saliste del grupo.";
+  }
+
+  // nombreOriginal == null significa alta; si tiene valor, es la edicion de ese grupo.
   private ModelAndView armarFormulario(String nombreOriginal, String nombre, String error) {
     Map<String, Object> modelo = new ModelMap();
     modelo.put("nombreOriginal", nombreOriginal);

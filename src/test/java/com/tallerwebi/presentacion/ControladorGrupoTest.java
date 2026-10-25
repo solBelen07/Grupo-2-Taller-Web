@@ -8,19 +8,26 @@ import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoExistente;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoExistente;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsAdministradorDelGrupo;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsAdministradorDelGrupo;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsIntegranteDelGrupo;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.NombreDeGrupoInvalido;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.NombreDeGrupoInvalido;
 import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.SalidaDeGrupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import com.tallerwebi.presentacion.grupo.ControladorGrupo;
 import com.tallerwebi.presentacion.grupo.DatosGrupo;
+import com.tallerwebi.presentacion.grupo.DatosIntegrante;
 import com.tallerwebi.presentacion.grupo.DatosIntegrante;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 public class ControladorGrupoTest {
@@ -43,7 +50,7 @@ public class ControladorGrupoTest {
     String nombre = "grupo1";
     grupoMock.setNombre(nombre);
     when(servicioGrupoMock.buscarPorNombre(nombre)).thenReturn(grupoMock);
-    ModelAndView modelAndView = controladorGrupo.verGrupo(nombre);
+    ModelAndView modelAndView = controladorGrupo.verGrupo(nombre, requestConUsuarioLogueado());
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/grupo/grupo-detalle"));
   }
 
@@ -68,7 +75,7 @@ public class ControladorGrupoTest {
     throws GrupoNoEncontrado {
     doThrow(GrupoNoEncontrado.class).when(servicioGrupoMock).buscarPorNombre("grupo2");
 
-    ModelAndView modelAndView = controladorGrupo.verGrupo("grupo2");
+    ModelAndView modelAndView = controladorGrupo.verGrupo("grupo2", requestConUsuarioLogueado());
 
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/grupo/grupo-detalle"));
     assertThat(
@@ -139,7 +146,7 @@ public class ControladorGrupoTest {
     when(servicioGrupoMock.cantidadParticipantes("grupo1")).thenReturn(1);
     when(servicioGrupoMock.listarIntegrantes("grupo1")).thenReturn(List.of(integrante));
 
-    ModelAndView mav = controladorGrupo.verGrupo("grupo1");
+    ModelAndView mav = controladorGrupo.verGrupo("grupo1", requestConUsuarioLogueado());
 
     DatosGrupo datos = (DatosGrupo) mav.getModel().get("datosGrupo");
     assertEquals(1, datos.getIntegrantes().size());
@@ -154,7 +161,7 @@ public class ControladorGrupoTest {
     when(servicioGrupoMock.buscarPorNombre("grupo1")).thenReturn(grupoMock);
     when(servicioGrupoMock.listarIntegrantes("grupo1")).thenReturn(null);
 
-    ModelAndView mav = controladorGrupo.verGrupo("grupo1");
+    ModelAndView mav = controladorGrupo.verGrupo("grupo1", requestConUsuarioLogueado());
 
     DatosGrupo datos = (DatosGrupo) mav.getModel().get("datosGrupo");
     assertEquals(0, datos.getIntegrantes().size());
@@ -225,10 +232,10 @@ public class ControladorGrupoTest {
   }
 
   @Test
-  public void elAdministradorPuedeAbrirElFormularioDeEdicion() throws Exception {
+  public void unIntegrantePuedeAbrirElFormularioDeEdicion() throws Exception {
     Grupo grupo = new Grupo();
     grupo.setNombre("grupo1");
-    when(servicioGrupoMock.buscarGrupoAdministrado(eq("grupo1"), any(Usuario.class)))
+    when(servicioGrupoMock.buscarGrupoDeIntegrante(eq("grupo1"), any(Usuario.class)))
       .thenReturn(grupo);
 
     ModelAndView mav = controladorGrupo.irAEditarGrupo(
@@ -242,9 +249,9 @@ public class ControladorGrupoTest {
   }
 
   @Test
-  public void quienNoEsAdministradorNoPuedeAbrirLaEdicion() throws Exception {
-    when(servicioGrupoMock.buscarGrupoAdministrado(eq("grupo1"), any(Usuario.class)))
-      .thenThrow(new NoEsAdministradorDelGrupo());
+  public void quienNoEsIntegranteNoPuedeAbrirLaEdicion() throws Exception {
+    when(servicioGrupoMock.buscarGrupoDeIntegrante(eq("grupo1"), any(Usuario.class)))
+      .thenThrow(new NoEsIntegranteDelGrupo());
     RedirectAttributesModelMap redirect = new RedirectAttributesModelMap();
 
     ModelAndView mav = controladorGrupo.irAEditarGrupo(
@@ -255,14 +262,14 @@ public class ControladorGrupoTest {
 
     assertEquals("redirect:/grupos", mav.getViewName());
     assertEquals(
-      "Solo el administrador del grupo puede hacer esto",
+      "Solo los integrantes del grupo pueden hacer esto",
       redirect.getFlashAttributes().get("error")
     );
   }
 
   @Test
   public void editarUnGrupoQueNoExisteDeberiaVolverALaListaConError() throws Exception {
-    when(servicioGrupoMock.buscarGrupoAdministrado(eq("x"), any(Usuario.class)))
+    when(servicioGrupoMock.buscarGrupoDeIntegrante(eq("x"), any(Usuario.class)))
       .thenThrow(new GrupoNoEncontrado());
     RedirectAttributesModelMap redirect = new RedirectAttributesModelMap();
 
@@ -273,19 +280,21 @@ public class ControladorGrupoTest {
   }
 
   @Test
-  public void guardarLaEdicionDeberiaModificarElGrupoYVolverALaLista() throws Exception {
+  public void guardarLaEdicionDeberiaModificarElGrupoYVolverAlDetalleConElNombreNuevo()
+    throws Exception {
     RedirectAttributesModelMap redirect = new RedirectAttributesModelMap();
 
     ModelAndView mav = controladorGrupo.editarGrupo(
       "viejo",
-      "nuevo",
+      "  nuevo  ",
       requestConUsuarioLogueado(),
       redirect
     );
 
-    assertEquals("redirect:/grupos", mav.getViewName());
-    verify(servicioGrupoMock).modificarGrupo(eq("viejo"), eq("nuevo"), any(Usuario.class));
-    assertEquals("Grupo actualizado", redirect.getFlashAttributes().get("exito"));
+    assertEquals("redirect:/grupos/{nombre}", mav.getViewName());
+    assertEquals("nuevo", redirect.get("nombre"));
+    verify(servicioGrupoMock).modificarGrupo(eq("viejo"), eq("  nuevo  "), any(Usuario.class));
+    assertEquals("Nombre del grupo actualizado", redirect.getFlashAttributes().get("exito"));
   }
 
   @Test
@@ -307,8 +316,8 @@ public class ControladorGrupoTest {
   }
 
   @Test
-  public void guardarLaEdicionSinSerAdministradorDeberiaVolverALaListaConError() throws Exception {
-    doThrow(new NoEsAdministradorDelGrupo())
+  public void guardarLaEdicionSinSerIntegranteDeberiaVolverALaListaConError() throws Exception {
+    doThrow(new NoEsIntegranteDelGrupo())
       .when(servicioGrupoMock)
       .modificarGrupo(eq("grupo1"), eq("otro"), any(Usuario.class));
     RedirectAttributesModelMap redirect = new RedirectAttributesModelMap();
@@ -322,7 +331,7 @@ public class ControladorGrupoTest {
 
     assertEquals("redirect:/grupos", mav.getViewName());
     assertEquals(
-      "Solo el administrador del grupo puede hacer esto",
+      "Solo los integrantes del grupo pueden hacer esto",
       redirect.getFlashAttributes().get("error")
     );
   }
@@ -430,11 +439,118 @@ public class ControladorGrupoTest {
     when(servicioGrupoMock.listarIntegrantes("grupo1")).thenReturn(List.of(creador, miembro));
 
     DatosGrupo datos = (DatosGrupo) controladorGrupo
-      .verGrupo("grupo1")
+      .verGrupo("grupo1", requestConUsuarioLogueado())
       .getModel()
       .get("datosGrupo");
 
     assertEquals(true, datos.getIntegrantes().get(0).isAdministrador());
     assertEquals(false, datos.getIntegrantes().get(1).isAdministrador());
+  }
+
+  // Panel Opciones: salir del grupo
+
+  @Test
+  public void verElDetalleSinLoginDeberiaRedirigirAlLogin() {
+    assertEquals(
+      "redirect:/login",
+      controladorGrupo.verGrupo("grupo1", new MockHttpServletRequest()).getViewName()
+    );
+  }
+
+  @Test
+  public void elDetalleDeberiaIndicarSiSoyIntegranteYAdministrador() throws GrupoNoEncontrado {
+    MockHttpServletRequest request = requestConUsuarioLogueado();
+    Usuario yo = (Usuario) request.getSession().getAttribute("USUARIO");
+    yo.setId(1L);
+    Grupo grupo = new Grupo();
+    grupo.setNombre("grupo1");
+    grupo.setCreador(yo);
+    when(servicioGrupoMock.buscarPorNombre("grupo1")).thenReturn(grupo);
+    when(servicioGrupoMock.esIntegrante(grupo, yo)).thenReturn(true);
+
+    DatosGrupo datos = (DatosGrupo) controladorGrupo
+      .verGrupo("grupo1", request)
+      .getModel()
+      .get("datosGrupo");
+
+    assertEquals(true, datos.isSoyIntegrante());
+    assertEquals(true, datos.isSoyAdministrador());
+  }
+
+  @Test
+  public void unMiembroQueSaleVuelveALaListaConMensaje() throws Exception {
+    when(servicioGrupoMock.salirDelGrupo(eq("grupo1"), any(Usuario.class)))
+      .thenReturn(SalidaDeGrupo.deMiembro());
+    RedirectAttributesModelMap redirect = new RedirectAttributesModelMap();
+
+    ModelAndView mav = controladorGrupo.salirDelGrupo(
+      "grupo1",
+      requestConUsuarioLogueado(),
+      redirect
+    );
+
+    assertEquals("redirect:/grupos", mav.getViewName());
+    assertEquals("Saliste del grupo.", redirect.getFlashAttributes().get("exito"));
+  }
+
+  @Test
+  public void siSaleElAdministradorElMensajeDiceQuienEsElNuevoAdministrador() throws Exception {
+    Usuario nuevo = new Usuario();
+    nuevo.setNombre("Usuario1");
+    nuevo.setApellido("Test");
+    when(servicioGrupoMock.salirDelGrupo(eq("grupo1"), any(Usuario.class)))
+      .thenReturn(SalidaDeGrupo.conNuevoAdministrador(nuevo));
+    RedirectAttributesModelMap redirect = new RedirectAttributesModelMap();
+
+    controladorGrupo.salirDelGrupo("grupo1", requestConUsuarioLogueado(), redirect);
+
+    assertEquals(
+      "Saliste del grupo. Ahora Usuario1 Test es administrador/a.",
+      redirect.getFlashAttributes().get("exito")
+    );
+  }
+
+  @Test
+  public void siSaleElUnicoIntegranteElMensajeAvisaQueSeElimino() throws Exception {
+    when(servicioGrupoMock.salirDelGrupo(eq("grupo1"), any(Usuario.class)))
+      .thenReturn(SalidaDeGrupo.conGrupoEliminado());
+    RedirectAttributesModelMap redirect = new RedirectAttributesModelMap();
+
+    controladorGrupo.salirDelGrupo("grupo1", requestConUsuarioLogueado(), redirect);
+
+    assertEquals(
+      "Saliste del grupo. Como eras el único integrante, el grupo se eliminó.",
+      redirect.getFlashAttributes().get("exito")
+    );
+  }
+
+  @Test
+  public void salirSinSerIntegranteOSinGrupoDeberiaMostrarError() throws Exception {
+    when(servicioGrupoMock.salirDelGrupo(eq("ajeno"), any(Usuario.class)))
+      .thenThrow(new NoEsIntegranteDelGrupo());
+    when(servicioGrupoMock.salirDelGrupo(eq("x"), any(Usuario.class)))
+      .thenThrow(new GrupoNoEncontrado());
+    RedirectAttributesModelMap r1 = new RedirectAttributesModelMap();
+    RedirectAttributesModelMap r2 = new RedirectAttributesModelMap();
+
+    controladorGrupo.salirDelGrupo("ajeno", requestConUsuarioLogueado(), r1);
+    controladorGrupo.salirDelGrupo("x", requestConUsuarioLogueado(), r2);
+
+    assertEquals(
+      "Solo los integrantes del grupo pueden hacer esto",
+      r1.getFlashAttributes().get("error")
+    );
+    assertEquals("El grupo no existe", r2.getFlashAttributes().get("error"));
+  }
+
+  @Test
+  public void salirSinLoginDeberiaRedirigirAlLogin() {
+    ModelAndView mav = controladorGrupo.salirDelGrupo(
+      "grupo1",
+      new MockHttpServletRequest(),
+      new RedirectAttributesModelMap()
+    );
+
+    assertEquals("redirect:/login", mav.getViewName());
   }
 }

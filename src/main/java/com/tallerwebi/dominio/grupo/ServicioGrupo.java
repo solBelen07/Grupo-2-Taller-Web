@@ -4,6 +4,7 @@ import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoExistente;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsAdministradorDelGrupo;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsIntegranteDelGrupo;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.NombreDeGrupoInvalido;
 import java.util.List;
 
@@ -18,8 +19,19 @@ public interface ServicioGrupo {
   Grupo buscarGrupoAdministrado(String nombre, Usuario usuario)
     throws GrupoNoEncontrado, NoEsAdministradorDelGrupo;
 
+  // Cualquier integrante (administrador o miembro) puede cambiar el nombre.
   void modificarGrupo(String nombreActual, String nombreNuevo, Usuario usuario)
-    throws GrupoNoEncontrado, NoEsAdministradorDelGrupo, NombreDeGrupoInvalido, GrupoExistente;
+    throws GrupoNoEncontrado, NoEsIntegranteDelGrupo, NombreDeGrupoInvalido, GrupoExistente;
+
+  Grupo buscarGrupoDeIntegrante(String nombre, Usuario usuario)
+    throws GrupoNoEncontrado, NoEsIntegranteDelGrupo;
+
+  boolean esIntegrante(Grupo grupo, Usuario usuario);
+
+  // Si sale el administrador, la administracion pasa al integrante mas antiguo.
+  // Si no queda nadie, el grupo se elimina.
+  SalidaDeGrupo salirDelGrupo(String nombre, Usuario usuario)
+    throws GrupoNoEncontrado, NoEsIntegranteDelGrupo;
 
   void eliminarGrupo(String nombre, Usuario usuario)
     throws GrupoNoEncontrado, NoEsAdministradorDelGrupo;

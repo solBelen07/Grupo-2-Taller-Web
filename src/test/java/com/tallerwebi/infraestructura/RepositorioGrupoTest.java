@@ -139,7 +139,7 @@ public class RepositorioGrupoTest {
   @Test
   @Transactional
   @Rollback
-  public void deberiaIncluirLosGruposDondeElUsuarioInvitoAAlguien() {
+  public void noDeberiaIncluirUnGrupoSoloPorHaberInvitadoAAlguien() {
     Usuario invitado = crearUsuario("invitado@prueba.com");
     dadoQueExisteElUsuario(usuario);
     dadoQueExisteElGrupo(grupo);
@@ -147,7 +147,7 @@ public class RepositorioGrupoTest {
 
     List<Grupo> grupos = this.repositorioGrupo.listarGruposPorUsuario(usuario.getEmail());
 
-    assertThat(grupos.size(), equalTo(1));
+    assertThat(grupos.size(), equalTo(0));
   }
 
   @Test
@@ -199,9 +199,10 @@ public class RepositorioGrupoTest {
   @Test
   @Transactional
   @Rollback
-  public void laCantidadDeIntegrantesDeberiaContarAlQueInvitaYALosQueAceptaron() {
+  public void laCantidadDeIntegrantesDeberiaContarAlCreadorYALosQueAceptaron() {
     Usuario aceptado = crearUsuario("aceptado@prueba.com");
     dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
     dadoQueExisteElGrupo(grupo);
     dadoQueExisteUnaInvitacion(crearInvitacion(usuario, aceptado, grupo, Estado.ACEPTADA));
 
@@ -217,6 +218,7 @@ public class RepositorioGrupoTest {
     Usuario pendiente = crearUsuario("pendiente@prueba.com");
     Usuario rechazado = crearUsuario("rechazado@prueba.com");
     dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
     dadoQueExisteElGrupo(grupo);
     dadoQueExisteUnaInvitacion(crearInvitacion(usuario, pendiente, grupo, Estado.PENDIENTE));
     dadoQueExisteUnaInvitacion(crearInvitacion(usuario, rechazado, grupo, Estado.RECHAZADA));
@@ -262,6 +264,7 @@ public class RepositorioGrupoTest {
     Usuario aceptado = crearUsuario("aceptado@prueba.com");
     Usuario deOtroGrupo = crearUsuario("otro@prueba.com");
     dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
     dadoQueExisteElGrupo(grupo);
     dadoQueExisteElGrupo(otroGrupo);
     dadoQueExisteUnaInvitacion(crearInvitacion(usuario, aceptado, grupo, Estado.ACEPTADA));
@@ -275,10 +278,11 @@ public class RepositorioGrupoTest {
   @Test
   @Transactional
   @Rollback
-  public void listarIntegrantesDeberiaDevolverAlQueInvitaYALosQueAceptaronSinPendientes() {
+  public void listarIntegrantesDeberiaDevolverAlCreadorYALosQueAceptaronSinPendientes() {
     Usuario aceptado = crearUsuario("aceptado@prueba.com");
     Usuario pendiente = crearUsuario("pendiente@prueba.com");
     dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
     dadoQueExisteElGrupo(grupo);
     dadoQueExisteUnaInvitacion(crearInvitacion(usuario, aceptado, grupo, Estado.ACEPTADA));
     dadoQueExisteUnaInvitacion(crearInvitacion(usuario, pendiente, grupo, Estado.PENDIENTE));
@@ -355,7 +359,7 @@ public class RepositorioGrupoTest {
     dadoQueExisteElUsuario(usuario);
     grupo.setCreador(usuario);
     dadoQueExisteElGrupo(grupo);
-    // el creador además invitó a alguien: igual tiene que contarse una sola vez
+    // el creador ademas invito a alguien: igual tiene que contarse una sola vez
     dadoQueExisteUnaInvitacion(crearInvitacion(usuario, aceptado, grupo, Estado.ACEPTADA));
 
     assertThat(this.repositorioGrupo.cantidadParticipantes("grupo-existente"), equalTo(2));
@@ -428,5 +432,63 @@ public class RepositorioGrupoTest {
 
     assertThat(integrantes.size(), equalTo(1));
     assertThat(integrantes.get(0).getEmail(), equalTo("usuario@prueba.com"));
+  }
+
+  // Salir del grupo
+
+  @Test
+  @Transactional
+  @Rollback
+  public void quitarIntegranteDeberiaDejarSuInvitacionComoAbandonadaYQueDejeDeContar() {
+    Usuario miembro = crearUsuario("miembro@prueba.com");
+    dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
+    dadoQueExisteElGrupo(grupo);
+    Invitacion invitacion = crearInvitacion(usuario, miembro, grupo, Estado.ACEPTADA);
+    dadoQueExisteUnaInvitacion(invitacion);
+
+    this.repositorioGrupo.quitarIntegrante(grupo, miembro);
+    this.sessionFactory.getCurrentSession().flush();
+    this.sessionFactory.getCurrentSession().clear();
+
+    Invitacion guardada =
+      this.sessionFactory.getCurrentSession().get(Invitacion.class, invitacion.getId());
+    assertThat(guardada.getEstadoInvitacion(), equalTo(Estado.ABANDONADA));
+    assertThat(this.repositorioGrupo.cantidadParticipantes("grupo-existente"), equalTo(1));
+    assertThat(
+      this.repositorioGrupo.listarGruposPorUsuario("miembro@prueba.com").size(),
+      equalTo(0)
+    );
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void elIntegranteMasAntiguoEsElPrimeroQueAcepto() {
+    Usuario primero = crearUsuario("primero@prueba.com");
+    Usuario segundo = crearUsuario("segundo@prueba.com");
+    dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
+    dadoQueExisteElGrupo(grupo);
+    dadoQueExisteUnaInvitacion(crearInvitacion(usuario, primero, grupo, Estado.ACEPTADA));
+    dadoQueExisteUnaInvitacion(crearInvitacion(usuario, segundo, grupo, Estado.ACEPTADA));
+
+    Usuario masAntiguo = this.repositorioGrupo.buscarIntegranteMasAntiguo(grupo, usuario);
+
+    assertThat(masAntiguo.getEmail(), equalTo("primero@prueba.com"));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void elIntegranteMasAntiguoNoTieneEnCuentaPendientesNiAlExcluido() {
+    Usuario pendiente = crearUsuario("pendiente@prueba.com");
+    dadoQueExisteElUsuario(usuario);
+    grupo.setCreador(usuario);
+    dadoQueExisteElGrupo(grupo);
+    dadoQueExisteUnaInvitacion(crearInvitacion(usuario, pendiente, grupo, Estado.PENDIENTE));
+    dadoQueExisteUnaInvitacion(crearInvitacion(pendiente, usuario, grupo, Estado.ACEPTADA));
+
+    assertThat(this.repositorioGrupo.buscarIntegranteMasAntiguo(grupo, usuario), equalTo(null));
   }
 }

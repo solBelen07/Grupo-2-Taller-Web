@@ -8,6 +8,8 @@ public class DatosGrupo {
   private String nombre;
   private Integer cantidadDeIntegrantes;
   private List<DatosIntegrante> integrantes = new ArrayList<>();
+  private boolean soyIntegrante;
+  private boolean soyAdministrador;
 
   public DatosGrupo(String nombre, Integer cantidadDeIntegrantes) {
     this.nombre = nombre;
@@ -38,5 +40,21 @@ public class DatosGrupo {
 
   public void setIntegrantes(List<DatosIntegrante> integrantes) {
     this.integrantes = integrantes;
+  }
+
+  public boolean isSoyIntegrante() {
+    return soyIntegrante;
+  }
+
+  public void setSoyIntegrante(boolean soyIntegrante) {
+    this.soyIntegrante = soyIntegrante;
+  }
+
+  public boolean isSoyAdministrador() {
+    return soyAdministrador;
+  }
+
+  public void setSoyAdministrador(boolean soyAdministrador) {
+    this.soyAdministrador = soyAdministrador;
   }
 }

@@ -13,5 +13,7 @@ public interface RepositorioGrupo {
   void guardar(Grupo grupo);
   void modificar(Grupo grupo);
   void eliminar(Grupo grupo);
+  Usuario buscarIntegranteMasAntiguo(Grupo grupo, Usuario excluido);
+  void quitarIntegrante(Grupo grupo, Usuario usuario);
   List<Usuario> listarIntegrantes(String nombre);
 }

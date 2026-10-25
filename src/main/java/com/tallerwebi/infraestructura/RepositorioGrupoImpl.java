@@ -11,6 +11,9 @@ import org.springframework.stereotype.Repository;
 @Repository("repositorioGrupo")
 public class RepositorioGrupoImpl implements RepositorioGrupo {
 
+  private static final String PARAM_ACEPTADA = "aceptada";
+  private static final String PARAM_GRUPO = "grupo";
+
   private SessionFactory sessionFactory;
 
   public RepositorioGrupoImpl(SessionFactory sessionFactory) {
@@ -36,16 +39,15 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
   public List<Grupo> listarGruposPorUsuario(String email) {
     // grupos a los que el usuario pertenece o fue invitado.
     // - Como creador: es el administrador del grupo.
-    // - Como invitado: invitaciones ACEPTADAS (pertenece) o PENDIENTES (fue invitado). Las RECHAZADAS no.
-    // - Como emisor: si invitó a alguien a un grupo, es porque forma parte de ese grupo.
+    // - Como invitado: invitaciones ACEPTADAS (pertenece) o PENDIENTES (fue invitado).
+    //   Las RECHAZADAS y las ABANDONADAS (salió del grupo) no.
     return sessionFactory
       .getCurrentSession()
       .createQuery(
         "select distinct g from Grupo g left join g.creador c " +
         "where c.email = :email " +
         "or g in (select i.grupo from Invitacion i " +
-        "         where (i.receptor.email = :email and i.estado in (:estadosVisibles)) " +
-        "         or i.emisor.email = :email)",
+        "         where i.receptor.email = :email and i.estado in (:estadosVisibles))",
         Grupo.class
       )
       .setParameter("email", email)
@@ -56,22 +58,20 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
   @Override
   public Integer cantidadParticipantes(String nombre) {
     // cuenta los usuarios confirmados del grupo, sin repetir:
-    // - el creador del grupo,
-    // - los que aceptaron una invitación (receptor con estado ACEPTADA), y
-    // - los que invitaron a alguien (emisor): si invitaron, forman parte del grupo.
-    // Las invitaciones PENDIENTES o RECHAZADAS no suman.
+    // - el creador del grupo, y
+    // - los que aceptaron una invitación (receptor con estado ACEPTADA).
+    // Las invitaciones PENDIENTES, RECHAZADAS o ABANDONADAS no suman.
     Long count = sessionFactory
       .getCurrentSession()
       .createQuery(
         "select count(distinct u) from Usuario u " +
         "where u in (select g.creador from Grupo g where g.nombre = :nombreGrupo) " +
         "or u in (select i.receptor from Invitacion i " +
-        "            where i.grupo.nombre = :nombreGrupo and i.estado = :aceptada) " +
-        "or u in (select i.emisor from Invitacion i where i.grupo.nombre = :nombreGrupo)",
+        "            where i.grupo.nombre = :nombreGrupo and i.estado = :aceptada)",
         Long.class
       )
       .setParameter("nombreGrupo", nombre)
-      .setParameter("aceptada", Estado.ACEPTADA)
+      .setParameter(PARAM_ACEPTADA, Estado.ACEPTADA)
       .uniqueResult();
 
     return count != null ? count.intValue() : 0;
@@ -79,8 +79,7 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
 
   @Override
   public List<Usuario> listarIntegrantes(String nombre) {
-    // Mismo criterio que cantidadParticipantes: el creador, los que aceptaron
-    // una invitación y los que invitaron a alguien al grupo, sin repetir.
+    // Mismo criterio que cantidadParticipantes: el creador y los que aceptaron una invitación.
     return sessionFactory
       .getCurrentSession()
       .createQuery(
@@ -88,12 +87,11 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
         "where u in (select g.creador from Grupo g where g.nombre = :nombreGrupo) " +
         "or u in (select i.receptor from Invitacion i " +
         "            where i.grupo.nombre = :nombreGrupo and i.estado = :aceptada) " +
-        "or u in (select i.emisor from Invitacion i where i.grupo.nombre = :nombreGrupo) " +
         "order by u.nombre",
         Usuario.class
       )
       .setParameter("nombreGrupo", nombre)
-      .setParameter("aceptada", Estado.ACEPTADA)
+      .setParameter(PARAM_ACEPTADA, Estado.ACEPTADA)
       .list();
   }
 
@@ -114,13 +112,47 @@ public class RepositorioGrupoImpl implements RepositorioGrupo {
     sessionFactory
       .getCurrentSession()
       .createMutationQuery("delete from Invitacion i where i.grupo = :grupo")
-      .setParameter("grupo", grupo)
+      .setParameter(PARAM_GRUPO, grupo)
       .executeUpdate();
     sessionFactory
       .getCurrentSession()
       .createMutationQuery("update Tarea t set t.grupo = null where t.grupo = :grupo")
-      .setParameter("grupo", grupo)
+      .setParameter(PARAM_GRUPO, grupo)
       .executeUpdate();
     sessionFactory.getCurrentSession().remove(grupo);
+  }
+
+  @Override
+  public Usuario buscarIntegranteMasAntiguo(Grupo grupo, Usuario excluido) {
+    // El primero que acepto una invitacion (la de id más chico), sin contar al excluido.
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "select i.receptor from Invitacion i " +
+        "where i.grupo = :grupo and i.estado = :aceptada and i.receptor.id <> :idExcluido " +
+        "order by i.id",
+        Usuario.class
+      )
+      .setParameter(PARAM_GRUPO, grupo)
+      .setParameter(PARAM_ACEPTADA, Estado.ACEPTADA)
+      .setParameter("idExcluido", excluido.getId())
+      .setMaxResults(1)
+      .uniqueResult();
+  }
+
+  @Override
+  public void quitarIntegrante(Grupo grupo, Usuario usuario) {
+    // No se borra la invitacion: pasa a ABANDONADA, asi queda el historial.
+    sessionFactory
+      .getCurrentSession()
+      .createMutationQuery(
+        "update Invitacion i set i.estado = :abandonada, i.vigente = false " +
+        "where i.grupo = :grupo and i.receptor.id = :idUsuario and i.estado = :aceptada"
+      )
+      .setParameter("abandonada", Estado.ABANDONADA)
+      .setParameter(PARAM_GRUPO, grupo)
+      .setParameter("idUsuario", usuario.getId())
+      .setParameter(PARAM_ACEPTADA, Estado.ACEPTADA)
+      .executeUpdate();
   }
 }

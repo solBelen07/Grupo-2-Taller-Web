@@ -3,15 +3,21 @@ package com.tallerwebi.dominio;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoExistente;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoExistente;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsAdministradorDelGrupo;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsAdministradorDelGrupo;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsIntegranteDelGrupo;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.NombreDeGrupoInvalido;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.NombreDeGrupoInvalido;
 import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.RepositorioGrupo;
+import com.tallerwebi.dominio.grupo.SalidaDeGrupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupoImpl;
 import java.util.List;
@@ -208,12 +214,12 @@ public class ServicioGrupoTest {
   }
 
   @Test
-  public void unUsuarioQueNoEsAdministradorNoPuedeModificarElGrupo() {
+  public void unUsuarioQueNoEsIntegranteNoPuedeModificarElGrupo() {
     when(repositorioGrupoMock.buscar("grupo1"))
       .thenReturn(grupoCreadoPor("grupo1", usuarioConId(1L)));
 
     assertThrows(
-      NoEsAdministradorDelGrupo.class,
+      NoEsIntegranteDelGrupo.class,
       () -> servicioGrupo.modificarGrupo("grupo1", "otro", usuarioConId(2L))
     );
     verify(repositorioGrupoMock, never()).modificar(any(Grupo.class));
@@ -273,5 +279,100 @@ public class ServicioGrupoTest {
     grupo.setNombre(nombre);
     grupo.setCreador(creador);
     return grupo;
+  }
+
+  // Editar como integrante y salir del grupo
+
+  @Test
+  public void unMiembroQueNoEsAdministradorTambienPuedeCambiarElNombre() throws Exception {
+    Usuario admin = usuarioConId(1L);
+    Usuario miembro = usuarioConId(2L);
+    Grupo grupo = grupoCreadoPor("viejo", admin);
+    when(repositorioGrupoMock.buscar("viejo")).thenReturn(grupo);
+    when(repositorioGrupoMock.listarIntegrantes("viejo")).thenReturn(List.of(admin, miembro));
+
+    servicioGrupo.modificarGrupo("viejo", "nuevo", miembro);
+
+    assertThat(grupo.getNombre(), equalTo("nuevo"));
+    verify(repositorioGrupoMock).modificar(grupo);
+  }
+
+  @Test
+  public void esIntegranteDeberiaSerVerdaderoParaElAdminYLosMiembros() {
+    Usuario admin = usuarioConId(1L);
+    Usuario miembro = usuarioConId(2L);
+    Grupo grupo = grupoCreadoPor("g", admin);
+    when(repositorioGrupoMock.listarIntegrantes("g")).thenReturn(List.of(admin, miembro));
+
+    assertThat(servicioGrupo.esIntegrante(grupo, admin), equalTo(true));
+    assertThat(servicioGrupo.esIntegrante(grupo, miembro), equalTo(true));
+    assertThat(servicioGrupo.esIntegrante(grupo, usuarioConId(3L)), equalTo(false));
+    assertThat(servicioGrupo.esIntegrante(grupo, null), equalTo(false));
+  }
+
+  @Test
+  public void esIntegranteConListaNulaDeberiaSerFalso() {
+    Grupo grupo = grupoCreadoPor("g", usuarioConId(1L));
+    when(repositorioGrupoMock.listarIntegrantes("g")).thenReturn(null);
+
+    assertThat(servicioGrupo.esIntegrante(grupo, usuarioConId(2L)), equalTo(false));
+  }
+
+  @Test
+  public void unMiembroQueSaleSoloDejaDeSerIntegrante() throws Exception {
+    Usuario admin = usuarioConId(1L);
+    Usuario miembro = usuarioConId(2L);
+    Grupo grupo = grupoCreadoPor("g", admin);
+    when(repositorioGrupoMock.buscar("g")).thenReturn(grupo);
+    when(repositorioGrupoMock.listarIntegrantes("g")).thenReturn(List.of(admin, miembro));
+
+    SalidaDeGrupo salida = servicioGrupo.salirDelGrupo("g", miembro);
+
+    verify(repositorioGrupoMock).quitarIntegrante(grupo, miembro);
+    assertThat(grupo.getCreador(), sameInstance(admin));
+    assertThat(salida.getNuevoAdministrador(), equalTo(null));
+    assertThat(salida.isGrupoEliminado(), equalTo(false));
+  }
+
+  @Test
+  public void siSaleElAdministradorLaAdministracionPasaAlIntegranteMasAntiguo() throws Exception {
+    Usuario admin = usuarioConId(1L);
+    Usuario sucesor = usuarioConId(2L);
+    Grupo grupo = grupoCreadoPor("g", admin);
+    when(repositorioGrupoMock.buscar("g")).thenReturn(grupo);
+    when(repositorioGrupoMock.buscarIntegranteMasAntiguo(grupo, admin)).thenReturn(sucesor);
+
+    SalidaDeGrupo salida = servicioGrupo.salirDelGrupo("g", admin);
+
+    assertThat(grupo.getCreador(), sameInstance(sucesor));
+    assertThat(salida.getNuevoAdministrador(), sameInstance(sucesor));
+    verify(repositorioGrupoMock).modificar(grupo);
+    verify(repositorioGrupoMock).quitarIntegrante(grupo, admin);
+    verify(repositorioGrupoMock, never()).eliminar(any(Grupo.class));
+  }
+
+  @Test
+  public void siSaleElAdministradorYNoQuedaNadieElGrupoSeElimina() throws Exception {
+    Usuario admin = usuarioConId(1L);
+    Grupo grupo = grupoCreadoPor("g", admin);
+    when(repositorioGrupoMock.buscar("g")).thenReturn(grupo);
+    when(repositorioGrupoMock.buscarIntegranteMasAntiguo(grupo, admin)).thenReturn(null);
+
+    SalidaDeGrupo salida = servicioGrupo.salirDelGrupo("g", admin);
+
+    assertThat(salida.isGrupoEliminado(), equalTo(true));
+    verify(repositorioGrupoMock).eliminar(grupo);
+  }
+
+  @Test
+  public void quienNoEsIntegranteNoPuedeSalirDelGrupo() {
+    when(repositorioGrupoMock.buscar("g")).thenReturn(grupoCreadoPor("g", usuarioConId(1L)));
+    when(repositorioGrupoMock.listarIntegrantes("g")).thenReturn(List.of());
+
+    assertThrows(
+      NoEsIntegranteDelGrupo.class,
+      () -> servicioGrupo.salirDelGrupo("g", usuarioConId(9L))
+    );
+    verify(repositorioGrupoMock, never()).quitarIntegrante(any(Grupo.class), any(Usuario.class));
   }
 }

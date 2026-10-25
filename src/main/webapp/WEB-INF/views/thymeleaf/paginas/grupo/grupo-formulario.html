@@ -29,6 +29,21 @@
             border-color: #2a253c;
             color: #8e8b99;
         }
+        .campo-con-icono {
+            position: relative;
+        }
+        .campo-con-icono i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8e8b99;
+            pointer-events: none;
+        }
+        .tp-form-card .campo-con-icono input {
+            padding: 10px 12px 10px 40px;
+            width: 100%;
+        }
         .btn-purple {
             background-color: #a855f7;
             color: white;
@@ -69,12 +84,11 @@
             <form th:action="${nombreOriginal == null} ? @{/grupos/crear} : @{/grupos/{nombre}/editar(nombre=${nombreOriginal})}" method="POST">
                 <div class="mb-4">
                     <label for="nombre" class="form-label text-muted small text-uppercase fw-bold">Nombre del grupo</label>
-                    <div class="input-group">
-                        <span class="input-group-text border-end-0">
-                            <i class="fa-solid fa-layer-group"></i>
-                        </span>
+                    <!-- El ícono va dentro del campo (antes quedaba arriba, separado del input) -->
+                    <div class="campo-con-icono">
+                        <i class="fa-solid fa-layer-group"></i>
                         <input type="text" id="nombre" name="nombre" th:value="${nombre}" maxlength="50"
-                               class="form-control form-control-custom border-start-0 ps-0" placeholder="Ej. Equipo Taller Web" required>
+                               class="form-control form-control-custom" placeholder="Ej. Equipo Taller Web" required>
                     </div>
                 </div>
 
@@ -82,7 +96,9 @@
                     <i class="fa-solid fa-check me-2"></i>
                     <span th:text="${nombreOriginal == null} ? 'Crear grupo' : 'Guardar cambios'">Crear grupo</span>
                 </button>
-                <a th:href="@{/grupos}" class="btn btn-outline-secondary border-0 w-100 text-muted">Cancelar</a>
+                <!-- Al editar, "Cancelar" vuelve al detalle del grupo; al crear, a la lista -->
+                <a th:href="${nombreOriginal == null} ? @{/grupos} : @{/grupos/{nombre}(nombre=${nombreOriginal})}"
+                   class="btn btn-outline-secondary border-0 w-100 text-muted">Cancelar</a>
             </form>
         </div>
 

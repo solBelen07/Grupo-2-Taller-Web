@@ -4,6 +4,7 @@ import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoExistente;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsAdministradorDelGrupo;
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsIntegranteDelGrupo;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.NombreDeGrupoInvalido;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -83,8 +84,8 @@ public class ServicioGrupoImpl implements ServicioGrupo {
 
   @Override
   public void modificarGrupo(String nombreActual, String nombreNuevo, Usuario usuario)
-    throws GrupoNoEncontrado, NoEsAdministradorDelGrupo, NombreDeGrupoInvalido, GrupoExistente {
-    Grupo grupo = buscarGrupoAdministrado(nombreActual, usuario);
+    throws GrupoNoEncontrado, NoEsIntegranteDelGrupo, NombreDeGrupoInvalido, GrupoExistente {
+    Grupo grupo = buscarGrupoDeIntegrante(nombreActual, usuario);
     String nombreValido = validarNombre(nombreNuevo);
 
     boolean cambiaDeNombre = !nombreValido.equals(grupo.getNombre());
@@ -103,7 +104,7 @@ public class ServicioGrupoImpl implements ServicioGrupo {
     repositorioGrupo.eliminar(grupo);
   }
 
-  // Devuelve el nombre sin espacios de más, o lanza la excepción con el motivo.
+  // Devuelve el nombre sin espacios de mas, o lanza la excepcion con el motivo.
   private String validarNombre(String nombre) throws NombreDeGrupoInvalido {
     if (nombre == null || nombre.isBlank()) {
       throw new NombreDeGrupoInvalido("El nombre del grupo es obligatorio");
@@ -119,5 +120,53 @@ public class ServicioGrupoImpl implements ServicioGrupo {
       throw new NombreDeGrupoInvalido("El nombre no puede contener \"/\"");
     }
     return nombreLimpio;
+  }
+
+  @Override
+  public Grupo buscarGrupoDeIntegrante(String nombre, Usuario usuario)
+    throws GrupoNoEncontrado, NoEsIntegranteDelGrupo {
+    Grupo grupo = buscarPorNombre(nombre);
+    if (!esIntegrante(grupo, usuario)) {
+      throw new NoEsIntegranteDelGrupo();
+    }
+    return grupo;
+  }
+
+  @Override
+  public boolean esIntegrante(Grupo grupo, Usuario usuario) {
+    if (usuario == null || usuario.getId() == null) {
+      return false;
+    }
+    if (grupo.esAdministradoPor(usuario)) {
+      return true;
+    }
+    List<Usuario> integrantes = repositorioGrupo.listarIntegrantes(grupo.getNombre());
+    return (
+      integrantes != null &&
+      integrantes.stream().anyMatch(integrante -> usuario.getId().equals(integrante.getId()))
+    );
+  }
+
+  @Override
+  public SalidaDeGrupo salirDelGrupo(String nombre, Usuario usuario)
+    throws GrupoNoEncontrado, NoEsIntegranteDelGrupo {
+    Grupo grupo = buscarGrupoDeIntegrante(nombre, usuario);
+
+    if (!grupo.esAdministradoPor(usuario)) {
+      repositorioGrupo.quitarIntegrante(grupo, usuario);
+      return SalidaDeGrupo.deMiembro();
+    }
+
+    // Sale el administrador: la administración pasa al integrante mas antiguo.
+    Usuario nuevoAdministrador = repositorioGrupo.buscarIntegranteMasAntiguo(grupo, usuario);
+    if (nuevoAdministrador == null) {
+      // No queda nadie mas en el grupo.
+      repositorioGrupo.eliminar(grupo);
+      return SalidaDeGrupo.conGrupoEliminado();
+    }
+    grupo.setCreador(nuevoAdministrador);
+    repositorioGrupo.modificar(grupo);
+    repositorioGrupo.quitarIntegrante(grupo, usuario);
+    return SalidaDeGrupo.conNuevoAdministrador(nuevoAdministrador);
   }
 }

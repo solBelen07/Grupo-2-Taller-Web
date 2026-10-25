@@ -72,7 +72,9 @@ public class ControladorGrupoTest {
     datosGrupo.setNombre(nombre);
     datosGrupo.setCantidadDeIntegrantes(2);
     this.mvcResult =
-      this.mockMvc.perform(get("/grupos/" + nombre)).andExpect(status().isOk()).andReturn();
+      this.mockMvc.perform(get("/grupos/" + nombre).sessionAttr("USUARIO", new Usuario()))
+        .andExpect(status().isOk())
+        .andReturn();
   }
 
   private void cuandoNavegoALaPaginaDeGrupos() throws Exception {
