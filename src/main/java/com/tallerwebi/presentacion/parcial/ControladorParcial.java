@@ -62,7 +62,15 @@ public class ControladorParcial {
   }
 
   @RequestMapping(path = "/guardar", method = RequestMethod.POST)
-  public ModelAndView guardarParcial(@ModelAttribute("datosParcial") DatosParcial datosParcial) {
+  public ModelAndView guardarParcial(
+    @ModelAttribute("datosParcial") DatosParcial datosParcial,
+    HttpServletRequest request
+  ) {
+    Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
+    if (usuario == null) {
+      return new ModelAndView("redirect:/login");
+    }
+
     Materia materia = servicioMateria.buscarMateriaPorId(datosParcial.getMateriaId().intValue());
     Parcial parcial = new Parcial();
 
@@ -89,7 +97,8 @@ public class ControladorParcial {
           parcial.getId(),
           tema,
           fechaSesion,
-          datosParcial.getHorasPorDia()
+          datosParcial.getHorasPorDia(),
+          usuario
         );
       }
     }

@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio.parcial;
 
+import com.tallerwebi.dominio.Usuario;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -9,5 +10,11 @@ public interface ServicioParcial {
   List<Parcial> obtenerParciales();
   void editarParcial(Parcial parcial);
   void eliminarParcial(Integer id);
-  void agregarTema(Integer parcialId, String tema, LocalDate fecha, Integer cantidadHoras);
+  void agregarTema(
+    Integer parcialId,
+    String tema,
+    LocalDate fecha,
+    Integer cantidadHoras,
+    Usuario usuario
+  );
 }

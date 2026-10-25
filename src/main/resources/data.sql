@@ -176,6 +176,11 @@ VALUES
     (null, 'Usuario5', 'Test', 'user5@test.com', '1234', 'ADMIN', true, 0),
     (null, 'Usuario6', 'Test', 'user6@test.com', '1234', 'ADMIN', true, 0);
 
+-- DSH-02: las sesiones de estudio de ejemplo son del usuario de prueba (el dueño de esas materias).
+UPDATE SesionEstudio
+SET usuario = (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')
+WHERE usuario IS NULL;
+
 INSERT INTO materia_usuario (materia_id, usuario_id)
 VALUES
     (1, 1),

@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio.parcial;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.sesionEstudio.ServicioSesionEstudio;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
 import com.tallerwebi.dominio.tecnicasestudio.RepositorioPomodoro;
@@ -53,7 +54,13 @@ public class ServicioParcialImpl implements ServicioParcial {
   }
 
   @Override
-  public void agregarTema(Integer parcialId, String tema, LocalDate fecha, Integer cantidadHoras) {
+  public void agregarTema(
+    Integer parcialId,
+    String tema,
+    LocalDate fecha,
+    Integer cantidadHoras,
+    Usuario usuario
+  ) {
     Parcial parcial = repositorioParcial.buscarPorId(parcialId);
 
     if (parcial != null) {
@@ -63,6 +70,8 @@ public class ServicioParcialImpl implements ServicioParcial {
       sesion.setFecha(fecha);
       sesion.setCantidadHoras(cantidadHoras);
       sesion.setCompletada(false);
+      // la sesión queda vinculada al usuario, así el dashboard la encuentra.
+      sesion.setUsuario(usuario);
 
       parcial.agregarSesion(sesion);
 

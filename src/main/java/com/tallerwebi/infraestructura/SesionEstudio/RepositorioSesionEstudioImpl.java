@@ -53,14 +53,21 @@ public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
 
   @Override
   public SesionEstudio buscarProximaSesionEstudio(Long idUsuario) {
+    // la próxima sesión SIN COMPLETAR del usuario, de hoy en adelante.
+    // Antes buscaba solo las de hoy y con uniqueResult(): si había dos el mismo día, fallaba.
+    // Ahora se ordena por fecha y se toma la primera (setMaxResults(1)).
     return sessionFactory
       .getCurrentSession()
       .createQuery(
-        "from SesionEstudio where fecha = :hoy and usuario.id = :idUsuario",
+        "from SesionEstudio s " +
+        "where s.usuario.id = :idUsuario and s.fecha >= :hoy " +
+        "and (s.completada = false or s.completada is null) " +
+        "order by s.fecha asc, s.id asc",
         SesionEstudio.class
       )
-      .setParameter("hoy", LocalDate.now())
       .setParameter("idUsuario", idUsuario)
+      .setParameter("hoy", LocalDate.now())
+      .setMaxResults(1)
       .uniqueResult();
   }
 }

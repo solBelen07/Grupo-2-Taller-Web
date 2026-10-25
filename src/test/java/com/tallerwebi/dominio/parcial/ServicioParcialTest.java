@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.sesionEstudio.ServicioSesionEstudio;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
 import java.time.LocalDate;
@@ -108,6 +109,7 @@ public class ServicioParcialTest {
   @Test
   public void queSePuedaAgregarUnTemaAlParcial() {
     Integer parcialId = 1;
+    Usuario usuario = new Usuario();
     Parcial parcial = new Parcial();
 
     String tema = "Hibernate";
@@ -116,7 +118,7 @@ public class ServicioParcialTest {
 
     when(repositorioParcialMock.buscarPorId(parcialId)).thenReturn(parcial);
 
-    servicioParcial.agregarTema(parcialId, tema, fecha, cantidadHoras);
+    servicioParcial.agregarTema(parcialId, tema, fecha, cantidadHoras, usuario);
 
     assertEquals(1, parcial.getSesiones().size());
 
@@ -128,6 +130,7 @@ public class ServicioParcialTest {
     assertFalse(sesion.getCompletada());
 
     assertEquals(parcial, sesion.getParcial());
+    assertEquals(usuario, sesion.getUsuario());
 
     verify(servicioSesionEstudioMock, times(1)).crearSesion(sesion);
   }
@@ -138,7 +141,13 @@ public class ServicioParcialTest {
 
     when(repositorioParcialMock.buscarPorId(parcialId)).thenReturn(null);
 
-    servicioParcial.agregarTema(parcialId, "Hibernate", LocalDate.of(2026, 10, 15), 2);
+    servicioParcial.agregarTema(
+      parcialId,
+      "Hibernate",
+      LocalDate.of(2026, 10, 15),
+      2,
+      new Usuario()
+    );
 
     verify(repositorioParcialMock, times(1)).buscarPorId(parcialId);
 

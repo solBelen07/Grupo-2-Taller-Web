@@ -95,7 +95,7 @@
                     </div>
                     <span class="live-tag">EN VIVO</span>
                 </div>
-                <div class="kpi-value" th:text="${dashboardData.proximaSesion != null ? dashboardData.proximaSesion.fecha : 'Hoy 18:30'}"></div>
+                <div class="kpi-value" th:text="${dashboardData.proximaSesion != null ? #temporals.format(dashboardData.proximaSesion.fecha, 'dd/MM') : 'Sin sesiones'}"></div>
                 <div class="kpi-label"></div>
                 <div class="kpi-subtext subtext-orange">
                     Próxima Sesión
@@ -158,7 +158,7 @@
                     </div>
 
                     <p class="next-session-info">
-                        Próxima: <span th:text="${dashboardData.proximaSesion != null ? dashboardData.proximaSesion.tema : 'Diseño de Sistemas - 45 min'}">Diseño de Sistemas - 45 min</span>
+                        Próxima: <span th:text="${dashboardData.proximaSesion != null ? dashboardData.proximaSesion.tema + ' - ' + dashboardData.proximaSesion.cantidadHoras + ' h' : 'No tenés sesiones pendientes'}">Tema - 2 h</span>
                     </p>
 
                     <a th:href="@{/focusflight}" class="btn-takeoff">
