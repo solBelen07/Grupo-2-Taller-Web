@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
@@ -71,12 +72,20 @@ public class ControladorGrupoTest {
     datosGrupo.setNombre(nombre);
     datosGrupo.setCantidadDeIntegrantes(2);
     this.mvcResult =
-      this.mockMvc.perform(get("/grupos/" + nombre)).andExpect(status().isOk()).andReturn();
+      this.mockMvc.perform(get("/grupos/" + nombre).sessionAttr("USUARIO", new Usuario()))
+        .andExpect(status().isOk())
+        .andReturn();
   }
 
   private void cuandoNavegoALaPaginaDeGrupos() throws Exception {
-    when(servicioGrupoMock.listarGrupos()).thenReturn(Arrays.asList(grupoMock));
-    this.mvcResult = this.mockMvc.perform(get("/grupos")).andExpect(status().isOk()).andReturn();
+    Usuario usuario = new Usuario();
+    usuario.setEmail("test@unlam.edu.ar");
+    when(servicioGrupoMock.listarGruposDelUsuario("test@unlam.edu.ar"))
+      .thenReturn(Arrays.asList(grupoMock));
+    this.mvcResult =
+      this.mockMvc.perform(get("/grupos").sessionAttr("USUARIO", usuario))
+        .andExpect(status().isOk())
+        .andReturn();
     DatosGrupo datosGrupo = new DatosGrupo();
     datosGrupo.setNombre(grupoMock.getNombre());
     mvcResult.getModelAndView().getModel().put("datosGrupo", datosGrupo);

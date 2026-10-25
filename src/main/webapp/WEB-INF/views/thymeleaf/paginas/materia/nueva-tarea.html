@@ -57,7 +57,7 @@
                         <select class="form-select" id="materia" name="materia" required>
                             <option value="" disabled selected>Seleccionar materia</option>
                             <option th:each="materia : ${materias}"
-                                    th:value="${materia.id}"
+                                    th:value="${materia.nombre}"
                                     th:text="${materia.nombre}"></option>
                         </select>
                     </div>
@@ -75,7 +75,8 @@
                 <div class="row">
                     <div class="col-md-6 mb-4">
                         <label for="responsable" class="form-label">Responsable</label>
-                        <input type="text" class="form-control" id="responsable" name="responsable" placeholder="Ej. Juan Pérez" required>
+                        <input type="email" class="form-control" id="responsable" name="responsable" placeholder="Ej. compañero@unlam.edu.ar" required>
+                        <small class="form-text text-muted">Usá el email del integrante: con eso se calcula su aporte.</small>
                     </div>
 
                     <div class="col-md-6 mb-4">

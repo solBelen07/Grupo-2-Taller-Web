@@ -48,14 +48,28 @@
 
     <main class="container">
 
-        <div class="mb-4">
-            <h1>Grupos</h1>
-            <p class="text-muted">Gestiona tus espacios de estudio colaborativo.</p>
+        <div class="mb-4 d-flex justify-content-between align-items-center">
+            <div>
+                <h1>Grupos</h1>
+                <p class="text-muted">Gestiona tus espacios de estudio colaborativo.</p>
+            </div>
+            <!-- GRP-06: alta de grupo -->
+            <a th:href="@{/grupos/nuevo}" class="btn btn-purple">
+                <i class="fa-solid fa-plus me-1"></i> Crear grupo
+            </a>
+        </div>
+
+        <div th:if="${error != null}" class="alert alert-danger border-0 bg-danger bg-opacity-25 text-danger rounded mb-4" th:text="${error}">
+            Mensaje de error.
         </div>
 
         <div th:if="${exito != null}" class="alert alert-success border-0 bg-success bg-opacity-25 text-success rounded mb-4" th:text="${exito}">
             Mensaje de confirmación.
         </div>
+
+        <p th:if="${datosGrupo == null or #lists.isEmpty(datosGrupo)}" class="text-muted">
+            Todavía no pertenecés a ningún grupo ni tenés invitaciones.
+        </p>
 
         <div class="row g-4">
             <div th:each="grupo : ${datosGrupo}" class="col-md-4">
@@ -64,7 +78,11 @@
                         <div class="bg-secondary bg-opacity-25 p-2 rounded text-light">
                             <i class="fa-solid fa-layer-group"></i>
                         </div>
-                        <span class="badge badge-live rounded-pill px-3">Activo</span>
+                        <!-- GRP-06: se marca si el usuario logueado es el administrador -->
+                        <span th:if="${grupo.esAdministradoPor(session.USUARIO)}" class="badge bg-warning text-dark rounded-pill px-3">
+                            <i class="fa-solid fa-crown me-1"></i>Administrador/a
+                        </span>
+                        <span th:unless="${grupo.esAdministradoPor(session.USUARIO)}" class="badge badge-live rounded-pill px-3">Activo</span>
                     </div>
 
                     <h5 class="fw-bold text-light" th:text="${grupo.nombre}">Nombre del Grupo</h5>
@@ -77,6 +95,19 @@
                         <a th:href="@{/grupos/{nombre}/invitar(nombre=${grupo.nombre})}" class="btn btn-outline-light btn-sm w-100">
                             <i class="fa-solid fa-user-plus me-1"></i> Invitar
                         </a>
+                    </div>
+
+                    <!-- GRP-06: modificación y baja, solo para el administrador -->
+                    <div th:if="${grupo.esAdministradoPor(session.USUARIO)}" class="d-flex gap-2 mt-2">
+                        <a th:href="@{/grupos/{nombre}/editar(nombre=${grupo.nombre})}" class="btn btn-outline-light btn-sm w-100">
+                            <i class="fa-solid fa-pen me-1"></i> Editar
+                        </a>
+                        <form th:action="@{/grupos/{nombre}/eliminar(nombre=${grupo.nombre})}" method="POST" class="w-100"
+                              onsubmit="return confirm('¿Eliminar el grupo? Se borran sus invitaciones y sus tareas quedan sin grupo.');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                <i class="fa-solid fa-trash me-1"></i> Eliminar
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

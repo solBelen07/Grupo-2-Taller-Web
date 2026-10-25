@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.parcial.Parcial;
 import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
@@ -200,5 +201,88 @@ public class RepositorioSesionEstudioTest {
     repositorioSesionEstudio.guardar(sesionEstudio);
 
     return sesionEstudio;
+  }
+
+  // próxima sesion
+
+  @Test
+  public void laProximaSesionEsLaPrimeraSinCompletarDeHoyEnAdelanteDelUsuario() {
+    Usuario usuario = dadoQueExisteUnUsuario("dsh02@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate hoy = LocalDate.now();
+    guardarSesion(parcial, usuario, "Pasada", hoy.minusDays(1), false);
+    guardarSesion(parcial, usuario, "Completada", hoy.plusDays(1), true);
+    guardarSesion(parcial, usuario, "Lejana", hoy.plusDays(5), false);
+    guardarSesion(parcial, usuario, "La proxima", hoy.plusDays(2), false);
+
+    SesionEstudio proxima = repositorioSesionEstudio.buscarProximaSesionEstudio(usuario.getId());
+
+    assertEquals("La proxima", proxima.getTema());
+  }
+
+  @Test
+  public void unaSesionDeHoySinCompletarCuentaComoProxima() {
+    Usuario usuario = dadoQueExisteUnUsuario("dsh02@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    guardarSesion(parcial, usuario, "Hoy", LocalDate.now(), false);
+    guardarSesion(parcial, usuario, "Mañana", LocalDate.now().plusDays(1), false);
+
+    assertEquals(
+      "Hoy",
+      repositorioSesionEstudio.buscarProximaSesionEstudio(usuario.getId()).getTema()
+    );
+  }
+
+  @Test
+  public void conVariasSesionesElMismoDiaNoFallaYDevuelveUna() {
+    Usuario usuario = dadoQueExisteUnUsuario("dsh02@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate manana = LocalDate.now().plusDays(1);
+    guardarSesion(parcial, usuario, "Primera", manana, false);
+    guardarSesion(parcial, usuario, "Segunda", manana, false);
+
+    assertEquals(
+      "Primera",
+      repositorioSesionEstudio.buscarProximaSesionEstudio(usuario.getId()).getTema()
+    );
+  }
+
+  @Test
+  public void noDeberiaDevolverSesionesDeOtroUsuario() {
+    Usuario usuario = dadoQueExisteUnUsuario("dsh02@prueba.com");
+    Usuario otro = dadoQueExisteUnUsuario("otro-dsh02@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    guardarSesion(parcial, otro, "Del otro", LocalDate.now().plusDays(1), false);
+
+    assertNull(repositorioSesionEstudio.buscarProximaSesionEstudio(usuario.getId()));
+  }
+
+  @Test
+  public void siNoHaySesionesFuturasDeberiaDevolverNull() {
+    Usuario usuario = dadoQueExisteUnUsuario("dsh02@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    guardarSesion(parcial, usuario, "Pasada", LocalDate.now().minusDays(3), false);
+
+    assertNull(repositorioSesionEstudio.buscarProximaSesionEstudio(usuario.getId()));
+  }
+
+  private Usuario dadoQueExisteUnUsuario(String email) {
+    Usuario usuario = new Usuario();
+    usuario.setEmail(email);
+    sessionFactory.getCurrentSession().persist(usuario);
+    return usuario;
+  }
+
+  private void guardarSesion(
+    Parcial parcial,
+    Usuario usuario,
+    String tema,
+    LocalDate fecha,
+    boolean completada
+  ) {
+    SesionEstudio sesion = dadoQueTengoUnaSesionDeEstudio(parcial, tema, fecha, 2);
+    sesion.setUsuario(usuario);
+    sesion.setCompletada(completada);
+    repositorioSesionEstudio.guardar(sesion);
   }
 }

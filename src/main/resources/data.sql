@@ -176,20 +176,26 @@ VALUES
     (null, 'Usuario5', 'Test', 'user5@test.com', '1234', 'ADMIN', true, 0),
     (null, 'Usuario6', 'Test', 'user6@test.com', '1234', 'ADMIN', true, 0);
 
+-- DSH-02: las sesiones de estudio de ejemplo son del usuario de prueba (el dueño de esas materias).
+UPDATE SesionEstudio
+SET usuario = (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')
+WHERE usuario IS NULL;
+
 INSERT INTO materia_usuario (materia_id, usuario_id)
 VALUES
     (1, 1),
     (2, 1),
     (3, 1);
 
-INSERT INTO Grupo (id, nombre)
+-- GRP-06: cada grupo tiene un creador (administrador). Es el mismo usuario que invita en los datos de abajo.
+INSERT INTO Grupo (id, nombre, creador_id)
 VALUES
-    (null, 'grupo1'),
-    (null, 'grupo2'),
-    (null, 'grupo3'),
-    (null, 'grupo4'),
-    (null, 'grupo5'),
-    (null, 'grupo6');
+    (null, 'grupo1', (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')),
+    (null, 'grupo2', (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')),
+    (null, 'grupo3', (SELECT id FROM Usuario WHERE email = 'user@test.com')),
+    (null, 'grupo4', (SELECT id FROM Usuario WHERE email = 'user1@test.com')),
+    (null, 'grupo5', (SELECT id FROM Usuario WHERE email = 'user3@test.com')),
+    (null, 'grupo6', (SELECT id FROM Usuario WHERE email = 'user5@test.com'));
 
 -- =====================================================================
 -- CAL-01: eventos de ejemplo para el calendario, del usuario
@@ -332,7 +338,22 @@ VALUES (
            null,
            'Popular',
            'Fuiste invitado muchas veces a grupos'
-       );
+       ),
+       -- Más logros, que se pueden ganar usando la app
+       (null, 'Primeros pasos', 'Cargaste tu primera materia'),
+       (null, 'Primer vuelo', 'Completaste tu primera sesión en FocusFlight'),
+       (null, 'Piloto frecuente', 'Estudiaste 5 horas con FocusFlight'),
+       (null, 'Constante', 'Estudiaste 3 días seguidos'),
+       (null, 'Imparable', 'Estudiaste 7 días seguidos'),
+       (null, 'Plan cumplido', 'Completaste todas las sesiones de un plan de parcial'),
+       (null, 'Líder de grupo', 'Creaste tu primer grupo de estudio');
+
+-- GAM-02: logro obtenido de ejemplo (quién obtuvo qué logro y cuándo)
+INSERT INTO LogroObtenido (id, usuario_id, logro_id, fechaObtencion)
+VALUES (null,
+        (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar'),
+        (SELECT id FROM Logro WHERE nombre = 'Popular'),
+        DATE_SUB(CURDATE(), INTERVAL 3 DAY));
 
 INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
 VALUES (null, 'ACEPTADA', false,
