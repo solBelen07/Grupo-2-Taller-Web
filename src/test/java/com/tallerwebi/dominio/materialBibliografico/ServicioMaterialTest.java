@@ -6,10 +6,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaNoEncontrada;
-import com.tallerwebi.dominio.excepcion.excepcionMaterial.ArchivoSinNombre;
-import com.tallerwebi.dominio.excepcion.excepcionMaterial.ArchivoVacio;
-import com.tallerwebi.dominio.excepcion.excepcionMaterial.ExtensionInvalida;
-import com.tallerwebi.dominio.excepcion.excepcionMaterial.PesoExcedido;
+import com.tallerwebi.dominio.excepcion.excepcionMaterial.*;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.infraestructura.r2.AlmacenamientoR2;
@@ -33,6 +30,7 @@ public class ServicioMaterialTest {
   private AlmacenamientoR2 almacenamientoR2;
   private Materia materiaMock;
   private MultipartFile archivoMock;
+  private MaterialBibliografico materialBibliograficoMock;
 
   @BeforeEach
   public void inicializar() {
@@ -41,6 +39,7 @@ public class ServicioMaterialTest {
     almacenamientoR2 = mock(AlmacenamientoR2.class);
     materiaMock = mock(Materia.class);
     archivoMock = mock(MultipartFile.class);
+    materialBibliograficoMock = mock(MaterialBibliografico.class);
     servicioMaterial =
       new ServicioMaterialImpl(repositorioMaterial, servicioMateria, almacenamientoR2);
   }
@@ -61,6 +60,14 @@ public class ServicioMaterialTest {
   }
 
   @Test
+  public void subirArchivoVacioDeberiaDevolverException() {
+    dadoQueElArchivoEsVacio();
+    dadoQueExisteUnaMateria();
+
+    entoncesSubirMaterialDevuelveExceptionDeArchivoVacio();
+  }
+
+  @Test
   public void subirArchivoQueExcedeTamanioMaximoDeberiaDevolverException() {
     dadoQueExisteUnaMateria();
     dadoQueElArchivoTieneClaveR2NombreYExtensionValidoConTamanioExcedido();
@@ -71,7 +78,15 @@ public class ServicioMaterialTest {
   @Test
   public void subirArchivoSinNombreDeberiaDevolverException() {
     dadoQueExisteUnaMateria();
-    dadoQueElArchivoNoTieneNombre();
+    dadoQueElArchivoTieneNombreNulo();
+
+    entoncesSubirMaterialDevuelveExceptionDeArchivoSinNombre();
+  }
+
+  @Test
+  public void subirArchivoConNombreVacioDeberiaDevolverException() {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoTieneNombreVacio();
 
     entoncesSubirMaterialDevuelveExceptionDeArchivoSinNombre();
   }
@@ -87,7 +102,7 @@ public class ServicioMaterialTest {
   @Test
   public void deberiaGuardarEnRepositorioSiElArchivoEsValido() throws IOException {
     dadoQueExisteUnaMateria();
-    dadoQueElArchivoTieneClaveR2PesoNombreYExtensionValidos();
+    dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos();
 
     cuandoSeSubeMaterial();
 
@@ -97,7 +112,7 @@ public class ServicioMaterialTest {
   @Test
   public void deberiaEliminarArchivoDeLaNubeSiFallaGuardadoEnBaseDeDatos() throws IOException {
     dadoQueExisteUnaMateria();
-    dadoQueElArchivoTieneClaveR2PesoNombreYExtensionValidos();
+    dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos();
     dadoQueSeAlmacenaEnR2ElArchivo();
 
     cuandoFallaElRepositorioAlGuardarMaterial();
@@ -108,12 +123,35 @@ public class ServicioMaterialTest {
   @Test
   public void deberiaAgregarExcepcionSuprimidaSiFallaBorradoEnLaNube() throws IOException {
     dadoQueExisteUnaMateria();
-    dadoQueElArchivoTieneClaveR2PesoNombreYExtensionValidos();
+    dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos();
 
     cuandoFallaElRepositorioAlGuardarMaterial();
     cuandoFallaElAlmacenamientoAlEliminarArchivo();
 
     entoncesElServicioLanzaExcepcionDeRepositorioAlSubirMaterial();
+  }
+
+  @Test
+  public void eliminarArchivoNuloDeberiaDevolverExceptionArchivoNoEncontrado() {
+    dadoQueNoSeEncuentraElArchivoBuscado();
+
+    entoncesSeLanzaExcepcionArchivoNoEncontradoAlEliminarMaterial();
+  }
+
+  @Test
+  public void eliminarArchivoDeberiaLlamarAlAlmacenamiento() {
+    dadoQueSeEncuentraElArchivoBuscado();
+
+    entoncesSeLlamaAAlmacenamientoParaEliminarArchivo();
+  }
+
+  @Test
+  public void buscarPorIdDeberiaLlamarAlRepositorio() {
+    dadoQueSeEncuentraElArchivoBuscado();
+
+    MaterialBibliografico materialBuscado = servicioMaterial.buscarPorId(1234);
+
+    assertEquals(materialBibliograficoMock, materialBuscado);
   }
 
   //DADO QUE
@@ -127,7 +165,7 @@ public class ServicioMaterialTest {
     when(servicioMateria.buscarMateriaPorId(any())).thenReturn(null);
   }
 
-  private void dadoQueElArchivoTieneClaveR2PesoNombreYExtensionValidos() throws IOException {
+  private void dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos() throws IOException {
     when(archivoMock.getSize()).thenReturn(TAMANIO_ARCHIVO_PERMITIDO);
     when(archivoMock.isEmpty()).thenReturn(false);
     when(archivoMock.getOriginalFilename()).thenReturn(NOMBRE_ARCHIVO_VALIDO);
@@ -148,15 +186,38 @@ public class ServicioMaterialTest {
     when(archivoMock.getOriginalFilename()).thenReturn(NOMBRE_ARCHIVO_VALIDO);
   }
 
-  private void dadoQueElArchivoNoTieneNombre() {
+  private void dadoQueElArchivoTieneNombreNulo() {
     when(archivoMock.getSize()).thenReturn(TAMANIO_ARCHIVO_PERMITIDO);
     when(archivoMock.isEmpty()).thenReturn(false);
     when(archivoMock.getContentType()).thenReturn("pdf");
     when(archivoMock.getOriginalFilename()).thenReturn(null);
   }
 
+  private void dadoQueElArchivoTieneNombreVacio() {
+    when(archivoMock.getSize()).thenReturn(TAMANIO_ARCHIVO_PERMITIDO);
+    when(archivoMock.isEmpty()).thenReturn(false);
+    when(archivoMock.getContentType()).thenReturn("pdf");
+    when(archivoMock.getOriginalFilename()).thenReturn("");
+  }
+
   private void dadoQueElArchivoEsNulo() {
     archivoMock = null;
+  }
+
+  private void dadoQueElArchivoEsVacio() {
+    when(archivoMock.isEmpty()).thenReturn(true);
+  }
+
+  private void dadoQueNoSeEncuentraElArchivoBuscado() {
+    when(repositorioMaterial.buscarPorId(anyInt())).thenReturn(null);
+  }
+
+  private void dadoQueSeEncuentraElArchivoBuscado() {
+    when(materialBibliograficoMock.getId()).thenReturn(1234);
+    when(materialBibliograficoMock.getClaveR2()).thenReturn(CLAVE_R2_VALIDA);
+    when(materialBibliograficoMock.getNombreArchivo()).thenReturn(NOMBRE_ARCHIVO_VALIDO);
+    when(materialBibliograficoMock.getTamanio()).thenReturn(TAMANIO_ARCHIVO_PERMITIDO);
+    when(repositorioMaterial.buscarPorId(anyInt())).thenReturn(materialBibliograficoMock);
   }
 
   private void dadoQueSeAlmacenaEnR2ElArchivo() throws IOException {
@@ -202,6 +263,15 @@ public class ServicioMaterialTest {
     Throwable[] suprimidos = excepcionLanzada.getSuppressed();
     assertEquals(1, suprimidos.length);
     assertEquals("Fallo al borrar en R2", suprimidos[0].getMessage());
+  }
+
+  private void entoncesSeLanzaExcepcionArchivoNoEncontradoAlEliminarMaterial() {
+    assertThrows(
+      ArchivoNoEncontrado.class,
+      () -> {
+        servicioMaterial.eliminarMaterial(1234);
+      }
+    );
   }
 
   private void entoncesSubirMaterialDevuelveExceptionDeArchivoVacio() {
@@ -258,5 +328,15 @@ public class ServicioMaterialTest {
     MaterialBibliografico materialGuardado = captor.getValue();
     assertEquals(NOMBRE_ARCHIVO_VALIDO, materialGuardado.getNombreArchivo());
     assertEquals(CLAVE_R2_VALIDA, materialGuardado.getClaveR2());
+  }
+
+  private void entoncesSeLlamaAAlmacenamientoParaEliminarArchivo() {
+    servicioMaterial.eliminarMaterial(materialBibliograficoMock.getId());
+    ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+
+    verify(almacenamientoR2, times(1)).eliminarArchivo(captor.capture());
+    materialBibliograficoMock.setClaveR2(captor.getValue());
+
+    assertEquals(CLAVE_R2_VALIDA, materialBibliograficoMock.getClaveR2());
   }
 }

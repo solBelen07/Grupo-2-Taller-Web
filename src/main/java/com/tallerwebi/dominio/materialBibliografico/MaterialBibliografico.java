@@ -64,6 +64,16 @@ public class MaterialBibliografico {
   }
 
   @SuppressWarnings("all")
+  public void setClaveR2(String claveR2) {
+    this.claveR2 = claveR2;
+  }
+
+  @SuppressWarnings("all")
+  public Integer getId() {
+    return id;
+  }
+
+  @SuppressWarnings("all")
   public void setId(Integer id) {
     this.id = id;
   }
@@ -91,5 +101,10 @@ public class MaterialBibliografico {
   @SuppressWarnings("all")
   public void setMateria(Materia materia) {
     this.materia = materia;
+  }
+
+  @SuppressWarnings("all")
+  public Long getTamanio() {
+    return tamanio;
   }
 }
