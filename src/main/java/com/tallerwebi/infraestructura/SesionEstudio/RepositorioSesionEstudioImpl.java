@@ -53,9 +53,6 @@ public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
 
   @Override
   public SesionEstudio buscarProximaSesionEstudio(Long idUsuario) {
-    // la próxima sesión SIN COMPLETAR del usuario, de hoy en adelante.
-    // Antes buscaba solo las de hoy y con uniqueResult(): si había dos el mismo día, fallaba.
-    // Ahora se ordena por fecha y se toma la primera (setMaxResults(1)).
     return sessionFactory
       .getCurrentSession()
       .createQuery(
@@ -69,5 +66,20 @@ public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
       .setParameter("hoy", LocalDate.now())
       .setMaxResults(1)
       .uniqueResult();
+  }
+
+  @Override
+  public long calcularHorasCompletadas(Long idUsuario) {
+    Long total = sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "select sum(s.cantidadHoras) from SesionEstudio s " +
+        "where s.usuario.id = :idUsuario and s.completada = true",
+        Long.class
+      )
+      .setParameter("idUsuario", idUsuario)
+      .uniqueResult();
+
+    return total != null ? total : 0L;
   }
 }
