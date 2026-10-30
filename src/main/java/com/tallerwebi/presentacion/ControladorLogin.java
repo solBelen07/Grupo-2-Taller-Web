@@ -5,6 +5,8 @@ import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
+
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -45,7 +47,7 @@ public class ControladorLogin {
     );
     if (usuarioBuscado != null) {
       request.getSession().setAttribute("USUARIO", usuarioBuscado);
-      return new ModelAndView("redirect:/home");
+      return new ModelAndView("redirect:/dashboard");
     }
     Map<String, Object> model = new ModelMap();
     model.put(CLAVE_DATOS_LOGIN, new DatosLogin());
@@ -87,7 +89,10 @@ public class ControladorLogin {
 
   @GetMapping("/cerrar-sesion")
   public ModelAndView cerrarSesion(HttpServletRequest request) {
-    request.getSession().invalidate();
+    HttpSession sesion = request.getSession(false);
+    if (sesion != null) {
+      sesion.invalidate();
+    }
     return new ModelAndView("redirect:/login");
   }
 }
