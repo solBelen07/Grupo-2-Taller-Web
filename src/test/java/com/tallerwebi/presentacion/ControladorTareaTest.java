@@ -6,25 +6,43 @@ import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
+import com.tallerwebi.dominio.grupo.Grupo;
+import com.tallerwebi.dominio.grupo.ServicioGrupo;
+import com.tallerwebi.dominio.materia.Materia;
+import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
 import com.tallerwebi.dominio.tarea.Tarea;
 import com.tallerwebi.presentacion.tarea.ControladorTarea;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import jakarta.servlet.http.HttpSession;
+import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 public class ControladorTareaTest {
 
   private ControladorTarea controladorTarea;
   private ServicioTarea servicioTareaMock;
+  private ServicioMateria servicioMateriaMock;
+  private ServicioGrupo servicioGrupoMock;
+
+  private MockHttpServletRequest crearRequestConUsuarioLogueado() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    HttpSession session = request.getSession();
+    session.setAttribute("USUARIO", new com.tallerwebi.dominio.Usuario());
+    return request;
+  }
 
   @BeforeEach
   public void init() {
     servicioTareaMock = mock(ServicioTarea.class);
-    controladorTarea = new ControladorTarea(servicioTareaMock);
+    servicioMateriaMock = mock(ServicioMateria.class);
+    servicioGrupoMock = mock(ServicioGrupo.class);
+    controladorTarea =
+      new ControladorTarea(servicioTareaMock, servicioMateriaMock, servicioGrupoMock);
   }
 
   @Test
@@ -49,7 +67,8 @@ public class ControladorTareaTest {
     when(servicioTareaMock.calcularAporteIndividual()).thenReturn(aporteIndividual);
 
     // ejecucion
-    ModelAndView modelAndView = controladorTarea.verTareas();
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+    ModelAndView modelAndView = controladorTarea.verTareas(request);
 
     // validacion
     assertThat(modelAndView.getViewName(), equalToIgnoringCase("paginas/materia/tareas"));
@@ -75,8 +94,13 @@ public class ControladorTareaTest {
   }
 
   @Test
-  public void crearTareaDeberiaCrearYGuardarLaTarea() {
+  public void crearTareaDeberiaCrearYGuardarLaTarea() throws GrupoNoEncontrado {
+    // preparacion
+    when(servicioGrupoMock.buscarPorNombre("grupo1")).thenReturn(new Grupo());
+
     // ejecucion
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+
     ModelAndView resultado = controladorTarea.crearTarea(
       "Estudiar parcial",
       "Programación Web",
@@ -85,12 +109,124 @@ public class ControladorTareaTest {
       10,
       5,
       "PARCIAL",
-      java.time.LocalDate.of(2026, 10, 10)
+      java.time.LocalDate.of(2026, 10, 10),
+      "grupo1",
+      request
     );
 
     // validacion
     assertThat(resultado.getViewName(), equalToIgnoringCase("redirect:/tareas"));
 
     verify(servicioTareaMock, times(1)).crearTarea(any(Tarea.class));
+  }
+
+  @Test
+  public void alPedirVerNuevaTareaDevuelvaLaVistaCorrecta() {
+    List<Materia> materias = new ArrayList<>();
+    materias.add(new Materia());
+
+    when(this.servicioMateriaMock.obtenerMaterias()).thenReturn(materias);
+
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+    ModelAndView modelAndView = controladorTarea.verNuevaTarea(request);
+
+    assertThat(modelAndView.getViewName(), equalTo("paginas/materia/nueva-tarea"));
+    assertThat(modelAndView.getModel().get("materias"), equalTo(materias));
+
+    verify(servicioMateriaMock, times(1)).obtenerMaterias();
+  }
+
+  @Test
+  public void crearTareaDeberiaAsociarLaTareaAlGrupoElegido() throws GrupoNoEncontrado {
+    // preparacion
+    Grupo grupo = new Grupo();
+    grupo.setNombre("grupo2");
+    when(servicioGrupoMock.buscarPorNombre("grupo2")).thenReturn(grupo);
+
+    // ejecucion
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+
+    controladorTarea.crearTarea(
+      "Entrega TP",
+      "Taller Web",
+      "PENDIENTE",
+      "Camila",
+      10,
+      0,
+      "TP",
+      java.time.LocalDate.of(2026, 10, 10),
+      "grupo2",
+      request
+    );
+
+    // validacion
+    ArgumentCaptor<Tarea> captor = ArgumentCaptor.forClass(Tarea.class);
+    verify(servicioTareaMock, times(1)).crearTarea(captor.capture());
+    assertThat(captor.getValue().getGrupo(), equalTo(grupo));
+  }
+
+  @Test
+  public void crearTareaConUnGrupoInexistenteNoDeberiaGuardarYDeberiaMostrarUnError()
+    throws GrupoNoEncontrado {
+    // preparacion
+    when(servicioGrupoMock.buscarPorNombre("noExiste")).thenThrow(new GrupoNoEncontrado());
+
+    // ejecucion
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+
+    ModelAndView resultado = controladorTarea.crearTarea(
+      "Entrega TP",
+      "Taller Web",
+      "PENDIENTE",
+      "Camila",
+      10,
+      0,
+      "TP",
+      java.time.LocalDate.of(2026, 10, 10),
+      "noExiste",
+      request
+    );
+
+    // validacion
+    assertThat(resultado.getViewName(), equalTo("paginas/materia/nueva-tarea"));
+    assertThat(resultado.getModel().containsKey("error"), equalTo(true));
+    verify(servicioTareaMock, never()).crearTarea(any(Tarea.class));
+  }
+
+  @Test
+  public void verNuevaTareaDeberiaCargarLosGruposParaElSelect() {
+    // preparacion
+    List<Grupo> grupos = new ArrayList<>();
+    grupos.add(new Grupo());
+    when(servicioGrupoMock.listarGrupos()).thenReturn(grupos);
+
+    // ejecucion
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+    ModelAndView modelAndView = controladorTarea.verNuevaTarea(request);
+
+    // validacion
+    assertThat(modelAndView.getModel().get("grupos"), equalTo(grupos));
+    verify(servicioGrupoMock, times(1)).listarGrupos();
+  }
+
+  @Test
+  public void verTareasDeberiaEnviarLasTareasAgrupadasYElProgresoDeCadaGrupo() {
+    // preparacion
+    Tarea tarea = new Tarea();
+    Map<String, List<Tarea>> tareasPorGrupo = new HashMap<>();
+    tareasPorGrupo.put("grupo1", Arrays.asList(tarea));
+    Map<String, Double> progresoPorGrupo = new HashMap<>();
+    progresoPorGrupo.put("grupo1", 50.0);
+
+    when(servicioTareaMock.obtenerTodas()).thenReturn(Arrays.asList(tarea));
+    when(servicioTareaMock.agruparPorGrupo()).thenReturn(tareasPorGrupo);
+    when(servicioTareaMock.calcularProgresoPorGrupo()).thenReturn(progresoPorGrupo);
+
+    // ejecucion
+    MockHttpServletRequest request = crearRequestConUsuarioLogueado();
+    ModelAndView modelAndView = controladorTarea.verTareas(request);
+    // validacion
+    assertThat(modelAndView.getModel().get("tareasPorGrupo"), equalTo(tareasPorGrupo));
+    assertThat(modelAndView.getModel().get("progresoPorGrupo"), equalTo(progresoPorGrupo));
   }
 }

@@ -2,11 +2,12 @@ package com.tallerwebi.infraestructura.SesionEstudio;
 
 import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
+import java.time.LocalDate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-@SuppressWarnings("CPD-START")
+//@SuppressWarnings("CPD-START")
 @Repository
 public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
 
@@ -48,5 +49,37 @@ public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
       .createQuery(hql)
       .setParameter("materiaId", materiaId)
       .executeUpdate();
+  }
+
+  @Override
+  public SesionEstudio buscarProximaSesionEstudio(Long idUsuario) {
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "from SesionEstudio s " +
+        "where s.usuario.id = :idUsuario and s.fecha >= :hoy " +
+        "and (s.completada = false or s.completada is null) " +
+        "order by s.fecha asc, s.id asc",
+        SesionEstudio.class
+      )
+      .setParameter("idUsuario", idUsuario)
+      .setParameter("hoy", LocalDate.now())
+      .setMaxResults(1)
+      .uniqueResult();
+  }
+
+  @Override
+  public long calcularHorasCompletadas(Long idUsuario) {
+    Long total = sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "select sum(s.cantidadHoras) from SesionEstudio s " +
+        "where s.usuario.id = :idUsuario and s.completada = true",
+        Long.class
+      )
+      .setParameter("idUsuario", idUsuario)
+      .uniqueResult();
+
+    return total != null ? total : 0L;
   }
 }

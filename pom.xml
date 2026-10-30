@@ -21,9 +21,27 @@
         <hsqldb.version>2.7.4</hsqldb.version>
         <checkstyle.version>3.6.0</checkstyle.version>
         <checkstyle.runtime.version>13.8.0</checkstyle.runtime.version>
+        <aws.sdk.version>2.38.0</aws.sdk.version>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>2.25.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
+
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.19.2</version>
+    </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -81,7 +99,6 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -107,6 +124,19 @@
             <artifactId>playwright</artifactId>
             <version>${playwright.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>regions</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>auth</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>

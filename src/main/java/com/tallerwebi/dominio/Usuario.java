@@ -10,6 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.Set;
+import com.tallerwebi.dominio.racha.Racha;
+import jakarta.persistence.*;
 
 @Entity
 public class Usuario {
@@ -26,6 +28,10 @@ public class Usuario {
 
   private String password;
   private String rol;
+
+  @Embedded
+  private Racha racha;
+
   private boolean activo = false;
   private int puntos;
 
@@ -129,5 +135,25 @@ public class Usuario {
       perfilAcademico = new PerfilAcademico();
     }
     return perfilAcademico;
+  }
+
+
+  public boolean isActivo() {
+    return activo;
+  }
+
+  public void setActivo(boolean activo) {
+    this.activo = activo;
+  }
+
+  public Racha getRacha() {
+    if (this.racha == null) {
+      this.racha = new Racha(0, 0, null);
+    }
+    return this.racha;
+  }
+
+  public void setRacha(Racha racha) {
+    this.racha = racha;
   }
 }

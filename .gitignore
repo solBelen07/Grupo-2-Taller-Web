@@ -18,9 +18,14 @@ hs_err_pid*
 /.classpath
 /.idea/
 /.settings/
-
+**/application.properties
 **/node_modules/
 .vscode/
 
 # Reportes de codigo limpio y cobertura de pruebas
 .calidad-de-codigo/
+
+# Variables de entorno y credenciales
+.env
+
+/config-r2/application.properties

@@ -1,16 +1,18 @@
 package com.tallerwebi.presentacion.parcial;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.parcial.Parcial;
 import com.tallerwebi.dominio.parcial.ServicioParcial;
+import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.sesionEstudio.ServicioSesionEstudio;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,16 +27,19 @@ public class ControladorParcial {
   private final ServicioMateria servicioMateria;
   private final ServicioParcial servicioParcial;
   private final ServicioSesionEstudio servicioSesionEstudio;
+  private final ServicioRacha servicioRacha;
 
   @Autowired
   public ControladorParcial(
     ServicioMateria servicioMateria,
     ServicioParcial servicioParcial,
-    ServicioSesionEstudio servicioSesionEstudio
+    ServicioSesionEstudio servicioSesionEstudio,
+    ServicioRacha servicioRacha
   ) {
     this.servicioMateria = servicioMateria;
     this.servicioParcial = servicioParcial;
     this.servicioSesionEstudio = servicioSesionEstudio;
+    this.servicioRacha = servicioRacha;
   }
 
   @RequestMapping(path = "/nuevo", method = RequestMethod.GET)
@@ -57,7 +62,15 @@ public class ControladorParcial {
   }
 
   @RequestMapping(path = "/guardar", method = RequestMethod.POST)
-  public ModelAndView guardarParcial(@ModelAttribute("datosParcial") DatosParcial datosParcial) {
+  public ModelAndView guardarParcial(
+    @ModelAttribute("datosParcial") DatosParcial datosParcial,
+    HttpServletRequest request
+  ) {
+    Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
+    if (usuario == null) {
+      return new ModelAndView("redirect:/login");
+    }
+
     Materia materia = servicioMateria.buscarMateriaPorId(datosParcial.getMateriaId().intValue());
     Parcial parcial = new Parcial();
 
@@ -84,7 +97,8 @@ public class ControladorParcial {
           parcial.getId(),
           tema,
           fechaSesion,
-          datosParcial.getHorasPorDia()
+          datosParcial.getHorasPorDia(),
+          usuario
         );
       }
     }
@@ -93,8 +107,19 @@ public class ControladorParcial {
   }
 
   @RequestMapping(path = "/sesion/completar", method = RequestMethod.POST)
-  public ModelAndView cambiarEstadoSesion(@RequestParam("id") Integer id) {
-    servicioSesionEstudio.cambiarEstado(id);
+  public ModelAndView cambiarEstadoSesion(
+    @RequestParam("id") Integer id,
+    HttpServletRequest request
+  ) {
+    Boolean quedoCompletada = servicioSesionEstudio.cambiarEstado(id);
+
+    // La racha solo suma cuando la sesión queda COMPLETADA. Desmarcarla no cuenta como día de estudio.
+    Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
+    if (usuario != null && Boolean.TRUE.equals(quedoCompletada)) {
+      servicioRacha.registrarRacha(usuario);
+      request.getSession().setAttribute("USUARIO", usuario);
+    }
+
     return new ModelAndView("redirect:/parciales");
   }
 }

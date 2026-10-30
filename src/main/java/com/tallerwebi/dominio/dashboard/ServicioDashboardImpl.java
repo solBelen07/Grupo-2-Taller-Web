@@ -1,0 +1,103 @@
+package com.tallerwebi.dominio.dashboard;
+
+import com.tallerwebi.dominio.RepositorioUsuario;
+import com.tallerwebi.dominio.ServicioCalendario;
+import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.calendario.CalendarioSemanal;
+import com.tallerwebi.dominio.materia.RepositorioMateria;
+import com.tallerwebi.dominio.racha.ServicioRacha;
+import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
+import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
+import com.tallerwebi.dominio.tarea.ServicioTarea;
+import com.tallerwebi.dominio.tecnicasestudio.RepositorioPomodoro;
+import jakarta.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.Map;
+import org.springframework.stereotype.Service;
+
+@Service("ServicioDashboard")
+@Transactional
+public class ServicioDashboardImpl implements ServicioDashboard {
+
+  private static final int MINUTOS_POR_HORA = 60;
+
+  private final RepositorioPomodoro repositorioPomodoro;
+  private final RepositorioMateria repositorioMateria;
+  private final RepositorioUsuario repositorioUsuario;
+  private final RepositorioSesionEstudio repositorioSesionEstudio;
+
+  private final ServicioCalendario servicioCalendario;
+  private final ServicioTarea servicioTarea;
+  private final ServicioRacha servicioRacha;
+
+  public ServicioDashboardImpl(
+    RepositorioPomodoro repositorioPomodoro,
+    RepositorioMateria repositorioMateria,
+    RepositorioUsuario repositorioUsuario,
+    RepositorioSesionEstudio repositorioSesionEstudio,
+    ServicioCalendario servicioCalendario,
+    ServicioTarea servicioTarea,
+    ServicioRacha servicioRacha
+  ) {
+    this.repositorioPomodoro = repositorioPomodoro;
+    this.repositorioMateria = repositorioMateria;
+    this.repositorioUsuario = repositorioUsuario;
+    this.repositorioSesionEstudio = repositorioSesionEstudio;
+    this.servicioCalendario = servicioCalendario;
+    this.servicioTarea = servicioTarea;
+    this.servicioRacha = servicioRacha;
+  }
+
+  @Override
+  public Long obtenerHorasEstudio(Long idUsuario) {
+    long horasPomodoro =
+      this.repositorioPomodoro.calcularMinutosCompletados(idUsuario) / MINUTOS_POR_HORA;
+    long horasSesiones = this.repositorioSesionEstudio.calcularHorasCompletadas(idUsuario);
+
+    return horasPomodoro + horasSesiones;
+  }
+
+  @Override
+  public Double porcentajeCumplimiento(Long idUsuario) {
+    // Las tareas guardan el EMAIL del responsable, así que hay que buscar el aporte por email.
+    Usuario usuario = this.repositorioUsuario.buscarPorId(idUsuario);
+    if (usuario == null) return 0.0;
+    String emailUsuario = usuario.getEmail();
+
+    Map<String, Long> aportes = this.servicioTarea.calcularAporteIndividual();
+
+    Long total = aportes.values().stream().mapToLong(Long::longValue).sum();
+
+    if (total == null || total == 0) return 0.0;
+
+    Long cumplimiento = aportes.getOrDefault(emailUsuario, 0L);
+    return ((double) cumplimiento / total) * 100;
+  }
+
+  @Override
+  public Long obtenerCantidadMaterias(Long idUsuario) {
+    return this.repositorioMateria.obtenerCantidadMateriasPorUsuario(idUsuario);
+  }
+
+  @Override
+  public CalendarioSemanal obtenerCalendarioSemanal(Long idUsuario, LocalDate referencia) {
+    return this.servicioCalendario.obtenerSemana(idUsuario, referencia);
+  }
+
+  @Override
+  public SesionEstudio obtenerProximaSesion(Long idUsuario) {
+    return this.repositorioSesionEstudio.buscarProximaSesionEstudio(idUsuario);
+  }
+
+  @Override
+  public Integer obtenerRacha(Long idUsuario) {
+    Usuario usuario = this.repositorioUsuario.buscarPorId(idUsuario);
+    return this.servicioRacha.obtenerRacha(usuario);
+  }
+
+  @Override
+  public Integer obtenerRecordRacha(Long idUsuario) {
+    Usuario usuario = this.repositorioUsuario.buscarPorId(idUsuario);
+    return this.servicioRacha.obtenerRecordRacha(usuario);
+  }
+}

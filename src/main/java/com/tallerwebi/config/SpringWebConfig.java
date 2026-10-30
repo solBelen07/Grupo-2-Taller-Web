@@ -7,6 +7,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -20,6 +23,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 @ComponentScan(
   { "com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura" }
 )
+@PropertySource("file:config-r2/application.properties")
 public class SpringWebConfig implements WebMvcConfigurer {
 
   // Spring + Thymeleaf need this
@@ -83,5 +87,10 @@ public class SpringWebConfig implements WebMvcConfigurer {
   @Bean
   public Clock reloj() {
     return Clock.system(ZoneId.of("America/Argentina/Buenos_Aires"));
+  }
+
+  @Bean(name = "multipartResolver")
+  public StandardServletMultipartResolver multipartResolver() {
+    return new StandardServletMultipartResolver();
   }
 }

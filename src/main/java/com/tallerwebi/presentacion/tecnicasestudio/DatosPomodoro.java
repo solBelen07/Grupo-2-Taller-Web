@@ -1,10 +1,7 @@
 package com.tallerwebi.presentacion.tecnicasestudio;
 
-import com.tallerwebi.dominio.Usuario;
-import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.tecnicasestudio.Estado;
 
-@SuppressWarnings("CPD-START")
 public class DatosPomodoro {
 
   private String origen;
@@ -12,7 +9,7 @@ public class DatosPomodoro {
   private Integer duracion;
   private Estado estado;
   private Integer materia;
-  private Usuario usuario;
+  private UsuarioDTO usuario;
   private String objetivo;
 
   public DatosPomodoro(
@@ -21,7 +18,7 @@ public class DatosPomodoro {
     Integer duracion,
     Estado estado,
     Integer materia,
-    Usuario usuario,
+    UsuarioDTO usuario,
     String objetivo
   ) {
     this.origen = origen;
@@ -67,11 +64,11 @@ public class DatosPomodoro {
     this.materia = materia;
   }
 
-  public Usuario getUsuario() {
+  public UsuarioDTO getUsuario() {
     return usuario;
   }
 
-  public void setUsuario(Usuario usuario) {
+  public void setUsuario(UsuarioDTO usuario) {
     this.usuario = usuario;
   }
 

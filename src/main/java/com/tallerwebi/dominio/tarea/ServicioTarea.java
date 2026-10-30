@@ -19,6 +19,12 @@ public interface ServicioTarea {
   //map guarda el nombre del responsable y la cantidad de tareas completadas
   Map<String, Long> calcularAporteIndividual();
 
+  // GRP-02: agrupa las tareas por nombre de grupo. Las tareas sin grupo quedan en "Sin grupo".
+  Map<String, List<Tarea>> agruparPorGrupo();
+
+  // GRP-02: porcentaje de tareas completadas de cada grupo, calculado solo con sus propias tareas.
+  Map<String, Double> calcularProgresoPorGrupo();
+
   // Calcula el porcentaje de horas realizadas sobre las horas planificadas, para medir el nivel de preparación de un parcial.
   double calcularPorcentajeHoras(Tarea tarea);
 

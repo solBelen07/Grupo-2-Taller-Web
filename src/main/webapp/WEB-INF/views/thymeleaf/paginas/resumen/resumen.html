@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Resumidor IA - FocusFlight</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <style>
+        .card-custom {
+            background-color: #171324;
+            border: 1px solid #2a253c;
+            border-radius: 12px;
+        }
+        .btn-purple {
+            background-color: #a855f7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-weight: 500;
+        }
+        .btn-purple:hover {
+            background-color: #9333ea;
+            color: white;
+        }
+        .input-custom {
+            background-color: #2a253c;
+            border: 1px solid #3f3954;
+            color: #e2e8f0;
+            border-radius: 8px;
+        }
+        .input-custom:focus {
+            background-color: #2a253c;
+            border-color: #a855f7;
+            color: white;
+            box-shadow: 0 0 0 0.25rem rgba(168, 85, 247, 0.25);
+        }
+        .input-custom::placeholder {
+            color: #8e8b99;
+        }
+        /* Estilo para la tarjeta de respuesta destacada */
+        .card-respuesta {
+            border-left: 4px solid #a855f7;
+        }
+        .icono-ia {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="~{componentes/sidebar :: sidebar-nav('ia-resumen')}"></div>
+
+<div class="contenido-principal">
+    <div th:replace="~{componentes/header :: header-principal}"></div>
+
+    <main class="container mt-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="icono-ia text-white fs-4">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold text-light mb-0">Asistente IA</h3>
+                    <p class="text-muted mb-0">Generá resúmenes automáticos de tus textos y apuntes de estudio.</p>
+                </div>
+            </div>
+            <div>
+                <a th:href="@{/materias}" class="btn btn-outline-secondary border-0 text-muted" style="background-color: #171324;">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Volver a Materias
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${error != null}">
+            <div class="alert alert-danger border-0 bg-danger bg-opacity-25 text-danger rounded mb-4 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span th:text="${error}">Mensaje de error</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-7 mb-4">
+                <div class="tp-form-card card-custom p-4 shadow-sm h-100">
+                    <h5 class="fw-bold text-light border-bottom border-secondary pb-3 mb-4" style="border-color: #2a253c !important;">
+                        <i class="fa-solid fa-file-lines me-2 text-muted"></i> Texto original
+                    </h5>
+
+                    <form th:action="@{/resumen/resumir}" th:object="${datosGemini}" method="post" class="d-flex flex-column h-100">
+                        <div class="mb-4 flex-grow-1">
+                            <label for="pregunta" class="form-label text-light mb-2 d-none">Texto a resumir:</label>
+                            <textarea class="form-control input-custom w-100 h-100" id="pregunta" th:field="*{pregunta}" style="min-height: 250px;"
+                                      required placeholder="Pegá acá el texto largo, apunte o artículo que necesites resumir..."></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-auto">
+                            <button type="submit" class="btn btn-purple d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-bolt"></i> Generar resumen
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-5 mb-4">
+                <div class="tp-form-card card-custom p-4 shadow-sm h-100 d-flex flex-column align-items-center justify-content-center text-center"
+                     th:if="${datosGemini.respuesta == null}">
+                    <div class="text-muted mb-3 fs-1 opacity-50">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h6 class="text-light fw-bold">Esperando texto...</h6>
+                    <p class="text-muted small mb-0">Pegá un texto en el cuadro de la izquierda y presioná el botón para que Gemini lo resuma.</p>
+                </div>
+                <div class="tp-form-card card-custom card-respuesta p-4 shadow-sm h-100 d-flex flex-column"
+                     th:if="${datosGemini.respuesta != null}">
+                    <h5 class="fw-bold text-light border-bottom border-secondary pb-3 mb-4" style="border-color: #2a253c !important;">
+                        <i class="fa-solid fa-sparkles me-2" style="color: #a855f7;"></i> Resumen generado
+                    </h5>
+
+                    <div class="flex-grow-1 overflow-auto pe-2" style="max-height: 400px;">
+                        <p class="text-light opacity-75 fs-6" style="white-space: pre-wrap; line-height: 1.6;" th:text="${datosGemini.respuesta}"></p>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top" style="border-color: #2a253c !important;">
+                        <button class="btn btn-outline-secondary w-100 border-0 text-muted bg-dark bg-opacity-25" onclick="navigator.clipboard.writeText(document.querySelector('.card-respuesta p').innerText);">
+                            <i class="fa-regular fa-copy me-2"></i> Copiar resumen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,12 +1,15 @@
 package com.tallerwebi.integracion.config;
 
+import com.tallerwebi.infraestructura.r2.AlmacenamientoR2;
 import java.time.Clock;
 import java.time.ZoneId;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -18,7 +21,13 @@ import org.thymeleaf.templatemode.TemplateMode;
 @EnableWebMvc
 @Configuration
 @ComponentScan(
-  { "com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura" }
+  basePackages = {
+    "com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura",
+  },
+  excludeFilters = @ComponentScan.Filter(
+    type = FilterType.ASSIGNABLE_TYPE,
+    classes = AlmacenamientoR2.class
+  )
 )
 public class SpringWebTestConfig implements WebMvcConfigurer {
 
@@ -80,5 +89,10 @@ public class SpringWebTestConfig implements WebMvcConfigurer {
   @Bean
   public Clock reloj() {
     return Clock.system(ZoneId.of("America/Argentina/Buenos_Aires"));
+  }
+
+  @Bean
+  public AlmacenamientoR2 almacenamientoR2() {
+    return Mockito.mock(AlmacenamientoR2.class);
   }
 }

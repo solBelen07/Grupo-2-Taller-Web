@@ -46,13 +46,28 @@ public class ServicioMateriaImpl implements ServicioMateria {
   }
 
   @Override
+  public List<Materia> obtenerMateriasPorUsuario(Long idUsuario) {
+    return repositorioMateria.obtenerPorUsuario(idUsuario);
+  }
+
+  @Override
   public Materia buscarMateriaPorNombre(String nombre) {
     return repositorioMateria.buscarPorNombre(nombre);
   }
 
   @Override
+  public Materia buscarMateriaPorNombreYUsuario(String nombre, Long idUsuario) {
+    return repositorioMateria.buscarPorNombreYUsuario(nombre, idUsuario);
+  }
+
+  @Override
   public Materia buscarMateriaPorId(Integer id) {
     return repositorioMateria.buscarPorId(id);
+  }
+
+  @Override
+  public Materia buscarMateriaPorIdYUsuario(Integer id, Long idUsuario) {
+    return repositorioMateria.buscarPorIdYUsuario(id, idUsuario);
   }
 
   @Override
