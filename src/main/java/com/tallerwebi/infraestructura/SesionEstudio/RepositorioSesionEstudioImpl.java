@@ -82,4 +82,22 @@ public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
 
     return total != null ? total : 0L;
   }
+
+  @Override
+  public boolean existeSesionCompletadaEnFecha(Long idUsuario, LocalDate fecha) {
+    Long cantidad = sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "select count(s.id) from SesionEstudio s " +
+        "where s.usuario.id = :idUsuario " +
+        "and s.completada = true " +
+        "and s.fechaCompletado = :fecha",
+        Long.class
+      )
+      .setParameter("idUsuario", idUsuario)
+      .setParameter("fecha", fecha)
+      .uniqueResult();
+
+    return cantidad != null && cantidad > 0;
+  }
 }

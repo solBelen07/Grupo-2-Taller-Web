@@ -67,39 +67,92 @@ public class ControladorParcial {
     HttpServletRequest request
   ) {
     Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
-    if (usuario == null) {
-      return new ModelAndView("redirect:/login");
+
+    if (usuario == null) return new ModelAndView("redirect:/login");
+
+    List<String> temas = datosParcial.getTemas() == null
+      ? List.of()
+      : datosParcial
+        .getTemas()
+        .stream()
+        .filter(t -> t != null && !t.trim().isEmpty())
+        .map(String::trim)
+        .toList();
+
+    Integer diasEstudio = datosParcial.getCantidadDiasEstudio();
+    Integer horasPorDia = datosParcial.getHorasPorDia();
+
+    boolean datosInvalidos =
+      diasEstudio == null ||
+      diasEstudio <= 0 ||
+      horasPorDia == null ||
+      horasPorDia <= 0 ||
+      temas.isEmpty();
+
+    boolean demasiadosTemas = !datosInvalidos && temas.size() > (long) diasEstudio * horasPorDia;
+
+    if (datosInvalidos || demasiadosTemas) {
+      Map<String, Object> modelo = new ModelMap();
+      modelo.put("datosParcial", datosParcial);
+      modelo.put("materias", servicioMateria.obtenerMaterias());
+      modelo.put(
+        "error",
+        "Ingresá datos válidos. Con horas enteras, " +
+        "cada tema necesita al menos una hora. " +
+        "Reducí los temas o aumentá los días u horas."
+      );
+
+      return new ModelAndView("paginas/materia/parcial-formulario", modelo);
     }
 
     Materia materia = servicioMateria.buscarMateriaPorId(datosParcial.getMateriaId().intValue());
-    Parcial parcial = new Parcial();
 
+    Parcial parcial = new Parcial();
     parcial.setMateria(materia);
     parcial.setFecha(datosParcial.getFecha());
     parcial.setHorario(datosParcial.getHorario());
-    parcial.setCantidadDiasEstudio(datosParcial.getCantidadDiasEstudio());
-    parcial.setHorasPorDia(datosParcial.getHorasPorDia());
+    parcial.setCantidadDiasEstudio(diasEstudio);
+    parcial.setHorasPorDia(horasPorDia);
     parcial.setNombre(datosParcial.getNombre());
+
     servicioParcial.crearParcial(parcial);
 
-    LocalDate fechaInicioEstudio = datosParcial
-      .getFecha()
-      .minusDays(datosParcial.getCantidadDiasEstudio());
+    LocalDate fechaInicioEstudio = datosParcial.getFecha().minusDays(diasEstudio);
 
-    List<String> temas = datosParcial.getTemas();
+    int totalTemas = temas.size();
+    int diasConTemas = Math.min(diasEstudio, totalTemas);
 
-    for (int i = 0; i < temas.size(); i++) {
-      String tema = temas.get(i);
+    int temasBasePorDia = totalTemas / diasConTemas;
+    int temasSobrantes = totalTemas % diasConTemas;
 
-      if (tema != null && !tema.trim().isEmpty()) {
-        LocalDate fechaSesion = fechaInicioEstudio.plusDays(i);
-        servicioParcial.agregarTema(
-          parcial.getId(),
-          tema,
-          fechaSesion,
-          datosParcial.getHorasPorDia(),
-          usuario
-        );
+    int indiceTema = 0;
+
+    for (int dia = 0; dia < diasConTemas; dia++) {
+      int temasDelDia = temasBasePorDia;
+
+      if (dia < temasSobrantes) {
+        temasDelDia++;
+      }
+
+      // 6. Dividir las horas del día entre los temas
+      int horasBasePorTema = horasPorDia / temasDelDia;
+      int horasSobrantes = horasPorDia % temasDelDia;
+
+      LocalDate fechaSesion = fechaInicioEstudio.plusDays(dia);
+
+      // 7. Crear las sesiones del día
+      for (int j = 0; j < temasDelDia; j++) {
+        String tema = temas.get(indiceTema);
+
+        int horasSesion = horasBasePorTema;
+
+        if (j < horasSobrantes) {
+          horasSesion++;
+        }
+
+        servicioParcial.agregarTema(parcial.getId(), tema, fechaSesion, horasSesion, usuario);
+
+        indiceTema++;
       }
     }
 
@@ -113,10 +166,11 @@ public class ControladorParcial {
   ) {
     Boolean quedoCompletada = servicioSesionEstudio.cambiarEstado(id);
 
-    // La racha solo suma cuando la sesión queda COMPLETADA. Desmarcarla no cuenta como día de estudio.
     Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
-    if (usuario != null && Boolean.TRUE.equals(quedoCompletada)) {
-      servicioRacha.registrarRacha(usuario);
+
+    if (usuario != null && quedoCompletada != null) {
+      servicioRacha.recalcularRacha(usuario);
+
       request.getSession().setAttribute("USUARIO", usuario);
     }
 
