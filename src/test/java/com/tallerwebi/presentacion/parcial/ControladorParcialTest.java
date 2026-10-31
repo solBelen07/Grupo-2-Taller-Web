@@ -3,6 +3,9 @@ package com.tallerwebi.presentacion.parcial;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.Usuario;
@@ -237,10 +240,6 @@ public class ControladorParcialTest {
     verify(servicioParcialMock, times(1))
       .agregarTema(7, "Spring MVC", LocalDate.of(2026, 10, 17), 2, usuarioLogueado);
 
-    /*
-     * Solo debe crear una sesión,
-     * porque "" y null no son temas válidos.
-     */
     verify(servicioParcialMock, times(1))
       .agregarTema(anyInt(), anyString(), any(LocalDate.class), anyInt(), any(Usuario.class));
   }
@@ -270,7 +269,7 @@ public class ControladorParcialTest {
 
     InOrder orden = inOrder(servicioSesionEstudioMock, servicioRachaMock);
     orden.verify(servicioSesionEstudioMock, times(1)).cambiarEstado(idSesion);
-    orden.verify(servicioRachaMock, times(1)).registrarRacha(usuario);
+    orden.verify(servicioRachaMock, times(1)).recalcularRacha(usuario);
 
     assertThat((Usuario) request.getSession().getAttribute("USUARIO"), sameInstance(usuario));
     assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
