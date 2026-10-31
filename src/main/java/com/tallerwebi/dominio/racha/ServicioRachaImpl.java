@@ -3,6 +3,8 @@ package com.tallerwebi.dominio.racha;
 import com.tallerwebi.dominio.RepositorioUsuario;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioNoEncontrado;
+import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
+import com.tallerwebi.dominio.tecnicasestudio.RepositorioPomodoro;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,17 @@ import org.springframework.stereotype.Service;
 public class ServicioRachaImpl implements ServicioRacha {
 
   private RepositorioUsuario repositorioUsuario;
+  private RepositorioSesionEstudio repositorioSesionEstudio;
+  private RepositorioPomodoro repositorioPomodoro;
 
-  public ServicioRachaImpl(RepositorioUsuario repositorioUsuario) {
+  public ServicioRachaImpl(
+    RepositorioUsuario repositorioUsuario,
+    RepositorioSesionEstudio repositorioSesionEstudio,
+    RepositorioPomodoro repositorioPomodoro
+  ) {
     this.repositorioUsuario = repositorioUsuario;
+    this.repositorioSesionEstudio = repositorioSesionEstudio;
+    this.repositorioPomodoro = repositorioPomodoro;
   }
 
   @Override
@@ -75,6 +85,45 @@ public class ServicioRachaImpl implements ServicioRacha {
   @Override
   public Integer obtenerRecordRacha(Usuario usuario) {
     return usuario == null ? 0 : usuario.getRacha().getRecordRacha();
+  }
+
+  @Override
+  public void recalcularRacha(Usuario usuario) {
+    if (usuario == null || usuario.getId() == null) {
+      return;
+    }
+
+    LocalDate hoy = LocalDate.now();
+
+    boolean sesionesHoy = repositorioSesionEstudio.existeSesionCompletadaEnFecha(
+      usuario.getId(),
+      hoy
+    );
+
+    boolean pomodorosHoy = repositorioPomodoro.existePomodoroCompletadoEnFecha(
+      usuario.getId(),
+      hoy
+    );
+
+    if (sesionesHoy || pomodorosHoy) {
+      registrarRacha(usuario);
+      return;
+    }
+
+    Usuario persistido = obtenerPersistido(usuario);
+    Racha racha = persistido.getRacha();
+
+    if (hoy.equals(racha.getUltimaFechaEstudio())) {
+      int nuevaRacha = Math.max(0, racha.getRachaActual() - 1);
+
+      racha.setRachaActual(nuevaRacha);
+
+      racha.setUltimaFechaEstudio(nuevaRacha > 0 ? hoy.minusDays(1) : null);
+
+      persistido.setRacha(racha);
+      repositorioUsuario.modificar(persistido);
+      sincronizarSesion(usuario, racha);
+    }
   }
 
   private Usuario obtenerPersistido(Usuario usuario) {

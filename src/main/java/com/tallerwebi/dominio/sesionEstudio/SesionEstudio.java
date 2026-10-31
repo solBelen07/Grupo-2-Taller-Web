@@ -28,6 +28,9 @@ public class SesionEstudio {
   @JoinColumn(name = "usuario")
   private Usuario usuario;
 
+  @Column(name = "fecha_completado")
+  private LocalDate fechaCompletado;
+
   public SesionEstudio() {}
 
   public Integer getId() {
@@ -84,5 +87,13 @@ public class SesionEstudio {
 
   public void setUsuario(Usuario usuario) {
     this.usuario = usuario;
+  }
+
+  public LocalDate getFechaCompletado() {
+    return fechaCompletado;
+  }
+
+  public void setFechaCompletado(LocalDate fechaCompletado) {
+    this.fechaCompletado = fechaCompletado;
   }
 }
