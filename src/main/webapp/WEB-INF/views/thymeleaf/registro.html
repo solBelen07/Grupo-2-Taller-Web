@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+
+<body class="registro-body">
+
+<main class="registro-contenedor">
+
+    <div class="registro-marca">
+        <i class="fa-solid fa-plane-up registro-marca-icono"></i>
+        <h1>FocusFlight</h1>
+        <p>Creá tu cuenta para empezar a organizarte.</p>
+    </div>
+
+    <form th:action="@{/registro}" th:object="${registro}" method="POST"
+          accept-charset="UTF-8" class="registro-card">
+
+        <div th:if="${error != null}" class="registro-error" th:text="${error}">Error</div>
+
+        <div class="registro-fila">
+            <div class="registro-campo">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" th:field="*{nombre}" required>
+            </div>
+            <div class="registro-campo">
+                <label for="apellido">Apellido</label>
+                <input type="text" id="apellido" th:field="*{apellido}" required>
+            </div>
+        </div>
+
+        <div class="registro-campo">
+            <label for="email">Email</label>
+            <input type="email" id="email" th:field="*{email}" required>
+        </div>
+
+        <div class="registro-campo">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" th:field="*{password}" minlength="8" required>
+        </div>
+
+        <div class="registro-fila">
+            <div class="registro-campo">
+                <label for="universidadId">Universidad</label>
+                <select id="universidadId" th:field="*{universidadId}" required>
+                    <option value="">Seleccioná una universidad</option>
+                    <option th:each="u : ${universidades}" th:value="${u.id}" th:text="${u.nombre}"></option>
+                </select>
+            </div>
+            <div class="registro-campo">
+                <label for="carreraId">Carrera</label>
+                <select id="carreraId" th:field="*{carreraId}" required>
+                    <option value="">Seleccioná una carrera</option>
+                    <option th:each="c : ${carreras}" th:value="${c.id}" th:text="${c.nombre}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="registro-campo">
+            <label>Intereses</label>
+            <div class="registro-intereses">
+                <label th:each="i : ${intereses}" class="registro-chip">
+                    <input type="checkbox" name="interesesIds" th:value="${i.id}"
+                           th:checked="${registro.interesesIds != null and registro.interesesIds.contains(i.id)}">
+                    <span th:text="${i.nombre}">JavaScript</span>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary registro-boton">Crear cuenta</button>
+
+        <p class="registro-login">
+            ¿Ya tenés cuenta? <a th:href="@{/login}">Iniciá sesión</a>
+        </p>
+    </form>
+</main>
+
+</body>
+</html>

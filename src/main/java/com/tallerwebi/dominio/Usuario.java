@@ -1,7 +1,16 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.catalogo.Carrera;
+import com.tallerwebi.dominio.catalogo.Interes;
+import com.tallerwebi.dominio.catalogo.Universidad;
 import com.tallerwebi.dominio.racha.Racha;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import java.util.Set;
 
 @Entity
 public class Usuario {
@@ -12,7 +21,10 @@ public class Usuario {
 
   private String nombre;
   private String apellido;
+
+  @Column(unique = true)
   private String email;
+
   private String password;
   private String rol;
 
@@ -21,6 +33,9 @@ public class Usuario {
 
   private boolean activo = false;
   private int puntos;
+
+  @Embedded
+  private PerfilAcademico perfilAcademico = new PerfilAcademico();
 
   public Long getId() {
     return id;
@@ -63,7 +78,7 @@ public class Usuario {
   }
 
   public void activar() {
-    activo = (Boolean) true;
+    activo = true;
   }
 
   public int getPuntos() {
@@ -107,5 +122,36 @@ public class Usuario {
 
   public void setRacha(Racha racha) {
     this.racha = racha;
+  }
+
+  public Universidad getUniversidad() {
+    return perfil().getUniversidad();
+  }
+
+  public void setUniversidad(Universidad universidad) {
+    perfil().setUniversidad(universidad);
+  }
+
+  public Carrera getCarrera() {
+    return perfil().getCarrera();
+  }
+
+  public void setCarrera(Carrera carrera) {
+    perfil().setCarrera(carrera);
+  }
+
+  public Set<Interes> getIntereses() {
+    return perfil().getIntereses();
+  }
+
+  public void setIntereses(Set<Interes> intereses) {
+    perfil().setIntereses(intereses);
+  }
+
+  private PerfilAcademico perfil() {
+    if (perfilAcademico == null) {
+      perfilAcademico = new PerfilAcademico();
+    }
+    return perfilAcademico;
   }
 }

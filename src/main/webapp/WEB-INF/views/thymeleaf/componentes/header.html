@@ -6,26 +6,40 @@
 <body>
 
 <!-- Fragmento del Header Superior -->
-<header th:fragment="header-principal" class="header-navbar">
-    <!-- Buscador -->
-    <div class="search-box">
+<header th:fragment="header-principal" class="header-navbar"
+        th:with="u=${session.USUARIO},
+                 dias=${u != null and u.racha != null and u.racha.rachaActual != null ? u.racha.rachaActual : 0}">
+
+    <!-- Buscador: solo con sesión iniciada -->
+    <div class="search-box" th:if="${u != null}">
         <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
         <input type="text" placeholder="Buscar asignaturas, tareas, exámenes..." />
     </div>
 
-    <!-- Widget de Estado / Streak y Perfil -->
     <!-- El usuario sale siempre de la sesión, así se ve igual en todas las páginas -->
-    <div class="user-widgets"
-         th:with="u=${session.USUARIO},
-                  dias=${u != null and u.racha != null and u.racha.rachaActual != null ? u.racha.rachaActual : 0}">
-        <div class="streak-badge">
-            <i class="fa-solid fa-fire text-purple-400"></i>
-            <span th:text="'Racha de ' + ${dias} + (${dias == 1} ? ' día' : ' días')">Racha de 0 días</span>
-        </div>
+    <div class="user-widgets">
 
-        <div class="avatar-circle"
-             th:text="${u == null ? '' : (#strings.isEmpty(u.nombre) ? '' : #strings.substring(u.nombre,0,1)) + (#strings.isEmpty(u.apellido) ? '' : #strings.substring(u.apellido,0,1))}">
-        </div>
+        <!-- Usuario con sesión iniciada -->
+        <th:block th:if="${u != null}">
+            <div class="streak-badge">
+                <i class="fa-solid fa-fire text-purple-400"></i>
+                <span th:text="'Racha de ' + ${dias} + (${dias == 1} ? ' día' : ' días')">Racha de 0 días</span>
+            </div>
+
+            <div class="avatar-circle"
+                 th:text="${(#strings.isEmpty(u.nombre) ? '' : #strings.substring(u.nombre,0,1)) + (#strings.isEmpty(u.apellido) ? '' : #strings.substring(u.apellido,0,1))}">
+                JM
+            </div>
+            <a th:href="@{/cerrar-sesion}" class="logout-btn" title="Cerrar sesión">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+        </th:block>
+
+        <!-- Usuario sin sesión iniciada -->
+        <th:block th:unless="${u != null}">
+            <a th:href="@{/login}" class="tp-btn-sec">Iniciar sesión</a>
+            <a th:href="@{/registro}" class="btn btn-primary">Registrarse</a>
+        </th:block>
     </div>
 </header>
 

@@ -1,14 +1,14 @@
 .sidebar {
-    width: var(--sidebar-width);
-    background-color: var(--bg-dark);
-    border-right: 1px solid var(--card-border);
-    padding: 20px 16px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: fixed;
-    height: 100vh;
-}
+                                                                   width: var(--sidebar-width);
+                                                                   background-color: var(--bg-dark);
+                                                                   border-right: 1px solid var(--card-border);
+                                                                   padding: 20px 16px;
+                                                                   display: flex;
+                                                                   flex-direction: column;
+                                                                   justify-content: space-between;
+                                                                   position: fixed;
+                                                                   height: 100vh;
+                                                               }
 
 .brand {
     display: flex;
@@ -62,3 +62,23 @@
 
 .user-info h4 { font-size: 13px; font-weight: 600; }
 .user-info p { font-size: 11px; color: var(--text-secondary); }
+
+.logout-btn {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.logout-btn:hover {
+    color: var(--error-acento);
+    border-color: var(--error-acento);
+}

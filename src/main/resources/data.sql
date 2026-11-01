@@ -329,16 +329,9 @@ VALUES
      DATE_ADD(CURDATE(), INTERVAL 12 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
 
 INSERT INTO Logro(id, nombre, descripcion)
-VALUES (
-           null,
-           'Maratonista',
-           'Estudiaste más de 50 horas'
-       ),
-       (
-           null,
-           'Popular',
-           'Fuiste invitado muchas veces a grupos'
-       ),
+VALUES (null,'Maratonista','Estudiaste más de 50 horas'),
+       (null,'Invitador','Fuiste invitado muchas veces a grupos'),
+       (null,'Popular','Fuiste invitado muchas veces a grupos'),
        -- Más logros, que se pueden ganar usando la app
        (null, 'Primeros pasos', 'Cargaste tu primera materia'),
        (null, 'Primer vuelo', 'Completaste tu primera sesión en FocusFlight'),
@@ -347,6 +340,47 @@ VALUES (
        (null, 'Imparable', 'Estudiaste 7 días seguidos'),
        (null, 'Plan cumplido', 'Completaste todas las sesiones de un plan de parcial'),
        (null, 'Líder de grupo', 'Creaste tu primer grupo de estudio');
+
+-- =====================================================================
+-- Universidades, carreras e intereses
+-- =====================================================================
+INSERT INTO Universidad (id, nombre) VALUES
+                                         (null, 'Universidad Nacional de La Matanza (UNLaM)'),
+                                         (null, 'Universidad de Buenos Aires (UBA)'),
+                                         (null, 'Universidad Tecnológica Nacional (UTN)'),
+                                         (null, 'Universidad Nacional de La Plata (UNLP)'),
+                                         (null, 'Universidad Nacional de Córdoba (UNC)'),
+                                         (null, 'Universidad Argentina de la Empresa (UADE)'),
+                                         (null, 'Instituto Tecnológico de Buenos Aires (ITBA)');
+
+INSERT INTO Carrera (id, nombre) VALUES
+                                     (null, 'Ingeniería en Informática'),
+                                     (null, 'Ingeniería en Sistemas'),
+                                     (null, 'Licenciatura en Sistemas'),
+                                     (null, 'Tecnicatura en Programación'),
+                                     (null, 'Ingeniería Industrial'),
+                                     (null, 'Ingeniería Electrónica');
+
+INSERT INTO Interes (id, nombre) VALUES
+                                     (null, 'JavaScript'),
+                                     (null, 'Java'),
+                                     (null, 'Python'),
+                                     (null, 'C#'),
+                                     (null, 'PHP'),
+                                     (null, 'SQL'),
+                                     (null, 'HTML y CSS'),
+                                     (null, 'React'),
+                                     (null, 'Spring'),
+                                     (null, 'Node.js'),
+                                     (null, 'Docker'),
+                                     (null, 'Git'),
+                                     (null, 'Inteligencia Artificial'),
+                                     (null, 'Ciberseguridad'),
+                                     (null, 'Redes'),
+                                     (null, 'Desarrollo móvil'),
+                                     (null, 'DevOps'),
+                                     (null, 'UX/UI'),
+                                     (null, 'Testing');
 
 -- GAM-02: logro obtenido de ejemplo (quién obtuvo qué logro y cuándo)
 INSERT INTO LogroObtenido (id, usuario_id, logro_id, fechaObtencion)

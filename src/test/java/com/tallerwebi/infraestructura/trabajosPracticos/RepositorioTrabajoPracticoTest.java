@@ -6,31 +6,35 @@ import static org.hamcrest.Matchers.*;
 import com.tallerwebi.dominio.trabajosPracticos.RepositorioTrabajoPractico;
 import com.tallerwebi.dominio.trabajosPracticos.TipoTrabajo;
 import com.tallerwebi.dominio.trabajosPracticos.TrabajoPractico;
-import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
+import com.tallerwebi.integracion.config.HibernateTestConfig;
 import java.util.List;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(
-  classes = { HibernateInfraestructuraTestConfig.class, RepositorioTrabajoPracticoImpl.class }
-)
+@WebAppConfiguration
+@ContextConfiguration(classes = { HibernateTestConfig.class })
 @Transactional
 public class RepositorioTrabajoPracticoTest {
 
   @Autowired
-  private RepositorioTrabajoPractico repositorioTrabajoPractico;
+  private SessionFactory sessionFactory;
 
+  private RepositorioTrabajoPractico repositorioTrabajoPractico;
   private TrabajoPractico tp1;
   private TrabajoPractico tp2;
 
   @BeforeEach
   public void setUp() {
+    repositorioTrabajoPractico = new RepositorioTrabajoPracticoImpl(sessionFactory);
+
     tp1 = new TrabajoPractico();
     tp1.setNombre("TP Integrador");
     tp1.setMateria("Taller Web I");
@@ -72,19 +76,19 @@ public class RepositorioTrabajoPracticoTest {
   @Test
   public void deberiaEncontrarTrabajosPracticosPorTipoIndividualOGrupal() {
     // Ejecución
-    List<TrabajoPractico> resultadosGrupar = repositorioTrabajoPractico.buscarPorTipo(
+    List<TrabajoPractico> resultadosGrupal = repositorioTrabajoPractico.buscarPorTipo(
       TipoTrabajo.GRUPAL
     );
 
     // Verificación
-    assertThat(resultadosGrupar, notNullValue());
-    assertThat(resultadosGrupar, hasSize(1));
-    assertThat(resultadosGrupar.getFirst().getTipo(), equalTo(TipoTrabajo.GRUPAL));
+    assertThat(resultadosGrupal, notNullValue());
+    assertThat(resultadosGrupal, hasSize(1));
+    assertThat(resultadosGrupal.getFirst().getTipo(), equalTo(TipoTrabajo.GRUPAL));
   }
 
   @Test
   public void deberiaActualizarTrabajoPractico() {
-    // 1. Preparación
+    // Preparación
     TrabajoPractico tp = new TrabajoPractico();
     tp.setNombre("TP Inicial");
     tp.setMateria("Taller Web I");
@@ -93,11 +97,11 @@ public class RepositorioTrabajoPracticoTest {
     repositorioTrabajoPractico.save(tp);
     Long idGenerado = tp.getId();
 
-    // 2. Modificación
+    // Modificación
     TrabajoPractico tpRecuperado = repositorioTrabajoPractico.buscarPorId(idGenerado);
     tpRecuperado.setNombre("TP Actualizado");
 
-    // 3. Verificación
+    // Verificación
     TrabajoPractico tpVerificado = repositorioTrabajoPractico.buscarPorId(idGenerado);
     assertThat(tpVerificado.getNombre(), equalTo("TP Actualizado"));
   }
