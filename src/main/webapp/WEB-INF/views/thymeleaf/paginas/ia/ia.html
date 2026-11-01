@@ -31,7 +31,66 @@
                     y organizar tu preparación.
                 </p>
             </div>
+            <section class="card shadow-sm border-0 mb-4 p-4">
+                <div class="mb-3">
+                    <h2 class="h4">
+                        <i class="fa-solid fa-graduation-cap me-2"></i>
+                        Practicar para un parcial
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Generá ejercicios personalizados para poner a prueba tus conocimientos.
+                    </p>
+                </div>
 
+                <div class="mb-3">
+                    <label for="materia" class="form-label">Materia</label>
+                    <select id="materia" class="form-select" required>
+                        <option value="">Seleccioná una materia</option>
+
+                        <option th:each="materia : ${materias}" th:value="${materia.id}" th:text="${materia.nombre}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="tema" class="form-label">Tema que querés practicar</label>
+                    <input type="text" id="tema" class="form-control"
+                        placeholder="Ej: Diagramas de estados, herencia, SQL..." required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="cantidad" class="form-label">Cantidad de preguntas</label>
+                    <select id="cantidad" class="form-select">
+                        <option value="5">5 preguntas</option>
+                        <option value="10">10 preguntas</option>
+                    </select>
+                </div>
+
+                <button type="button" id="generar-ejercicios" class="btn btn-primary">
+                    <i class="fa-solid fa-wand-magic-sparkles me-2"></i>
+                    Generar ejercicios
+                </button>
+            </section>
+            <section id="contenedor-ejercicios" class="card shadow-sm border-0 mb-4 p-4"
+                th:attr="data-generar-url=@{/api/ejercicios/generar}, data-corregir-url=@{/api/ejercicios/corregir}"
+                hidden>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h4 mb-0">
+                        <i class="fa-solid fa-clipboard-question me-2"></i>
+                        Tus ejercicios
+                    </h2>
+                </div>
+
+                <div id="preguntas-ejercicios"></div>
+
+                <div id="resultado-ejercicios" class="mt-4" aria-live="polite"></div>
+
+                <button type="button" id="corregir-ejercicios" class="btn btn-success mt-3">
+                    Corregir respuestas
+                </button>
+
+            </section>
             <section class="ia-panel" aria-label="Chat con el asistente de estudio">
 
                 <div id="ia-mensajes" class="ia-mensajes" aria-live="polite">
@@ -193,6 +252,240 @@
                 formulario.requestSubmit();
             }
         });
+
+        // ELEMENTOS DE EJERCITACIÓN
+        const contenedorEjercicios = document.getElementById("contenedor-ejercicios");
+        const botonGenerar = document.getElementById("generar-ejercicios");
+        const botonCorregir = document.getElementById("corregir-ejercicios");
+        const preguntasEjercicios = document.getElementById("preguntas-ejercicios");
+        const resultadoEjercicios = document.getElementById("resultado-ejercicios");
+
+        const urlGenerar = contenedorEjercicios.dataset.generarUrl;
+        const urlCorregir = contenedorEjercicios.dataset.corregirUrl;
+
+        // GENERAR EJERCICIOS
+        botonGenerar.addEventListener("click", async function () {
+
+            const materiaId = document.getElementById("materia").value;
+            const tema = document.getElementById("tema").value.trim();
+            const cantidad = Number(document.getElementById("cantidad").value);
+
+            if (!materiaId || !tema) {
+                resultadoEjercicios.textContent =
+                    "Seleccioná una materia e ingresá el tema que querés practicar.";
+                contenedorEjercicios.hidden = false;
+                return;
+            }
+
+            botonGenerar.disabled = true;
+            botonGenerar.textContent = "Generando ejercicios...";
+
+            resultadoEjercicios.textContent = "";
+            preguntasEjercicios.replaceChildren();
+            contenedorEjercicios.hidden = false;
+
+            try {
+                const respuestaHttp = await fetch(urlGenerar, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        materiaId: Number(materiaId),
+                        tema: tema,
+                        cantidad: cantidad
+                    })
+                });
+
+                const texto = await respuestaHttp.text();
+                let datos;
+
+                try {
+                    datos = JSON.parse(texto);
+                } catch (error) {
+                    throw new Error(texto || "No se pudo procesar la respuesta.");
+                }
+
+                if (!respuestaHttp.ok) {
+                    throw new Error(typeof datos === "string" ? datos : "No se pudieron generar los ejercicios.");
+                }
+
+                mostrarPreguntas(datos);
+
+            } catch (error) {
+                resultadoEjercicios.textContent = error.message;
+                console.error("Error al generar ejercicios:", error);
+
+            } finally {
+                botonGenerar.disabled = false;
+                botonGenerar.innerHTML =
+                    '<i class="fa-solid fa-wand-magic-sparkles me-2"></i> Generar ejercicios';
+            }
+        });
+
+        // MOSTRAR LAS PREGUNTAS
+        function mostrarPreguntas(preguntas) {
+
+            preguntasEjercicios.replaceChildren();
+            resultadoEjercicios.textContent = "";
+
+            if (!Array.isArray(preguntas) || preguntas.length === 0) {
+                resultadoEjercicios.textContent =
+                    "No se recibieron preguntas. Intentá nuevamente.";
+                botonCorregir.hidden = true;
+                return;
+            }
+
+            preguntas.forEach(function (pregunta, indice) {
+
+                const grupo = document.createElement("fieldset");
+                grupo.className = "mb-4";
+
+                const titulo = document.createElement("legend");
+                titulo.className = "h5";
+                titulo.textContent = (indice + 1) + ". " + pregunta.enunciado;
+
+                grupo.appendChild(titulo);
+
+                pregunta.opciones.forEach(function (opcion, indiceOpcion) {
+
+                    const etiqueta = document.createElement("label");
+                    etiqueta.className = "d-block border rounded p-2 mb-2";
+
+                    const radio = document.createElement("input");
+                    radio.type = "radio";
+                    radio.name = "respuesta-" + indice;
+                    radio.value = indiceOpcion;
+                    radio.className = "form-check-input me-2";
+
+                    etiqueta.appendChild(radio);
+                    etiqueta.appendChild(document.createTextNode(opcion));
+
+                    grupo.appendChild(etiqueta);
+                });
+
+                preguntasEjercicios.appendChild(grupo);
+            });
+
+            botonCorregir.hidden = false;
+        }
+
+        // CORREGIR EJERCICIOS
+        botonCorregir.addEventListener("click", async function () {
+
+            const preguntas = preguntasEjercicios.querySelectorAll("fieldset");
+            const respuestas = [];
+
+            for (let i = 0; i < preguntas.length; i++) {
+
+                const seleccionada = preguntasEjercicios.querySelector(
+                    'input[name="respuesta-' + i + '"]:checked'
+                );
+
+                if (!seleccionada) {
+                    resultadoEjercicios.textContent =
+                        "Respondé todas las preguntas antes de corregir.";
+                    return;
+                }
+
+                respuestas.push(Number(seleccionada.value));
+            }
+
+            botonCorregir.disabled = true;
+            botonCorregir.textContent = "Corrigiendo...";
+
+            try {
+                const respuestaHttp = await fetch(urlCorregir, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        respuestas: respuestas
+                    })
+                });
+
+                const texto = await respuestaHttp.text();
+                let datos;
+
+                try {
+                    datos = JSON.parse(texto);
+                } catch (error) {
+                    throw new Error(texto || "No se pudo procesar la corrección.");
+                }
+
+                if (!respuestaHttp.ok) {
+                    throw new Error(typeof datos === "string" ? datos : "No se pudieron corregir los ejercicios.");
+                }
+
+                mostrarResultado(datos);
+
+            } catch (error) {
+                resultadoEjercicios.textContent = error.message;
+                console.error("Error al corregir ejercicios:", error);
+
+            } finally {
+                botonCorregir.disabled = false;
+                botonCorregir.textContent = "Corregir respuestas";
+            }
+        });
+
+        // MOSTRAR RESULTADO
+        function mostrarResultado(datos) {
+
+            resultadoEjercicios.replaceChildren();
+
+            const titulo = document.createElement("h3");
+            titulo.className = "h4";
+            titulo.textContent = "¡Terminaste tu práctica!";
+
+            const puntaje = document.createElement("p");
+            puntaje.className = "fs-5";
+            puntaje.textContent =
+                "Resultado: " + datos.correctas + " de " + datos.total +
+                " respuestas correctas (" + datos.porcentaje + "%).";
+
+            resultadoEjercicios.appendChild(titulo);
+            resultadoEjercicios.appendChild(puntaje);
+
+            datos.correcciones.forEach(function (correccion, indice) {
+
+                const detalle = document.createElement("div");
+                detalle.className = "border rounded p-3 mb-3";
+
+                const pregunta = document.createElement("p");
+                pregunta.className = "fw-bold";
+                pregunta.textContent = (indice + 1) + ". " + correccion.enunciado;
+
+                const estado = document.createElement("p");
+                estado.textContent = correccion.esCorrecta ?
+                    "¡Correcto!" : "Incorrecto";
+
+                const respuestaElegida = document.createElement("p");
+                respuestaElegida.textContent =
+                    "Tu respuesta: " + correccion.respuestaElegida;
+
+                const respuestaCorrecta = document.createElement("p");
+                respuestaCorrecta.textContent =
+                    "Respuesta correcta: " + correccion.respuestaCorrecta;
+
+                const explicacion = document.createElement("p");
+                explicacion.textContent =
+                    "Explicación: " + (correccion.explicacion || "Sin explicación disponible.");
+
+                detalle.append(
+                    pregunta,
+                    estado,
+                    respuestaElegida,
+                    respuestaCorrecta,
+                    explicacion
+                );
+
+                resultadoEjercicios.appendChild(detalle);
+            });
+
+            botonCorregir.hidden = true;
+        }
     </script>
 
 </body>
