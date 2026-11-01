@@ -93,9 +93,6 @@
             <h4 th:text="${#strings.trim((u.nombre != null ? u.nombre : '') + ' ' + (u.apellido != null ? u.apellido : ''))}">Usuario</h4>
             <p th:text="${u.email}">email</p>
         </div>
-        <a th:href="@{/cerrar-sesion}" class="logout-btn" title="Cerrar sesión">
-            <i class="fa-solid fa-right-from-bracket"></i>
-        </a>
     </div>
 </aside>
 </body>

@@ -329,16 +329,17 @@ VALUES
      DATE_ADD(CURDATE(), INTERVAL 12 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
 
 INSERT INTO Logro(id, nombre, descripcion)
-VALUES (
-           null,
-           'Maratonista',
-           'Estudiaste más de 50 horas'
-       ),
-    (
-     null,
-        'Invitador',
-     'Fuiste invitado muchas veces a grupos'
-    );
+VALUES (null,'Maratonista','Estudiaste más de 50 horas'),
+       (null,'Invitador','Fuiste invitado muchas veces a grupos'),
+       (null,'Popular','Fuiste invitado muchas veces a grupos'),
+       -- Más logros, que se pueden ganar usando la app
+       (null, 'Primeros pasos', 'Cargaste tu primera materia'),
+       (null, 'Primer vuelo', 'Completaste tu primera sesión en FocusFlight'),
+       (null, 'Piloto frecuente', 'Estudiaste 5 horas con FocusFlight'),
+       (null, 'Constante', 'Estudiaste 3 días seguidos'),
+       (null, 'Imparable', 'Estudiaste 7 días seguidos'),
+       (null, 'Plan cumplido', 'Completaste todas las sesiones de un plan de parcial'),
+       (null, 'Líder de grupo', 'Creaste tu primer grupo de estudio');
 
 -- =====================================================================
 -- Universidades, carreras e intereses
@@ -380,19 +381,6 @@ INSERT INTO Interes (id, nombre) VALUES
                                      (null, 'DevOps'),
                                      (null, 'UX/UI'),
                                      (null, 'Testing');
-       (
-           null,
-           'Popular',
-           'Fuiste invitado muchas veces a grupos'
-       ),
-       -- Más logros, que se pueden ganar usando la app
-       (null, 'Primeros pasos', 'Cargaste tu primera materia'),
-       (null, 'Primer vuelo', 'Completaste tu primera sesión en FocusFlight'),
-       (null, 'Piloto frecuente', 'Estudiaste 5 horas con FocusFlight'),
-       (null, 'Constante', 'Estudiaste 3 días seguidos'),
-       (null, 'Imparable', 'Estudiaste 7 días seguidos'),
-       (null, 'Plan cumplido', 'Completaste todas las sesiones de un plan de parcial'),
-       (null, 'Líder de grupo', 'Creaste tu primer grupo de estudio');
 
 -- GAM-02: logro obtenido de ejemplo (quién obtuvo qué logro y cuándo)
 INSERT INTO LogroObtenido (id, usuario_id, logro_id, fechaObtencion)

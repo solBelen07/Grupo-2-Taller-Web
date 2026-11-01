@@ -3,6 +3,7 @@ package com.tallerwebi.dominio;
 import com.tallerwebi.dominio.catalogo.Carrera;
 import com.tallerwebi.dominio.catalogo.Interes;
 import com.tallerwebi.dominio.catalogo.Universidad;
+import com.tallerwebi.dominio.racha.Racha;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -10,8 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.Set;
-import com.tallerwebi.dominio.racha.Racha;
-import jakarta.persistence.*;
 
 @Entity
 public class Usuario {
@@ -44,22 +43,6 @@ public class Usuario {
 
   public void setId(Long id) {
     this.id = id;
-  }
-
-  public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
-  }
-
-  public String getApellido() {
-    return apellido;
-  }
-
-  public void setApellido(String apellido) {
-    this.apellido = apellido;
   }
 
   public String getEmail() {
@@ -106,6 +89,41 @@ public class Usuario {
     this.puntos = puntos;
   }
 
+  public String getNombre() {
+    return nombre;
+  }
+
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
+
+  public String getApellido() {
+    return apellido;
+  }
+
+  public void setApellido(String apellido) {
+    this.apellido = apellido;
+  }
+
+  public boolean isActivo() {
+    return activo;
+  }
+
+  public void setActivo(boolean activo) {
+    this.activo = activo;
+  }
+
+  public Racha getRacha() {
+    if (this.racha == null) {
+      this.racha = new Racha(0, 0, null);
+    }
+    return this.racha;
+  }
+
+  public void setRacha(Racha racha) {
+    this.racha = racha;
+  }
+
   public Universidad getUniversidad() {
     return perfil().getUniversidad();
   }
@@ -135,25 +153,5 @@ public class Usuario {
       perfilAcademico = new PerfilAcademico();
     }
     return perfilAcademico;
-  }
-
-
-  public boolean isActivo() {
-    return activo;
-  }
-
-  public void setActivo(boolean activo) {
-    this.activo = activo;
-  }
-
-  public Racha getRacha() {
-    if (this.racha == null) {
-      this.racha = new Racha(0, 0, null);
-    }
-    return this.racha;
-  }
-
-  public void setRacha(Racha racha) {
-    this.racha = racha;
   }
 }
