@@ -22,65 +22,65 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class RepositorioFotoPerfilImplTest {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+  @Autowired
+  private SessionFactory sessionFactory;
 
-    private RepositorioFotoPerfil repositorio;
+  private RepositorioFotoPerfil repositorio;
 
-    @BeforeEach
-    public void init() {
-        repositorio = new RepositorioFotoPerfilImpl(sessionFactory);
-    }
+  @BeforeEach
+  public void init() {
+    repositorio = new RepositorioFotoPerfilImpl(sessionFactory);
+  }
 
-    @Test
-    public void guardarYBuscarDeberiaDevolverLaFoto() {
-        repositorio.guardar(new FotoPerfil(100L, "image/png", new byte[] { 1, 2, 3 }));
-        sessionFactory.getCurrentSession().flush();
-        sessionFactory.getCurrentSession().clear();
+  @Test
+  public void guardarYBuscarDeberiaDevolverLaFoto() {
+    repositorio.guardar(new FotoPerfil(100L, "image/png", new byte[] { 1, 2, 3 }));
+    sessionFactory.getCurrentSession().flush();
+    sessionFactory.getCurrentSession().clear();
 
-        FotoPerfil encontrada = repositorio.buscar(100L);
+    FotoPerfil encontrada = repositorio.buscar(100L);
 
-        assertThat(encontrada, notNullValue());
-        assertThat(encontrada.getTipoContenido(), equalTo("image/png"));
-        assertThat(encontrada.getDatos(), equalTo(new byte[] { 1, 2, 3 }));
-    }
+    assertThat(encontrada, notNullValue());
+    assertThat(encontrada.getTipoContenido(), equalTo("image/png"));
+    assertThat(encontrada.getDatos(), equalTo(new byte[] { 1, 2, 3 }));
+  }
 
-    @Test
-    public void guardarDosVecesDeberiaReemplazarLaFoto() {
-        repositorio.guardar(new FotoPerfil(101L, "image/png", new byte[] { 1 }));
-        sessionFactory.getCurrentSession().flush();
-        sessionFactory.getCurrentSession().clear();
+  @Test
+  public void guardarDosVecesDeberiaReemplazarLaFoto() {
+    repositorio.guardar(new FotoPerfil(101L, "image/png", new byte[] { 1 }));
+    sessionFactory.getCurrentSession().flush();
+    sessionFactory.getCurrentSession().clear();
 
-        repositorio.guardar(new FotoPerfil(101L, "image/jpeg", new byte[] { 9, 9 }));
-        sessionFactory.getCurrentSession().flush();
-        sessionFactory.getCurrentSession().clear();
+    repositorio.guardar(new FotoPerfil(101L, "image/jpeg", new byte[] { 9, 9 }));
+    sessionFactory.getCurrentSession().flush();
+    sessionFactory.getCurrentSession().clear();
 
-        FotoPerfil encontrada = repositorio.buscar(101L);
-        assertThat(encontrada.getTipoContenido(), equalTo("image/jpeg"));
-        assertThat(encontrada.getDatos(), equalTo(new byte[] { 9, 9 }));
-    }
+    FotoPerfil encontrada = repositorio.buscar(101L);
+    assertThat(encontrada.getTipoContenido(), equalTo("image/jpeg"));
+    assertThat(encontrada.getDatos(), equalTo(new byte[] { 9, 9 }));
+  }
 
-    @Test
-    public void buscarInexistenteDeberiaDevolverNull() {
-        assertThat(repositorio.buscar(999999L), nullValue());
-    }
+  @Test
+  public void buscarInexistenteDeberiaDevolverNull() {
+    assertThat(repositorio.buscar(999999L), nullValue());
+  }
 
-    @Test
-    public void eliminarDeberiaBorrarLaFoto() {
-        repositorio.guardar(new FotoPerfil(102L, "image/png", new byte[] { 1 }));
-        sessionFactory.getCurrentSession().flush();
+  @Test
+  public void eliminarDeberiaBorrarLaFoto() {
+    repositorio.guardar(new FotoPerfil(102L, "image/png", new byte[] { 1 }));
+    sessionFactory.getCurrentSession().flush();
 
-        repositorio.eliminar(102L);
-        sessionFactory.getCurrentSession().flush();
-        sessionFactory.getCurrentSession().clear();
+    repositorio.eliminar(102L);
+    sessionFactory.getCurrentSession().flush();
+    sessionFactory.getCurrentSession().clear();
 
-        assertThat(repositorio.buscar(102L), nullValue());
-    }
+    assertThat(repositorio.buscar(102L), nullValue());
+  }
 
-    @Test
-    public void eliminarInexistenteNoDeberiaFallar() {
-        repositorio.eliminar(999998L);
+  @Test
+  public void eliminarInexistenteNoDeberiaFallar() {
+    repositorio.eliminar(999998L);
 
-        assertThat(repositorio.buscar(999998L), nullValue());
-    }
+    assertThat(repositorio.buscar(999998L), nullValue());
+  }
 }

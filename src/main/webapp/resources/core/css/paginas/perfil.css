@@ -223,3 +223,104 @@
     border: 1px solid var(--error-acento);
     color: var(--error-acento);
 }
+
+.perfil-dato {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.perfil-dato:last-of-type {
+    border-bottom: none;
+}
+
+.perfil-dato-etiqueta {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.perfil-dato-fila {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.perfil-dato-valor {
+    flex: 1;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.perfil-dato-edicion {
+    flex: 1;
+}
+
+.perfil-dato-edicion input[type="text"],
+.perfil-dato-edicion select {
+    width: 100%;
+    background-color: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    outline: none;
+}
+
+.perfil-dato-edicion input:focus,
+.perfil-dato-edicion select:focus {
+    border-color: var(--accent-purple);
+}
+
+.perfil-lapiz {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.perfil-lapiz:hover {
+    color: #d8b4fe;
+    border-color: var(--accent-purple);
+    background-color: #231638;
+}
+
+.perfil-candado {
+    flex-shrink: 0;
+    width: 32px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.perfil-acciones {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.perfil-password-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.perfil-password-cabecera .perfil-titulo {
+    margin: 0;
+}
+
+#form-password {
+    margin-top: 18px;
+}
+
+[hidden] {
+    display: none !important;
+}

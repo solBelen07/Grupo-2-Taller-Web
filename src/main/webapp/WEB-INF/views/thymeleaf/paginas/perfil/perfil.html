@@ -30,7 +30,7 @@
 
         <div class="perfil-grilla">
 
-            <!-- ===== Columna izquierda: foto y resumen ===== -->
+            <!-- ===== Columna izquierda: foto ===== -->
             <aside class="perfil-card perfil-lateral">
                 <div class="perfil-foto">
                     <img th:if="${tieneFoto}" th:src="@{/perfil/foto(v=${fotoVersion})}" alt="Foto de perfil">
@@ -56,106 +56,160 @@
                         <i class="fa-solid fa-trash"></i> Eliminar foto
                     </button>
                 </form>
-
-                <hr class="perfil-sep">
-
-                <dl class="perfil-resumen">
-                    <dt>Universidad</dt>
-                    <dd th:text="${perfil.universidad != null ? perfil.universidad.nombre : 'Sin definir'}">UNLaM</dd>
-                    <dt>Carrera</dt>
-                    <dd th:text="${perfil.carrera != null ? perfil.carrera.nombre : 'Sin definir'}">Ingeniería</dd>
-                    <dt>Intereses</dt>
-                    <dd>
-                        <span th:each="i : ${perfil.intereses}" class="perfil-etiqueta" th:text="${i.nombre}">Java</span>
-                        <span th:if="${#lists.isEmpty(perfil.intereses)}" class="text-muted">Sin intereses</span>
-                    </dd>
-                </dl>
             </aside>
 
-            <!-- ===== Columna derecha: formularios ===== -->
+            <!-- ===== Columna derecha ===== -->
             <section class="perfil-formularios">
 
+                <!-- ---------- Datos (lectura + edición por campo) ---------- -->
                 <form th:action="@{/perfil/datos}" th:object="${datos}" method="POST"
-                      accept-charset="UTF-8" class="perfil-card">
+                      accept-charset="UTF-8" class="perfil-card" id="form-datos">
                     <h2 class="perfil-titulo">Datos personales y académicos</h2>
 
-                    <div class="perfil-fila">
-                        <div class="perfil-campo">
-                            <label for="nombre">Nombre</label>
-                            <input type="text" id="nombre" th:field="*{nombre}" required>
-                        </div>
-                        <div class="perfil-campo">
-                            <label for="apellido">Apellido</label>
-                            <input type="text" id="apellido" th:field="*{apellido}" required>
-                        </div>
-                    </div>
-
-                    <div class="perfil-campo">
-                        <label for="emailLectura">Email</label>
-                        <input type="email" id="emailLectura" th:value="${perfil.email}" disabled>
-                        <small class="text-muted">El email no se puede modificar.</small>
-                    </div>
-
-                    <div class="perfil-fila">
-                        <div class="perfil-campo">
-                            <label for="universidadId">Universidad</label>
-                            <select id="universidadId" th:field="*{universidadId}" required>
-                                <option value="">Seleccioná una universidad</option>
-                                <option th:each="u : ${universidades}" th:value="${u.id}" th:text="${u.nombre}"></option>
-                            </select>
-                        </div>
-                        <div class="perfil-campo">
-                            <label for="carreraId">Carrera</label>
-                            <select id="carreraId" th:field="*{carreraId}" required>
-                                <option value="">Seleccioná una carrera</option>
-                                <option th:each="c : ${carreras}" th:value="${c.id}" th:text="${c.nombre}"></option>
-                            </select>
+                    <!-- Nombre -->
+                    <div class="perfil-dato" data-campo>
+                        <span class="perfil-dato-etiqueta">Nombre</span>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-valor" data-lectura th:text="${perfil.nombre}">Ana</span>
+                            <div class="perfil-dato-edicion" data-edicion hidden>
+                                <input type="text" id="nombre" th:field="*{nombre}" required>
+                            </div>
+                            <button type="button" class="perfil-lapiz" data-editar title="Editar nombre">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="perfil-campo">
-                        <label>Intereses</label>
-                        <div class="perfil-intereses">
-                            <label th:each="i : ${intereses}" class="perfil-chip">
-                                <input type="checkbox" name="interesesIds" th:value="${i.id}"
-                                       th:checked="${datos.interesesIds.contains(i.id)}">
-                                <span th:text="${i.nombre}">Java</span>
-                            </label>
+                    <!-- Apellido -->
+                    <div class="perfil-dato" data-campo>
+                        <span class="perfil-dato-etiqueta">Apellido</span>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-valor" data-lectura th:text="${perfil.apellido}">Pérez</span>
+                            <div class="perfil-dato-edicion" data-edicion hidden>
+                                <input type="text" id="apellido" th:field="*{apellido}" required>
+                            </div>
+                            <button type="button" class="perfil-lapiz" data-editar title="Editar apellido">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <!-- Email (solo lectura, sin lápiz) -->
+                    <div class="perfil-dato">
+                        <span class="perfil-dato-etiqueta">Email</span>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-valor" th:text="${perfil.email}">email</span>
+                            <i class="fa-solid fa-lock perfil-candado" title="El email no se puede modificar"></i>
+                        </div>
+                    </div>
+
+                    <!-- Universidad -->
+                    <div class="perfil-dato" data-campo>
+                        <span class="perfil-dato-etiqueta">Universidad</span>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-valor" data-lectura
+                                  th:text="${perfil.universidad != null ? perfil.universidad.nombre : 'Sin definir'}">UNLaM</span>
+                            <div class="perfil-dato-edicion" data-edicion hidden>
+                                <select id="universidadId" th:field="*{universidadId}" required>
+                                    <option value="">Seleccioná una universidad</option>
+                                    <option th:each="u : ${universidades}" th:value="${u.id}" th:text="${u.nombre}"></option>
+                                </select>
+                            </div>
+                            <button type="button" class="perfil-lapiz" data-editar title="Editar universidad">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Carrera -->
+                    <div class="perfil-dato" data-campo>
+                        <span class="perfil-dato-etiqueta">Carrera</span>
+                        <div class="perfil-dato-fila">
+                            <span class="perfil-dato-valor" data-lectura
+                                  th:text="${perfil.carrera != null ? perfil.carrera.nombre : 'Sin definir'}">Ingeniería</span>
+                            <div class="perfil-dato-edicion" data-edicion hidden>
+                                <select id="carreraId" th:field="*{carreraId}" required>
+                                    <option value="">Seleccioná una carrera</option>
+                                    <option th:each="c : ${carreras}" th:value="${c.id}" th:text="${c.nombre}"></option>
+                                </select>
+                            </div>
+                            <button type="button" class="perfil-lapiz" data-editar title="Editar carrera">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Intereses -->
+                    <div class="perfil-dato" data-campo>
+                        <span class="perfil-dato-etiqueta">Intereses</span>
+                        <div class="perfil-dato-fila">
+                            <div class="perfil-dato-valor" data-lectura>
+                                <span th:each="i : ${perfil.intereses}" class="perfil-etiqueta" th:text="${i.nombre}">Java</span>
+                                <span th:if="${#lists.isEmpty(perfil.intereses)}" class="text-muted">Sin intereses</span>
+                            </div>
+                            <div class="perfil-dato-edicion" data-edicion hidden>
+                                <div class="perfil-intereses">
+                                    <label th:each="i : ${intereses}" class="perfil-chip">
+                                        <input type="checkbox" name="interesesIds" th:value="${i.id}"
+                                               th:checked="${datos.interesesIds.contains(i.id)}">
+                                        <span th:text="${i.nombre}">Java</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="button" class="perfil-lapiz" data-editar title="Editar intereses">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Barra de acciones: aparece solo si hay algo en edición -->
+                    <div class="perfil-acciones" id="acciones-datos" hidden>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        <button type="button" class="tp-btn-sec" id="cancelar-datos">Cancelar</button>
+                    </div>
                 </form>
 
-                <form th:action="@{/perfil/password}" th:object="${cambioPassword}" method="POST"
-                      accept-charset="UTF-8" class="perfil-card">
-                    <h2 class="perfil-titulo">Cambiar contraseña</h2>
-
-                    <div class="perfil-campo">
-                        <label for="actual">Contraseña actual</label>
-                        <input type="password" id="actual" th:field="*{actual}"
-                               autocomplete="current-password" required>
+                <!-- ---------- Contraseña (desplegable) ---------- -->
+                <div class="perfil-card">
+                    <div class="perfil-password-cabecera">
+                        <h2 class="perfil-titulo">Contraseña</h2>
+                        <button type="button" class="tp-btn-sec" id="btn-password"
+                                aria-expanded="false" aria-controls="form-password">
+                            <i class="fa-solid fa-key"></i> Cambiar contraseña
+                        </button>
                     </div>
 
-                    <div class="perfil-fila">
+                    <form th:action="@{/perfil/password}" th:object="${cambioPassword}" method="POST"
+                          accept-charset="UTF-8" id="form-password" hidden>
                         <div class="perfil-campo">
-                            <label for="nueva">Nueva contraseña</label>
-                            <input type="password" id="nueva" th:field="*{nueva}" minlength="8"
-                                   autocomplete="new-password" required>
+                            <label for="actual">Contraseña actual</label>
+                            <input type="password" id="actual" th:field="*{actual}"
+                                   autocomplete="current-password" required>
                         </div>
-                        <div class="perfil-campo">
-                            <label for="confirmacion">Repetir nueva contraseña</label>
-                            <input type="password" id="confirmacion" th:field="*{confirmacion}" minlength="8"
-                                   autocomplete="new-password" required>
-                        </div>
-                    </div>
 
-                    <button type="submit" class="btn btn-primary">Actualizar contraseña</button>
-                </form>
+                        <div class="perfil-fila">
+                            <div class="perfil-campo">
+                                <label for="nueva">Nueva contraseña</label>
+                                <input type="password" id="nueva" th:field="*{nueva}" minlength="8"
+                                       autocomplete="new-password" required>
+                            </div>
+                            <div class="perfil-campo">
+                                <label for="confirmacion">Repetir nueva contraseña</label>
+                                <input type="password" id="confirmacion" th:field="*{confirmacion}" minlength="8"
+                                       autocomplete="new-password" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Actualizar contraseña</button>
+                        <button type="button" class="tp-btn-sec" id="cancelar-password">Cancelar</button>
+                    </form>
+                </div>
             </section>
         </div>
     </main>
 </div>
+
+<script type="module" th:src="@{/js/perfil.js}"></script>
 
 </body>
 </html>
