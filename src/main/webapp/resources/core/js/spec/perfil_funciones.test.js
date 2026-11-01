@@ -30,7 +30,7 @@ describe("Perfil Funciones", function () {
       expect(campo.partes["[data-editar]"].hidden).toBe(true);
     });
 
-    it("no debe fallar con un campo nulo", function () {
+    it("abrirCampo no debe fallar con un campo nulo", function () {
       expect(function () {
         abrirCampo(null);
       }).not.toThrow();
@@ -49,7 +49,7 @@ describe("Perfil Funciones", function () {
       expect(campo.partes["[data-editar]"].hidden).toBe(false);
     });
 
-    it("no debe fallar con un campo nulo", function () {
+    it("cerrarCampo no debe fallar con un campo nulo", function () {
       expect(function () {
         cerrarCampo(null);
       }).not.toThrow();
