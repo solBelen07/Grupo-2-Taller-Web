@@ -26,10 +26,12 @@
                 <span th:text="'Racha de ' + ${dias} + (${dias == 1} ? ' día' : ' días')">Racha de 0 días</span>
             </div>
 
-            <div class="avatar-circle"
-                 th:text="${(#strings.isEmpty(u.nombre) ? '' : #strings.substring(u.nombre,0,1)) + (#strings.isEmpty(u.apellido) ? '' : #strings.substring(u.apellido,0,1))}">
-                JM
-            </div>
+            <a th:href="@{/perfil}" class="avatar-enlace" title="Mi perfil">
+                <div class="avatar-circle"
+                     th:text="${(#strings.isEmpty(u.nombre) ? '' : #strings.substring(u.nombre,0,1)) + (#strings.isEmpty(u.apellido) ? '' : #strings.substring(u.apellido,0,1))}">
+                    JM
+                </div>
+            </a>
             <a th:href="@{/cerrar-sesion}" class="logout-btn" title="Cerrar sesión">
                 <i class="fa-solid fa-right-from-bracket"></i>
             </a>
