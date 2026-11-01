@@ -4,7 +4,7 @@ export function validarEmail(email) {
 }
 
 export function validarPassword(password) {
-  return password?.trim().length >= 6;
+  return password?.trim().length >= 8;
 }
 
 export function validarCamposDeLogin(email, password) {

@@ -1,0 +1,225 @@
+.perfil-grilla {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+@media (max-width: 992px) {
+    .perfil-grilla {
+        grid-template-columns: 1fr;
+    }
+}
+
+.perfil-formularios {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.perfil-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.perfil-lateral {
+    text-align: center;
+}
+
+.perfil-foto {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #3b235d;
+    color: #d8b4fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: 700;
+    border: 2px solid var(--card-border);
+}
+
+.perfil-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.perfil-nombre {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.perfil-email {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 4px 0 16px;
+    overflow-wrap: anywhere;
+}
+
+.perfil-foto-form,
+.perfil-lateral form {
+    margin: 0 0 8px;
+}
+
+.perfil-archivo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.perfil-archivo input[type="file"] {
+    display: none;
+}
+
+.perfil-eliminar:hover {
+    border-color: var(--error-acento);
+    color: var(--error-acento);
+    background-color: var(--error-fondo);
+}
+
+.perfil-sep {
+    border-color: var(--card-border);
+    margin: 18px 0;
+}
+
+.perfil-resumen {
+    text-align: left;
+    margin: 0;
+}
+
+.perfil-resumen dt {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin-top: 12px;
+}
+
+.perfil-resumen dd {
+    font-size: 14px;
+    margin: 2px 0 0;
+}
+
+.perfil-etiqueta {
+    display: inline-block;
+    padding: 2px 10px;
+    margin: 2px 4px 2px 0;
+    border-radius: 12px;
+    border: 1px solid #3b235d;
+    background-color: #231638;
+    color: #d8b4fe;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.perfil-titulo {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 18px;
+}
+
+.perfil-fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+@media (max-width: 576px) {
+    .perfil-fila {
+        grid-template-columns: 1fr;
+    }
+}
+
+.perfil-campo {
+    margin-bottom: 18px;
+}
+
+.perfil-campo > label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.perfil-campo input[type="text"],
+.perfil-campo input[type="email"],
+.perfil-campo input[type="password"],
+.perfil-campo select {
+    width: 100%;
+    background-color: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    outline: none;
+}
+
+.perfil-campo input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.perfil-campo input:focus,
+.perfil-campo select:focus {
+    border-color: var(--accent-purple);
+}
+
+.perfil-intereses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.perfil-chip {
+    cursor: pointer;
+    margin: 0;
+}
+
+.perfil-chip input {
+    display: none;
+}
+
+.perfil-chip span {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    background-color: var(--input-bg);
+    color: var(--text-secondary);
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.perfil-chip input:checked + span {
+    border-color: var(--accent-purple);
+    background-color: #231638;
+    color: #d8b4fe;
+}
+
+.perfil-aviso {
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.perfil-ok {
+    background-color: rgba(52, 211, 153, 0.08);
+    border: 1px solid #34d399;
+    color: #34d399;
+}
+
+.perfil-error {
+    background-color: var(--error-fondo);
+    border: 1px solid var(--error-acento);
+    color: var(--error-acento);
+}
