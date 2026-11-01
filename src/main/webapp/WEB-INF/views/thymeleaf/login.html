@@ -28,21 +28,31 @@
         <div class="login-campo">
             <label for="email">Email</label>
             <input type="email" id="email" th:field="*{email}" autocomplete="username" required>
+            <small id="email-error" class="input-error-msg" style="display: none;">Ingresá un correo electrónico válido.</small>
         </div>
 
         <div class="login-campo">
             <label for="password">Contraseña</label>
-            <input type="password" id="password" th:field="*{password}"
-                   autocomplete="current-password" required>
+            <div class="password-container" style="position: relative;">
+                <input type="password" id="password" th:field="*{password}"
+                       autocomplete="current-password" required style="width: 100%;">
+                <button type="button" id="btn-toggle-password" class="btn-toggle-password" title="Mostrar contraseña">
+                    <i class="fa-regular fa-eye" id="icon-eye"></i>
+                </button>
+            </div>
+            <small id="password-error" class="input-error-msg" style="display: none;">Debe tener al menos 6 caracteres.</small>
+            <small id="caps-lock-warning" class="caps-lock-alerta" style="display: none;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Mayúsculas activadas
+            </small>
         </div>
 
-        <button type="submit" class="btn btn-primary login-boton">Ingresar</button>
+        <button type="submit" id="btn-login" class="btn btn-primary login-boton">Ingresar</button>
 
         <p class="login-registro">
             ¿No tenés cuenta? <a th:href="@{/registro}">Registrate</a>
         </p>
     </form>
 </main>
-
+<script type="module" th:src="@{/js/login.js}"></script>
 </body>
 </html>

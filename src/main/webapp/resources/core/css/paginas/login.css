@@ -55,7 +55,8 @@
 }
 
 .login-campo input[type="email"],
-.login-campo input[type="password"] {
+.login-campo input[type="password"],
+.login-campo input[type="text"]{
     width: 100%;
     background-color: var(--input-bg);
     border: 1px solid var(--card-border);
@@ -68,6 +69,27 @@
 
 .login-campo input:focus {
     border-color: var(--accent-purple);
+}
+
+.password-container {
+    position: relative;
+}
+
+.btn-toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    font-size: 14px;
+}
+
+.btn-toggle-password:hover {
+    color: var(--text-primary);
 }
 
 .login-boton {
@@ -95,4 +117,21 @@
     padding: 10px 14px;
     font-size: 13px;
     margin-bottom: 18px;
+}
+
+.caps-lock-alerta {
+    color: #facc15;
+    font-size: 12px;
+    margin-top: 6px;
+    display: block;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.input-error-msg {
+    color: #f87171; /* Rojo suave acorde a modo oscuro */
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
 }

@@ -82,6 +82,36 @@
     border-color: var(--accent-purple);
 }
 
+.password-container {
+    position: relative;
+}
+
+.btn-toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    font-size: 14px;
+}
+
+.btn-toggle-password:hover {
+    color: var(--text-primary);
+}
+
+.caps-lock-alerta {
+    color: #facc15;
+    font-size: 12px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .registro-intereses {
     display: flex;
     flex-wrap: wrap;
@@ -139,4 +169,11 @@
     padding: 10px 14px;
     font-size: 13px;
     margin-bottom: 18px;
+}
+
+.input-error-msg {
+    color: #f87171; /* Rojo suave acorde a modo oscuro */
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
 }

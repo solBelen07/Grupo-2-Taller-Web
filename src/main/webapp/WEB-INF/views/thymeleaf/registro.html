@@ -29,21 +29,33 @@
             <div class="registro-campo">
                 <label for="nombre">Nombre</label>
                 <input type="text" id="nombre" th:field="*{nombre}" required>
+                <small id="nombre-error" class="input-error-msg" style="display: none;">Campo obligatorio.</small>
             </div>
             <div class="registro-campo">
                 <label for="apellido">Apellido</label>
                 <input type="text" id="apellido" th:field="*{apellido}" required>
+                <small id="apellido-error" class="input-error-msg" style="display: none;">Campo obligatorio.</small>
             </div>
         </div>
 
         <div class="registro-campo">
             <label for="email">Email</label>
             <input type="email" id="email" th:field="*{email}" required>
+            <small id="email-error" class="input-error-msg" style="display: none;">Ingresá un correo electrónico válido.</small>
         </div>
 
         <div class="registro-campo">
             <label for="password">Contraseña</label>
-            <input type="password" id="password" th:field="*{password}" minlength="8" required>
+            <div class="password-container">
+                <input type="password" id="password" th:field="*{password}" required>
+                <button type="button" id="btn-toggle-password" class="btn-toggle-password" title="Mostrar contraseña">
+                    <i class="fa-regular fa-eye" id="icon-eye"></i>
+                </button>
+            </div>
+            <small id="password-error" class="input-error-msg" style="display: none;">Debe tener al menos 6 caracteres.</small>
+            <small id="caps-lock-warning" class="caps-lock-alerta" style="display: none;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Mayúsculas activadas
+            </small>
         </div>
 
         <div class="registro-fila">
@@ -74,7 +86,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary registro-boton">Crear cuenta</button>
+        <button type="submit" id="btn-registro" class="btn btn-primary registro-boton" disabled>Crear cuenta</button>
 
         <p class="registro-login">
             ¿Ya tenés cuenta? <a th:href="@{/login}">Iniciá sesión</a>
@@ -82,5 +94,6 @@
     </form>
 </main>
 
+<script type="module" th:src="@{/js/registro.js}"></script>
 </body>
 </html>
