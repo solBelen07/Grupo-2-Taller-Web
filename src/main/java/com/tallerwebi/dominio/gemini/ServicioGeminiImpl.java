@@ -74,6 +74,61 @@ public class ServicioGeminiImpl implements ServicioGemini {
   }
 
   @Override
+  public String generarEjercicios(String materia, String tema, int cantidad) {
+    String prompt =
+      """
+      Generá %d preguntas de opción múltiple para practicar un parcial.
+
+      Materia: %s
+      Tema: %s
+
+      Requisitos:
+      - Cada pregunta debe tener exactamente 4 opciones.
+      - Debe existir una sola respuesta correcta.
+      - Las opciones deben identificarse mediante índices del 0 al 3.
+      - Incluí una explicación breve de la respuesta correcta.
+      - El nivel debe ser adecuado para un estudiante universitario.
+
+      Respondé únicamente con JSON válido, sin bloques Markdown,
+      siguiendo esta estructura:
+
+      {
+        "preguntas": [
+          {
+            "enunciado": "Texto de la pregunta",
+            "opciones": ["Opción A", "Opción B", "Opción C", "Opción D"],
+            "respuestaCorrecta": 0,
+            "explicacion": "Explicación de la respuesta"
+          }
+        ]
+      }
+      """.formatted(cantidad, materia, tema);
+
+    try {
+      Map<String, Object> bodyMap = Map.of(
+        "contents",
+        List.of(Map.of("parts", List.of(Map.of("text", prompt)))),
+        "generationConfig",
+        Map.of("responseMimeType", "application/json")
+      );
+      ObjectMapper mapper = new ObjectMapper();
+      String body = mapper.writeValueAsString(bodyMap);
+
+      MultiValueMap<String, String> headers = new HttpHeaders();
+      headers.add("Content-Type", "application/json");
+      headers.add("x-goog-api-key", this.apiKey);
+
+      HttpEntity<String> request = new HttpEntity<>(body, headers);
+
+      String json = restTemplate.postForObject(url, request, String.class);
+
+      return extraerRespuesta(json);
+    } catch (Exception e) {
+      return "Error al generar ejercicios: " + e.getMessage();
+    }
+  }
+
+  @Override
   public void limpiar() {
     // Historial de conversación (a implementar luego si es necesario)
   }
