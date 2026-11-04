@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${nombreOriginal == null} ? 'Nuevo grupo - FocusFlight' : 'Editar grupo - FocusFlight'">Grupo - FocusFlight</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <style>
+        .card-custom {
+            background-color: #171324;
+            border: 1px solid #2a253c;
+            border-radius: 12px;
+        }
+        .form-control-custom {
+            background-color: #0b0914 !important;
+            border: 1px solid #2a253c;
+            color: white !important;
+            border-radius: 8px;
+        }
+        .form-control-custom:focus {
+            border-color: #a855f7;
+            box-shadow: none;
+        }
+        .input-group-text {
+            background-color: transparent;
+            border-color: #2a253c;
+            color: #8e8b99;
+        }
+        .campo-con-icono {
+            position: relative;
+        }
+        .campo-con-icono i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8e8b99;
+            pointer-events: none;
+        }
+        .tp-form-card .campo-con-icono input {
+            padding: 10px 12px 10px 40px;
+            width: 100%;
+        }
+        .btn-purple {
+            background-color: #a855f7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: 500;
+        }
+        .btn-purple:hover {
+            background-color: #9333ea;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{componentes/sidebar :: sidebar-nav('grupos')}"></div>
+
+<div class="contenido-principal">
+
+    <div th:replace="~{componentes/header :: header-principal}"></div>
+
+    <main class="container d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 100px);">
+
+        <!-- GRP-06: el mismo formulario sirve para crear (nombreOriginal vacío) y para editar -->
+        <div class="tp-form-card card-custom p-4 w-100 shadow-sm" style="max-width: 500px;">
+            <div class="text-center mb-4">
+                <div class="bg-secondary bg-opacity-25 d-inline-block p-3 rounded-circle text-light mb-3">
+                    <i class="fa-solid fs-3" th:classappend="${nombreOriginal == null} ? 'fa-users' : 'fa-pen'"></i>
+                </div>
+                <h4 class="fw-bold mb-1" th:text="${nombreOriginal == null} ? 'Nuevo grupo' : 'Editar grupo'">Nuevo grupo</h4>
+                <p class="text-muted small" th:if="${nombreOriginal == null}">Vas a quedar como administrador/a del grupo.</p>
+            </div>
+
+            <div th:if="${error != null}" class="alert alert-danger border-0 bg-danger bg-opacity-25 text-danger rounded mb-4" th:text="${error}"></div>
+
+            <form th:action="${nombreOriginal == null} ? @{/grupos/crear} : @{/grupos/{nombre}/editar(nombre=${nombreOriginal})}" method="POST">
+                <div class="mb-4">
+                    <label for="nombre" class="form-label text-muted small text-uppercase fw-bold">Nombre del grupo</label>
+                    <!-- El ícono va dentro del campo (antes quedaba arriba, separado del input) -->
+                    <div class="campo-con-icono">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <input type="text" id="nombre" name="nombre" th:value="${nombre}" maxlength="50"
+                               class="form-control form-control-custom" placeholder="Ej. Equipo Taller Web" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-purple w-100 mb-3">
+                    <i class="fa-solid fa-check me-2"></i>
+                    <span th:text="${nombreOriginal == null} ? 'Crear grupo' : 'Guardar cambios'">Crear grupo</span>
+                </button>
+                <!-- Al editar, "Cancelar" vuelve al detalle del grupo; al crear, a la lista -->
+                <a th:href="${nombreOriginal == null} ? @{/grupos} : @{/grupos/{nombre}(nombre=${nombreOriginal})}"
+                   class="btn btn-outline-secondary border-0 w-100 text-muted">Cancelar</a>
+            </form>
+        </div>
+
+    </main>
+</div>
+
+</body>
+</html>

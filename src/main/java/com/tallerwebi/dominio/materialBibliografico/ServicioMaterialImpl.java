@@ -85,7 +85,7 @@ public class ServicioMaterialImpl implements ServicioMaterial {
     MaterialBibliografico material = repositorioMaterial.buscarPorId(id);
 
     if (material == null) {
-      throw new IllegalArgumentException("El material no existe");
+      throw new ArchivoNoEncontrado();
     }
 
     return almacenamientoR2.descargarArchivo(material.getClaveR2());

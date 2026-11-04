@@ -1,0 +1,2197 @@
+2026-10-31 22:21:12.398:INFO :oejs.Server:main: jetty-12.0.37; built: 2026-07-02T19:22:00.399Z; git: ceb2461aabfc7e4f362f2602ea2eeb5bd67599db; jvm 25.0.5+8-LTS
+2026-10-31 22:21:12.435:INFO :oejdp.ScanningAppProvider:main: Deployment monitor ee10 in [file:///opt/jetty/webapps/] at intervals 0s
+2026-10-31 22:21:12.445:INFO :oejd.DeploymentManager:main: addApp: App@757acd7b[ee10,null,/opt/jetty/webapps/spring.war]
+2026-10-31 22:21:14.270:WARN :oejea.AnnotationParser:qtp1208736537-33: org.apache.commons.logging.impl.SimpleLog scanned from multiple locations: jar:file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/WEB-INF/lib/commons-logging-1.2.jar!/org/apache/commons/logging/impl/SimpleLog.class, jar:file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/WEB-INF/lib/spring-jcl-6.2.19.jar!/org/apache/commons/logging/impl/SimpleLog.class
+2026-10-31 22:21:14.270:WARN :oejea.AnnotationParser:qtp1208736537-33: org.apache.commons.logging.impl.NoOpLog scanned from multiple locations: jar:file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/WEB-INF/lib/commons-logging-1.2.jar!/org/apache/commons/logging/impl/NoOpLog.class, jar:file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/WEB-INF/lib/spring-jcl-6.2.19.jar!/org/apache/commons/logging/impl/NoOpLog.class
+2026-10-31 22:21:14.270:WARN :oejea.AnnotationParser:qtp1208736537-33: org.apache.commons.logging.LogFactory$1 scanned from multiple locations: jar:file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/WEB-INF/lib/commons-logging-1.2.jar!/org/apache/commons/logging/LogFactory$1.class, jar:file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/WEB-INF/lib/spring-jcl-6.2.19.jar!/org/apache/commons/logging/LogFactory$1.class
+2026-10-31 22:21:14.271:WARN :oejea.AnnotationParser:qtp1208736537-33: org.apache.commons.logging.Log scanned from multiple locations: jar:file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/WEB-INF/lib/commons-logging-1.2.jar!/org/apache/commons/logging/Log.class, jar:file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/WEB-INF/lib/spring-jcl-6.2.19.jar!/org/apache/commons/logging/Log.class
+2026-10-31 22:21:14.271:WARN :oejea.AnnotationParser:qtp1208736537-33: org.apache.commons.logging.LogFactory scanned from multiple locations: jar:file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/WEB-INF/lib/commons-logging-1.2.jar!/org/apache/commons/logging/LogFactory.class, jar:file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/WEB-INF/lib/spring-jcl-6.2.19.jar!/org/apache/commons/logging/LogFactory.class
+2026-10-31 22:21:14.563:WARN :oatud.DigesterFactory:main: The XML schema [XMLSchema.dtd] could not be found. This is very likely to break XML validation if XML validation is enabled.
+2026-10-31 22:21:14.564:WARN :oatud.DigesterFactory:main: The XML schema [datatypes.dtd] could not be found. This is very likely to break XML validation if XML validation is enabled.
+2026-10-31 22:21:14.564:WARN :oatud.DigesterFactory:main: The XML schema [xml.xsd] could not be found. This is very likely to break XML validation if XML validation is enabled.
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+2026-10-31 22:21:14.657:INFO :oejshC.spring:main: 1 Spring WebApplicationInitializers detected on classpath
+2026-10-31 22:21:14.728:INFO :oejsh.ContextHandler:main: Started oeje10w.WebAppContext@141e5bef{spring,/spring,b=file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/,a=AVAILABLE,h=oeje10s.SessionHandler@9ed238c{STARTED}}{/opt/jetty/webapps/spring.war}
+2026-10-31 22:21:14.767:INFO :oejshC.spring:main: Initializing Spring DispatcherServlet 'dispatcher'
+Oct 31, 2026 10:21:15 PM org.hibernate.Version logVersion
+INFO: HHH000412: Hibernate ORM core version 6.6.54.Final
+Oct 31, 2026 10:21:15 PM org.hibernate.cache.internal.RegionFactoryInitiator initiateService
+INFO: HHH000026: Second-level cache disabled
+Oct 31, 2026 10:21:16 PM org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl constructDialect
+WARN: HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+Oct 31, 2026 10:21:16 PM org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator logConnectionInfo
+INFO: HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'org.springframework.jdbc.datasource.DriverManagerDataSource@5b498842']
+	Database driver: undefined/unknown
+	Database version: 8.0.46
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+Oct 31, 2026 10:21:17 PM org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator initiateService
+INFO: HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    alter table Evento 
+       drop 
+       foreign key FK3fub90kiukyfx0pkjru8koykp
+Hibernate: 
+    alter table Grupo 
+       drop 
+       foreign key FKsn626lnt1a9qmevu2t2w5kqtx
+Oct 31, 2026 10:21:17 PM org.hibernate.tool.schema.internal.ExceptionHandlerLoggedImpl handleException
+WARN: GenerationTarget encountered exception accepting command : Error executing DDL "
+    alter table Grupo 
+       drop 
+       foreign key FKsn626lnt1a9qmevu2t2w5kqtx" via JDBC [Can't DROP 'FKsn626lnt1a9qmevu2t2w5kqtx'; check that column/key exists]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    alter table Grupo 
+       drop 
+       foreign key FKsn626lnt1a9qmevu2t2w5kqtx" via JDBC [Can't DROP 'FKsn626lnt1a9qmevu2t2w5kqtx'; check that column/key exists]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applyConstraintDropping(SchemaDropperImpl.java:479)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropConstraintsTablesSequences(SchemaDropperImpl.java:245)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:218)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:186)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:156)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:116)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:238)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1430)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:980)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:999)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.buildSessionFactory(LocalSessionFactoryBean.java:625)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.afterPropertiesSet(LocalSessionFactoryBean.java:601)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+Hibernate: 
+    alter table Invitacion 
+       drop 
+       foreign key FK3ad327h5ray5lwr9y9hn6iexx
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: java.sql.SQLSyntaxErrorException: Can't DROP 'FKsn626lnt1a9qmevu2t2w5kqtx'; check that column/key exists
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 134 more
+
+Hibernate: 
+    alter table Invitacion 
+       drop 
+       foreign key FK8otcajt16dpdq0yfpu8gl7jmp
+Hibernate: 
+    alter table Invitacion 
+       drop 
+       foreign key FKi60dmxkuumvnkx9rwf6xchwri
+Hibernate: 
+    alter table LogroObtenido 
+       drop 
+       foreign key FKk5fuo1sckdmgm5b2eyjy24c27
+Oct 31, 2026 10:21:17 PM org.hibernate.tool.schema.internal.ExceptionHandlerLoggedImpl handleException
+WARN: GenerationTarget encountered exception accepting command : Error executing DDL "
+    alter table LogroObtenido 
+       drop 
+       foreign key FKk5fuo1sckdmgm5b2eyjy24c27" via JDBC [Table 'tallerwebi.LogroObtenido' doesn't exist]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    alter table LogroObtenido 
+       drop 
+       foreign key FKk5fuo1sckdmgm5b2eyjy24c27" via JDBC [Table 'tallerwebi.LogroObtenido' doesn't exist]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applyConstraintDropping(SchemaDropperImpl.java:479)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropConstraintsTablesSequences(SchemaDropperImpl.java:245)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:218)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:186)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:156)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:116)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:238)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1430)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:980)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:999)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.buildSessionFactory(LocalSessionFactoryBean.java:625)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.afterPropertiesSet(LocalSessionFactoryBean.java:601)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+Hibernate: 
+    alter table LogroObtenido 
+       drop 
+       foreign key FKiwbq6b2t0e2vpr54561afs5iq
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: java.sql.SQLSyntaxErrorException: Table 'tallerwebi.LogroObtenido' doesn't exist
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 134 more
+
+Oct 31, 2026 10:21:17 PM org.hibernate.tool.schema.internal.ExceptionHandlerLoggedImpl handleException
+WARN: GenerationTarget encountered exception accepting command : Error executing DDL "
+    alter table LogroObtenido 
+       drop 
+       foreign key FKiwbq6b2t0e2vpr54561afs5iq" via JDBC [Table 'tallerwebi.LogroObtenido' doesn't exist]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    alter table LogroObtenido 
+       drop 
+       foreign key FKiwbq6b2t0e2vpr54561afs5iq" via JDBC [Table 'tallerwebi.LogroObtenido' doesn't exist]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applyConstraintDropping(SchemaDropperImpl.java:479)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropConstraintsTablesSequences(SchemaDropperImpl.java:245)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:218)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:186)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:156)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:116)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:238)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1430)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:980)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:999)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.buildSessionFactory(LocalSessionFactoryBean.java:625)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.afterPropertiesSet(LocalSessionFactoryBean.java:601)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+Hibernate: 
+    alter table materia_usuario 
+       drop 
+       foreign key FKe3xqwtoieebstmm2gl5rmx4mh
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: java.sql.SQLSyntaxErrorException: Table 'tallerwebi.LogroObtenido' doesn't exist
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 134 more
+
+Oct 31, 2026 10:21:17 PM org.hibernate.tool.schema.internal.ExceptionHandlerLoggedImpl handleException
+WARN: GenerationTarget encountered exception accepting command : Error executing DDL "
+    alter table materia_usuario 
+       drop 
+       foreign key FKe3xqwtoieebstmm2gl5rmx4mh" via JDBC [Table 'tallerwebi.materia_usuario' doesn't exist]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    alter table materia_usuario 
+       drop 
+       foreign key FKe3xqwtoieebstmm2gl5rmx4mh" via JDBC [Table 'tallerwebi.materia_usuario' doesn't exist]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applyConstraintDropping(SchemaDropperImpl.java:479)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropConstraintsTablesSequences(SchemaDropperImpl.java:245)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:218)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:186)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:156)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:116)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:238)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1430)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:980)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:999)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.buildSessionFactory(LocalSessionFactoryBean.java:625)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.afterPropertiesSet(LocalSessionFactoryBean.java:601)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+Hibernate: 
+    alter table materia_usuario 
+       drop 
+       foreign key FK1ofvayvtkfwa7ghxsvrqhj1f
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: java.sql.SQLSyntaxErrorException: Table 'tallerwebi.materia_usuario' doesn't exist
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 134 more
+
+Oct 31, 2026 10:21:17 PM org.hibernate.tool.schema.internal.ExceptionHandlerLoggedImpl handleException
+WARN: GenerationTarget encountered exception accepting command : Error executing DDL "
+    alter table materia_usuario 
+       drop 
+       foreign key FK1ofvayvtkfwa7ghxsvrqhj1f" via JDBC [Table 'tallerwebi.materia_usuario' doesn't exist]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    alter table materia_usuario 
+       drop 
+       foreign key FK1ofvayvtkfwa7ghxsvrqhj1f" via JDBC [Table 'tallerwebi.materia_usuario' doesn't exist]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applyConstraintDropping(SchemaDropperImpl.java:479)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropConstraintsTablesSequences(SchemaDropperImpl.java:245)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:218)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:186)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:156)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:116)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:238)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1430)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:980)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:999)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.buildSessionFactory(LocalSessionFactoryBean.java:625)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.afterPropertiesSet(LocalSessionFactoryBean.java:601)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+Hibernate: 
+    alter table MaterialBibliografico 
+       drop 
+       foreign key FK6wdie8dxcwtvvqs3yl1kotlaj
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: java.sql.SQLSyntaxErrorException: Table 'tallerwebi.materia_usuario' doesn't exist
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 134 more
+
+Oct 31, 2026 10:21:17 PM org.hibernate.tool.schema.internal.ExceptionHandlerLoggedImpl handleException
+WARN: GenerationTarget encountered exception accepting command : Error executing DDL "
+    alter table MaterialBibliografico 
+       drop 
+       foreign key FK6wdie8dxcwtvvqs3yl1kotlaj" via JDBC [Table 'tallerwebi.MaterialBibliografico' doesn't exist]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    alter table MaterialBibliografico 
+       drop 
+       foreign key FK6wdie8dxcwtvvqs3yl1kotlaj" via JDBC [Table 'tallerwebi.MaterialBibliografico' doesn't exist]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applyConstraintDropping(SchemaDropperImpl.java:479)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropConstraintsTablesSequences(SchemaDropperImpl.java:245)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:218)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:186)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:156)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:116)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:238)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1430)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+Hibernate: 
+    alter table Parcial 
+       drop 
+       foreign key FKhvab04mfcrx0mmsnqont40tcr
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:980)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:999)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.buildSessionFactory(LocalSessionFactoryBean.java:625)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.afterPropertiesSet(LocalSessionFactoryBean.java:601)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: java.sql.SQLSyntaxErrorException: Table 'tallerwebi.MaterialBibliografico' doesn't exist
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 134 more
+
+Hibernate: 
+    alter table pomodoro 
+       drop 
+       foreign key FKrbk19yoq5m9g7r44aew4cpmbt
+Hibernate: 
+    alter table SesionEstudio 
+       drop 
+       foreign key FK3gjhua458x108p9kcrl090bxi
+Hibernate: 
+    alter table SesionEstudio 
+       drop 
+       foreign key FK4pwgi4t07ng3q7bvx2id26ou8
+Oct 31, 2026 10:21:17 PM org.hibernate.tool.schema.internal.ExceptionHandlerLoggedImpl handleException
+WARN: GenerationTarget encountered exception accepting command : Error executing DDL "
+    alter table SesionEstudio 
+       drop 
+       foreign key FK4pwgi4t07ng3q7bvx2id26ou8" via JDBC [Can't DROP 'FK4pwgi4t07ng3q7bvx2id26ou8'; check that column/key exists]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    alter table SesionEstudio 
+       drop 
+       foreign key FK4pwgi4t07ng3q7bvx2id26ou8" via JDBC [Can't DROP 'FK4pwgi4t07ng3q7bvx2id26ou8'; check that column/key exists]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applyConstraintDropping(SchemaDropperImpl.java:479)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropConstraintsTablesSequences(SchemaDropperImpl.java:245)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:218)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:186)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:156)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:116)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:238)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1430)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:980)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:999)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.buildSessionFactory(LocalSessionFactoryBean.java:625)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.afterPropertiesSet(LocalSessionFactoryBean.java:601)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+Hibernate: 
+    alter table Tarea 
+       drop 
+       foreign key FKgpaiw606e3kirq7nlbg13et4p
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: java.sql.SQLSyntaxErrorException: Can't DROP 'FK4pwgi4t07ng3q7bvx2id26ou8'; check that column/key exists
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 134 more
+
+Oct 31, 2026 10:21:17 PM org.hibernate.tool.schema.internal.ExceptionHandlerLoggedImpl handleException
+WARN: GenerationTarget encountered exception accepting command : Error executing DDL "
+    alter table Tarea 
+       drop 
+       foreign key FKgpaiw606e3kirq7nlbg13et4p" via JDBC [Can't DROP 'FKgpaiw606e3kirq7nlbg13et4p'; check that column/key exists]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    alter table Tarea 
+       drop 
+       foreign key FKgpaiw606e3kirq7nlbg13et4p" via JDBC [Can't DROP 'FKgpaiw606e3kirq7nlbg13et4p'; check that column/key exists]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+Hibernate: 
+    alter table TrabajoPractico_disponibilidades 
+       drop 
+       foreign key FK2jws2v5q5naqegrprv9srogv3
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.applyConstraintDropping(SchemaDropperImpl.java:479)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropConstraintsTablesSequences(SchemaDropperImpl.java:245)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.dropFromMetadata(SchemaDropperImpl.java:218)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.performDrop(SchemaDropperImpl.java:186)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:156)
+	at org.hibernate.tool.schema.internal.SchemaDropperImpl.doDrop(SchemaDropperImpl.java:116)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:238)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1430)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:980)
+	at org.hibernate.cfg.Configuration.buildSessionFactory(Configuration.java:999)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.buildSessionFactory(LocalSessionFactoryBean.java:625)
+	at org.springframework.orm.hibernate5.LocalSessionFactoryBean.afterPropertiesSet(LocalSessionFactoryBean.java:601)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1777)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1660)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1393)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1230)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: java.sql.SQLSyntaxErrorException: Can't DROP 'FKgpaiw606e3kirq7nlbg13et4p'; check that column/key exists
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 134 more
+
+Hibernate: 
+    alter table Usuario 
+       drop 
+       foreign key FKfqxw2cn4smmg3atrixfdw4f2p
+Hibernate: 
+    alter table Usuario 
+       drop 
+       foreign key FK9434kvvfbx99caiqfsc31777t
+Hibernate: 
+    alter table usuario_interes 
+       drop 
+       foreign key FK7ei9yt5wibxqvr0w4pw9osbvk
+Hibernate: 
+    alter table usuario_interes 
+       drop 
+       foreign key FKbnrotu45tc16y1rb5ujxpjo3n
+Hibernate: 
+    drop table if exists Carrera
+Hibernate: 
+    drop table if exists Evento
+Hibernate: 
+    drop table if exists Grupo
+Hibernate: 
+    drop table if exists Interes
+Hibernate: 
+    drop table if exists Invitacion
+Hibernate: 
+    drop table if exists Logro
+Hibernate: 
+    drop table if exists LogroObtenido
+Hibernate: 
+    drop table if exists Materia
+Hibernate: 
+    drop table if exists materia_usuario
+Hibernate: 
+    drop table if exists MaterialBibliografico
+Hibernate: 
+    drop table if exists Parcial
+Hibernate: 
+    drop table if exists pomodoro
+Hibernate: 
+    drop table if exists SesionEstudio
+Hibernate: 
+    drop table if exists Tarea
+Hibernate: 
+    drop table if exists TrabajoPractico
+Hibernate: 
+    drop table if exists TrabajoPractico_disponibilidades
+Hibernate: 
+    drop table if exists Universidad
+Hibernate: 
+    drop table if exists Usuario
+Hibernate: 
+    drop table if exists usuario_interes
+Hibernate: 
+    create table Carrera (
+        id bigint not null auto_increment,
+        nombre varchar(255) not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table Evento (
+        materia_id integer not null,
+        fin datetime(6),
+        id bigint not null auto_increment,
+        inicio datetime(6),
+        tareaId bigint,
+        usuarioId bigint,
+        titulo varchar(255),
+        tipo enum ('ACTIVIDAD_GRUPAL','CLASE','ESTUDIO','PARCIAL','TRABAJO_PRACTICO'),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table Grupo (
+        creador_id bigint,
+        id bigint not null auto_increment,
+        nombre varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table Interes (
+        id bigint not null auto_increment,
+        nombre varchar(255) not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table Invitacion (
+        vigente bit,
+        emisor_id bigint,
+        grupo_id bigint,
+        id bigint not null auto_increment,
+        receptor_id bigint,
+        estado enum ('ABANDONADA','ACEPTADA','PENDIENTE','RECHAZADA'),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table Logro (
+        id bigint not null auto_increment,
+        descripcion varchar(255),
+        nombre varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table LogroObtenido (
+        fechaObtencion date,
+        id bigint not null auto_increment,
+        logro_id bigint not null,
+        usuario_id bigint not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table Materia (
+        id integer not null auto_increment,
+        color varchar(255),
+        descripcion varchar(255),
+        dias varchar(255),
+        docente varchar(255),
+        horario varchar(255),
+        materialBibliografico varchar(255),
+        nombre varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table materia_usuario (
+        materia_id integer not null,
+        usuario_id bigint not null
+    ) engine=InnoDB
+Hibernate: 
+    create table MaterialBibliografico (
+        id integer not null auto_increment,
+        materia_id integer not null,
+        fechaSubida datetime(6) not null,
+        tamanio bigint not null,
+        claveR2 varchar(255) not null,
+        nombreArchivo varchar(255) not null,
+        tipoArchivo varchar(255) not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table Parcial (
+        cantidadDiasEstudio integer,
+        fecha date,
+        horario time(6),
+        horasPorDia integer,
+        id integer not null auto_increment,
+        materia_id integer not null,
+        nombre varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table pomodoro (
+        duracion_minutos integer not null,
+        fecha_fin datetime(6),
+        fecha_inicio datetime(6),
+        fecha_pausa datetime(6),
+        id bigint not null auto_increment,
+        usuario_id bigint not null,
+        destino varchar(255) not null,
+        materia varchar(255) not null,
+        objetivo varchar(255) not null,
+        origen varchar(255) not null,
+        estado enum ('CANCELADO','COMPLETADO','EN_CURSO','PAUSADO') not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table SesionEstudio (
+        cantidadHoras integer,
+        completada bit,
+        fecha date,
+        fecha_completado date,
+        id integer not null auto_increment,
+        parcial_id integer not null,
+        usuario bigint,
+        tema varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table Tarea (
+        fechaVencimiento date,
+        horasPlanificadas integer,
+        horasRealizadas integer,
+        grupo_id bigint,
+        id bigint not null auto_increment,
+        estado varchar(255),
+        materia varchar(255),
+        responsable varchar(255),
+        tipo varchar(255),
+        titulo varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table TrabajoPractico (
+        fechaEntrega date,
+        id bigint not null auto_increment,
+        descripcion varchar(255),
+        materia varchar(255),
+        nombre varchar(255),
+        estado enum ('EN_CURSO','FINALIZADO','PENDIENTE'),
+        tipo enum ('GRUPAL','INDIVIDUAL'),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table TrabajoPractico_disponibilidades (
+        horas integer,
+        TrabajoPractico_id bigint not null,
+        dia varchar(255)
+    ) engine=InnoDB
+Hibernate: 
+    create table Universidad (
+        id bigint not null auto_increment,
+        nombre varchar(255) not null,
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table Usuario (
+        activo bit not null,
+        puntos integer not null,
+        racha integer,
+        record_racha integer,
+        ultima_fecha_estudio date,
+        carrera_id bigint,
+        id bigint not null auto_increment,
+        universidad_id bigint,
+        apellido varchar(255),
+        email varchar(255),
+        nombre varchar(255),
+        password varchar(255),
+        rol varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table usuario_interes (
+        interes_id bigint not null,
+        usuario_id bigint not null,
+        primary key (interes_id, usuario_id)
+    ) engine=InnoDB
+Hibernate: 
+    alter table Carrera 
+       add constraint UKmc3oqvx2dnlb0m0tb06i2txqn unique (nombre)
+Hibernate: 
+    alter table Interes 
+       add constraint UKfl8inv632s9oui7jhgec19a4l unique (nombre)
+Hibernate: 
+    alter table LogroObtenido 
+       add constraint UK9teeropiitkvx2ifxvpma8u57 unique (usuario_id, logro_id)
+Hibernate: 
+    alter table MaterialBibliografico 
+       add constraint UKtf7fhvbe4fspalo39hyct8xux unique (claveR2)
+Hibernate: 
+    alter table Universidad 
+       add constraint UKr8cafa0n07n228y70podsig9r unique (nombre)
+Hibernate: 
+    alter table Usuario 
+       add constraint UK4tdehxj7dh8ghfc68kbwbsbll unique (email)
+Hibernate: 
+    alter table Evento 
+       add constraint FK3fub90kiukyfx0pkjru8koykp 
+       foreign key (materia_id) 
+       references Materia (id)
+Hibernate: 
+    alter table Grupo 
+       add constraint FKsn626lnt1a9qmevu2t2w5kqtx 
+       foreign key (creador_id) 
+       references Usuario (id)
+Hibernate: 
+    alter table Invitacion 
+       add constraint FK3ad327h5ray5lwr9y9hn6iexx 
+       foreign key (emisor_id) 
+       references Usuario (id)
+Hibernate: 
+    alter table Invitacion 
+       add constraint FK8otcajt16dpdq0yfpu8gl7jmp 
+       foreign key (grupo_id) 
+       references Grupo (id)
+Hibernate: 
+    alter table Invitacion 
+       add constraint FKi60dmxkuumvnkx9rwf6xchwri 
+       foreign key (receptor_id) 
+       references Usuario (id)
+Hibernate: 
+    alter table LogroObtenido 
+       add constraint FKk5fuo1sckdmgm5b2eyjy24c27 
+       foreign key (logro_id) 
+       references Logro (id)
+Hibernate: 
+    alter table LogroObtenido 
+       add constraint FKiwbq6b2t0e2vpr54561afs5iq 
+       foreign key (usuario_id) 
+       references Usuario (id)
+Hibernate: 
+    alter table materia_usuario 
+       add constraint FKe3xqwtoieebstmm2gl5rmx4mh 
+       foreign key (usuario_id) 
+       references Usuario (id)
+Hibernate: 
+    alter table materia_usuario 
+       add constraint FK1ofvayvtkfwa7ghxsvrqhj1f 
+       foreign key (materia_id) 
+       references Materia (id)
+Hibernate: 
+    alter table MaterialBibliografico 
+       add constraint FK6wdie8dxcwtvvqs3yl1kotlaj 
+       foreign key (materia_id) 
+       references Materia (id)
+Hibernate: 
+    alter table Parcial 
+       add constraint FKhvab04mfcrx0mmsnqont40tcr 
+       foreign key (materia_id) 
+       references Materia (id)
+Hibernate: 
+    alter table pomodoro 
+       add constraint FKrbk19yoq5m9g7r44aew4cpmbt 
+       foreign key (usuario_id) 
+       references Usuario (id)
+Hibernate: 
+    alter table SesionEstudio 
+       add constraint FK3gjhua458x108p9kcrl090bxi 
+       foreign key (parcial_id) 
+       references Parcial (id)
+Hibernate: 
+    alter table SesionEstudio 
+       add constraint FK4pwgi4t07ng3q7bvx2id26ou8 
+       foreign key (usuario) 
+       references Usuario (id)
+Hibernate: 
+    alter table Tarea 
+       add constraint FKgpaiw606e3kirq7nlbg13et4p 
+       foreign key (grupo_id) 
+       references Grupo (id)
+Hibernate: 
+    alter table TrabajoPractico_disponibilidades 
+       add constraint FK2jws2v5q5naqegrprv9srogv3 
+       foreign key (TrabajoPractico_id) 
+       references TrabajoPractico (id)
+Hibernate: 
+    alter table Usuario 
+       add constraint FKfqxw2cn4smmg3atrixfdw4f2p 
+       foreign key (carrera_id) 
+       references Carrera (id)
+Hibernate: 
+    alter table Usuario 
+       add constraint FK9434kvvfbx99caiqfsc31777t 
+       foreign key (universidad_id) 
+       references Universidad (id)
+Hibernate: 
+    alter table usuario_interes 
+       add constraint FK7ei9yt5wibxqvr0w4pw9osbvk 
+       foreign key (interes_id) 
+       references Interes (id)
+Hibernate: 
+    alter table usuario_interes 
+       add constraint FKbnrotu45tc16y1rb5ujxpjo3n 
+       foreign key (usuario_id) 
+       references Usuario (id)
+2026-10-31 22:21:27.410:WARN :oejshC.spring:main: unavailable
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSourceInitializer' defined in com.tallerwebi.config.DatabaseInitializationConfig: Failed to execute SQL script statement #36 of class path resource [data.sql]: ( null, 'Popular', 'Fuiste invitado muchas veces a grupos' ), (null, 'Primeros pasos', 'Cargaste tu primera materia'), (null, 'Primer vuelo', 'Completaste tu primera sesión en FocusFlight'), (null, 'Piloto frecuente', 'Estudiaste 5 horas con FocusFlight'), (null, 'Constante', 'Estudiaste 3 días seguidos'), (null, 'Imparable', 'Estudiaste 7 días seguidos'), (null, 'Plan cumplido', 'Completaste todas las sesiones de un plan de parcial'), (null, 'Líder de grupo', 'Creaste tu primer grupo de estudio')
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1824)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: 
+org.springframework.jdbc.datasource.init.ScriptStatementFailedException: Failed to execute SQL script statement #36 of class path resource [data.sql]: ( null, 'Popular', 'Fuiste invitado muchas veces a grupos' ), (null, 'Primeros pasos', 'Cargaste tu primera materia'), (null, 'Primer vuelo', 'Completaste tu primera sesión en FocusFlight'), (null, 'Piloto frecuente', 'Estudiaste 5 horas con FocusFlight'), (null, 'Constante', 'Estudiaste 3 días seguidos'), (null, 'Imparable', 'Estudiaste 7 días seguidos'), (null, 'Plan cumplido', 'Completaste todas las sesiones de un plan de parcial'), (null, 'Líder de grupo', 'Creaste tu primer grupo de estudio')
+	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:293)
+	at org.springframework.jdbc.datasource.init.ResourceDatabasePopulator.populate(ResourceDatabasePopulator.java:254)
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:54)
+	at org.springframework.jdbc.datasource.init.DataSourceInitializer.execute(DataSourceInitializer.java:112)
+	at org.springframework.jdbc.datasource.init.DataSourceInitializer.afterPropertiesSet(DataSourceInitializer.java:97)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: 
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'null, 'Popular', 'Fuiste invitado muchas veces a grupos' ), (null, 'Primeros pas' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:261)
+	at org.springframework.jdbc.datasource.init.ResourceDatabasePopulator.populate(ResourceDatabasePopulator.java:254)
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:54)
+	at org.springframework.jdbc.datasource.init.DataSourceInitializer.execute(DataSourceInitializer.java:112)
+	at org.springframework.jdbc.datasource.init.DataSourceInitializer.afterPropertiesSet(DataSourceInitializer.java:97)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+2026-10-31 22:21:27.413:WARN :oejew.WebAppContext:main: Failed startup of context oeje10w.WebAppContext@141e5bef{spring,/spring,b=file:///tmp/jetty-0_0_0_0-8080-spring_war-_spring-any-15497938761964452756/webapp/,a=AVAILABLE,h=oeje10s.SessionHandler@9ed238c{STARTED}}{/opt/jetty/webapps/spring.war}
+jakarta.servlet.ServletException: dispatcher==org.springframework.web.servlet.DispatcherServlet@b7ba1aa7{jsp=null,order=1,inst=true,async=true,src=JAKARTA_API:<null>,STARTED}
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:659)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: 
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSourceInitializer' defined in com.tallerwebi.config.DatabaseInitializationConfig: Failed to execute SQL script statement #36 of class path resource [data.sql]: ( null, 'Popular', 'Fuiste invitado muchas veces a grupos' ), (null, 'Primeros pasos', 'Cargaste tu primera materia'), (null, 'Primer vuelo', 'Completaste tu primera sesión en FocusFlight'), (null, 'Piloto frecuente', 'Estudiaste 5 horas con FocusFlight'), (null, 'Constante', 'Estudiaste 3 días seguidos'), (null, 'Imparable', 'Estudiaste 7 días seguidos'), (null, 'Plan cumplido', 'Completaste todas las sesiones de un plan de parcial'), (null, 'Líder de grupo', 'Creaste tu primer grupo de estudio')
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1824)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: 
+org.springframework.jdbc.datasource.init.ScriptStatementFailedException: Failed to execute SQL script statement #36 of class path resource [data.sql]: ( null, 'Popular', 'Fuiste invitado muchas veces a grupos' ), (null, 'Primeros pasos', 'Cargaste tu primera materia'), (null, 'Primer vuelo', 'Completaste tu primera sesión en FocusFlight'), (null, 'Piloto frecuente', 'Estudiaste 5 horas con FocusFlight'), (null, 'Constante', 'Estudiaste 3 días seguidos'), (null, 'Imparable', 'Estudiaste 7 días seguidos'), (null, 'Plan cumplido', 'Completaste todas las sesiones de un plan de parcial'), (null, 'Líder de grupo', 'Creaste tu primer grupo de estudio')
+	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:293)
+	at org.springframework.jdbc.datasource.init.ResourceDatabasePopulator.populate(ResourceDatabasePopulator.java:254)
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:54)
+	at org.springframework.jdbc.datasource.init.DataSourceInitializer.execute(DataSourceInitializer.java:112)
+	at org.springframework.jdbc.datasource.init.DataSourceInitializer.afterPropertiesSet(DataSourceInitializer.java:97)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+Caused by: 
+java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'null, 'Popular', 'Fuiste invitado muchas veces a grupos' ), (null, 'Primeros pas' at line 1
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:112)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:114)
+	at com.mysql.cj.jdbc.StatementImpl.executeInternal(StatementImpl.java:839)
+	at com.mysql.cj.jdbc.StatementImpl.execute(StatementImpl.java:687)
+	at org.springframework.jdbc.datasource.init.ScriptUtils.executeSqlScript(ScriptUtils.java:261)
+	at org.springframework.jdbc.datasource.init.ResourceDatabasePopulator.populate(ResourceDatabasePopulator.java:254)
+	at org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute(DatabasePopulatorUtils.java:54)
+	at org.springframework.jdbc.datasource.init.DataSourceInitializer.execute(DataSourceInitializer.java:112)
+	at org.springframework.jdbc.datasource.init.DataSourceInitializer.afterPropertiesSet(DataSourceInitializer.java:97)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1871)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1820)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1235)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1201)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:991)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:628)
+	at org.springframework.web.servlet.FrameworkServlet.configureAndRefreshWebApplicationContext(FrameworkServlet.java:706)
+	at org.springframework.web.servlet.FrameworkServlet.initWebApplicationContext(FrameworkServlet.java:583)
+	at org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:537)
+	at org.springframework.web.servlet.HttpServletBean.init(HttpServletBean.java:172)
+	at jakarta.servlet.GenericServlet.init(GenericServlet.java:178)
+	at jakarta.servlet.http.HttpServlet.init(HttpServlet.java:107)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initServlet(ServletHolder.java:641)
+	at org.eclipse.jetty.ee10.servlet.ServletHolder.initialize(ServletHolder.java:428)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$1(ServletHandler.java:668)
+	at org.eclipse.jetty.util.ExceptionUtil.call(ExceptionUtil.java:369)
+	at org.eclipse.jetty.util.ExceptionUtil$MultiException.callAndCatch(ExceptionUtil.java:305)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.lambda$initialize$0(ServletHandler.java:665)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.StreamSpliterators$WrappingSpliterator.forEachRemaining(StreamSpliterators.java:315)
+	at java.base/java.util.stream.Streams$ConcatSpliterator.forEachRemaining(Streams.java:735)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:803)
+	at org.eclipse.jetty.ee10.servlet.ServletHandler.initialize(ServletHandler.java:688)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.startContext(ServletContextHandler.java:1326)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startWebapp(WebAppContext.java:1359)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.startContext(WebAppContext.java:1317)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.lambda$doStart$0(ServletContextHandler.java:1052)
+	at org.eclipse.jetty.server.handler.ContextHandler$ScopedContext.call(ContextHandler.java:1494)
+	at org.eclipse.jetty.ee10.servlet.ServletContextHandler.doStart(ServletContextHandler.java:1049)
+	at org.eclipse.jetty.ee10.webapp.WebAppContext.doStart(WebAppContext.java:510)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.bindings.StandardStarter.processBinding(StandardStarter.java:40)
+	at org.eclipse.jetty.deploy.AppLifeCycle.runBindings(AppLifeCycle.java:183)
+	at org.eclipse.jetty.deploy.DeploymentManager.requestAppGoal(DeploymentManager.java:524)
+	at org.eclipse.jetty.deploy.DeploymentManager.addApp(DeploymentManager.java:162)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.pathAdded(ScanningAppProvider.java:294)
+	at org.eclipse.jetty.deploy.providers.ContextProvider.pathAdded(ContextProvider.java:635)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider$1.pathAdded(ScanningAppProvider.java:69)
+	at org.eclipse.jetty.util.Scanner.reportAddition(Scanner.java:904)
+	at org.eclipse.jetty.util.Scanner.reportDifferences(Scanner.java:870)
+	at org.eclipse.jetty.util.Scanner.scan(Scanner.java:777)
+	at org.eclipse.jetty.util.Scanner.startScanning(Scanner.java:666)
+	at org.eclipse.jetty.util.Scanner.doStart(Scanner.java:638)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.deploy.providers.ScanningAppProvider.doStart(ScanningAppProvider.java:265)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.deploy.DeploymentManager.startAppProvider(DeploymentManager.java:595)
+	at org.eclipse.jetty.deploy.DeploymentManager.doStart(DeploymentManager.java:264)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:169)
+	at org.eclipse.jetty.server.Server.start(Server.java:643)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:120)
+	at org.eclipse.jetty.server.Handler$Abstract.doStart(Handler.java:491)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:584)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.xml.XmlConfiguration.main(XmlConfiguration.java:2040)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at org.eclipse.jetty.start.Main.invokeMain(Main.java:312)
+	at org.eclipse.jetty.start.Main.start(Main.java:603)
+	at org.eclipse.jetty.start.Main.main(Main.java:82)
+2026-10-31 22:21:27.416:INFO :oejs.DefaultSessionIdManager:main: Session workerName=node0
+2026-10-31 22:21:27.425:INFO :oejs.AbstractConnector:main: Started ServerConnector@4b517357{HTTP/1.1, (http/1.1)}{0.0.0.0:8080}
+2026-10-31 22:21:27.464:INFO :oejs.Server:main: Started oejs.Server@752325ad{STARTING}[12.0.37,sto=0] @17199ms

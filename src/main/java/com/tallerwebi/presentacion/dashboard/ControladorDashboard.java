@@ -7,6 +7,7 @@ import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ControladorDashboard {
+
+  private static final LocalTime INICIO_MANIANA = LocalTime.of(6, 0);
+  private static final LocalTime INICIO_TARDE = LocalTime.of(12, 0);
+  private static final LocalTime INICIO_NOCHE = LocalTime.of(20, 0);
 
   private final ServicioDashboard servicioDashboard;
   private final ServicioRacha servicioRacha;
@@ -67,6 +72,7 @@ public class ControladorDashboard {
 
     modelo.put("dashboardData", dashboardDTO);
     modelo.put("usuario", usuario);
+    modelo.put("saludo", saludoSegunHora(LocalTime.now()));
     modelo.put("racha", racha != null ? racha : 0);
 
     return new ModelAndView("paginas/dashboard/dashboard", modelo);
@@ -74,5 +80,13 @@ public class ControladorDashboard {
 
   private static Usuario obtenerUsuarioLogueado(HttpServletRequest request) {
     return (Usuario) request.getSession().getAttribute("USUARIO");
+  }
+
+  // Saludo segun horario correspondiente
+  static String saludoSegunHora(LocalTime hora) {
+    if (hora.isBefore(INICIO_MANIANA) || !hora.isBefore(INICIO_NOCHE)) {
+      return "Buenas noches";
+    }
+    return hora.isBefore(INICIO_TARDE) ? "Buenos días" : "Buenas tardes";
   }
 }

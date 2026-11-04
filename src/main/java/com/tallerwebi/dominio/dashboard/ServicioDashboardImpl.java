@@ -50,7 +50,11 @@ public class ServicioDashboardImpl implements ServicioDashboard {
 
   @Override
   public Long obtenerHorasEstudio(Long idUsuario) {
-    return this.repositorioPomodoro.calcularMinutosCompletados(idUsuario) / MINUTOS_POR_HORA;
+    long horasPomodoro =
+      this.repositorioPomodoro.calcularMinutosCompletados(idUsuario) / MINUTOS_POR_HORA;
+    long horasSesiones = this.repositorioSesionEstudio.calcularHorasCompletadas(idUsuario);
+
+    return horasPomodoro + horasSesiones;
   }
 
   @Override

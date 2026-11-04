@@ -56,11 +56,48 @@ public class RepositorioSesionEstudioImpl implements RepositorioSesionEstudio {
     return sessionFactory
       .getCurrentSession()
       .createQuery(
-        "from SesionEstudio where fecha = :hoy and usuario.id = :idUsuario",
+        "from SesionEstudio s " +
+        "where s.usuario.id = :idUsuario and s.fecha >= :hoy " +
+        "and (s.completada = false or s.completada is null) " +
+        "order by s.fecha asc, s.id asc",
         SesionEstudio.class
       )
+      .setParameter("idUsuario", idUsuario)
       .setParameter("hoy", LocalDate.now())
+      .setMaxResults(1)
+      .uniqueResult();
+  }
+
+  @Override
+  public long calcularHorasCompletadas(Long idUsuario) {
+    Long total = sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "select sum(s.cantidadHoras) from SesionEstudio s " +
+        "where s.usuario.id = :idUsuario and s.completada = true",
+        Long.class
+      )
       .setParameter("idUsuario", idUsuario)
       .uniqueResult();
+
+    return total != null ? total : 0L;
+  }
+
+  @Override
+  public boolean existeSesionCompletadaEnFecha(Long idUsuario, LocalDate fecha) {
+    Long cantidad = sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "select count(s.id) from SesionEstudio s " +
+        "where s.usuario.id = :idUsuario " +
+        "and s.completada = true " +
+        "and s.fechaCompletado = :fecha",
+        Long.class
+      )
+      .setParameter("idUsuario", idUsuario)
+      .setParameter("fecha", fecha)
+      .uniqueResult();
+
+    return cantidad != null && cantidad > 0;
   }
 }

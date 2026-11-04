@@ -3,6 +3,9 @@ package com.tallerwebi.presentacion.parcial;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.Usuario;
@@ -28,6 +31,7 @@ public class ControladorParcialTest {
   private ServicioParcial servicioParcialMock;
   private ServicioSesionEstudio servicioSesionEstudioMock;
   private ServicioRacha servicioRachaMock;
+  private Usuario usuarioLogueado = new Usuario();
 
   private ControladorParcial controladorParcial;
 
@@ -126,7 +130,7 @@ public class ControladorParcialTest {
       .when(servicioParcialMock)
       .crearParcial(any(Parcial.class));
 
-    ModelAndView mav = controladorParcial.guardarParcial(datosParcial);
+    ModelAndView mav = controladorParcial.guardarParcial(datosParcial, requestConUsuario());
 
     ArgumentCaptor<Parcial> parcialCaptor = ArgumentCaptor.forClass(Parcial.class);
 
@@ -180,7 +184,7 @@ public class ControladorParcialTest {
       .when(servicioParcialMock)
       .crearParcial(any(Parcial.class));
 
-    controladorParcial.guardarParcial(datosParcial);
+    controladorParcial.guardarParcial(datosParcial, requestConUsuario());
 
     /*
      * Fecha parcial:
@@ -191,12 +195,13 @@ public class ControladorParcialTest {
      */
 
     verify(servicioParcialMock, times(1))
-      .agregarTema(5, "Spring MVC", LocalDate.of(2026, 10, 17), 2);
+      .agregarTema(5, "Spring MVC", LocalDate.of(2026, 10, 17), 2, usuarioLogueado);
 
     verify(servicioParcialMock, times(1))
-      .agregarTema(5, "Hibernate", LocalDate.of(2026, 10, 18), 2);
+      .agregarTema(5, "Hibernate", LocalDate.of(2026, 10, 18), 2, usuarioLogueado);
 
-    verify(servicioParcialMock, times(1)).agregarTema(5, "Mockito", LocalDate.of(2026, 10, 19), 2);
+    verify(servicioParcialMock, times(1))
+      .agregarTema(5, "Mockito", LocalDate.of(2026, 10, 19), 2, usuarioLogueado);
   }
 
   @Test
@@ -230,17 +235,13 @@ public class ControladorParcialTest {
       .when(servicioParcialMock)
       .crearParcial(any(Parcial.class));
 
-    controladorParcial.guardarParcial(datosParcial);
+    controladorParcial.guardarParcial(datosParcial, requestConUsuario());
 
     verify(servicioParcialMock, times(1))
-      .agregarTema(7, "Spring MVC", LocalDate.of(2026, 10, 17), 2);
+      .agregarTema(7, "Spring MVC", LocalDate.of(2026, 10, 17), 2, usuarioLogueado);
 
-    /*
-     * Solo debe crear una sesión,
-     * porque "" y null no son temas válidos.
-     */
     verify(servicioParcialMock, times(1))
-      .agregarTema(anyInt(), anyString(), any(LocalDate.class), anyInt());
+      .agregarTema(anyInt(), anyString(), any(LocalDate.class), anyInt(), any(Usuario.class));
   }
 
   @Test
@@ -268,7 +269,7 @@ public class ControladorParcialTest {
 
     InOrder orden = inOrder(servicioSesionEstudioMock, servicioRachaMock);
     orden.verify(servicioSesionEstudioMock, times(1)).cambiarEstado(idSesion);
-    orden.verify(servicioRachaMock, times(1)).registrarRacha(usuario);
+    orden.verify(servicioRachaMock, times(1)).recalcularRacha(usuario);
 
     assertThat((Usuario) request.getSession().getAttribute("USUARIO"), sameInstance(usuario));
     assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
@@ -298,5 +299,22 @@ public class ControladorParcialTest {
     controladorParcial.cambiarEstadoSesion(idSesion, request);
 
     verify(servicioRachaMock, never()).registrarRacha(any(Usuario.class));
+  }
+
+  private MockHttpServletRequest requestConUsuario() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.getSession().setAttribute("USUARIO", usuarioLogueado);
+    return request;
+  }
+
+  @Test
+  public void guardarUnParcialSinEstarLogueadoDeberiaRedirigirAlLogin() {
+    ModelAndView mav = controladorParcial.guardarParcial(
+      new DatosParcial(),
+      new MockHttpServletRequest()
+    );
+
+    assertThat(mav.getViewName(), equalTo("redirect:/login"));
+    verifyNoInteractions(servicioParcialMock);
   }
 }

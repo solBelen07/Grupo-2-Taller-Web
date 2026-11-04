@@ -11,6 +11,7 @@ import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.infraestructura.r2.AlmacenamientoR2;
 import java.io.IOException;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -154,6 +155,89 @@ public class ServicioMaterialTest {
     assertEquals(materialBibliograficoMock, materialBuscado);
   }
 
+  @Test
+  public void buscarPorIdDeberiaDevolverMaterialEncontrado() {
+    dadoQueSeEncuentraElArchivoBuscado();
+
+    MaterialBibliografico materialBuscado = servicioMaterial.buscarPorId(1234);
+
+    assertEquals(materialBibliograficoMock, materialBuscado);
+  }
+
+  @Test
+  public void buscarPorMateriaDeberiaLlamarAlRepositorio() {
+    dadoQueExisteUnaMateria();
+
+    servicioMaterial.obtenerPorMateria(materiaMock.getId());
+
+    verify(repositorioMaterial, times(1)).buscarPorMateria(materiaMock.getId());
+  }
+
+  @Test
+  public void buscarPorMateriaDeberiaDevolverMaterialEncontrado() {
+    dadoQueExisteUnaMateria();
+    dadoQueSeEncuentraElArchivoBuscadoPorMateria();
+
+    List<MaterialBibliografico> materialesBuscados = cuandoSeBuscaPorMateria();
+
+    entoncesSeObtienenLosMaterialesBuscados(materialesBuscados);
+    entoncesSeObtieneUnaListaDeMateriales(materialesBuscados);
+  }
+
+  @Test
+  public void buscarPorMateriaDeberiaDevolverListaVaciaSiNoSeEncuentraMaterial() {
+    dadoQueExisteUnaMateria();
+    dadoQueNoSeEncuentraElArchivoBuscadoPorMateria();
+
+    List<MaterialBibliografico> materialesBuscados = cuandoSeBuscaPorMateria();
+
+    entoncesSeObtieneUnaListaVaciaDeMateriales(materialesBuscados);
+  }
+
+  @Test
+  public void descargarMaterialDeberiaLlamarAlRepositorio() {
+    dadoQueSeEncuentraElArchivoBuscado();
+
+    servicioMaterial.descargarMaterial(materialBibliograficoMock.getId());
+
+    verify(repositorioMaterial, times(1)).buscarPorId(materialBibliograficoMock.getId());
+  }
+
+  @Test
+  public void descargarMaterialInexistenteDeberiaLanzarExcepcion() {
+    dadoQueNoSeEncuentraElArchivoBuscado();
+
+    assertThrows(
+      ArchivoNoEncontrado.class,
+      () -> {
+        servicioMaterial.descargarMaterial(1234);
+      }
+    );
+  }
+
+  @Test
+  public void descargarMaterialDeberiaLlamarAlAlmacenamiento() {
+    dadoQueSeEncuentraElArchivoBuscado();
+
+    servicioMaterial.descargarMaterial(materialBibliograficoMock.getId());
+
+    verify(almacenamientoR2, times(1)).descargarArchivo(materialBibliograficoMock.getClaveR2());
+  }
+
+  @Test
+  public void descargarMaterialDeberiaDevolverElArchivoDescargado() {
+    dadoQueSeEncuentraElArchivoBuscado();
+    byte[] archivoEsperado = new byte[] { 1, 2, 3 };
+    when(almacenamientoR2.descargarArchivo(materialBibliograficoMock.getClaveR2()))
+      .thenReturn(archivoEsperado);
+
+    byte[] archivoDescargado = servicioMaterial.descargarMaterial(
+      materialBibliograficoMock.getId()
+    );
+
+    assertEquals(archivoEsperado, archivoDescargado);
+  }
+
   //DADO QUE
   private void dadoQueExisteUnaMateria() {
     when(materiaMock.getId()).thenReturn(1234);
@@ -224,6 +308,15 @@ public class ServicioMaterialTest {
     when(almacenamientoR2.subirArchivo(any(), anyInt())).thenReturn(CLAVE_R2_VALIDA);
   }
 
+  private void dadoQueSeEncuentraElArchivoBuscadoPorMateria() {
+    when(repositorioMaterial.buscarPorMateria(anyInt()))
+      .thenReturn(List.of(materialBibliograficoMock));
+  }
+
+  private void dadoQueNoSeEncuentraElArchivoBuscadoPorMateria() {
+    when(repositorioMaterial.buscarPorMateria(anyInt())).thenReturn(List.of());
+  }
+
   //CUANDO
   private void cuandoFallaElRepositorioAlGuardarMaterial() {
     doThrow(new RuntimeException("Fallo en BD"))
@@ -239,6 +332,10 @@ public class ServicioMaterialTest {
 
   private void cuandoSeSubeMaterial() throws IOException {
     servicioMaterial.subirMaterial(materiaMock.getId(), archivoMock);
+  }
+
+  private List<MaterialBibliografico> cuandoSeBuscaPorMateria() {
+    return servicioMaterial.obtenerPorMateria(materiaMock.getId());
   }
 
   //ENTONCES
@@ -338,5 +435,23 @@ public class ServicioMaterialTest {
     materialBibliograficoMock.setClaveR2(captor.getValue());
 
     assertEquals(CLAVE_R2_VALIDA, materialBibliograficoMock.getClaveR2());
+  }
+
+  private void entoncesSeObtienenLosMaterialesBuscados(
+    List<MaterialBibliografico> materialesBuscados
+  ) {
+    assertEquals(materialBibliograficoMock, materialesBuscados.get(0));
+  }
+
+  private void entoncesSeObtieneUnaListaDeMateriales(
+    List<MaterialBibliografico> materialesBuscados
+  ) {
+    assertEquals(1, materialesBuscados.size());
+  }
+
+  private void entoncesSeObtieneUnaListaVaciaDeMateriales(
+    List<MaterialBibliografico> materialesBuscados
+  ) {
+    assertEquals(0, materialesBuscados.size());
   }
 }

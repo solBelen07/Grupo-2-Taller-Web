@@ -1,6 +1,7 @@
 package com.tallerwebi.dominio.sesionEstudio;
 
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,12 +33,16 @@ public class ServicioSesionEstudioImpl implements ServicioSesionEstudio {
   public Boolean cambiarEstado(Integer id) {
     SesionEstudio sesion = repositorioSesionEstudio.buscarPorId(id);
 
-    if (sesion == null) {
-      return null;
-    }
+    if (sesion == null) return null;
+
     boolean completada = !Boolean.TRUE.equals(sesion.getCompletada());
+
     sesion.setCompletada(completada);
+
+    sesion.setFechaCompletado(completada ? LocalDate.now() : null);
+
     repositorioSesionEstudio.modificar(sesion);
+
     return completada;
   }
 }

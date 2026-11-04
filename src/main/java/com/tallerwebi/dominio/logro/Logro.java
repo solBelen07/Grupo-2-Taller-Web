@@ -5,6 +5,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+/**
+ * Logro solo describe el logro (nombre y descripción).
+ * No sabe quién lo obtuvo (eso lo indica LogroObtenido) ni cuándo se gana
+ * (eso lo define ServicioLogroImpl).
+ */
 @Entity
 public class Logro {
 

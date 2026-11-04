@@ -56,7 +56,7 @@
                 <div class="aporte-header">
                     <span class="aporte-nombre" th:text="${aporte.key}">Usuario</span>
                     <span class="aporte-cantidad"
-                          th:text="${aporte.value + ' tareas completadas - ' + (total > 0 ? (aporte.value * 100 / total) : 0) + '%'}">
+                          th:text="${aporte.value + (aporte.value == 1 ? ' tarea completada - ' : ' tareas completadas - ') + (total > 0 ? (aporte.value * 100 / total) : 0) + '%'}">
                                 0 tareas completadas - 0%
                         </span>
                 </div>

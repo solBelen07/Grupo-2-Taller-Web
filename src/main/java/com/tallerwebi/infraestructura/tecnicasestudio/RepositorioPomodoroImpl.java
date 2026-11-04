@@ -3,6 +3,8 @@ package com.tallerwebi.infraestructura.tecnicasestudio;
 import com.tallerwebi.dominio.tecnicasestudio.Estado;
 import com.tallerwebi.dominio.tecnicasestudio.Pomodoro;
 import com.tallerwebi.dominio.tecnicasestudio.RepositorioPomodoro;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +67,29 @@ public class RepositorioPomodoroImpl implements RepositorioPomodoro {
         .setParameter("estado", Estado.COMPLETADO)
         .uniqueResult();
     return total != null ? total : 0L;
+  }
+
+  @Override
+  public boolean existePomodoroCompletadoEnFecha(Long idUsuario, LocalDate fecha) {
+    LocalDateTime inicioDia = fecha.atStartOfDay();
+    LocalDateTime finDia = fecha.plusDays(1).atStartOfDay();
+
+    Long cantidad = sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "SELECT COUNT(p.id) FROM Pomodoro p " +
+        "WHERE p.usuario.id = :idUsuario " +
+        "AND p.estado = :estado " +
+        "AND p.fechaFin >= :inicioDia " +
+        "AND p.fechaFin < :finDia",
+        Long.class
+      )
+      .setParameter("idUsuario", idUsuario)
+      .setParameter("estado", Estado.COMPLETADO)
+      .setParameter("inicioDia", inicioDia)
+      .setParameter("finDia", finDia)
+      .uniqueResult();
+
+    return cantidad != null && cantidad > 0;
   }
 }

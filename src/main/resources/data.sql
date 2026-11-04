@@ -176,20 +176,26 @@ VALUES
     (null, 'Usuario5', 'Test', 'user5@test.com', '1234', 'ADMIN', true, 0),
     (null, 'Usuario6', 'Test', 'user6@test.com', '1234', 'ADMIN', true, 0);
 
+-- DSH-02: las sesiones de estudio de ejemplo son del usuario de prueba (el dueño de esas materias).
+UPDATE SesionEstudio
+SET usuario = (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')
+WHERE usuario IS NULL;
+
 INSERT INTO materia_usuario (materia_id, usuario_id)
 VALUES
     (1, 1),
     (2, 1),
     (3, 1);
 
-INSERT INTO Grupo (id, nombre)
+-- GRP-06: cada grupo tiene un creador (administrador). Es el mismo usuario que invita en los datos de abajo.
+INSERT INTO Grupo (id, nombre, creador_id)
 VALUES
-    (null, 'grupo1'),
-    (null, 'grupo2'),
-    (null, 'grupo3'),
-    (null, 'grupo4'),
-    (null, 'grupo5'),
-    (null, 'grupo6');
+    (null, 'grupo1', (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')),
+    (null, 'grupo2', (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')),
+    (null, 'grupo3', (SELECT id FROM Usuario WHERE email = 'user@test.com')),
+    (null, 'grupo4', (SELECT id FROM Usuario WHERE email = 'user1@test.com')),
+    (null, 'grupo5', (SELECT id FROM Usuario WHERE email = 'user3@test.com')),
+    (null, 'grupo6', (SELECT id FROM Usuario WHERE email = 'user5@test.com'));
 
 -- =====================================================================
 -- CAL-01: eventos de ejemplo para el calendario, del usuario
@@ -323,16 +329,65 @@ VALUES
      DATE_ADD(CURDATE(), INTERVAL 12 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
 
 INSERT INTO Logro(id, nombre, descripcion)
-VALUES (
-           null,
-           'Maratonista',
-           'Estudiaste más de 50 horas'
-       ),
-       (
-           null,
-           'Popular',
-           'Fuiste invitado muchas veces a grupos'
-       );
+VALUES (null,'Maratonista','Estudiaste más de 50 horas'),
+       (null,'Invitador','Fuiste invitado muchas veces a grupos'),
+       (null,'Popular','Fuiste invitado muchas veces a grupos'),
+       -- Más logros, que se pueden ganar usando la app
+       (null, 'Primeros pasos', 'Cargaste tu primera materia'),
+       (null, 'Primer vuelo', 'Completaste tu primera sesión en FocusFlight'),
+       (null, 'Piloto frecuente', 'Estudiaste 5 horas con FocusFlight'),
+       (null, 'Constante', 'Estudiaste 3 días seguidos'),
+       (null, 'Imparable', 'Estudiaste 7 días seguidos'),
+       (null, 'Plan cumplido', 'Completaste todas las sesiones de un plan de parcial'),
+       (null, 'Líder de grupo', 'Creaste tu primer grupo de estudio');
+
+-- =====================================================================
+-- Universidades, carreras e intereses
+-- =====================================================================
+INSERT INTO Universidad (id, nombre) VALUES
+                                         (null, 'Universidad Nacional de La Matanza (UNLaM)'),
+                                         (null, 'Universidad de Buenos Aires (UBA)'),
+                                         (null, 'Universidad Tecnológica Nacional (UTN)'),
+                                         (null, 'Universidad Nacional de La Plata (UNLP)'),
+                                         (null, 'Universidad Nacional de Córdoba (UNC)'),
+                                         (null, 'Universidad Argentina de la Empresa (UADE)'),
+                                         (null, 'Instituto Tecnológico de Buenos Aires (ITBA)');
+
+INSERT INTO Carrera (id, nombre) VALUES
+                                     (null, 'Ingeniería en Informática'),
+                                     (null, 'Ingeniería en Sistemas'),
+                                     (null, 'Licenciatura en Sistemas'),
+                                     (null, 'Tecnicatura en Programación'),
+                                     (null, 'Ingeniería Industrial'),
+                                     (null, 'Ingeniería Electrónica');
+
+INSERT INTO Interes (id, nombre) VALUES
+                                     (null, 'JavaScript'),
+                                     (null, 'Java'),
+                                     (null, 'Python'),
+                                     (null, 'C#'),
+                                     (null, 'PHP'),
+                                     (null, 'SQL'),
+                                     (null, 'HTML y CSS'),
+                                     (null, 'React'),
+                                     (null, 'Spring'),
+                                     (null, 'Node.js'),
+                                     (null, 'Docker'),
+                                     (null, 'Git'),
+                                     (null, 'Inteligencia Artificial'),
+                                     (null, 'Ciberseguridad'),
+                                     (null, 'Redes'),
+                                     (null, 'Desarrollo móvil'),
+                                     (null, 'DevOps'),
+                                     (null, 'UX/UI'),
+                                     (null, 'Testing');
+
+-- GAM-02: logro obtenido de ejemplo (quién obtuvo qué logro y cuándo)
+INSERT INTO LogroObtenido (id, usuario_id, logro_id, fechaObtencion)
+VALUES (null,
+        (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar'),
+        (SELECT id FROM Logro WHERE nombre = 'Popular'),
+        DATE_SUB(CURDATE(), INTERVAL 3 DAY));
 
 INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
 VALUES (null, 'ACEPTADA', false,

@@ -4,10 +4,12 @@ import com.tallerwebi.dominio.ServicioLogin;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.UsuarioExistente;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ControladorLogin {
+
+  private static final String CLAVE_ERROR = "error";
+  private static final String CLAVE_DATOS_LOGIN = "datosLogin";
 
   private ServicioLogin servicioLogin;
 
@@ -26,13 +31,13 @@ public class ControladorLogin {
   @RequestMapping("/login")
   public ModelAndView irALogin() {
     Map<String, Object> modelo = new ModelMap();
-    modelo.put("datosLogin", new DatosLogin());
+    modelo.put(CLAVE_DATOS_LOGIN, new DatosLogin());
     return new ModelAndView("login", modelo);
   }
 
   @RequestMapping(path = "/validar-login", method = RequestMethod.POST)
   public ModelAndView validarLogin(
-    @ModelAttribute("datosLogin") DatosLogin datosLogin,
+    @ModelAttribute(CLAVE_DATOS_LOGIN) DatosLogin datosLogin,
     HttpServletRequest request
   ) {
     Usuario usuarioBuscado = servicioLogin.consultarUsuario(
@@ -41,12 +46,12 @@ public class ControladorLogin {
     );
     if (usuarioBuscado != null) {
       request.getSession().setAttribute("USUARIO", usuarioBuscado);
-      return new ModelAndView("redirect:/home");
-    } else {
-      Map<String, Object> model = new ModelMap();
-      model.put("error", "Usuario o clave incorrecta");
-      return new ModelAndView("login", model);
+      return new ModelAndView("redirect:/dashboard");
     }
+    Map<String, Object> model = new ModelMap();
+    model.put(CLAVE_DATOS_LOGIN, new DatosLogin());
+    model.put(CLAVE_ERROR, "Usuario o clave incorrecta");
+    return new ModelAndView("login", model);
   }
 
   @RequestMapping(path = "/registrarme", method = RequestMethod.POST)
@@ -55,10 +60,10 @@ public class ControladorLogin {
     try {
       servicioLogin.registrar(usuario);
     } catch (UsuarioExistente e) {
-      model.put("error", "El usuario ya existe");
+      model.put(CLAVE_ERROR, "El usuario ya existe");
       return new ModelAndView("nuevo-usuario", model);
     } catch (Exception e) {
-      model.put("error", "Error al registrar el nuevo usuario");
+      model.put(CLAVE_ERROR, "Error al registrar el nuevo usuario");
       return new ModelAndView("nuevo-usuario", model);
     }
     return new ModelAndView("redirect:/login");
@@ -78,6 +83,15 @@ public class ControladorLogin {
 
   @RequestMapping(path = "/", method = RequestMethod.GET)
   public ModelAndView inicio() {
+    return new ModelAndView("redirect:/login");
+  }
+
+  @GetMapping("/cerrar-sesion")
+  public ModelAndView cerrarSesion(HttpServletRequest request) {
+    HttpSession sesion = request.getSession(false);
+    if (sesion != null) {
+      sesion.invalidate();
+    }
     return new ModelAndView("redirect:/login");
   }
 }

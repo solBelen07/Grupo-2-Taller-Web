@@ -78,3 +78,14 @@
 }
 
 .avatar-circle.sm { width: 30px; height: 30px; font-size: 10px; }
+
+.avatar-enlace {
+    display: inline-flex;
+    text-decoration: none;
+    border-radius: 50%;
+    transition: box-shadow 0.2s;
+}
+
+.avatar-enlace:hover .avatar-circle {
+    box-shadow: 0 0 0 2px var(--accent-purple);
+}

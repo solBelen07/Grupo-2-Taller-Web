@@ -1,5 +1,6 @@
 package com.tallerwebi.dominio.grupo;
 
+import com.tallerwebi.dominio.Usuario;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +10,10 @@ public interface RepositorioGrupo {
   List<Grupo> listar();
   List<Grupo> listarGruposPorUsuario(String nombreUsuario);
   Integer cantidadParticipantes(String nombre);
+  void guardar(Grupo grupo);
+  void modificar(Grupo grupo);
+  void eliminar(Grupo grupo);
+  Usuario buscarIntegranteMasAntiguo(Grupo grupo, Usuario excluido);
+  void quitarIntegrante(Grupo grupo, Usuario usuario);
+  List<Usuario> listarIntegrantes(String nombre);
 }

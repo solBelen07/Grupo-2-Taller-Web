@@ -7,4 +7,5 @@ public interface ServicioRacha {
   void modificarRacha(Usuario usuario);
   Integer obtenerRacha(Usuario usuario);
   Integer obtenerRecordRacha(Usuario usuario);
+  void recalcularRacha(Usuario usuario);
 }
