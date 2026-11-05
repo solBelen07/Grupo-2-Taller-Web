@@ -22,7 +22,10 @@ import org.thymeleaf.templatemode.TemplateMode;
 @ComponentScan(
   { "com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura" }
 )
-@PropertySource(value = "file:config-r2/application.properties", ignoreResourceNotFound = true)
+@PropertySource(
+  value = { "classpath:application.properties", "file:config-r2/application.properties" },
+  ignoreResourceNotFound = true
+)
 public class SpringWebConfig implements WebMvcConfigurer {
 
   // Spring + Thymeleaf need this

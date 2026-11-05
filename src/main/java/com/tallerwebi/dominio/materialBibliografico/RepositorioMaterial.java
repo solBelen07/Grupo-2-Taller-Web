@@ -7,4 +7,5 @@ public interface RepositorioMaterial {
   MaterialBibliografico buscarPorId(Integer id);
   List<MaterialBibliografico> buscarPorMateria(Integer materiaId);
   void eliminar(MaterialBibliografico material);
+  void eliminarPorMateria(Integer id);
 }

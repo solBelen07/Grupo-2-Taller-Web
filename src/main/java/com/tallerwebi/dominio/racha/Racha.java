@@ -40,10 +40,12 @@ public class Racha {
     this.recordRacha = recordRacha == null ? 0 : recordRacha;
   }
 
+  @SuppressWarnings("all")
   public LocalDate getUltimaFechaEstudio() {
     return ultimaFechaEstudio;
   }
 
+  @SuppressWarnings("all")
   public void setUltimaFechaEstudio(LocalDate ultimaFechaEstudio) {
     this.ultimaFechaEstudio = ultimaFechaEstudio;
   }

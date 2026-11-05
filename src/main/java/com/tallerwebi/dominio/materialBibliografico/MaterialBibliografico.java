@@ -10,7 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 public class MaterialBibliografico {
 
@@ -54,59 +58,53 @@ public class MaterialBibliografico {
     this.fechaSubida = LocalDateTime.now();
   }
 
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getNombreArchivo() {
-    return nombreArchivo;
-  }
-
-  public void setNombreArchivo(String nombreArchivo) {
-    this.nombreArchivo = nombreArchivo;
-  }
-
-  public String getTipoArchivo() {
-    return tipoArchivo;
-  }
-
-  public void setTipoArchivo(String tipoArchivo) {
-    this.tipoArchivo = tipoArchivo;
-  }
-
-  public Long getTamanio() {
-    return tamanio;
-  }
-
-  public void setTamanio(Long tamanio) {
-    this.tamanio = tamanio;
-  }
-
+  @SuppressWarnings("all")
   public String getClaveR2() {
     return claveR2;
   }
 
+  @SuppressWarnings("all")
   public void setClaveR2(String claveR2) {
     this.claveR2 = claveR2;
   }
 
-  public LocalDateTime getFechaSubida() {
-    return fechaSubida;
+  @SuppressWarnings("all")
+  public Integer getId() {
+    return id;
   }
 
-  public void setFechaSubida(LocalDateTime fechaSubida) {
-    this.fechaSubida = fechaSubida;
+  @SuppressWarnings("all")
+  public void setId(Integer id) {
+    this.id = id;
   }
 
+  @SuppressWarnings("all")
+  public String getNombreArchivo() {
+    return nombreArchivo;
+  }
+
+  @SuppressWarnings("all")
+  public void setNombreArchivo(String nombreArchivo) {
+    this.nombreArchivo = nombreArchivo;
+  }
+
+  @SuppressWarnings("all")
+  public void setTipoArchivo(String tipoArchivo) {
+    this.tipoArchivo = tipoArchivo;
+  }
+
+  @SuppressWarnings("all")
   public Materia getMateria() {
     return materia;
   }
 
+  @SuppressWarnings("all")
   public void setMateria(Materia materia) {
     this.materia = materia;
+  }
+
+  @SuppressWarnings("all")
+  public Long getTamanio() {
+    return tamanio;
   }
 }

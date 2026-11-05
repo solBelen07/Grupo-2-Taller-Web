@@ -1,9 +1,12 @@
-
 package com.tallerwebi.dominio.materialBibliografico;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaNoEncontrada;
+import com.tallerwebi.dominio.excepcion.excepcionMaterial.*;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.infraestructura.r2.AlmacenamientoR2;
@@ -11,243 +14,445 @@ import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ServicioMaterialTest {
 
+  private static final String NOMBRE_ARCHIVO_VALIDO = "nombre-test.pdf";
+  private static final String NOMBRE_ARCHIVO_INVALIDO = "nombre-test.exe";
+  private static final Long TAMANIO_ARCHIVO_EXCEDIDO = (50L * 1024 * 1024) + 1L;
+  private static final Long TAMANIO_ARCHIVO_PERMITIDO = 1L;
+  private static final String CLAVE_R2_VALIDA = "clave-ficticia";
+
   private ServicioMaterial servicioMaterial;
   private RepositorioMaterial repositorioMaterialMock;
-  private ServicioMateria servicioMateriaMock;
-  private AlmacenamientoR2 almacenamientoR2Mock;
-
-  private Materia materia;
+  private ServicioMateria servicioMateria;
+  private AlmacenamientoR2 almacenamientoR2;
+  private Materia materiaMock;
+  private MultipartFile archivoMock;
+  private MaterialBibliografico materialBibliograficoMock;
 
   @BeforeEach
-  public void init() {
+  public void inicializar() {
     repositorioMaterialMock = mock(RepositorioMaterial.class);
-    servicioMateriaMock = mock(ServicioMateria.class);
-    almacenamientoR2Mock = mock(AlmacenamientoR2.class);
-
-    servicioMaterial = new ServicioMaterialImpl(
-      repositorioMaterialMock,
-      servicioMateriaMock,
-      almacenamientoR2Mock
-    );
-
-    materia = new Materia();
+    servicioMateria = mock(ServicioMateria.class);
+    almacenamientoR2 = mock(AlmacenamientoR2.class);
+    materiaMock = mock(Materia.class);
+    archivoMock = mock(MultipartFile.class);
+    materialBibliograficoMock = mock(MaterialBibliografico.class);
+    servicioMaterial =
+      new ServicioMaterialImpl(repositorioMaterialMock, servicioMateria, almacenamientoR2);
   }
 
   @Test
-  public void queSePuedaSubirUnArchivoValido() throws IOException {
+  public void subirArchivoDeUnaMateriaInexistenteDeberiaDevolverException() {
+    dadoQueNoExisteLaMateria();
+
+    entoncesSubirMaterialDevuelveExceptionDeMateriaNoEncontrada();
+  }
+
+  @Test
+  public void subirArchivoNuloDeberiaDevolverException() {
+    dadoQueElArchivoEsNulo();
+    dadoQueExisteUnaMateria();
+
+    entoncesSubirMaterialDevuelveExceptionDeArchivoVacio();
+  }
+
+  @Test
+  public void subirArchivoVacioDeberiaDevolverException() {
+    dadoQueElArchivoEsVacio();
+    dadoQueExisteUnaMateria();
+
+    entoncesSubirMaterialDevuelveExceptionDeArchivoVacio();
+  }
+
+  @Test
+  public void subirArchivoQueExcedeTamanioMaximoDeberiaDevolverException() {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoTieneClaveR2NombreYExtensionValidoConTamanioExcedido();
+
+    entoncesSubirMaterialDevuelveExceptionDePesoExcedido();
+  }
+
+  @Test
+  public void subirArchivoSinNombreDeberiaDevolverException() {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoTieneNombreNulo();
+
+    entoncesSubirMaterialDevuelveExceptionDeArchivoSinNombre();
+  }
+
+  @Test
+  public void subirArchivoConNombreVacioDeberiaDevolverException() {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoTieneNombreVacio();
+
+    entoncesSubirMaterialDevuelveExceptionDeArchivoSinNombre();
+  }
+
+  @Test
+  public void subirArchivoConExtensionInvalidaDeberiaDevolverException() {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoTIeneClaveR2PesoNombreValidoConExtensionInvalida();
+
+    entoncesSubirMaterialDevuelveExceptionDeExtensionInvalida();
+  }
+
+  @Test
+  public void deberiaGuardarEnRepositorioSiElArchivoEsValido() throws IOException {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos();
+
+    cuandoSeSubeMaterial();
+
+    entoncesSeGuardaEnElRepositorioElMaterial();
+  }
+
+  @Test
+  public void deberiaEliminarArchivoDeLaNubeSiFallaGuardadoEnBaseDeDatos() throws IOException {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos();
+    dadoQueSeAlmacenaEnR2ElArchivo();
     MultipartFile archivo = mock(MultipartFile.class);
 
-    when(servicioMateriaMock.buscarMateriaPorId(1)).thenReturn(materia);
-    when(archivo.isEmpty()).thenReturn(false);
-    when(archivo.getSize()).thenReturn(1024L);
-    when(archivo.getOriginalFilename()).thenReturn("apunte.pdf");
-    when(archivo.getContentType()).thenReturn("application/pdf");
-    when(almacenamientoR2Mock.subirArchivo(archivo, 1)).thenReturn("clave-r2");
+    cuandoFallaElRepositorioAlGuardarMaterial();
 
-    servicioMaterial.subirMaterial(1, archivo);
-
-    verify(almacenamientoR2Mock, times(1)).subirArchivo(archivo, 1);
-    verify(repositorioMaterialMock, times(1)).guardar(any(MaterialBibliografico.class));
+    entoncesElServicioLanzaExcepcionYSeEliminaDelAlmacenamientoR2ElArchivo();
   }
 
   @Test
-  public void queNoSePuedaSubirUnArchivoSiLaMateriaNoExiste() {
-    when(servicioMateriaMock.buscarMateriaPorId(1)).thenReturn(null);
+  public void deberiaAgregarExcepcionSuprimidaSiFallaBorradoEnLaNube() throws IOException {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos();
+
+    cuandoFallaElRepositorioAlGuardarMaterial();
+    cuandoFallaElAlmacenamientoAlEliminarArchivo();
+
+    entoncesElServicioLanzaExcepcionDeRepositorioAlSubirMaterial();
+  }
+
+  @Test
+  public void eliminarArchivoNuloDeberiaDevolverExceptionArchivoNoEncontrado() {
+    dadoQueNoSeEncuentraElArchivoBuscado();
+
+    entoncesSeLanzaExcepcionArchivoNoEncontradoAlEliminarMaterial();
+  }
+
+  @Test
+  public void eliminarArchivoDeberiaLlamarAlAlmacenamiento() {
+    dadoQueSeEncuentraElArchivoBuscado();
+
+    entoncesSeLlamaAAlmacenamientoParaEliminarArchivo();
+  }
+
+  @Test
+  public void buscarPorIdDeberiaLlamarAlRepositorio() {
+    dadoQueSeEncuentraElArchivoBuscado();
+
+    MaterialBibliografico materialBuscado = servicioMaterial.buscarPorId(1234);
+
+    assertEquals(materialBibliograficoMock, materialBuscado);
+  }
+
+  @Test
+  public void buscarPorIdDeberiaDevolverMaterialEncontrado() {
+    dadoQueSeEncuentraElArchivoBuscado();
+
+    MaterialBibliografico materialBuscado = servicioMaterial.buscarPorId(1234);
+
+    assertEquals(materialBibliograficoMock, materialBuscado);
+  }
+
+  @Test
+  public void buscarPorMateriaDeberiaLlamarAlRepositorio() {
+    dadoQueExisteUnaMateria();
+
+    servicioMaterial.obtenerPorMateria(materiaMock.getId());
+
+    verify(repositorioMaterialMock, times(1)).buscarPorMateria(materiaMock.getId());
+  }
+
+  @Test
+  public void buscarPorMateriaDeberiaDevolverMaterialEncontrado() {
+    dadoQueExisteUnaMateria();
+    dadoQueSeEncuentraElArchivoBuscadoPorMateria();
+
+    List<MaterialBibliografico> materialesBuscados = cuandoSeBuscaPorMateria();
+
+    entoncesSeObtienenLosMaterialesBuscados(materialesBuscados);
+    entoncesSeObtieneUnaListaDeMateriales(materialesBuscados);
+  }
+
+  @Test
+  public void buscarPorMateriaDeberiaDevolverListaVaciaSiNoSeEncuentraMaterial() {
+    dadoQueExisteUnaMateria();
+    dadoQueNoSeEncuentraElArchivoBuscadoPorMateria();
+
+    List<MaterialBibliografico> materialesBuscados = cuandoSeBuscaPorMateria();
+
+    entoncesSeObtieneUnaListaVaciaDeMateriales(materialesBuscados);
+  }
+
+  @Test
+  public void descargarMaterialDeberiaLlamarAlRepositorio() {
+    dadoQueSeEncuentraElArchivoBuscado();
+
+    servicioMaterial.descargarMaterial(materialBibliograficoMock.getId());
+
+    verify(repositorioMaterialMock, times(1)).buscarPorId(materialBibliograficoMock.getId());
+  }
+
+  @Test
+  public void descargarMaterialInexistenteDeberiaLanzarExcepcion() {
+    dadoQueNoSeEncuentraElArchivoBuscado();
+    when(repositorioMaterialMock.buscarPorId(1)).thenReturn(null);
 
     assertThrows(
-      IllegalArgumentException.class,
-      () -> servicioMaterial.subirMaterial(1, null)
+      ArchivoNoEncontrado.class,
+      () -> {
+        servicioMaterial.descargarMaterial(1234);
+      }
     );
-
-    verifyNoInteractions(almacenamientoR2Mock);
-    verifyNoInteractions(repositorioMaterialMock);
   }
 
   @Test
-  public void queNoSePuedaSubirUnArchivoNulo() {
-    when(servicioMateriaMock.buscarMateriaPorId(1)).thenReturn(materia);
+  public void descargarMaterialDeberiaLlamarAlAlmacenamiento() {
+    dadoQueSeEncuentraElArchivoBuscado();
+    servicioMaterial.descargarMaterial(materialBibliograficoMock.getId());
 
-    assertThrows(
-      IllegalArgumentException.class,
-      () -> servicioMaterial.subirMaterial(1, null)
-    );
-
-    verifyNoInteractions(almacenamientoR2Mock);
+    verify(almacenamientoR2, times(1)).descargarArchivo(materialBibliograficoMock.getClaveR2());
   }
 
   @Test
-  public void queNoSePuedaSubirUnArchivoVacio() {
-    MultipartFile archivo = mock(MultipartFile.class);
+  public void descargarMaterialDeberiaDevolverElArchivoDescargado() {
+    dadoQueSeEncuentraElArchivoBuscado();
+    byte[] archivoEsperado = new byte[] { 1, 2, 3 };
+    when(almacenamientoR2.descargarArchivo(materialBibliograficoMock.getClaveR2()))
+      .thenReturn(archivoEsperado);
 
-    when(servicioMateriaMock.buscarMateriaPorId(1)).thenReturn(materia);
-    when(archivo.isEmpty()).thenReturn(true);
-
-    assertThrows(
-      IllegalArgumentException.class,
-      () -> servicioMaterial.subirMaterial(1, archivo)
+    byte[] archivoDescargado = servicioMaterial.descargarMaterial(
+      materialBibliograficoMock.getId()
     );
 
-    verifyNoInteractions(almacenamientoR2Mock);
+    assertEquals(archivoEsperado, archivoDescargado);
   }
 
-  @Test
-  public void queNoSePuedaSubirUnArchivoQueSupereLos50MB() {
-    MultipartFile archivo = mock(MultipartFile.class);
-
-    when(servicioMateriaMock.buscarMateriaPorId(1)).thenReturn(materia);
-    when(archivo.isEmpty()).thenReturn(false);
-    when(archivo.getSize()).thenReturn(51L * 1024 * 1024);
-
-    assertThrows(
-      IllegalArgumentException.class,
-      () -> servicioMaterial.subirMaterial(1, archivo)
-    );
-
-    verifyNoInteractions(almacenamientoR2Mock);
+  //DADO QUE
+  private void dadoQueExisteUnaMateria() {
+    when(materiaMock.getId()).thenReturn(1234);
+    when(servicioMateria.buscarMateriaPorId(materiaMock.getId())).thenReturn(materiaMock);
   }
 
-  @Test
-  public void queNoSePuedaSubirUnArchivoSinNombre() {
-    MultipartFile archivo = mock(MultipartFile.class);
-
-    when(servicioMateriaMock.buscarMateriaPorId(1)).thenReturn(materia);
-    when(archivo.isEmpty()).thenReturn(false);
-    when(archivo.getSize()).thenReturn(1024L);
-    when(archivo.getOriginalFilename()).thenReturn(null);
-
-    assertThrows(
-      IllegalArgumentException.class,
-      () -> servicioMaterial.subirMaterial(1, archivo)
-    );
-
-    verifyNoInteractions(almacenamientoR2Mock);
+  private void dadoQueNoExisteLaMateria() {
+    when(materiaMock.getId()).thenReturn(1234);
+    when(servicioMateria.buscarMateriaPorId(any())).thenReturn(null);
   }
 
-  @Test
-  public void queNoSePuedaSubirUnArchivoConExtensionInvalida() {
-    MultipartFile archivo = mock(MultipartFile.class);
-
-    when(servicioMateriaMock.buscarMateriaPorId(1)).thenReturn(materia);
-    when(archivo.isEmpty()).thenReturn(false);
-    when(archivo.getSize()).thenReturn(1024L);
-    when(archivo.getOriginalFilename()).thenReturn("imagen.png");
-
-    assertThrows(
-      IllegalArgumentException.class,
-      () -> servicioMaterial.subirMaterial(1, archivo)
-    );
-
-    verifyNoInteractions(almacenamientoR2Mock);
+  private void dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos() throws IOException {
+    when(archivoMock.getSize()).thenReturn(TAMANIO_ARCHIVO_PERMITIDO);
+    when(archivoMock.isEmpty()).thenReturn(false);
+    when(archivoMock.getOriginalFilename()).thenReturn(NOMBRE_ARCHIVO_VALIDO);
+    when(archivoMock.getContentType()).thenReturn("pdf");
+    when(almacenamientoR2.subirArchivo(any(), anyInt())).thenReturn(CLAVE_R2_VALIDA);
   }
 
-  @Test
-  public void queSeElimineElArchivoDeR2SiFallaElGuardadoEnRepositorio() throws IOException {
-    MultipartFile archivo = mock(MultipartFile.class);
+  private void dadoQueElArchivoTIeneClaveR2PesoNombreValidoConExtensionInvalida() {
+    when(archivoMock.getSize()).thenReturn(TAMANIO_ARCHIVO_PERMITIDO);
+    when(archivoMock.isEmpty()).thenReturn(false);
+    when(archivoMock.getOriginalFilename()).thenReturn(NOMBRE_ARCHIVO_INVALIDO);
+  }
 
-    when(servicioMateriaMock.buscarMateriaPorId(1)).thenReturn(materia);
-    when(archivo.isEmpty()).thenReturn(false);
-    when(archivo.getSize()).thenReturn(1024L);
-    when(archivo.getOriginalFilename()).thenReturn("apunte.pdf");
-    when(archivo.getContentType()).thenReturn("application/pdf");
-    when(almacenamientoR2Mock.subirArchivo(archivo, 1)).thenReturn("clave-r2");
+  private void dadoQueElArchivoTieneClaveR2NombreYExtensionValidoConTamanioExcedido() {
+    when(archivoMock.getSize()).thenReturn(TAMANIO_ARCHIVO_EXCEDIDO);
+    when(archivoMock.isEmpty()).thenReturn(false);
+    when(archivoMock.getContentType()).thenReturn("pdf");
+    when(archivoMock.getOriginalFilename()).thenReturn(NOMBRE_ARCHIVO_VALIDO);
+  }
 
-    doThrow(new RuntimeException("Error al guardar"))
+  private void dadoQueElArchivoTieneNombreNulo() {
+    when(archivoMock.getSize()).thenReturn(TAMANIO_ARCHIVO_PERMITIDO);
+    when(archivoMock.isEmpty()).thenReturn(false);
+    when(archivoMock.getContentType()).thenReturn("pdf");
+    when(archivoMock.getOriginalFilename()).thenReturn(null);
+  }
+
+  private void dadoQueElArchivoTieneNombreVacio() {
+    when(archivoMock.getSize()).thenReturn(TAMANIO_ARCHIVO_PERMITIDO);
+    when(archivoMock.isEmpty()).thenReturn(false);
+    when(archivoMock.getContentType()).thenReturn("pdf");
+    when(archivoMock.getOriginalFilename()).thenReturn("");
+  }
+
+  private void dadoQueElArchivoEsNulo() {
+    archivoMock = null;
+  }
+
+  private void dadoQueElArchivoEsVacio() {
+    when(archivoMock.isEmpty()).thenReturn(true);
+  }
+
+  private void dadoQueNoSeEncuentraElArchivoBuscado() {
+    when(repositorioMaterialMock.buscarPorId(anyInt())).thenReturn(null);
+  }
+
+  private void dadoQueSeEncuentraElArchivoBuscado() {
+    when(materialBibliograficoMock.getId()).thenReturn(1234);
+    when(materialBibliograficoMock.getClaveR2()).thenReturn(CLAVE_R2_VALIDA);
+    when(materialBibliograficoMock.getNombreArchivo()).thenReturn(NOMBRE_ARCHIVO_VALIDO);
+    when(materialBibliograficoMock.getTamanio()).thenReturn(TAMANIO_ARCHIVO_PERMITIDO);
+    when(repositorioMaterialMock.buscarPorId(anyInt())).thenReturn(materialBibliograficoMock);
+  }
+
+  private void dadoQueSeAlmacenaEnR2ElArchivo() throws IOException {
+    when(almacenamientoR2.subirArchivo(any(), anyInt())).thenReturn(CLAVE_R2_VALIDA);
+  }
+
+  private void dadoQueSeEncuentraElArchivoBuscadoPorMateria() {
+    when(repositorioMaterialMock.buscarPorMateria(anyInt()))
+      .thenReturn(List.of(materialBibliograficoMock));
+  }
+
+  private void dadoQueNoSeEncuentraElArchivoBuscadoPorMateria() {
+    when(repositorioMaterialMock.buscarPorMateria(anyInt())).thenReturn(List.of());
+  }
+
+  //CUANDO
+  private void cuandoFallaElRepositorioAlGuardarMaterial() {
+    doThrow(new RuntimeException("Fallo en BD"))
       .when(repositorioMaterialMock)
       .guardar(any(MaterialBibliografico.class));
+  }
 
+  private void cuandoFallaElAlmacenamientoAlEliminarArchivo() {
+    doThrow(new RuntimeException("Fallo al borrar en R2"))
+      .when(almacenamientoR2)
+      .eliminarArchivo(CLAVE_R2_VALIDA);
+  }
+
+  private void cuandoSeSubeMaterial() throws IOException {
+    servicioMaterial.subirMaterial(materiaMock.getId(), archivoMock);
+  }
+
+  private List<MaterialBibliografico> cuandoSeBuscaPorMateria() {
+    return servicioMaterial.obtenerPorMateria(materiaMock.getId());
+  }
+
+  //ENTONCES
+  private void entoncesElServicioLanzaExcepcionYSeEliminaDelAlmacenamientoR2ElArchivo() {
     assertThrows(
       RuntimeException.class,
-      () -> servicioMaterial.subirMaterial(1, archivo)
+      () -> {
+        servicioMaterial.subirMaterial(materiaMock.getId(), archivoMock);
+      }
     );
-
-    verify(almacenamientoR2Mock, times(1)).eliminarArchivo("clave-r2");
+    verify(almacenamientoR2, times(1)).eliminarArchivo(CLAVE_R2_VALIDA);
   }
 
-  @Test
-  public void queSePuedanObtenerLosMaterialesDeUnaMateria() {
-    List<MaterialBibliografico> materiales = List.of(
-      new MaterialBibliografico("apunte.pdf", "application/pdf", 1024L, "clave", materia)
+  private void entoncesElServicioLanzaExcepcionDeRepositorioAlSubirMaterial() {
+    RuntimeException excepcionLanzada = assertThrows(
+      RuntimeException.class,
+      () -> {
+        servicioMaterial.subirMaterial(materiaMock.getId(), archivoMock);
+      }
     );
-
-    when(repositorioMaterialMock.buscarPorMateria(1)).thenReturn(materiales);
-
-    List<MaterialBibliografico> resultado = servicioMaterial.obtenerPorMateria(1);
-
-    assertEquals(materiales, resultado);
-    verify(repositorioMaterialMock, times(1)).buscarPorMateria(1);
+    assertEquals("Fallo en BD", excepcionLanzada.getMessage());
+    Throwable[] suprimidos = excepcionLanzada.getSuppressed();
+    assertEquals(1, suprimidos.length);
+    assertEquals("Fallo al borrar en R2", suprimidos[0].getMessage());
   }
 
-  @Test
-  public void queSePuedaBuscarUnMaterialPorId() {
-    MaterialBibliografico material = new MaterialBibliografico(
-      "apunte.pdf", "application/pdf", 1024L, "clave", materia
-    );
-
-    when(repositorioMaterialMock.buscarPorId(1)).thenReturn(material);
-
-    MaterialBibliografico resultado = servicioMaterial.buscarPorId(1);
-
-    assertEquals(material, resultado);
-    verify(repositorioMaterialMock, times(1)).buscarPorId(1);
-  }
-
-  @Test
-  public void queNoSePuedaDescargarUnMaterialInexistente() {
-    when(repositorioMaterialMock.buscarPorId(1)).thenReturn(null);
-
+  private void entoncesSeLanzaExcepcionArchivoNoEncontradoAlEliminarMaterial() {
     assertThrows(
-      IllegalArgumentException.class,
-      () -> servicioMaterial.descargarMaterial(1)
+      ArchivoNoEncontrado.class,
+      () -> {
+        servicioMaterial.eliminarMaterial(1234);
+      }
     );
-
-    verifyNoInteractions(almacenamientoR2Mock);
   }
 
-  @Test
-  public void queSePuedaDescargarUnMaterialExistente() {
-    MaterialBibliografico material = new MaterialBibliografico(
-      "apunte.pdf", "application/pdf", 1024L, "clave", materia
-    );
-
-    byte[] contenido = { 1, 2, 3 };
-
-    when(repositorioMaterialMock.buscarPorId(1)).thenReturn(material);
-    when(almacenamientoR2Mock.descargarArchivo("clave")).thenReturn(contenido);
-
-    byte[] resultado = servicioMaterial.descargarMaterial(1);
-
-    assertArrayEquals(contenido, resultado);
-    verify(almacenamientoR2Mock, times(1)).descargarArchivo("clave");
-  }
-
-  @Test
-  public void queNoSePuedaEliminarUnMaterialInexistente() {
-    when(repositorioMaterialMock.buscarPorId(1)).thenReturn(null);
-
+  private void entoncesSubirMaterialDevuelveExceptionDeArchivoVacio() {
     assertThrows(
-      IllegalArgumentException.class,
-      () -> servicioMaterial.eliminarMaterial(1)
+      ArchivoVacio.class,
+      () -> {
+        servicioMaterial.subirMaterial(materiaMock.getId(), archivoMock);
+      }
     );
-
-    verifyNoInteractions(almacenamientoR2Mock);
   }
 
-  @Test
-  public void queSePuedaEliminarUnMaterialExistente() {
-    MaterialBibliografico material = new MaterialBibliografico(
-      "apunte.pdf", "application/pdf", 1024L, "clave", materia
+  private void entoncesSubirMaterialDevuelveExceptionDeExtensionInvalida() {
+    assertThrows(
+      ExtensionInvalida.class,
+      () -> {
+        servicioMaterial.subirMaterial(materiaMock.getId(), archivoMock);
+      }
     );
+  }
 
-    when(repositorioMaterialMock.buscarPorId(1)).thenReturn(material);
+  private void entoncesSubirMaterialDevuelveExceptionDeArchivoSinNombre() {
+    assertThrows(
+      ArchivoSinNombre.class,
+      () -> {
+        servicioMaterial.subirMaterial(materiaMock.getId(), archivoMock);
+      }
+    );
+  }
 
-    servicioMaterial.eliminarMaterial(1);
+  private void entoncesSubirMaterialDevuelveExceptionDePesoExcedido() {
+    assertThrows(
+      PesoExcedido.class,
+      () -> {
+        servicioMaterial.subirMaterial(materiaMock.getId(), archivoMock);
+      }
+    );
+  }
 
-    verify(almacenamientoR2Mock, times(1)).eliminarArchivo("clave");
-    verify(repositorioMaterialMock, times(1)).eliminar(material);
+  private void entoncesSubirMaterialDevuelveExceptionDeMateriaNoEncontrada() {
+    assertThrows(
+      MateriaNoEncontrada.class,
+      () -> {
+        servicioMaterial.subirMaterial(materiaMock.getId(), archivoMock);
+      }
+    );
+  }
+
+  private void entoncesSeGuardaEnElRepositorioElMaterial() {
+    ArgumentCaptor<MaterialBibliografico> captor = ArgumentCaptor.forClass(
+      MaterialBibliografico.class
+    );
+    verify(repositorioMaterialMock, times(1)).guardar(captor.capture());
+
+    MaterialBibliografico materialGuardado = captor.getValue();
+    assertEquals(NOMBRE_ARCHIVO_VALIDO, materialGuardado.getNombreArchivo());
+    assertEquals(CLAVE_R2_VALIDA, materialGuardado.getClaveR2());
+  }
+
+  private void entoncesSeLlamaAAlmacenamientoParaEliminarArchivo() {
+    servicioMaterial.eliminarMaterial(materialBibliograficoMock.getId());
+    ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+
+    verify(almacenamientoR2, times(1)).eliminarArchivo(captor.capture());
+    materialBibliograficoMock.setClaveR2(captor.getValue());
+
+    assertEquals(CLAVE_R2_VALIDA, materialBibliograficoMock.getClaveR2());
+  }
+
+  private void entoncesSeObtienenLosMaterialesBuscados(
+    List<MaterialBibliografico> materialesBuscados
+  ) {
+    assertEquals(materialBibliograficoMock, materialesBuscados.get(0));
+  }
+
+  private void entoncesSeObtieneUnaListaDeMateriales(
+    List<MaterialBibliografico> materialesBuscados
+  ) {
+    assertEquals(1, materialesBuscados.size());
+  }
+
+  private void entoncesSeObtieneUnaListaVaciaDeMateriales(
+    List<MaterialBibliografico> materialesBuscados
+  ) {
+    assertEquals(0, materialesBuscados.size());
   }
 }
-

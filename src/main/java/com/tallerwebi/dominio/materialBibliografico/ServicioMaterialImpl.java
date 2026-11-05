@@ -1,5 +1,7 @@
 package com.tallerwebi.dominio.materialBibliografico;
 
+import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaNoEncontrada;
+import com.tallerwebi.dominio.excepcion.excepcionMaterial.*;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.infraestructura.r2.AlmacenamientoR2;
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
+@Service("servicioMaterial")
 public class ServicioMaterialImpl implements ServicioMaterial {
 
   private static final long TAMANIO_MAXIMO = 50L * 1024 * 1024;
@@ -38,7 +40,7 @@ public class ServicioMaterialImpl implements ServicioMaterial {
     Materia materia = servicioMateria.buscarMateriaPorId(materiaId);
 
     if (materia == null) {
-      throw new IllegalArgumentException("La materia no existe");
+      throw new MateriaNoEncontrada();
     }
 
     validarArchivo(archivo);
@@ -83,7 +85,7 @@ public class ServicioMaterialImpl implements ServicioMaterial {
     MaterialBibliografico material = repositorioMaterial.buscarPorId(id);
 
     if (material == null) {
-      throw new IllegalArgumentException("El material no existe");
+      throw new ArchivoNoEncontrado();
     }
 
     return almacenamientoR2.descargarArchivo(material.getClaveR2());
@@ -95,7 +97,7 @@ public class ServicioMaterialImpl implements ServicioMaterial {
     MaterialBibliografico material = repositorioMaterial.buscarPorId(id);
 
     if (material == null) {
-      throw new IllegalArgumentException("El material no existe");
+      throw new ArchivoNoEncontrado();
     }
 
     almacenamientoR2.eliminarArchivo(material.getClaveR2());
@@ -111,13 +113,13 @@ public class ServicioMaterialImpl implements ServicioMaterial {
 
   private void validarArchivoNoVacio(MultipartFile archivo) {
     if (archivo == null || archivo.isEmpty()) {
-      throw new IllegalArgumentException("No se selecciono ningun archivo");
+      throw new ArchivoVacio();
     }
   }
 
   private void validarTamanio(MultipartFile archivo) {
     if (archivo.getSize() > TAMANIO_MAXIMO) {
-      throw new IllegalArgumentException("El archivo supera los 50 MB");
+      throw new PesoExcedido();
     }
   }
 
@@ -125,7 +127,7 @@ public class ServicioMaterialImpl implements ServicioMaterial {
     String nombre = archivo.getOriginalFilename();
 
     if (nombre == null || nombre.isBlank()) {
-      throw new IllegalArgumentException("El archivo debe tener un nombre");
+      throw new ArchivoSinNombre();
     }
 
     String nombreNormalizado = nombre.toLowerCase(Locale.ROOT);
@@ -133,7 +135,7 @@ public class ServicioMaterialImpl implements ServicioMaterial {
     boolean extensionValida = EXTENSIONES.stream().anyMatch(nombreNormalizado::endsWith);
 
     if (!extensionValida) {
-      throw new IllegalArgumentException("Solo se permiten archivos PDF, DOC y DOCX");
+      throw new ExtensionInvalida();
     }
   }
 }

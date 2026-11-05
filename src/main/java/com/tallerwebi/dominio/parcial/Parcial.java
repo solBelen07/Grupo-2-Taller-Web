@@ -30,58 +30,72 @@ public class Parcial {
 
   public Parcial() {}
 
+  @SuppressWarnings("all")
   public Integer getId() {
     return id;
   }
 
+  @SuppressWarnings("all")
   public void setId(Integer id) {
     this.id = id;
   }
 
+  @SuppressWarnings("all")
   public LocalDate getFecha() {
     return fecha;
   }
 
+  @SuppressWarnings("all")
   public void setFecha(LocalDate fecha) {
     this.fecha = fecha;
   }
 
+  @SuppressWarnings("all")
   public LocalTime getHorario() {
     return horario;
   }
 
+  @SuppressWarnings("all")
   public void setHorario(LocalTime horario) {
     this.horario = horario;
   }
 
+  @SuppressWarnings("all")
   public Integer getCantidadDiasEstudio() {
     return cantidadDiasEstudio;
   }
 
+  @SuppressWarnings("all")
   public void setCantidadDiasEstudio(Integer cantidadDiasEstudio) {
     this.cantidadDiasEstudio = cantidadDiasEstudio;
   }
 
+  @SuppressWarnings("all")
   public Integer getHorasPorDia() {
     return horasPorDia;
   }
 
+  @SuppressWarnings("all")
   public void setHorasPorDia(Integer horasPorDia) {
     this.horasPorDia = horasPorDia;
   }
 
+  @SuppressWarnings("all")
   public Materia getMateria() {
     return materia;
   }
 
+  @SuppressWarnings("all")
   public void setMateria(Materia materia) {
     this.materia = materia;
   }
 
+  @SuppressWarnings("all")
   public List<SesionEstudio> getSesiones() {
     return sesiones;
   }
 
+  @SuppressWarnings("all")
   public void setSesiones(List<SesionEstudio> sesiones) {
     this.sesiones = sesiones;
   }
@@ -91,10 +105,12 @@ public class Parcial {
     sesion.setParcial(this);
   }
 
+  @SuppressWarnings("all")
   public String getNombre() {
     return nombre;
   }
 
+  @SuppressWarnings("all")
   public void setNombre(String nombre) {
     this.nombre = nombre;
   }
