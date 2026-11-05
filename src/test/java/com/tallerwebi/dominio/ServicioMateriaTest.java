@@ -3,17 +3,22 @@ package com.tallerwebi.dominio;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaExistente;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.RepositorioMateria;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import com.tallerwebi.dominio.materia.ServicioMateriaImpl;
+import com.tallerwebi.dominio.materialBibliografico.RepositorioMaterial;
 import com.tallerwebi.dominio.parcial.RepositorioParcial;
 import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 
 public class ServicioMateriaTest {
 
@@ -22,6 +27,7 @@ public class ServicioMateriaTest {
   private RepositorioEvento repositorioEventoMock;
   private RepositorioParcial repositorioParcialMock;
   private RepositorioSesionEstudio repositorioSesionEstudioMock;
+  private RepositorioMaterial repositorioMaterialMock;
 
   @BeforeEach
   public void init() {
@@ -29,12 +35,14 @@ public class ServicioMateriaTest {
     this.repositorioEventoMock = mock(RepositorioEvento.class);
     this.repositorioParcialMock = mock(RepositorioParcial.class);
     this.repositorioSesionEstudioMock = mock(RepositorioSesionEstudio.class);
+    this.repositorioMaterialMock = mock(RepositorioMaterial.class);
     this.servicioMateria =
       new ServicioMateriaImpl(
         this.repositorioMateriaMock,
         this.repositorioEventoMock,
         this.repositorioParcialMock,
-        this.repositorioSesionEstudioMock
+        this.repositorioSesionEstudioMock,
+        this.repositorioMaterialMock
       );
   }
 
@@ -105,21 +113,104 @@ public class ServicioMateriaTest {
   }
 
   @Test
-  public void queSePuedaEliminarUnaMateriaQueExiste() {
-    String nombre1 = "Taller Web I";
-    String nombre2 = "Base de Datos II";
+  public void crearMateriaQueNoExisteDeberiaGuardarla() throws MateriaExistente {
+    Materia materia = new Materia();
+    materia.setNombre("Taller Web I");
+    when(this.repositorioMateriaMock.buscarPorNombre("Taller Web I")).thenReturn(null);
 
-    Materia materia1 = new Materia();
-    Materia materia2 = new Materia();
+    this.servicioMateria.crearMateria(materia);
 
-    materia1.setNombre(nombre1);
-    materia2.setNombre(nombre2);
+    verify(this.repositorioMateriaMock, times(1)).guardar(materia);
+  }
 
-    when(this.repositorioMateriaMock.buscarPorNombre(nombre2)).thenReturn(materia2);
+  @Test
+  public void crearMateriaExistenteDeberiaLanzarExcepcionYNoGuardar() {
+    Materia materia = new Materia();
+    materia.setNombre("Taller Web I");
+    when(this.repositorioMateriaMock.buscarPorNombre("Taller Web I")).thenReturn(new Materia());
 
-    servicioMateria.eliminarMateria(nombre2);
+    assertThrows(MateriaExistente.class, () -> this.servicioMateria.crearMateria(materia));
 
-    verify(this.repositorioMateriaMock, times(1)).buscarPorNombre(nombre2);
-    verify(this.repositorioMateriaMock, times(1)).eliminar(materia2);
+    verify(this.repositorioMateriaMock, never()).guardar(any());
+  }
+
+  @Test
+  public void obtenerMateriasPorUsuarioDeberiaDevolverLasDelRepositorio() {
+    List<Materia> esperadas = List.of(new Materia(), new Materia());
+    when(this.repositorioMateriaMock.obtenerPorUsuario(1L)).thenReturn(esperadas);
+
+    List<Materia> obtenidas = this.servicioMateria.obtenerMateriasPorUsuario(1L);
+
+    assertThat(obtenidas, equalTo(esperadas));
+    verify(this.repositorioMateriaMock, times(1)).obtenerPorUsuario(1L);
+  }
+
+  @Test
+  public void buscarMateriaPorNombreYUsuarioDeberiaDevolverLaDelRepositorio() {
+    Materia esperada = new Materia();
+    when(this.repositorioMateriaMock.buscarPorNombreYUsuario("Taller Web I", 1L))
+      .thenReturn(esperada);
+
+    Materia obtenida = this.servicioMateria.buscarMateriaPorNombreYUsuario("Taller Web I", 1L);
+
+    assertThat(obtenida, equalTo(esperada));
+  }
+
+  @Test
+  public void buscarMateriaPorIdDeberiaDevolverLaDelRepositorio() {
+    Materia esperada = new Materia();
+    when(this.repositorioMateriaMock.buscarPorId(10)).thenReturn(esperada);
+
+    Materia obtenida = this.servicioMateria.buscarMateriaPorId(10);
+
+    assertThat(obtenida, equalTo(esperada));
+  }
+
+  @Test
+  public void buscarMateriaPorIdYUsuarioDeberiaDevolverLaDelRepositorio() {
+    Materia esperada = new Materia();
+    when(this.repositorioMateriaMock.buscarPorIdYUsuario(10, 1L)).thenReturn(esperada);
+
+    Materia obtenida = this.servicioMateria.buscarMateriaPorIdYUsuario(10, 1L);
+
+    assertThat(obtenida, equalTo(esperada));
+  }
+
+  @Test
+  public void eliminarMateriaDeberiaBorrarDependenciasAntesQueLaMateria() {
+    Materia materia = new Materia();
+    materia.setId(10);
+    materia.setNombre("Taller Web I");
+    when(this.repositorioMateriaMock.buscarPorNombre("Taller Web I")).thenReturn(materia);
+
+    this.servicioMateria.eliminarMateria("Taller Web I");
+
+    InOrder orden = inOrder(
+      this.repositorioSesionEstudioMock,
+      this.repositorioParcialMock,
+      this.repositorioEventoMock,
+      this.repositorioMaterialMock,
+      this.repositorioMateriaMock
+    );
+    orden.verify(this.repositorioSesionEstudioMock).eliminarPorMateriaId(10);
+    orden.verify(this.repositorioParcialMock).eliminarPorMateriaId(10);
+    orden.verify(this.repositorioEventoMock).eliminarPorMateriaId(10);
+    orden.verify(this.repositorioMaterialMock).eliminarPorMateria(10);
+    orden.verify(this.repositorioMateriaMock).eliminar(materia);
+  }
+
+  @Test
+  public void eliminarMateriaInexistenteNoDeberiaBorrarNada() {
+    when(this.repositorioMateriaMock.buscarPorNombre("Inexistente")).thenReturn(null);
+
+    this.servicioMateria.eliminarMateria("Inexistente");
+
+    verify(this.repositorioMateriaMock, never()).eliminar(any());
+    verifyNoInteractions(
+      this.repositorioSesionEstudioMock,
+      this.repositorioParcialMock,
+      this.repositorioEventoMock,
+      this.repositorioMaterialMock
+    );
   }
 }

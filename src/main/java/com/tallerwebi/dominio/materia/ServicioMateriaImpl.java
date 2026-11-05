@@ -2,6 +2,7 @@ package com.tallerwebi.dominio.materia;
 
 import com.tallerwebi.dominio.RepositorioEvento;
 import com.tallerwebi.dominio.excepcion.excepcionMateria.MateriaExistente;
+import com.tallerwebi.dominio.materialBibliografico.RepositorioMaterial;
 import com.tallerwebi.dominio.parcial.RepositorioParcial;
 import com.tallerwebi.dominio.sesionEstudio.RepositorioSesionEstudio;
 import jakarta.transaction.Transactional;
@@ -16,17 +17,20 @@ public class ServicioMateriaImpl implements ServicioMateria {
   private RepositorioEvento repositorioEvento;
   private RepositorioParcial repositorioParcial;
   private RepositorioSesionEstudio repositorioSesion;
+  private RepositorioMaterial repositorioMaterial;
 
   public ServicioMateriaImpl(
     RepositorioMateria repositorioMateria,
     RepositorioEvento repositorioEvento,
     RepositorioParcial repositorioParcial,
-    RepositorioSesionEstudio repositorioSesion
+    RepositorioSesionEstudio repositorioSesion,
+    RepositorioMaterial repositorioMaterial
   ) {
     this.repositorioMateria = repositorioMateria;
     this.repositorioEvento = repositorioEvento;
     this.repositorioParcial = repositorioParcial;
     this.repositorioSesion = repositorioSesion;
+    this.repositorioMaterial = repositorioMaterial;
   }
 
   @Override
@@ -83,6 +87,7 @@ public class ServicioMateriaImpl implements ServicioMateria {
       repositorioSesion.eliminarPorMateriaId(materia.getId());
       repositorioParcial.eliminarPorMateriaId(materia.getId());
       repositorioEvento.eliminarPorMateriaId(materia.getId());
+      repositorioMaterial.eliminarPorMateria(materia.getId());
       repositorioMateria.eliminar(materia);
     }
   }

@@ -95,7 +95,7 @@
                         </div>
                         <!-- Acciones -->
                         <div class="col-auto">
-                            <a th:href="@{/materias/editar(id=${materia.id})}" class="btn btn-outline-secondary mb-2">
+                            <a th:href="@{/materias/editar/{id}(id=${materia.id})}" class="btn btn-outline-secondary mb-2">
                                 Editar
                             </a>
                             <form th:action="@{/materias/eliminar}" method="POST">

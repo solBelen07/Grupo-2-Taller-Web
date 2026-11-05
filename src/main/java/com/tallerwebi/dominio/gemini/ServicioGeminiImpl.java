@@ -45,7 +45,7 @@ public class ServicioGeminiImpl implements ServicioGemini {
             List.of(
               Map.of(
                 "text",
-                "Quiero que hagas un resumen breve del siguiente fragmento de texto, marcando en items los temas principales:" +
+                "Quiero que hagas un resumen breve del siguiente fragmento de texto sin bloques Markdown, marcando en items los temas principales:" +
                 pregunta
               )
             )

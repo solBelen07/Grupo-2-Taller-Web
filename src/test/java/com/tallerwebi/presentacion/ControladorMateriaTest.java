@@ -387,4 +387,167 @@ public class ControladorMateriaTest {
     assertSame(materia, resultado.getModel().get("materiaBuscada"));
     assertEquals("Taller Web I", resultado.getModel().get("nombreBuscado"));
   }
+
+  private MockHttpServletRequest requestSinUsuario() {
+    return new MockHttpServletRequest();
+  }
+
+  private Materia crearMateriaDeOtroUsuario(Integer id) {
+    Usuario otro = mock(Usuario.class);
+    when(otro.getId()).thenReturn(2L);
+    Materia materia = new Materia();
+    materia.setId(id);
+    materia.setUsuarios(List.of(otro));
+    return materia;
+  }
+
+  @Test
+  public void queSePuedaEliminarUnaMateriaDelUsuario() {
+    Materia materia = crearMateriaDePrueba(1, "Taller Web I");
+    when(servicioMateriaMock.buscarMateriaPorNombreYUsuario("Taller Web I", 1L))
+      .thenReturn(materia);
+
+    ModelAndView resultado = controladorMateria.eliminarMateria("Taller Web I", request);
+
+    verify(servicioMateriaMock).eliminarMateria("Taller Web I");
+    assertEquals("redirect:/materias", resultado.getViewName());
+  }
+
+  @Test
+  public void queNoSeElimineUnaMateriaInexistente() {
+    when(servicioMateriaMock.buscarMateriaPorNombreYUsuario("X", 1L)).thenReturn(null);
+
+    ModelAndView resultado = controladorMateria.eliminarMateria("X", request);
+
+    verify(servicioMateriaMock, never()).eliminarMateria(anyString());
+    assertEquals("redirect:/materias", resultado.getViewName());
+  }
+
+  @Test
+  public void sinUsuarioLogueadoLosEndpointsRedirigenAlLogin() throws IOException {
+    MockHttpServletRequest sinUsuario = requestSinUsuario();
+    DatosMateria datos = new DatosMateria();
+
+    assertEquals("redirect:/login", controladorMateria.nuevaMateria(sinUsuario).getViewName());
+    assertEquals(
+      "redirect:/login",
+      controladorMateria.guardarMateria(datos, null, sinUsuario).getViewName()
+    );
+    assertEquals("redirect:/login", controladorMateria.listarMaterias(sinUsuario).getViewName());
+    assertEquals("redirect:/login", controladorMateria.verMateria(1, sinUsuario).getViewName());
+    assertEquals("redirect:/login", controladorMateria.editarMateria(1, sinUsuario).getViewName());
+    assertEquals(
+      "redirect:/login",
+      controladorMateria.guardarMateriaModificada(datos, null, sinUsuario).getViewName()
+    );
+    assertEquals(
+      "redirect:/login",
+      controladorMateria.buscarMateria("X", sinUsuario).getViewName()
+    );
+    assertEquals(
+      "redirect:/login",
+      controladorMateria.eliminarMaterial(1, sinUsuario).getViewName()
+    );
+    assertEquals(
+      "redirect:/login",
+      controladorMateria.eliminarMateria("X", sinUsuario).getViewName()
+    );
+
+    verifyNoInteractions(servicioMateriaMock, servicioMaterialMock);
+  }
+
+  @Test
+  public void verMateriaInexistenteRedirigeAMaterias() {
+    when(servicioMateriaMock.buscarMateriaPorIdYUsuario(9, 1L)).thenReturn(null);
+
+    ModelAndView resultado = controladorMateria.verMateria(9, request);
+
+    assertEquals("redirect:/materias", resultado.getViewName());
+    verifyNoInteractions(servicioMaterialMock);
+  }
+
+  @Test
+  public void editarMateriaInexistenteRedirigeAMaterias() {
+    when(servicioMateriaMock.buscarMateriaPorIdYUsuario(9, 1L)).thenReturn(null);
+
+    ModelAndView resultado = controladorMateria.editarMateria(9, request);
+
+    assertEquals("redirect:/materias", resultado.getViewName());
+    verifyNoInteractions(servicioMaterialMock);
+  }
+
+  @Test
+  public void modificarMateriaInexistenteNoEditaNiSubeArchivos() throws IOException {
+    DatosMateria datos = new DatosMateria();
+    datos.setId(9);
+    MultipartFile archivo = new MockMultipartFile(
+      "archivos",
+      "a.pdf",
+      "application/pdf",
+      "x".getBytes(StandardCharsets.UTF_8)
+    );
+    when(servicioMateriaMock.buscarMateriaPorIdYUsuario(9, 1L)).thenReturn(null);
+
+    ModelAndView resultado = controladorMateria.guardarMateriaModificada(
+      datos,
+      new MultipartFile[] { archivo },
+      request
+    );
+
+    assertEquals("redirect:/materias", resultado.getViewName());
+    verify(servicioMateriaMock, never()).editarMateria(any());
+    verifyNoInteractions(servicioMaterialMock);
+  }
+
+  @Test
+  public void noSePuedeEliminarMaterialDeOtroUsuario() {
+    MaterialBibliografico material = new MaterialBibliografico();
+    material.setMateria(crearMateriaDeOtroUsuario(5));
+    when(servicioMaterialMock.buscarPorId(10)).thenReturn(material);
+
+    ModelAndView resultado = controladorMateria.eliminarMaterial(10, request);
+
+    assertEquals("redirect:/materias", resultado.getViewName());
+    verify(servicioMaterialMock, never()).eliminarMaterial(anyInt());
+  }
+
+  @Test
+  public void eliminarMaterialSinMateriaRedirigeAMaterias() {
+    when(servicioMaterialMock.buscarPorId(10)).thenReturn(new MaterialBibliografico());
+
+    ModelAndView resultado = controladorMateria.eliminarMaterial(10, request);
+
+    assertEquals("redirect:/materias", resultado.getViewName());
+    verify(servicioMaterialMock, never()).eliminarMaterial(anyInt());
+  }
+
+  @Test
+  public void eliminarMaterialDeMateriaSinUsuariosRedirigeAMaterias() {
+    Materia materia = new Materia();
+    materia.setUsuarios(null);
+    MaterialBibliografico material = new MaterialBibliografico();
+    material.setMateria(materia);
+    when(servicioMaterialMock.buscarPorId(10)).thenReturn(material);
+
+    ModelAndView resultado = controladorMateria.eliminarMaterial(10, request);
+
+    assertEquals("redirect:/materias", resultado.getViewName());
+    verify(servicioMaterialMock, never()).eliminarMaterial(anyInt());
+  }
+
+  @Test
+  public void guardarMateriaIgnoraArchivosNulos() throws IOException, MateriaExistente {
+    DatosMateria datos = new DatosMateria();
+    datos.setNombre("Taller Web I");
+
+    ModelAndView resultado = controladorMateria.guardarMateria(
+      datos,
+      new MultipartFile[] { null },
+      request
+    );
+
+    verify(servicioMateriaMock).crearMateria(any(Materia.class));
+    verifyNoInteractions(servicioMaterialMock);
+    assertEquals("redirect:/materias", resultado.getViewName());
+  }
 }

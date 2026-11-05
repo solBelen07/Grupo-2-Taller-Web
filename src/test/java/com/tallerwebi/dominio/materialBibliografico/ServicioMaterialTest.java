@@ -26,7 +26,7 @@ public class ServicioMaterialTest {
   private static final String CLAVE_R2_VALIDA = "clave-ficticia";
 
   private ServicioMaterial servicioMaterial;
-  private RepositorioMaterial repositorioMaterial;
+  private RepositorioMaterial repositorioMaterialMock;
   private ServicioMateria servicioMateria;
   private AlmacenamientoR2 almacenamientoR2;
   private Materia materiaMock;
@@ -35,14 +35,14 @@ public class ServicioMaterialTest {
 
   @BeforeEach
   public void inicializar() {
-    repositorioMaterial = mock(RepositorioMaterial.class);
+    repositorioMaterialMock = mock(RepositorioMaterial.class);
     servicioMateria = mock(ServicioMateria.class);
     almacenamientoR2 = mock(AlmacenamientoR2.class);
     materiaMock = mock(Materia.class);
     archivoMock = mock(MultipartFile.class);
     materialBibliograficoMock = mock(MaterialBibliografico.class);
     servicioMaterial =
-      new ServicioMaterialImpl(repositorioMaterial, servicioMateria, almacenamientoR2);
+      new ServicioMaterialImpl(repositorioMaterialMock, servicioMateria, almacenamientoR2);
   }
 
   @Test
@@ -115,6 +115,7 @@ public class ServicioMaterialTest {
     dadoQueExisteUnaMateria();
     dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos();
     dadoQueSeAlmacenaEnR2ElArchivo();
+    MultipartFile archivo = mock(MultipartFile.class);
 
     cuandoFallaElRepositorioAlGuardarMaterial();
 
@@ -170,7 +171,7 @@ public class ServicioMaterialTest {
 
     servicioMaterial.obtenerPorMateria(materiaMock.getId());
 
-    verify(repositorioMaterial, times(1)).buscarPorMateria(materiaMock.getId());
+    verify(repositorioMaterialMock, times(1)).buscarPorMateria(materiaMock.getId());
   }
 
   @Test
@@ -200,12 +201,13 @@ public class ServicioMaterialTest {
 
     servicioMaterial.descargarMaterial(materialBibliograficoMock.getId());
 
-    verify(repositorioMaterial, times(1)).buscarPorId(materialBibliograficoMock.getId());
+    verify(repositorioMaterialMock, times(1)).buscarPorId(materialBibliograficoMock.getId());
   }
 
   @Test
   public void descargarMaterialInexistenteDeberiaLanzarExcepcion() {
     dadoQueNoSeEncuentraElArchivoBuscado();
+    when(repositorioMaterialMock.buscarPorId(1)).thenReturn(null);
 
     assertThrows(
       ArchivoNoEncontrado.class,
@@ -218,7 +220,6 @@ public class ServicioMaterialTest {
   @Test
   public void descargarMaterialDeberiaLlamarAlAlmacenamiento() {
     dadoQueSeEncuentraElArchivoBuscado();
-
     servicioMaterial.descargarMaterial(materialBibliograficoMock.getId());
 
     verify(almacenamientoR2, times(1)).descargarArchivo(materialBibliograficoMock.getClaveR2());
@@ -293,7 +294,7 @@ public class ServicioMaterialTest {
   }
 
   private void dadoQueNoSeEncuentraElArchivoBuscado() {
-    when(repositorioMaterial.buscarPorId(anyInt())).thenReturn(null);
+    when(repositorioMaterialMock.buscarPorId(anyInt())).thenReturn(null);
   }
 
   private void dadoQueSeEncuentraElArchivoBuscado() {
@@ -301,7 +302,7 @@ public class ServicioMaterialTest {
     when(materialBibliograficoMock.getClaveR2()).thenReturn(CLAVE_R2_VALIDA);
     when(materialBibliograficoMock.getNombreArchivo()).thenReturn(NOMBRE_ARCHIVO_VALIDO);
     when(materialBibliograficoMock.getTamanio()).thenReturn(TAMANIO_ARCHIVO_PERMITIDO);
-    when(repositorioMaterial.buscarPorId(anyInt())).thenReturn(materialBibliograficoMock);
+    when(repositorioMaterialMock.buscarPorId(anyInt())).thenReturn(materialBibliograficoMock);
   }
 
   private void dadoQueSeAlmacenaEnR2ElArchivo() throws IOException {
@@ -309,18 +310,18 @@ public class ServicioMaterialTest {
   }
 
   private void dadoQueSeEncuentraElArchivoBuscadoPorMateria() {
-    when(repositorioMaterial.buscarPorMateria(anyInt()))
+    when(repositorioMaterialMock.buscarPorMateria(anyInt()))
       .thenReturn(List.of(materialBibliograficoMock));
   }
 
   private void dadoQueNoSeEncuentraElArchivoBuscadoPorMateria() {
-    when(repositorioMaterial.buscarPorMateria(anyInt())).thenReturn(List.of());
+    when(repositorioMaterialMock.buscarPorMateria(anyInt())).thenReturn(List.of());
   }
 
   //CUANDO
   private void cuandoFallaElRepositorioAlGuardarMaterial() {
     doThrow(new RuntimeException("Fallo en BD"))
-      .when(repositorioMaterial)
+      .when(repositorioMaterialMock)
       .guardar(any(MaterialBibliografico.class));
   }
 
@@ -420,7 +421,7 @@ public class ServicioMaterialTest {
     ArgumentCaptor<MaterialBibliografico> captor = ArgumentCaptor.forClass(
       MaterialBibliografico.class
     );
-    verify(repositorioMaterial, times(1)).guardar(captor.capture());
+    verify(repositorioMaterialMock, times(1)).guardar(captor.capture());
 
     MaterialBibliografico materialGuardado = captor.getValue();
     assertEquals(NOMBRE_ARCHIVO_VALIDO, materialGuardado.getNombreArchivo());

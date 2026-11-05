@@ -134,8 +134,8 @@ public class ControladorMateria {
     return new ModelAndView("paginas/materia/materia-detalle", model);
   }
 
-  @RequestMapping(path = "/materias/editar", method = RequestMethod.GET)
-  public ModelAndView editarMateria(@RequestParam("id") Integer id, HttpServletRequest request) {
+  @RequestMapping(path = "/materias/editar/{id}", method = RequestMethod.GET)
+  public ModelAndView editarMateria(@PathVariable("id") Integer id, HttpServletRequest request) {
     Usuario usuario = obtenerUsuarioLogueado(request);
 
     if (usuario == null) {
@@ -293,6 +293,28 @@ public class ControladorMateria {
     servicioMaterial.eliminarMaterial(id);
 
     return new ModelAndView("redirect:/materias/detalle?id=" + materiaId);
+  }
+
+  @PostMapping("/materias/eliminar")
+  public ModelAndView eliminarMateria(
+    @RequestParam("nombre") String nombre,
+    HttpServletRequest request
+  ) {
+    Usuario usuario = obtenerUsuarioLogueado(request);
+
+    if (usuario == null) {
+      return new ModelAndView(REDIRECT_LOGIN);
+    }
+
+    Materia materia = servicioMateria.buscarMateriaPorNombreYUsuario(nombre, usuario.getId());
+
+    if (materia == null) {
+      return new ModelAndView(REDIRECT_MATERIAS);
+    }
+
+    servicioMateria.eliminarMateria(materia.getNombre());
+
+    return new ModelAndView(REDIRECT_MATERIAS);
   }
 
   private Usuario obtenerUsuarioLogueado(HttpServletRequest request) {

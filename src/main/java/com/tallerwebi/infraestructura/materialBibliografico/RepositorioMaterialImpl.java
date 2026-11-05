@@ -43,4 +43,14 @@ public class RepositorioMaterialImpl implements RepositorioMaterial {
   public void eliminar(MaterialBibliografico material) {
     sessionFactory.getCurrentSession().remove(material);
   }
+
+  @Override
+  public void eliminarPorMateria(Integer id) {
+    String hql = "delete from MaterialBibliografico m where m.materia.id = :materiaId";
+    sessionFactory
+      .getCurrentSession()
+      .createQuery(hql)
+      .setParameter("materiaId", id)
+      .executeUpdate();
+  }
 }

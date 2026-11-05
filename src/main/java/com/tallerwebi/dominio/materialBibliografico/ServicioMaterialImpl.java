@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
+@Service("servicioMaterial")
 public class ServicioMaterialImpl implements ServicioMaterial {
 
   private static final long TAMANIO_MAXIMO = 50L * 1024 * 1024;
