@@ -239,6 +239,120 @@ public class ServicioMaterialTest {
     assertEquals(archivoEsperado, archivoDescargado);
   }
 
+  @Test
+  public void deberiaPermitirArchivoDOC() throws IOException {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos();
+    when(archivoMock.getOriginalFilename()).thenReturn("apunte.doc");
+    when(archivoMock.getContentType()).thenReturn("application/msword");
+
+    cuandoSeSubeMaterial();
+
+    entoncesSeGuardaUnArchivoConNombre("apunte.doc");
+  }
+
+  @Test
+  public void deberiaPermitirArchivoDOCX() throws IOException {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos();
+    when(archivoMock.getOriginalFilename()).thenReturn("apunte.docx");
+    when(archivoMock.getContentType())
+      .thenReturn("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+    cuandoSeSubeMaterial();
+
+    entoncesSeGuardaUnArchivoConNombre("apunte.docx");
+  }
+
+  @Test
+  public void deberiaPermitirExtensionEnMayusculasYConservarNombre() throws IOException {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos();
+    when(archivoMock.getOriginalFilename()).thenReturn("APUNTE.PDF");
+
+    cuandoSeSubeMaterial();
+
+    entoncesSeGuardaUnArchivoConNombre("APUNTE.PDF");
+  }
+
+  @Test
+  public void noDeberiaGuardarMaterialSiFallaLaSubidaAR2() throws IOException {
+    dadoQueExisteUnaMateria();
+    dadoQueElArchivoSubidoTieneClaveR2PesoNombreYExtensionValidos();
+    IOException errorEsperado = new IOException("Fallo al subir a R2");
+    when(almacenamientoR2.subirArchivo(archivoMock, materiaMock.getId())).thenThrow(errorEsperado);
+
+    IOException errorObtenido = assertThrows(
+      IOException.class,
+      () -> servicioMaterial.subirMaterial(materiaMock.getId(), archivoMock)
+    );
+
+    org.junit.jupiter.api.Assertions.assertSame(errorEsperado, errorObtenido);
+    verifyNoInteractions(repositorioMaterialMock);
+    verify(almacenamientoR2, never()).eliminarArchivo(anyString());
+  }
+
+  @Test
+  public void eliminarMaterialDeberiaBorrarPrimeroEnR2YLuegoEnRepositorio() {
+    dadoQueSeEncuentraElArchivoBuscado();
+
+    servicioMaterial.eliminarMaterial(materialBibliograficoMock.getId());
+
+    org.mockito.InOrder orden = inOrder(almacenamientoR2, repositorioMaterialMock);
+    orden.verify(almacenamientoR2).eliminarArchivo(CLAVE_R2_VALIDA);
+    orden.verify(repositorioMaterialMock).eliminar(materialBibliograficoMock);
+  }
+
+  @Test
+  public void noDeberiaEliminarDelRepositorioSiFallaElBorradoEnR2() {
+    dadoQueSeEncuentraElArchivoBuscado();
+    cuandoFallaElAlmacenamientoAlEliminarArchivo();
+
+    RuntimeException excepcion = assertThrows(
+      RuntimeException.class,
+      () -> servicioMaterial.eliminarMaterial(materialBibliograficoMock.getId())
+    );
+
+    assertEquals("Fallo al borrar en R2", excepcion.getMessage());
+    verify(repositorioMaterialMock, never()).eliminar(any(MaterialBibliografico.class));
+  }
+
+  @Test
+  public void buscarPorIdDeberiaDevolverNullSiNoExisteMaterial() {
+    dadoQueNoSeEncuentraElArchivoBuscado();
+
+    MaterialBibliografico resultado = servicioMaterial.buscarPorId(1234);
+
+    org.junit.jupiter.api.Assertions.assertNull(resultado);
+    verify(repositorioMaterialMock).buscarPorId(1234);
+    verifyNoInteractions(almacenamientoR2);
+  }
+
+  @Test
+  public void descargarMaterialDeberiaPropagarErrorDeR2() {
+    dadoQueSeEncuentraElArchivoBuscado();
+    RuntimeException errorEsperado = new RuntimeException("Fallo al descargar de R2");
+    when(almacenamientoR2.descargarArchivo(CLAVE_R2_VALIDA)).thenThrow(errorEsperado);
+
+    RuntimeException errorObtenido = assertThrows(
+      RuntimeException.class,
+      () -> servicioMaterial.descargarMaterial(materialBibliograficoMock.getId())
+    );
+
+    org.junit.jupiter.api.Assertions.assertSame(errorEsperado, errorObtenido);
+    verify(repositorioMaterialMock, never()).eliminar(any(MaterialBibliografico.class));
+  }
+
+  private void entoncesSeGuardaUnArchivoConNombre(String nombreEsperado) {
+    ArgumentCaptor<MaterialBibliografico> captor = ArgumentCaptor.forClass(
+      MaterialBibliografico.class
+    );
+    verify(repositorioMaterialMock).guardar(captor.capture());
+    assertEquals(nombreEsperado, captor.getValue().getNombreArchivo());
+    assertEquals(CLAVE_R2_VALIDA, captor.getValue().getClaveR2());
+    org.junit.jupiter.api.Assertions.assertSame(materiaMock, captor.getValue().getMateria());
+  }
+
   //DADO QUE
   private void dadoQueExisteUnaMateria() {
     when(materiaMock.getId()).thenReturn(1234);

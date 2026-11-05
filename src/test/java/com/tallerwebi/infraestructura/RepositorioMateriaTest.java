@@ -196,4 +196,206 @@ public class RepositorioMateriaTest {
 
     assertThat(materiaModificada.getNombre(), is(equalTo(nombreNuevo)));
   }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaLanzarMateriaNoEncontradaAlModificarUnaMateriaInexistente() {
+    Materia materia = dadoQueTengoUnaMateria("Inexistente");
+    materia.setId(-1);
+
+    entoncesSeLanzaUnaMateriaNoEncontrada(materia);
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaBuscarUnaMateriaPorId() {
+    Materia materia = dadoQueTengoUnaMateria("Materia por ID");
+    dadoQueExisteLaMateria(materia);
+    Integer id = materia.getId();
+    prepararLecturaDesdeBaseDeDatos();
+
+    Materia obtenida = repositorioMateria.buscarPorId(id);
+
+    assertThat(obtenida.getId(), is(equalTo(id)));
+    entoncesLaMateriaObtenidaEsCorrecta(obtenida, materia);
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaDevolverNullAlBuscarUnIdInexistente() {
+    entoncesLaMateriaObtenidaEsNull(repositorioMateria.buscarPorId(-1));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaDevolverNullAlBuscarUnNombreInexistente() {
+    entoncesLaMateriaObtenidaEsNull(
+      repositorioMateria.buscarPorNombre("Nombre inexistente de prueba")
+    );
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaObtenerSoloLasMateriasDelUsuario() {
+    Usuario usuario = dadoQueExisteUnUsuarioDePrueba("propietario-lista@test.com");
+    Usuario otro = dadoQueExisteUnUsuarioDePrueba("otro-lista@test.com");
+    Materia propia = dadoQueExisteUnaMateriaDeUsuarios("Propia", usuario);
+    Materia compartida = dadoQueExisteUnaMateriaDeUsuarios("Compartida", usuario, otro);
+    dadoQueExisteUnaMateriaDeUsuarios("Ajena", otro);
+    prepararLecturaDesdeBaseDeDatos();
+
+    List<Materia> obtenidas = repositorioMateria.obtenerPorUsuario(usuario.getId());
+
+    assertThat(obtenidas.size(), is(equalTo(2)));
+    List<Integer> ids = obtenidas.stream().map(Materia::getId).toList();
+    assertThat(ids, hasItem(propia.getId()));
+    assertThat(ids, hasItem(compartida.getId()));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaObtenerListaVaciaParaUsuarioSinMaterias() {
+    Usuario usuario = dadoQueExisteUnUsuarioDePrueba("sin-materias@test.com");
+    Usuario otro = dadoQueExisteUnUsuarioDePrueba("con-materia@test.com");
+    dadoQueExisteUnaMateriaDeUsuarios("Ajena", otro);
+    prepararLecturaDesdeBaseDeDatos();
+
+    assertThat(repositorioMateria.obtenerPorUsuario(usuario.getId()).isEmpty(), is(true));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaBuscarPorNombreYUsuarioIgnorandoMayusculas() {
+    Usuario usuario = dadoQueExisteUnUsuarioDePrueba("nombre-propio@test.com");
+    Usuario otro = dadoQueExisteUnUsuarioDePrueba("nombre-ajeno@test.com");
+    Materia propia = dadoQueExisteUnaMateriaDeUsuarios("Materia Compartida", usuario, otro);
+    dadoQueExisteUnaMateriaDeUsuarios("Materia Compartida", otro);
+    prepararLecturaDesdeBaseDeDatos();
+
+    Materia obtenida = repositorioMateria.buscarPorNombreYUsuario(
+      "MATERIA COMPARTIDA",
+      usuario.getId()
+    );
+
+    assertThat(obtenida.getId(), is(equalTo(propia.getId())));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void noDeberiaEncontrarPorNombreUnaMateriaDeOtroUsuario() {
+    Usuario usuario = dadoQueExisteUnUsuarioDePrueba("consulta-nombre@test.com");
+    Usuario otro = dadoQueExisteUnUsuarioDePrueba("duenio-nombre@test.com");
+    dadoQueExisteUnaMateriaDeUsuarios("Privada", otro);
+    prepararLecturaDesdeBaseDeDatos();
+
+    entoncesLaMateriaObtenidaEsNull(
+      repositorioMateria.buscarPorNombreYUsuario("Privada", usuario.getId())
+    );
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaBuscarPorIdYUsuarioUnaMateriaCompartida() {
+    Usuario usuario = dadoQueExisteUnUsuarioDePrueba("id-propio@test.com");
+    Usuario otro = dadoQueExisteUnUsuarioDePrueba("id-compartido@test.com");
+    Materia materia = dadoQueExisteUnaMateriaDeUsuarios("Compartida por ID", usuario, otro);
+    prepararLecturaDesdeBaseDeDatos();
+
+    Materia obtenida = repositorioMateria.buscarPorIdYUsuario(materia.getId(), usuario.getId());
+
+    assertThat(obtenida.getId(), is(equalTo(materia.getId())));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void noDeberiaEncontrarPorIdUnaMateriaDeOtroUsuario() {
+    Usuario usuario = dadoQueExisteUnUsuarioDePrueba("consulta-id@test.com");
+    Usuario otro = dadoQueExisteUnUsuarioDePrueba("duenio-id@test.com");
+    Materia materia = dadoQueExisteUnaMateriaDeUsuarios("Ajena por ID", otro);
+    prepararLecturaDesdeBaseDeDatos();
+
+    entoncesLaMateriaObtenidaEsNull(
+      repositorioMateria.buscarPorIdYUsuario(materia.getId(), usuario.getId())
+    );
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaContarSoloLasMateriasDelUsuario() {
+    Usuario usuario = dadoQueExisteUnUsuarioDePrueba("conteo-propio@test.com");
+    Usuario otro = dadoQueExisteUnUsuarioDePrueba("conteo-ajeno@test.com");
+    dadoQueExisteUnaMateriaDeUsuarios("Propia para conteo", usuario);
+    dadoQueExisteUnaMateriaDeUsuarios("Compartida para conteo", usuario, otro);
+    dadoQueExisteUnaMateriaDeUsuarios("Ajena para conteo", otro);
+    prepararLecturaDesdeBaseDeDatos();
+
+    Long cantidad = repositorioMateria.obtenerCantidadMateriasPorUsuario(usuario.getId());
+
+    assertThat(cantidad, is(equalTo(2L)));
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaContarCeroParaUsuarioSinMaterias() {
+    Usuario usuario = dadoQueExisteUnUsuarioDePrueba("conteo-vacio@test.com");
+    Usuario otro = dadoQueExisteUnUsuarioDePrueba("conteo-otro@test.com");
+    dadoQueExisteUnaMateriaDeUsuarios("Solo del otro usuario", otro);
+    prepararLecturaDesdeBaseDeDatos();
+
+    assertThat(
+      repositorioMateria.obtenerCantidadMateriasPorUsuario(usuario.getId()),
+      is(equalTo(0L))
+    );
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaModificarUnaMateriaDesvinculadaDeLaSesion() {
+    Materia materia = dadoQueTengoUnaMateria("Antes de modificar");
+    dadoQueExisteLaMateria(materia);
+    Integer id = materia.getId();
+    prepararLecturaDesdeBaseDeDatos();
+    materia.setNombre("Despues de modificar");
+
+    cuandoModificoUnaMateria(materia);
+    prepararLecturaDesdeBaseDeDatos();
+
+    Materia obtenida = sessionFactory.getCurrentSession().find(Materia.class, id);
+    assertThat(obtenida.getNombre(), is(equalTo("Despues de modificar")));
+  }
+
+  private Usuario dadoQueExisteUnUsuarioDePrueba(String email) {
+    Usuario usuario = new Usuario();
+    usuario.setEmail(email);
+    usuario.setPassword("password-prueba");
+    sessionFactory.getCurrentSession().persist(usuario);
+    return usuario;
+  }
+
+  private Materia dadoQueExisteUnaMateriaDeUsuarios(String nombre, Usuario... usuarios) {
+    Materia materia = dadoQueTengoUnaMateria(nombre);
+    for (Usuario usuario : usuarios) {
+      materia.getUsuarios().add(usuario);
+    }
+    dadoQueExisteLaMateria(materia);
+    return materia;
+  }
+
+  private void prepararLecturaDesdeBaseDeDatos() {
+    sessionFactory.getCurrentSession().flush();
+    sessionFactory.getCurrentSession().clear();
+  }
 }
