@@ -1,1 +1,5 @@
 GEMINI_API_KEY=clave-de-api-key-de-gemini
+R2_ACCESS_KEY=clave-de-acceso-de-r2
+R2_SECRET_KEY=clave-secreta-de-r2
+R2_ENDPOINT=https://endpoint-de-r2.com
+R2_BUCKET_NAME=focusflight
