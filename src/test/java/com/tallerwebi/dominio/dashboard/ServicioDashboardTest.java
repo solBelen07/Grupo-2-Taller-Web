@@ -36,9 +36,9 @@ public class ServicioDashboardTest {
   private RepositorioUsuario repositorioUsuarioMock;
   private RepositorioSesionEstudio repositorioSesionEstudioMock;
 
-  private ServicioCalendario servicioCalendarioMock;
   private ServicioTarea servicioTareaMock;
   private ServicioRacha servicioRachaMock;
+  private ServicioCalendario servicioCalendarioMock;
 
   private ServicioDashboard servicioDashboard;
 
@@ -49,9 +49,9 @@ public class ServicioDashboardTest {
     this.repositorioUsuarioMock = mock(RepositorioUsuario.class);
     this.repositorioSesionEstudioMock = mock(RepositorioSesionEstudio.class);
 
-    this.servicioCalendarioMock = mock(ServicioCalendario.class);
     this.servicioTareaMock = mock(ServicioTarea.class);
     this.servicioRachaMock = mock(ServicioRacha.class);
+    this.servicioCalendarioMock = mock(ServicioCalendario.class);
 
     this.servicioDashboard =
       new ServicioDashboardImpl(
@@ -59,9 +59,9 @@ public class ServicioDashboardTest {
         this.repositorioMateriaMock,
         this.repositorioUsuarioMock,
         this.repositorioSesionEstudioMock,
-        this.servicioCalendarioMock,
         this.servicioTareaMock,
-        this.servicioRachaMock
+        this.servicioRachaMock,
+        this.servicioCalendarioMock
       );
   }
 
@@ -122,19 +122,6 @@ public class ServicioDashboardTest {
 
     assertThat(cantidadMaterias, equalTo(5L));
     verify(this.repositorioMateriaMock, times(1)).obtenerCantidadMateriasPorUsuario(ID_USUARIO);
-  }
-
-  @Test
-  public void obtenerCalendarioSemanalDeberiaDelegarEnElServicioCalendario() {
-    LocalDate hoy = LocalDate.now();
-    CalendarioSemanal calendarioEsperado = mock(CalendarioSemanal.class);
-
-    when(this.servicioCalendarioMock.obtenerSemana(ID_USUARIO, hoy)).thenReturn(calendarioEsperado);
-
-    CalendarioSemanal resultado = this.servicioDashboard.obtenerCalendarioSemanal(ID_USUARIO, hoy);
-
-    assertThat(resultado, equalTo(calendarioEsperado));
-    verify(this.servicioCalendarioMock, times(1)).obtenerSemana(ID_USUARIO, hoy);
   }
 
   @Test

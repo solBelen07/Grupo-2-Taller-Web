@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Resumidor IA - FocusFlight</title>
+    <title>Resumidor IA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/main.css}">
@@ -89,6 +89,13 @@
             </div>
         </div>
 
+        <div th:if="${reutilizado == true}">
+            <div class="alert alert-info border-0 bg-info bg-opacity-25 text-info rounded mb-4 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-piggy-bank"></i>
+                <span>Este texto ya estaba en tu historial: te mostramos el resumen guardado.</span>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-lg-7 mb-4">
                 <div class="tp-form-card card-custom p-4 shadow-sm h-100">
@@ -100,7 +107,7 @@
                         <div class="mb-4 flex-grow-1">
                             <label for="pregunta" class="form-label text-light mb-2 d-none">Texto a resumir:</label>
                             <textarea class="form-control input-custom w-100 h-100" id="pregunta" th:field="*{pregunta}" style="min-height: 250px;"
-                                      required placeholder="Pegá acá el texto largo, apunte o artículo que necesites resumir..."></textarea>
+                                      required maxlength="15000" placeholder="Pegá acá el texto largo, apunte o artículo que necesites resumir..."></textarea>
                         </div>
 
                         <div class="d-flex justify-content-end mt-auto">
@@ -119,7 +126,7 @@
                         <i class="fa-solid fa-robot"></i>
                     </div>
                     <h6 class="text-light fw-bold">Esperando texto...</h6>
-                    <p class="text-muted small mb-0">Pegá un texto en el cuadro de la izquierda y presioná el botón para que Gemini lo resuma.</p>
+                    <p class="text-muted small mb-0">Pegá un texto en el cuadro de la izquierda y presioná el botón para que la IA lo resuma.</p>
                 </div>
                 <div class="tp-form-card card-custom card-respuesta p-4 shadow-sm h-100 d-flex flex-column"
                      th:if="${datosGemini.respuesta != null}">
@@ -128,13 +135,37 @@
                     </h5>
 
                     <div class="flex-grow-1 overflow-auto pe-2" style="max-height: 400px;">
-                        <p class="text-light opacity-75 fs-6" style="white-space: pre-wrap; line-height: 1.6;" th:text="${datosGemini.respuesta}"></p>
+                        <div id="resumen-generado" class="contenido-markdown text-light opacity-75 fs-6" th:utext="${datosGemini.respuesta}"></div>
                     </div>
 
                     <div class="mt-4 pt-3 border-top" style="border-color: #2a253c !important;">
-                        <button class="btn btn-outline-secondary w-100 border-0 text-muted bg-dark bg-opacity-25" onclick="navigator.clipboard.writeText(document.querySelector('.card-respuesta p').innerText);">
+                        <button class="btn btn-outline-secondary w-100 border-0 text-muted bg-dark bg-opacity-25" onclick="navigator.clipboard.writeText(document.getElementById('resumen-generado').innerText);">
                             <i class="fa-regular fa-copy me-2"></i> Copiar resumen
                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 mb-4">
+                <div class="tp-form-card card-custom p-4 shadow-sm">
+                    <h5 class="fw-bold text-light border-bottom border-secondary pb-3 mb-4" style="border-color: #2a253c !important;">
+                        <i class="fa-solid fa-clock-rotate-left me-2 text-muted"></i> Historial de resúmenes
+                    </h5>
+
+                    <p class="text-muted small mb-0" th:if="${#lists.isEmpty(historial)}">
+                        Todavía no generaste resúmenes.
+                    </p>
+
+                    <div class="list-group list-group-flush" th:unless="${#lists.isEmpty(historial)}">
+                        <a th:each="item : ${historial}" th:href="@{/resumen/{id}(id=${item.id})}"
+                           class="list-group-item list-group-item-action bg-transparent text-light border-secondary d-flex justify-content-between align-items-start gap-3">
+                            <span>
+                                <span class="d-block" th:text="${item.vistaPrevia}">Vista previa del texto</span>
+                                <small class="text-muted" th:text="${item.fecha}">01/01/2026 10:00</small>
+                            </span>
+                        </a>
                     </div>
                 </div>
             </div>

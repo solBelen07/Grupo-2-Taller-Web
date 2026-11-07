@@ -1,10 +1,12 @@
 package com.tallerwebi.presentacion.dashboard;
 
+import com.tallerwebi.dominio.ServicioCalendario;
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.calendario.CalendarioSemanal;
 import com.tallerwebi.dominio.dashboard.ServicioDashboard;
 import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
+import com.tallerwebi.dominio.tarea.ServicioTarea;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -26,11 +28,17 @@ public class ControladorDashboard {
 
   private final ServicioDashboard servicioDashboard;
   private final ServicioRacha servicioRacha;
+  private final ServicioTarea servicioTarea;
 
   @Autowired
-  public ControladorDashboard(ServicioDashboard servicioDashboard, ServicioRacha servicioRacha) {
+  public ControladorDashboard(
+    ServicioDashboard servicioDashboard,
+    ServicioRacha servicioRacha,
+    ServicioTarea servicioTarea
+  ) {
     this.servicioDashboard = servicioDashboard;
     this.servicioRacha = servicioRacha;
+    this.servicioTarea = servicioTarea;
   }
 
   @RequestMapping("/dashboard")
