@@ -157,6 +157,7 @@ botonGenerar.addEventListener("click", async function () {
       datos = JSON.parse(texto);
     } catch (error) {
       throw new Error(texto || "No se pudo procesar la respuesta.");
+      console.error(error);
     }
 
     if (!respuestaHttp.ok) {
@@ -172,7 +173,7 @@ botonGenerar.addEventListener("click", async function () {
   } finally {
     botonGenerar.disabled = false;
     botonGenerar.innerHTML =
-      '<i class="fa-solid fa-wand-magic-sparkles me-2"></i> Generar ejercicios';
+      "<i class='fa-solid fa-wand-magic-sparkles me-2'></i> Generar ejercicios";
   }
 });
 
@@ -232,7 +233,7 @@ botonCorregir.addEventListener("click", async function () {
   for (let i = 0; i < preguntas.length; i++) {
 
     const seleccionada = preguntasEjercicios.querySelector(
-      'input[name="respuesta-' + i + '"]:checked'
+      "input[name='respuesta-" + i + "']:checked"
     );
 
     if (!seleccionada) {
@@ -265,6 +266,7 @@ botonCorregir.addEventListener("click", async function () {
       datos = JSON.parse(texto);
     } catch (error) {
       throw new Error(texto || "No se pudo procesar la corrección.");
+      console.error(error);
     }
 
     if (!respuestaHttp.ok) {
