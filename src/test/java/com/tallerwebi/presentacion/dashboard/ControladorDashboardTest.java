@@ -25,6 +25,8 @@ import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
 import com.tallerwebi.dominio.tarea.ServicioTarea;
 import com.tallerwebi.presentacion.dashboard.DashboardDTO;
 import java.time.LocalDate;
+import java.time.LocalTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpSession;
@@ -77,6 +79,7 @@ public class ControladorDashboardTest {
     when(this.servicioDashboardMock.porcentajeCumplimiento(ID_USUARIO)).thenReturn(85.0);
     when(this.servicioDashboardMock.obtenerCantidadMaterias(ID_USUARIO)).thenReturn(6L);
     when(this.servicioDashboardMock.obtenerProximaSesion(ID_USUARIO)).thenReturn(sesionMock);
+    when(this.servicioDashboardMock.obtenerCalendarioSemanal(ID_USUARIO, LocalDate.now())).thenReturn(calendarioMock);
 
     this.mockMvc.perform(get("/dashboard").session(session))
       .andExpect(status().isOk())
