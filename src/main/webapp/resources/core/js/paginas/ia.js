@@ -156,8 +156,8 @@ botonGenerar.addEventListener("click", async function () {
     try {
       datos = JSON.parse(texto);
     } catch (error) {
-      throw new Error(texto || "No se pudo procesar la respuesta.");
-      console.error(error);
+        console.error(error);
+        throw new Error(texto || "No se pudo procesar la respuesta.");
     }
 
     if (!respuestaHttp.ok) {
@@ -265,8 +265,8 @@ botonCorregir.addEventListener("click", async function () {
     try {
       datos = JSON.parse(texto);
     } catch (error) {
-      throw new Error(texto || "No se pudo procesar la corrección.");
-      console.error(error);
+        console.error(error);
+        throw new Error(texto || "No se pudo procesar la corrección.");
     }
 
     if (!respuestaHttp.ok) {
