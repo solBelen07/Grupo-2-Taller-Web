@@ -26,26 +26,26 @@ public class ServicioDashboardImpl implements ServicioDashboard {
   private final RepositorioUsuario repositorioUsuario;
   private final RepositorioSesionEstudio repositorioSesionEstudio;
 
-  private final ServicioCalendario servicioCalendario;
   private final ServicioTarea servicioTarea;
   private final ServicioRacha servicioRacha;
+  private final ServicioCalendario servicioCalendario;
 
   public ServicioDashboardImpl(
     RepositorioPomodoro repositorioPomodoro,
     RepositorioMateria repositorioMateria,
     RepositorioUsuario repositorioUsuario,
     RepositorioSesionEstudio repositorioSesionEstudio,
-    ServicioCalendario servicioCalendario,
     ServicioTarea servicioTarea,
-    ServicioRacha servicioRacha
+    ServicioRacha servicioRacha,
+    ServicioCalendario servicioCalendario
   ) {
     this.repositorioPomodoro = repositorioPomodoro;
     this.repositorioMateria = repositorioMateria;
     this.repositorioUsuario = repositorioUsuario;
     this.repositorioSesionEstudio = repositorioSesionEstudio;
-    this.servicioCalendario = servicioCalendario;
     this.servicioTarea = servicioTarea;
     this.servicioRacha = servicioRacha;
+    this.servicioCalendario = servicioCalendario;
   }
 
   @Override
@@ -75,13 +75,13 @@ public class ServicioDashboardImpl implements ServicioDashboard {
   }
 
   @Override
-  public Long obtenerCantidadMaterias(Long idUsuario) {
-    return this.repositorioMateria.obtenerCantidadMateriasPorUsuario(idUsuario);
+  public CalendarioSemanal obtenerCalendarioSemanal(Long idUsuario, LocalDate referencia) {
+    return this.servicioCalendario.obtenerSemana(idUsuario, referencia);
   }
 
   @Override
-  public CalendarioSemanal obtenerCalendarioSemanal(Long idUsuario, LocalDate referencia) {
-    return this.servicioCalendario.obtenerSemana(idUsuario, referencia);
+  public Long obtenerCantidadMaterias(Long idUsuario) {
+    return this.repositorioMateria.obtenerCantidadMateriasPorUsuario(idUsuario);
   }
 
   @Override

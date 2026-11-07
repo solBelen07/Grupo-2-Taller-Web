@@ -2,6 +2,11 @@ package com.tallerwebi.dominio.gemini;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tallerwebi.dominio.gemini.errores.ErroresGemini;
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +27,10 @@ public class ServicioGeminiImpl implements ServicioGemini {
 
   private final String url =
     "https://generativelanguage.googleapis.com/v1beta/models/" + modelo + ":generateContent";
+
+  private static final DataHolder OPCIONES = crearOpcionesMarkdown();
+  private final Parser parser = Parser.builder(OPCIONES).build();
+  private final HtmlRenderer renderer = HtmlRenderer.builder(OPCIONES).build();
 
   @Autowired
   public ServicioGeminiImpl(@Value("${GEMINI_API_KEY}") String apiKey) {
@@ -45,7 +54,7 @@ public class ServicioGeminiImpl implements ServicioGemini {
             List.of(
               Map.of(
                 "text",
-                "Quiero que hagas un resumen breve del siguiente fragmento de texto sin bloques Markdown, marcando en items los temas principales:" +
+                "Quiero que hagas un resumen breve del siguiente fragmento de texto, marcando en items los temas principales:" +
                 pregunta
               )
             )
@@ -61,9 +70,9 @@ public class ServicioGeminiImpl implements ServicioGemini {
       HttpEntity<String> request = new HttpEntity<>(body, headers);
       String json = restTemplate.postForObject(url, request, String.class);
 
-      return extraerRespuesta(json);
+      return convertirMarkdownAHtml(extraerRespuesta(json));
     } catch (Exception e) {
-      return "Error al armar la petición: " + e.getMessage();
+      return ErroresGemini.ERROR_AL_ARMAR_LA_PETICION + e.getMessage();
     }
   }
 
@@ -124,7 +133,7 @@ public class ServicioGeminiImpl implements ServicioGemini {
 
       return extraerRespuesta(json);
     } catch (Exception e) {
-      return "Error al generar ejercicios: " + e.getMessage();
+      return ErroresGemini.ERROR_PROCESANDO_RESPUESTA + e.getMessage();
     }
   }
 
@@ -148,5 +157,16 @@ public class ServicioGeminiImpl implements ServicioGemini {
     } catch (Exception e) {
       return "Error procesando respuesta de Gemini: " + e.getMessage();
     }
+  }
+
+  private String convertirMarkdownAHtml(String texto) {
+    if (texto == null || texto.isEmpty()) return "";
+    return renderer.render(parser.parse(texto));
+  }
+
+  private static DataHolder crearOpcionesMarkdown() {
+    MutableDataSet opciones = new MutableDataSet();
+    opciones.set(HtmlRenderer.ESCAPE_HTML, true);
+    return opciones;
   }
 }

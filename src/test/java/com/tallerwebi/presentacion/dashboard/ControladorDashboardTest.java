@@ -22,8 +22,11 @@ import com.tallerwebi.dominio.calendario.CalendarioSemanal;
 import com.tallerwebi.dominio.dashboard.ServicioDashboard;
 import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
+import com.tallerwebi.dominio.tarea.ServicioTarea;
 import com.tallerwebi.presentacion.dashboard.DashboardDTO;
 import java.time.LocalDate;
+import java.time.LocalTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpSession;
@@ -37,16 +40,19 @@ public class ControladorDashboardTest {
 
   private ServicioDashboard servicioDashboardMock;
   private ServicioRacha servicioRachaMock;
+  private ServicioTarea servicioTareaMock;
   private MockMvc mockMvc;
 
   @BeforeEach
   public void init() {
     this.servicioDashboardMock = mock(ServicioDashboard.class);
     this.servicioRachaMock = mock(ServicioRacha.class);
+    this.servicioTareaMock = mock(ServicioTarea.class);
 
     ControladorDashboard controlador = new ControladorDashboard(
       this.servicioDashboardMock,
-      this.servicioRachaMock
+      this.servicioRachaMock,
+      this.servicioTareaMock
     );
     this.mockMvc = MockMvcBuilders.standaloneSetup(controlador).build();
   }
@@ -72,9 +78,8 @@ public class ControladorDashboardTest {
     when(this.servicioDashboardMock.obtenerHorasEstudio(ID_USUARIO)).thenReturn(2L);
     when(this.servicioDashboardMock.porcentajeCumplimiento(ID_USUARIO)).thenReturn(85.0);
     when(this.servicioDashboardMock.obtenerCantidadMaterias(ID_USUARIO)).thenReturn(6L);
-    when(this.servicioDashboardMock.obtenerCalendarioSemanal(eq(ID_USUARIO), any(LocalDate.class)))
-      .thenReturn(calendarioMock);
     when(this.servicioDashboardMock.obtenerProximaSesion(ID_USUARIO)).thenReturn(sesionMock);
+    when(this.servicioDashboardMock.obtenerCalendarioSemanal(ID_USUARIO, LocalDate.now())).thenReturn(calendarioMock);
 
     this.mockMvc.perform(get("/dashboard").session(session))
       .andExpect(status().isOk())
@@ -94,8 +99,6 @@ public class ControladorDashboardTest {
     verify(this.servicioDashboardMock, times(1)).obtenerHorasEstudio(ID_USUARIO);
     verify(this.servicioDashboardMock, times(1)).porcentajeCumplimiento(ID_USUARIO);
     verify(this.servicioDashboardMock, times(1)).obtenerCantidadMaterias(ID_USUARIO);
-    verify(this.servicioDashboardMock, times(1))
-      .obtenerCalendarioSemanal(eq(ID_USUARIO), any(LocalDate.class));
     verify(this.servicioDashboardMock, times(1)).obtenerProximaSesion(ID_USUARIO);
   }
 
