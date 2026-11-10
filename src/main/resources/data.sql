@@ -55,6 +55,26 @@ INSERT INTO Parcial
 VALUES
     (null, 'Evaluación de Interfaces', (SELECT id FROM Materia WHERE nombre = 'Visualización e Interfaces'), '2026-10-30', '14:00:00', 3, 2);
 
+-- Vencimientos de muestra para el dashboard.
+INSERT INTO Parcial
+(id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
+VALUES
+    (null, 'Segundo Parcial de Interfaces', (SELECT id FROM Materia WHERE nombre = 'Visualización e Interfaces'),
+     '2026-11-27', '14:00:00', 3, 2);
+
+INSERT INTO TrabajoPractico
+(id, nombre, materia, descripcion, fechaEntrega, tipo, estado)
+VALUES
+    (null, 'TP Integrador de Normalización', 'Base de Datos II',
+     'Normalizar el modelo de datos hasta tercera forma normal.',
+     '2026-11-24', 'INDIVIDUAL', 'EN_CURSO');
+
+INSERT INTO Parcial
+(id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
+VALUES
+    (null, 'Sprint 6', (SELECT id FROM Materia WHERE nombre = 'Taller Web I'),
+     '2026-11-19', '21:30:00', 2, 2);
+
 INSERT INTO SesionEstudio
 (id, tema, fecha, cantidadHoras, completada, parcial_id)
 VALUES

@@ -1,7 +1,10 @@
 package com.tallerwebi.presentacion.dashboard;
 
 import com.tallerwebi.dominio.calendario.CalendarioSemanal;
+import com.tallerwebi.dominio.calendario.EventoConEstado;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardDTO {
 
@@ -12,6 +15,7 @@ public class DashboardDTO {
   private SesionEstudio proximaSesion;
   private Integer racha;
   private Integer recordRacha;
+  private List<EventoConEstado> proximosVencimientos = new ArrayList<>();
 
   public DashboardDTO(
     Long horasEstudio,
@@ -85,5 +89,13 @@ public class DashboardDTO {
 
   public void setRecordRacha(Integer recordRacha) {
     this.recordRacha = recordRacha;
+  }
+
+  public List<EventoConEstado> getProximosVencimientos() {
+    return proximosVencimientos;
+  }
+
+  public void setProximosVencimientos(List<EventoConEstado> proximosVencimientos) {
+    this.proximosVencimientos = proximosVencimientos;
   }
 }
