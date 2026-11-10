@@ -22,6 +22,7 @@ import com.tallerwebi.dominio.tecnicasestudio.Estado;
 import com.tallerwebi.dominio.tecnicasestudio.PlanDeVuelo;
 import com.tallerwebi.dominio.tecnicasestudio.Pomodoro;
 import com.tallerwebi.dominio.tecnicasestudio.ServicioPomodoro;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -200,6 +201,8 @@ public class ControladorPomodoroTest {
     Materia materia = new Materia();
     materia.setNombre("Taller Web I");
     Pomodoro registrada = this.crearPomodoro(Estado.EN_CURSO);
+    LocalDateTime inicio = LocalDateTime.of(2026, 11, 10, 12, 0);
+    registrada.setFechaInicio(inicio);
 
     when(this.servicioMateriaMock.buscarMateriaPorId(3)).thenReturn(materia);
     when(
@@ -226,7 +229,8 @@ public class ControladorPomodoroTest {
       .andExpect(status().isOk())
       .andExpect(view().name("paginas/tecnicasestudio/boleto"))
       .andExpect(model().attribute("materia", sameInstance(materia)))
-      .andExpect(model().attribute("pomodoroId", ID_SESION));
+      .andExpect(model().attribute("pomodoroId", ID_SESION))
+      .andExpect(model().attribute("horaEmbarque", inicio));
 
     verify(this.servicioPomodoroMock, times(1))
       .registrarSesionEstudio(any(), any(), eq(25), any(), any(), any());

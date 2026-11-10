@@ -33,7 +33,8 @@
                 </div>
                 <div class="ticket-meta">
                     <span class="meta-label">PASE DE ABORDAR</span>
-                    <span class="meta-value">VUELO #FF-0047</span>
+                    <span class="meta-value"
+                          th:text="${pomodoroId != null ? 'VUELO #FF-' + #numbers.formatInteger(pomodoroId, 4) : 'VUELO #FF-0000'}">VUELO #FF-0000</span>
                 </div>
             </div>
 
@@ -78,7 +79,7 @@
                 </div>
                 <div class="info-item">
                     <span class="label">EMBARQUE</span>
-                    <span class="value">19:30</span>
+                    <span class="value" th:text="${horaEmbarque != null ? #temporals.format(horaEmbarque, 'HH:mm') : '--:--'}">--:--</span>
                 </div>
                 <div class="info-item">
                     <span class="label">MATERIA</span>
@@ -99,7 +100,8 @@
                 </div>
                 <div class="barcode-container">
                     <div class="barcode"></div>
-                    <span class="barcode-text">FF0047-25M-14A</span>
+                    <span class="barcode-text"
+                          th:text="${pomodoroId != null ? 'FF' + #numbers.formatInteger(pomodoroId, 4) + '-' + datosPomodoro.duracion + 'M-14A' : 'FF0000-14A'}">FF0000-14A</span>
                 </div>
             </div>
 
