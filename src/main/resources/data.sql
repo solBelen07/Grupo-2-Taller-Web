@@ -439,6 +439,12 @@ VALUES (null, 'PENDIENTE', true,
         (SELECT id FROM Usuario WHERE email = 'user@test.com'),
         (SELECT id FROM Usuario WHERE email = 'user6@test.com'),
         (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
+-- Juan (test@unlam.edu.ar) es integrante (no admin) de grupo3: aceptó la invitación.
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'ACEPTADA', false,
+        (SELECT id FROM Usuario WHERE email = 'user@test.com'),
+        (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
 INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
 VALUES (null, 'ACEPTADA', false,
         (SELECT id FROM Usuario WHERE email = 'user1@test.com'),
