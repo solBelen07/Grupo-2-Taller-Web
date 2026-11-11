@@ -221,3 +221,17 @@
     gap: 10px;
     margin-top: 8px;
 }
+
+.tp-btn-mini.avanzar {
+    border-color: var(--accent-purple);
+    color: #d8b4fe;
+}
+
+.tp-btn-mini.avanzar:hover {
+    background-color: var(--accent-purple);
+    color: #fff;
+}
+
+.tp-acciones {
+    flex-wrap: wrap;
+}

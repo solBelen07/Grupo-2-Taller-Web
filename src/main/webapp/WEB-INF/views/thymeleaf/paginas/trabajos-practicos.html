@@ -32,9 +32,8 @@
         <form th:action="@{/trabajos-practicos}" method="GET" class="tp-filtro">
             <select name="materia">
                 <option value="">Todas las materias</option>
-                <option value="Taller Web" th:selected="${materiaBuscada == 'Taller Web'}">Taller Web</option>
-                <option value="Programación Web" th:selected="${materiaBuscada == 'Programación Web'}">Programación Web</option>
-                <option value="Base de Datos" th:selected="${materiaBuscada == 'Base de Datos'}">Base de Datos</option>
+                <option th:each="m : ${materias}" th:value="${m}" th:text="${m}"
+                        th:selected="${materiaBuscada == m}"></option>
             </select>
             <button type="submit" class="tp-btn-sec">Filtrar</button>
             <a th:href="@{/trabajos-practicos}" class="tp-btn-sec">Mostrar todos</a>
@@ -60,6 +59,9 @@
                     <p class="tp-materia" th:text="${tp.materia}">Materia</p>
                     <span class="tp-etiqueta" th:text="${tp.tipo}">TIPO</span>
                     <div class="tp-acciones">
+                        <form th:action="@{/trabajos-practicos/avanzar/{id}(id=${tp.id})}" method="POST">
+                            <button type="submit" class="tp-btn-mini avanzar">Pasar a En curso &rarr;</button>
+                        </form>
                         <a th:href="@{/trabajos-practicos/editar/{id}(id=${tp.id})}" class="tp-btn-mini">Editar</a>
                         <form th:action="@{/trabajos-practicos/eliminar/{id}(id=${tp.id})}" method="POST"
                               onsubmit="return confirm('¿Estás seguro de eliminar este trabajo práctico?');">
@@ -86,6 +88,9 @@
                     <p class="tp-materia" th:text="${tp.materia}">Materia</p>
                     <span class="tp-etiqueta" th:text="${tp.tipo}">TIPO</span>
                     <div class="tp-acciones">
+                        <form th:action="@{/trabajos-practicos/avanzar/{id}(id=${tp.id})}" method="POST">
+                            <button type="submit" class="tp-btn-mini avanzar">Pasar a Finalizado &rarr;</button>
+                        </form>
                         <a th:href="@{/trabajos-practicos/editar/{id}(id=${tp.id})}" class="tp-btn-mini">Editar</a>
                         <form th:action="@{/trabajos-practicos/eliminar/{id}(id=${tp.id})}" method="POST"
                               onsubmit="return confirm('¿Estás seguro de eliminar este trabajo práctico?');">

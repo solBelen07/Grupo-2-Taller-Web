@@ -56,4 +56,18 @@ public class ServicioTrabajoPracticoImpl implements ServicioTrabajoPractico {
     }
     repositorioTrabajoPractico.eliminar(tp);
   }
+
+  @Override
+  public TrabajoPractico avanzarEstado(Long id) {
+    TrabajoPractico trabajoPractico = repositorioTrabajoPractico.buscarPorId(id);
+    if (trabajoPractico == null) {
+      throw new RuntimeException("Trabajo práctico no encontrado");
+    }
+    if (trabajoPractico.getEstado() == EstadoTP.PENDIENTE) {
+      trabajoPractico.setEstado(EstadoTP.EN_CURSO);
+    } else if (trabajoPractico.getEstado() == EstadoTP.EN_CURSO) {
+      trabajoPractico.setEstado(EstadoTP.FINALIZADO);
+    }
+    return trabajoPractico;
+  }
 }

@@ -38,9 +38,7 @@
                 <label for="materia">Materia</label>
                 <select id="materia" th:field="*{materia}" required>
                     <option value="">Seleccioná una materia</option>
-                    <option value="Taller Web">Taller Web</option>
-                    <option value="Programación Web">Programación Web</option>
-                    <option value="Base de Datos">Base de Datos</option>
+                    <option th:each="m : ${materias}" th:value="${m}" th:text="${m}"></option>
                 </select>
             </div>
 
