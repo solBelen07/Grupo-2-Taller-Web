@@ -43,51 +43,61 @@ VALUES
 INSERT INTO Parcial
 (id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
 VALUES
-    (null, 'Primer Parcial', (SELECT id FROM Materia WHERE nombre = 'Taller Web I'), '2026-10-15', '18:00:00', 4, 2);
+    (null, 'Segundo Parcial de Base de Datos II', (SELECT id FROM Materia WHERE nombre = 'Base de Datos II'), '2026-12-03', '16:00:00', 5, 3);
+
+-- Vencimientos de muestra para el dashboard.
+INSERT INTO Parcial
+(id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
+VALUES
+    (null, 'Segundo Parcial de Interfaces', (SELECT id FROM Materia WHERE nombre = 'Visualización e Interfaces'),
+     '2026-11-27', '14:00:00', 3, 2);
+
+INSERT INTO TrabajoPractico
+(id, nombre, materia, descripcion, fechaEntrega, tipo, estado)
+VALUES
+    (null, 'TP Integrador de Normalización', 'Base de Datos II',
+     'Normalizar el modelo de datos hasta tercera forma normal.',
+     '2026-11-24', 'INDIVIDUAL', 'EN_CURSO');
 
 INSERT INTO Parcial
 (id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
 VALUES
-    (null, 'Parcial SQL y Normalización', (SELECT id FROM Materia WHERE nombre = 'Base de Datos II'), '2026-10-22', '16:00:00', 5, 3);
-
-INSERT INTO Parcial
-(id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
-VALUES
-    (null, 'Evaluación de Interfaces', (SELECT id FROM Materia WHERE nombre = 'Visualización e Interfaces'), '2026-10-30', '14:00:00', 3, 2);
+    (null, 'Sprint 6', (SELECT id FROM Materia WHERE nombre = 'Taller Web I'),
+     '2026-11-19', '21:30:00', 4, 2);
 
 INSERT INTO SesionEstudio
 (id, tema, fecha, cantidadHoras, completada, parcial_id)
 VALUES
-    (null, 'Spring MVC', '2026-10-11', 2, true,
+    (null, 'Terminar los tests de punta a punta', '2026-10-11', 2, true,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Primer Parcial'));
+         WHERE nombre = 'Sprint 6'));
 
 INSERT INTO SesionEstudio
 (id, tema, fecha, cantidadHoras, completada, parcial_id)
 VALUES
-    (null, 'Hibernate y persistencia', '2026-10-12', 2, true,
+    (null, 'Corregir errores', '2026-10-12', 2, true,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Primer Parcial'
+         WHERE nombre = 'Sprint 6'
      ));
 
 INSERT INTO SesionEstudio
 (id, tema, fecha, cantidadHoras, completada, parcial_id)
 VALUES
-    (null, 'Controladores y servicios', '2026-10-13', 2, false,
+    (null, 'Preparar la demo', '2026-11-16', 2, false,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Primer Parcial'
+         WHERE nombre = 'Sprint 6'
      ));
 
 INSERT INTO SesionEstudio
 (id, tema, fecha, cantidadHoras, completada, parcial_id)
 VALUES
-    (null, 'Thymeleaf', '2026-10-14', 2, false,
+    (null, 'Ensayar la presentación', '2026-11-17', 2, false,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Primer Parcial'
+         WHERE nombre = 'Sprint 6'
      ));
 
 INSERT INTO SesionEstudio
@@ -96,7 +106,7 @@ VALUES
     (null, 'Modelo entidad relación', '2026-10-17', 3, true,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Parcial SQL y Normalización'
+         WHERE nombre = 'Segundo Parcial de Base de Datos II'
      ));
 
 INSERT INTO SesionEstudio
@@ -105,7 +115,7 @@ VALUES
     (null, 'Normalización', '2026-10-18', 3, true,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Parcial SQL y Normalización'
+         WHERE nombre = 'Segundo Parcial de Base de Datos II'
      ));
 
 INSERT INTO SesionEstudio
@@ -114,52 +124,52 @@ VALUES
     (null, 'Consultas SQL', '2026-10-19', 3, true,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Parcial SQL y Normalización'
+         WHERE nombre = 'Segundo Parcial de Base de Datos II'
      ));
 
 INSERT INTO SesionEstudio
 (id, tema, fecha, cantidadHoras, completada, parcial_id)
 VALUES
-    (null, 'JOIN y subconsultas', '2026-10-20', 3, false,
+    (null, 'JOIN y subconsultas', '2026-11-30', 3, false,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Parcial SQL y Normalización'
+         WHERE nombre = 'Segundo Parcial de Base de Datos II'
      ));
 
 INSERT INTO SesionEstudio
 (id, tema, fecha, cantidadHoras, completada, parcial_id)
 VALUES
-    (null, 'Procedimientos y triggers', '2026-10-21', 3, false,
+    (null, 'Procedimientos y triggers', '2026-12-02', 3, false,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Parcial SQL y Normalización'
+         WHERE nombre = 'Segundo Parcial de Base de Datos II'
      ));
 
 INSERT INTO SesionEstudio
 (id, tema, fecha, cantidadHoras, completada, parcial_id)
 VALUES
-    (null, 'Principios de diseño visual', '2026-10-27', 2, false,
+    (null, 'Principios de diseño visual', '2026-11-23', 2, false,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Evaluación de Interfaces'
+         WHERE nombre = 'Segundo Parcial de Interfaces'
      ));
 
 INSERT INTO SesionEstudio
 (id, tema, fecha, cantidadHoras, completada, parcial_id)
 VALUES
-    (null, 'Wireframes y prototipos', '2026-10-28', 2, false,
+    (null, 'Wireframes y prototipos', '2026-11-24', 2, false,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Evaluación de Interfaces'
+         WHERE nombre = 'Segundo Parcial de Interfaces'
      ));
 
 INSERT INTO SesionEstudio
 (id, tema, fecha, cantidadHoras, completada, parcial_id)
 VALUES
-    (null, 'Usabilidad y experiencia de usuario', '2026-10-29', 2, false,
+    (null, 'Usabilidad y experiencia de usuario', '2026-11-26', 2, false,
      (   SELECT id
          FROM Parcial
-         WHERE nombre = 'Evaluación de Interfaces'
+         WHERE nombre = 'Segundo Parcial de Interfaces'
      ));
 
 -- =====================================================================
@@ -330,7 +340,6 @@ VALUES
 
 INSERT INTO Logro(id, nombre, descripcion)
 VALUES (null,'Maratonista','Estudiaste más de 50 horas'),
-       (null,'Invitador','Fuiste invitado muchas veces a grupos'),
        (null,'Popular','Fuiste invitado muchas veces a grupos'),
        -- Más logros, que se pueden ganar usando la app
        (null, 'Primeros pasos', 'Cargaste tu primera materia'),
@@ -418,6 +427,12 @@ INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
 VALUES (null, 'PENDIENTE', true,
         (SELECT id FROM Usuario WHERE email = 'user@test.com'),
         (SELECT id FROM Usuario WHERE email = 'user6@test.com'),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
+-- Juan (test@unlam.edu.ar) es integrante (no admin) de grupo3: aceptó la invitación.
+INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
+VALUES (null, 'ACEPTADA', false,
+        (SELECT id FROM Usuario WHERE email = 'user@test.com'),
+        (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar'),
         (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
 INSERT INTO Invitacion (id, estado, vigente, emisor_id, receptor_id, grupo_id)
 VALUES (null, 'ACEPTADA', false,

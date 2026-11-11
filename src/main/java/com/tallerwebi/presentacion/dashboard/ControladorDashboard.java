@@ -5,14 +5,15 @@ import com.tallerwebi.dominio.calendario.CalendarioSemanal;
 import com.tallerwebi.dominio.dashboard.ServicioDashboard;
 import com.tallerwebi.dominio.racha.ServicioRacha;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
+import com.tallerwebi.dominio.tarea.ServicioTarea;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,11 +27,17 @@ public class ControladorDashboard {
 
   private final ServicioDashboard servicioDashboard;
   private final ServicioRacha servicioRacha;
+  private final ServicioTarea servicioTarea;
 
   @Autowired
-  public ControladorDashboard(ServicioDashboard servicioDashboard, ServicioRacha servicioRacha) {
+  public ControladorDashboard(
+    ServicioDashboard servicioDashboard,
+    ServicioRacha servicioRacha,
+    ServicioTarea servicioTarea
+  ) {
     this.servicioDashboard = servicioDashboard;
     this.servicioRacha = servicioRacha;
+    this.servicioTarea = servicioTarea;
   }
 
   @RequestMapping("/dashboard")
@@ -68,6 +75,9 @@ public class ControladorDashboard {
       proximaSesion,
       racha,
       recordRacha
+    );
+    dashboardDTO.setProximosVencimientos(
+      servicioDashboard.obtenerProximosVencimientos(idUsuario, LocalDateTime.now())
     );
 
     modelo.put("dashboardData", dashboardDTO);

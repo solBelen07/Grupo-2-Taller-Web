@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -46,11 +47,22 @@ public class ControladorGrupo {
 
     Map<String, Object> modelo = new ModelMap();
     try {
-      modelo.put("datosGrupo", servicioGrupo.listarGruposDelUsuario(usuario.getEmail()));
+      List<Grupo> grupos = servicioGrupo.listarGruposDelUsuario(usuario.getEmail());
+      modelo.put("datosGrupo", grupos);
+      // Los grupos donde todavía no es integrante son los que tienen la invitación pendiente.
+      modelo.put("gruposPendientes", nombresDeGruposPendientes(grupos, usuario));
     } catch (Exception e) {
       modelo.put(MENSAJE_ERROR, "No se pudieron cargar los grupos");
     }
     return new ModelAndView("paginas/grupo/grupos", modelo);
+  }
+
+  private List<String> nombresDeGruposPendientes(List<Grupo> grupos, Usuario usuario) {
+    return grupos
+      .stream()
+      .filter(grupo -> !servicioGrupo.esIntegrante(grupo, usuario))
+      .map(Grupo::getNombre)
+      .collect(Collectors.toList());
   }
 
   @GetMapping("/grupos/{nombre}")
@@ -260,7 +272,6 @@ public class ControladorGrupo {
     return "Saliste del grupo.";
   }
 
-  // nombreOriginal == null significa alta; si tiene valor, es la edicion de ese grupo.
   private ModelAndView armarFormulario(String nombreOriginal, String nombre, String error) {
     Map<String, Object> modelo = new ModelMap();
     modelo.put("nombreOriginal", nombreOriginal);
