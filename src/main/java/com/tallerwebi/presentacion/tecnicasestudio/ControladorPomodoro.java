@@ -101,6 +101,8 @@ public class ControladorPomodoro {
     modelo.put("datosPomodoro", datosPomodoro);
     modelo.put("materia", materia);
     modelo.put("pomodoroId", sesion.getId());
+    // El embarque es la hora en que se registró la sesión, no una hora fija.
+    modelo.put("horaEmbarque", sesion.getFechaInicio());
 
     return new ModelAndView(VISTA_BOLETO, modelo);
   }

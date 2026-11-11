@@ -82,7 +82,12 @@
                         <span th:if="${grupo.esAdministradoPor(session.USUARIO)}" class="badge bg-warning text-dark rounded-pill px-3">
                             <i class="fa-solid fa-crown me-1"></i>Administrador/a
                         </span>
-                        <span th:unless="${grupo.esAdministradoPor(session.USUARIO)}" class="badge badge-live rounded-pill px-3">Activo</span>
+                        <th:block th:unless="${grupo.esAdministradoPor(session.USUARIO)}">
+                            <span th:if="${#lists.contains(gruposPendientes, grupo.nombre)}" class="badge bg-secondary rounded-pill px-3">
+                                <i class="fa-solid fa-clock me-1"></i>Pendiente
+                            </span>
+                            <span th:unless="${#lists.contains(gruposPendientes, grupo.nombre)}" class="badge badge-live rounded-pill px-3">Activo</span>
+                        </th:block>
                     </div>
 
                     <h5 class="fw-bold text-light" th:text="${grupo.nombre}">Nombre del Grupo</h5>
