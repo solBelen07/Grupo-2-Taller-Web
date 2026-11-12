@@ -1,0 +1,73 @@
+.card-custom {
+    background-color: #171324;
+    border: 1px solid #2a253c;
+    border-radius: 12px;
+}
+
+#matriz-competencias .resumen-matriz {
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    background-color: #0b0914;
+    border: 1px solid #2a253c;
+    border-radius: 8px;
+    line-height: 1.8;
+}
+
+#matriz-competencias .resumen-matriz strong {
+    color: #d6b4fc;
+}
+
+.progress-custom {
+    background-color: #2a253c;
+    height: 8px;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-custom .progress-bar {
+    background-color: #a855f7;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+.recomendacion-item {
+    transition: background-color 0.2s ease;
+}
+
+.recomendacion-item:last-child {
+    border-bottom: none !important;
+}
+
+.recomendacion-item:hover {
+    background-color: rgba(168, 85, 247, 0.06);
+}
+
+.recomendacion-item .fs-5 {
+    color: #d6b4fc;
+}
+
+.badge-competencia {
+    background-color: rgba(168, 85, 247, 0.2);
+    color: #d6b4fc;
+    border: 1px solid rgba(168, 85, 247, 0.5);
+    font-weight: 500;
+    border-radius: 999px;
+    padding: 4px 10px;
+}
+
+@media (max-width: 992px) {
+    #matriz-competencias {
+        margin-bottom: 4px;
+    }
+}
+
+@media (max-width: 576px) {
+    .recomendacion-item .d-flex {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .recomendacion-item .text-end {
+        text-align: left !important;
+    }
+}
