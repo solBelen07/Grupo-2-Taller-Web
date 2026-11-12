@@ -306,7 +306,8 @@ public class ServicioDashboardTest {
     CalendarioSemanal semana = mock(CalendarioSemanal.class);
     when(this.servicioCalendarioMock.obtenerSemana(ID_USUARIO, referencia)).thenReturn(semana);
 
-    CalendarioSemanal resultado = this.servicioDashboard.obtenerCalendarioSemanal(ID_USUARIO, referencia);
+    CalendarioSemanal resultado =
+      this.servicioDashboard.obtenerCalendarioSemanal(ID_USUARIO, referencia);
 
     assertThat(resultado, is(sameInstance(semana)));
   }
@@ -334,7 +335,8 @@ public class ServicioDashboardTest {
   }
 
   private void dadoQueLaFuenteDevuelve(FuenteDeEventos fuente, EventoConEstado... vencimientos) {
-    when(fuente.eventosEntre(eq(ID_USUARIO), any(), any(), any())).thenReturn(List.of(vencimientos));
+    when(fuente.eventosEntre(eq(ID_USUARIO), any(), any(), any()))
+      .thenReturn(List.of(vencimientos));
   }
 
   private static Materia materia(Integer id, String nombre) {
@@ -344,7 +346,12 @@ public class ServicioDashboardTest {
     return materia;
   }
 
-  private static Evento evento(Materia materia, TipoEvento tipo, String titulo, LocalDateTime inicio) {
+  private static Evento evento(
+    Materia materia,
+    TipoEvento tipo,
+    String titulo,
+    LocalDateTime inicio
+  ) {
     return new Evento(ID_USUARIO, materia, tipo, titulo, inicio, inicio.plusHours(2));
   }
 
