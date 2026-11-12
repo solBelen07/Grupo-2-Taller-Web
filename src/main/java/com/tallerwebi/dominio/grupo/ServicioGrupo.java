@@ -8,6 +8,7 @@ import com.tallerwebi.dominio.excepcion.excepcionGrupo.NoEsIntegranteDelGrupo;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.NombreDeGrupoInvalido;
 import java.util.List;
 
+/*Interfaz que define los servicios de grupo que se pueden realizar en la aplicación.*/
 public interface ServicioGrupo {
   Grupo buscarPorNombre(String nombre) throws GrupoNoEncontrado;
   List<Grupo> listarGrupos();

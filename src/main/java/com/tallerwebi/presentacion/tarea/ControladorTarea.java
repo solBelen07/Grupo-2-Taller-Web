@@ -85,7 +85,7 @@ public class ControladorTarea {
       return new ModelAndView("redirect:/login");
     }
 
-    return armarFormularioNuevaTarea(new HashMap<>());
+    return armarFormularioNuevaTarea(new HashMap<>(), request);
   }
 
   @RequestMapping("/tareas/crear")
@@ -112,7 +112,7 @@ public class ControladorTarea {
     } catch (GrupoNoEncontrado e) {
       Map<String, Object> modelo = new HashMap<>();
       modelo.put("error", "El grupo seleccionado no existe. Elegí uno de la lista.");
-      return armarFormularioNuevaTarea(modelo);
+      return armarFormularioNuevaTarea(modelo, request);
     }
 
     Tarea tarea = new Tarea();
@@ -131,13 +131,21 @@ public class ControladorTarea {
     return new ModelAndView("redirect:/tareas");
   }
 
-  private ModelAndView armarFormularioNuevaTarea(Map<String, Object> modelo) {
+  private ModelAndView armarFormularioNuevaTarea(
+    Map<String, Object> modelo,
+    HttpServletRequest request
+  ) {
     List<Materia> materias = this.servicioMateria.obtenerMaterias();
-    List<Grupo> grupos = this.servicioGrupo.listarGrupos();
+    List<Grupo> grupos =
+      this.servicioGrupo.listarGruposDelUsuario(obtenerUsuarioLogueado(request).getEmail());
     modelo.put("materias", materias);
     modelo.put("grupos", grupos);
 
     return new ModelAndView("paginas/materia/nueva-tarea", modelo);
+  }
+
+  private Usuario obtenerUsuarioLogueado(HttpServletRequest request) {
+    return (Usuario) request.getSession().getAttribute("USUARIO");
   }
 
   private boolean tieneUsuarioAutenticado(HttpServletRequest request) {

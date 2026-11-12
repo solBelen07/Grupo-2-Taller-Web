@@ -41,19 +41,16 @@ public class ControladorDashboardTest {
 
   private ServicioDashboard servicioDashboardMock;
   private ServicioRacha servicioRachaMock;
-  private ServicioTarea servicioTareaMock;
   private MockMvc mockMvc;
 
   @BeforeEach
   public void init() {
     this.servicioDashboardMock = mock(ServicioDashboard.class);
     this.servicioRachaMock = mock(ServicioRacha.class);
-    this.servicioTareaMock = mock(ServicioTarea.class);
 
     ControladorDashboard controlador = new ControladorDashboard(
       this.servicioDashboardMock,
-      this.servicioRachaMock,
-      this.servicioTareaMock
+      this.servicioRachaMock
     );
     this.mockMvc = MockMvcBuilders.standaloneSetup(controlador).build();
   }
