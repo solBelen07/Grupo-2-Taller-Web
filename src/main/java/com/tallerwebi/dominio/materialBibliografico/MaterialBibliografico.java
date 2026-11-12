@@ -11,11 +11,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class MaterialBibliografico {
 
   @Id
@@ -41,8 +43,6 @@ public class MaterialBibliografico {
   @JoinColumn(name = "materia_id", nullable = false)
   private Materia materia;
 
-  public MaterialBibliografico() {}
-
   public MaterialBibliografico(
     String nombreArchivo,
     String tipoArchivo,
@@ -56,55 +56,5 @@ public class MaterialBibliografico {
     this.claveR2 = claveR2;
     this.materia = materia;
     this.fechaSubida = LocalDateTime.now();
-  }
-
-  @SuppressWarnings("all")
-  public String getClaveR2() {
-    return claveR2;
-  }
-
-  @SuppressWarnings("all")
-  public void setClaveR2(String claveR2) {
-    this.claveR2 = claveR2;
-  }
-
-  @SuppressWarnings("all")
-  public Integer getId() {
-    return id;
-  }
-
-  @SuppressWarnings("all")
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  @SuppressWarnings("all")
-  public String getNombreArchivo() {
-    return nombreArchivo;
-  }
-
-  @SuppressWarnings("all")
-  public void setNombreArchivo(String nombreArchivo) {
-    this.nombreArchivo = nombreArchivo;
-  }
-
-  @SuppressWarnings("all")
-  public void setTipoArchivo(String tipoArchivo) {
-    this.tipoArchivo = tipoArchivo;
-  }
-
-  @SuppressWarnings("all")
-  public Materia getMateria() {
-    return materia;
-  }
-
-  @SuppressWarnings("all")
-  public void setMateria(Materia materia) {
-    this.materia = materia;
-  }
-
-  @SuppressWarnings("all")
-  public Long getTamanio() {
-    return tamanio;
   }
 }

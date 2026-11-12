@@ -6,8 +6,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Grupo {
 
   @Id
@@ -19,30 +25,6 @@ public class Grupo {
   // el usuario que creó el grupo. Es el administrador y también cuenta como miembro.
   @ManyToOne
   private Usuario creador;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
-  }
-
-  public Usuario getCreador() {
-    return creador;
-  }
-
-  public void setCreador(Usuario creador) {
-    this.creador = creador;
-  }
 
   // Compara por id porque el usuario de la sesión y el de la base son objetos distintos.
   public boolean esAdministradoPor(Usuario usuario) {

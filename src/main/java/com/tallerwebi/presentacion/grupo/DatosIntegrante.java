@@ -1,6 +1,9 @@
 package com.tallerwebi.presentacion.grupo;
 
+import lombok.Getter;
+
 // Datos de un integrante que se muestran en el detalle del grupo (sin exponer la contraseña).
+@Getter
 public class DatosIntegrante {
 
   private String nombre;
@@ -17,21 +20,5 @@ public class DatosIntegrante {
     this.apellido = apellido;
     this.email = email;
     this.administrador = administrador;
-  }
-
-  public boolean isAdministrador() {
-    return administrador;
-  }
-
-  public String getNombre() {
-    return nombre;
-  }
-
-  public String getApellido() {
-    return apellido;
-  }
-
-  public String getEmail() {
-    return email;
   }
 }
