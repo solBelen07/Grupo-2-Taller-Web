@@ -25,11 +25,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
-/**
- * E2E real: navegador -> Spring MVC -> MySQL -> Cloudflare R2 -> descarga.
- * Ejecutar contra una base y un bucket de pruebas, nunca contra produccion.
- * Activar con: mvn -De2e.r2=true -Dtest=RegistroMateriaR2E2ETest test
- */
 @EnabledIfSystemProperty(named = "e2e.r2", matches = "true")
 public class RegistroMateriaR2E2ETest {
 
@@ -90,7 +85,6 @@ public class RegistroMateriaR2E2ETest {
     assertTrue(Files.isRegularFile(pdf), "Falta el archivo PDF de prueba");
     byte[] contenidoOriginal = Files.readAllBytes(pdf);
 
-    // 1. REGISTRO: formulario real, con los campos obligatorios actuales.
     page.navigate(baseUrl + "/registro");
     page.locator("#nombre").fill("Prueba");
     page.locator("#apellido").fill("Automatizada");
@@ -101,14 +95,11 @@ public class RegistroMateriaR2E2ETest {
     page.locator("#btn-registro").click();
     comprobarRuta("/login", "registro");
 
-    // 2. LOGIN: el controlador actual redirige a /dashboard.
     page.locator("#email").fill(email);
     page.locator("#password").fill(clave);
     page.locator("#btn-login").click();
-    // Si el login falla, se informa la URL real y el mensaje de la pantalla.
     comprobarRuta("/dashboard", "inicio de sesion");
 
-    // 3. CREACION DE MATERIA, adjuntando un archivo mediante el navegador.
     page.navigate(baseUrl + "/materias");
     page.locator("a[href*='/materias/nueva']").click();
     page.locator("#nombre").fill(nombreMateria);
@@ -119,10 +110,8 @@ public class RegistroMateriaR2E2ETest {
     page.locator("#color").fill("#4477cc");
     page.locator("#archivos").setInputFiles(pdf);
     page.locator("form[enctype='multipart/form-data'] button[type='submit']").click();
-    // Si R2 falla al subir, el error se informa aqui, sin esperar 30 segundos.
     comprobarRuta("/materias", "creacion de materia y subida a R2");
 
-    // 4. VERIFICAR que la materia existe y entrar a su detalle.
     Locator enlaceMateria = page
       .locator("a[href*='/materias/detalle']")
       .filter(new Locator.FilterOptions().setHasText(nombreMateria));
@@ -132,8 +121,6 @@ public class RegistroMateriaR2E2ETest {
       page.locator("h2").filter(new Locator.FilterOptions().setHasText(nombreMateria)).isVisible()
     );
 
-    // 5. VERIFICAR R2: pedir el material desde el mismo contexto autenticado.
-    // La respuesta pasa por ServicioMaterial -> AlmacenamientoR2 -> getObjectAsBytes.
     Locator enlacePdf = page
       .locator("a[href*='/materias/material/']")
       .filter(new Locator.FilterOptions().setHasText("material-e2e.pdf"));
