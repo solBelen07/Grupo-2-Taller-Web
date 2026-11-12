@@ -62,6 +62,12 @@
                 <i class="fa-solid fa-envelope"></i> Invitaciones
             </a>
 
+            <a th:href="@{/recomendaciones}"
+               class="nav-item"
+               th:classappend="${activePage == 'recomendaciones' ? 'activo' : ''}">
+                <i class="fa-solid fa-users"></i> Recomendaciones
+            </a>
+
             <a th:href="@{/logros}" class="nav-item"
                th:classappend="${activePage == 'logros' ? 'activo' : ''}">
                 <i class="fa-solid fa-trophy"></i> Logros
