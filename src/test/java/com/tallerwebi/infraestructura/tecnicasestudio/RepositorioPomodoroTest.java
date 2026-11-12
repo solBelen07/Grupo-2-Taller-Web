@@ -3,7 +3,9 @@ package com.tallerwebi.infraestructura.tecnicasestudio;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.tecnicasestudio.Estado;
@@ -12,6 +14,7 @@ import com.tallerwebi.dominio.tecnicasestudio.Pomodoro;
 import com.tallerwebi.dominio.tecnicasestudio.RepositorioPomodoro;
 import com.tallerwebi.infraestructura.config.HibernateInfraestructuraTestConfig;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.hibernate.SessionFactory;
@@ -28,6 +31,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class RepositorioPomodoroTest {
 
   private static final LocalDateTime INICIO = LocalDateTime.of(2026, 9, 30, 10, 0, 0);
+  private static final LocalDate DIA = LocalDate.of(2026, 11, 10);
 
   @Autowired
   private SessionFactory sessionFactory;
@@ -204,5 +208,85 @@ public class RepositorioPomodoroTest {
   private void forzarLecturaDesdeLaBaseDeDatos() {
     this.sessionFactory.getCurrentSession().flush();
     this.sessionFactory.getCurrentSession().clear();
+  }
+
+  // ---------- pomodoro completado en una fecha (racha) ----------
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaContarElDiaSiTerminoUnPomodoroEseDia() {
+    Usuario ana = this.dadoQueExisteElUsuario("ana@test.com");
+    this.dadoQueTerminoUnPomodoro(ana, Estado.COMPLETADO, DIA.atTime(15, 30));
+
+    boolean completoUnPomodoroEseDia = this.cuandoConsultoSiCompletoUnPomodoroEl(ana, DIA);
+
+    assertTrue(completoUnPomodoroEseDia, "Terminó un pomodoro a las 15:30, debería contar");
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void deberiaContarUnPomodoroQueTerminaJustoALaMedianoche() {
+    Usuario ana = this.dadoQueExisteElUsuario("ana@test.com");
+    this.dadoQueTerminoUnPomodoro(ana, Estado.COMPLETADO, DIA.atStartOfDay());
+
+    boolean completoUnPomodoroEseDia = this.cuandoConsultoSiCompletoUnPomodoroEl(ana, DIA);
+
+    assertTrue(completoUnPomodoroEseDia, "Las 00:00 son el comienzo del día, debería contar");
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void unPomodoroQuePasaLaMedianocheCuentaParaElDiaEnQueTermina() {
+    // Ana estudia del 10/11 a las 23:50 al 11/11 a las 00:20.
+    Usuario ana = this.dadoQueExisteElUsuario("ana@test.com");
+    LocalDate diaQueEmpezo = DIA;
+    LocalDate diaQueTermino = DIA.plusDays(1);
+    this.dadoQueEstudioUnPomodoroEntre(
+        ana,
+        diaQueEmpezo.atTime(23, 50),
+        diaQueTermino.atTime(0, 20)
+      );
+
+    boolean cuentaElDiaQueEmpezo = this.cuandoConsultoSiCompletoUnPomodoroEl(ana, diaQueEmpezo);
+    boolean cuentaElDiaQueTermino = this.cuandoConsultoSiCompletoUnPomodoroEl(ana, diaQueTermino);
+
+    assertTrue(cuentaElDiaQueTermino, "Terminó el 11/11, debería contar para ese día");
+    assertFalse(cuentaElDiaQueEmpezo, "Se cuenta por la hora en que terminó, no por la de inicio");
+  }
+
+  @Test
+  @Transactional
+  @Rollback
+  public void noDeberiaContarUnPomodoroCancelado() {
+    Usuario ana = this.dadoQueExisteElUsuario("ana@test.com");
+    this.dadoQueTerminoUnPomodoro(ana, Estado.CANCELADO, DIA.atTime(15, 30));
+
+    boolean completoUnPomodoroEseDia = this.cuandoConsultoSiCompletoUnPomodoroEl(ana, DIA);
+
+    assertFalse(completoUnPomodoroEseDia, "Un pomodoro cancelado no debería contar");
+  }
+
+  private boolean cuandoConsultoSiCompletoUnPomodoroEl(Usuario usuario, LocalDate dia) {
+    return this.repositorioPomodoro.existePomodoroCompletadoEnFecha(usuario.getId(), dia);
+  }
+
+  private void dadoQueEstudioUnPomodoroEntre(
+    Usuario usuario,
+    LocalDateTime horaDeInicio,
+    LocalDateTime horaDeFin
+  ) {
+    Pomodoro pomodoro = this.crearPomodoro(usuario, Estado.COMPLETADO, 30);
+    pomodoro.setFechaInicio(horaDeInicio);
+    pomodoro.setFechaFin(horaDeFin);
+    this.sessionFactory.getCurrentSession().persist(pomodoro);
+  }
+
+  private void dadoQueTerminoUnPomodoro(Usuario usuario, Estado estado, LocalDateTime horaDeFin) {
+    Pomodoro pomodoro = this.crearPomodoro(usuario, estado, 25);
+    pomodoro.setFechaFin(horaDeFin);
+    this.sessionFactory.getCurrentSession().persist(pomodoro);
   }
 }
