@@ -268,12 +268,12 @@ VALUES (
            1
        );
 
--- Ejemplo 2, mañana: un Parcial con 70% de avance pero que vence en 2
+-- Ejemplo 2, mañana: un simulacro de parcial con 70% de avance pero que vence en 2
 -- días. La urgencia por fecha le gana al progreso -> "Próxima a vencer".
 INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento, grupo_id)
 VALUES (
            null,
-           'Parcial de Base de Datos II',
+           'Simulacro de parcial de Base de Datos II',
            'Base de Datos II',
            'PENDIENTE',
            7,
@@ -288,7 +288,7 @@ INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id, tareaI
 VALUES (
            null,
            1,
-           'Parcial de Base de Datos II',
+           'Simulacro de parcial de Base de Datos II',
            'PARCIAL',
            CONCAT(DATE_ADD(CURDATE(), INTERVAL 1 DAY), ' 09:00:00'),
            CONCAT(DATE_ADD(CURDATE(), INTERVAL 1 DAY), ' 11:00:00'),
@@ -296,12 +296,12 @@ VALUES (
            2
        );
 
--- Ejemplo 3, pasado mañana: un Parcial con 60% de avance y 15 días
+-- Ejemplo 3, pasado mañana: un simulacro de parcial con 60% de avance y 15 días
 -- todavía. Acá gana el progreso -> "Parcialmente completada".
 INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento, grupo_id)
 VALUES (
            null,
-           'Parcial de Visualización e Interfaces',
+           'Simulacro de parcial de Visualización e Interfaces',
            'Visualización e Interfaces',
            'PENDIENTE',
            6,
@@ -316,7 +316,7 @@ INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id, tareaI
 VALUES (
            null,
            1,
-           'Parcial de Visualización e Interfaces',
+           'Simulacro de parcial de Visualización e Interfaces',
            'PARCIAL',
            CONCAT(DATE_ADD(CURDATE(), INTERVAL 2 DAY), ' 14:00:00'),
            CONCAT(DATE_ADD(CURDATE(), INTERVAL 2 DAY), ' 16:00:00'),
