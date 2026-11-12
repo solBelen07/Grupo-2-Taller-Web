@@ -3,7 +3,11 @@ package com.tallerwebi.presentacion.resumen;
 import com.tallerwebi.dominio.resumen.Resumen;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
 public class HistorialResumenDTO {
 
   private static final int LARGO_VISTA_PREVIA = 90;
@@ -16,30 +20,12 @@ public class HistorialResumenDTO {
   private final String vistaPrevia;
   private final String fecha;
 
-  public HistorialResumenDTO(Long id, String vistaPrevia, String fecha) {
-    this.id = id;
-    this.vistaPrevia = vistaPrevia;
-    this.fecha = fecha;
-  }
-
   public static HistorialResumenDTO desde(Resumen resumen) {
     return new HistorialResumenDTO(
       resumen.getId(),
       armarVistaPrevia(resumen.getTextoOriginal()),
       resumen.getFechaCreacion().format(FORMATO_FECHA)
     );
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public String getVistaPrevia() {
-    return vistaPrevia;
-  }
-
-  public String getFecha() {
-    return fecha;
   }
 
   private static String armarVistaPrevia(String texto) {

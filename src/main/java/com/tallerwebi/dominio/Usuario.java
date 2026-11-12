@@ -11,8 +11,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class Usuario {
 
   @Id
@@ -37,36 +41,8 @@ public class Usuario {
   @Embedded
   private PerfilAcademico perfilAcademico = new PerfilAcademico();
 
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public String getRol() {
-    return rol;
-  }
-
-  public void setRol(String rol) {
-    this.rol = rol;
+  public void activar() {
+    activo = true;
   }
 
   public boolean getActivo() {
@@ -77,51 +53,13 @@ public class Usuario {
     this.activo = activo;
   }
 
-  public void activar() {
-    activo = true;
-  }
-
-  public int getPuntos() {
-    return puntos;
-  }
-
-  public void setPuntos(int puntos) {
-    this.puntos = puntos;
-  }
-
-  public String getNombre() {
-    return nombre;
-  }
-
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
-  }
-
-  public String getApellido() {
-    return apellido;
-  }
-
-  public void setApellido(String apellido) {
-    this.apellido = apellido;
-  }
-
-  public boolean isActivo() {
-    return activo;
-  }
-
-  public void setActivo(boolean activo) {
-    this.activo = activo;
-  }
+  // --- Métodos con lógica personalizada (Lombok no los sobrescribe) ---
 
   public Racha getRacha() {
     if (this.racha == null) {
       this.racha = new Racha(0, 0, null);
     }
     return this.racha;
-  }
-
-  public void setRacha(Racha racha) {
-    this.racha = racha;
   }
 
   public Universidad getUniversidad() {

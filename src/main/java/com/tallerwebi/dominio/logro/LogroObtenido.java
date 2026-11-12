@@ -10,14 +10,22 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * indica QUIEN obtuvo QUÉ logro y CUANDO.
- * Relaciona Usuario con Logro (un usuario puede tener muchos logros y un logro
- * puede ser obtenido por muchos usuarios). Un usuario no puede obtener dos veces el mismo logro.
+ * - indica QUIEN obtuvo QUÉ logro y CUANDO.
+ *
+ * - Relaciona Usuario con Logro (un usuario puede tener muchos logros y un logro
+ *
+ * - puede ser obtenido por muchos usuarios). Un usuario no puede obtener dos veces el mismo logro.
  */
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "usuario_id", "logro_id" }))
+@Getter
+@Setter
+@NoArgsConstructor
 public class LogroObtenido {
 
   @Id
@@ -34,43 +42,9 @@ public class LogroObtenido {
 
   private LocalDate fechaObtencion;
 
-  public LogroObtenido() {}
-
   public LogroObtenido(Usuario usuario, Logro logro, LocalDate fechaObtencion) {
     this.usuario = usuario;
     this.logro = logro;
-    this.fechaObtencion = fechaObtencion;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public Usuario getUsuario() {
-    return usuario;
-  }
-
-  public void setUsuario(Usuario usuario) {
-    this.usuario = usuario;
-  }
-
-  public Logro getLogro() {
-    return logro;
-  }
-
-  public void setLogro(Logro logro) {
-    this.logro = logro;
-  }
-
-  public LocalDate getFechaObtencion() {
-    return fechaObtencion;
-  }
-
-  public void setFechaObtencion(LocalDate fechaObtencion) {
     this.fechaObtencion = fechaObtencion;
   }
 }

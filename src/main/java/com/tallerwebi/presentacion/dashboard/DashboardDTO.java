@@ -5,7 +5,13 @@ import com.tallerwebi.dominio.calendario.EventoConEstado;
 import com.tallerwebi.dominio.sesionEstudio.SesionEstudio;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class DashboardDTO {
 
   private Long horasEstudio;
@@ -33,69 +39,5 @@ public class DashboardDTO {
     this.proximaSesion = proximaSesion;
     this.racha = racha;
     this.recordRacha = recordRacha;
-  }
-
-  public Long getHorasEstudio() {
-    return horasEstudio;
-  }
-
-  public void setHorasEstudio(Long horasEstudio) {
-    this.horasEstudio = horasEstudio;
-  }
-
-  public Double getPorcentajeCumplimiento() {
-    return porcentajeCumplimiento;
-  }
-
-  public void setPorcentajeCumplimiento(Double porcentajeCumplimiento) {
-    this.porcentajeCumplimiento = porcentajeCumplimiento;
-  }
-
-  public Long getCantidadMaterias() {
-    return cantidadMaterias;
-  }
-
-  public void setCantidadMaterias(Long cantidadMaterias) {
-    this.cantidadMaterias = cantidadMaterias;
-  }
-
-  public CalendarioSemanal getCalendarioSemanal() {
-    return calendarioSemanal;
-  }
-
-  public void setCalendarioSemanal(CalendarioSemanal calendarioSemanal) {
-    this.calendarioSemanal = calendarioSemanal;
-  }
-
-  public SesionEstudio getProximaSesion() {
-    return proximaSesion;
-  }
-
-  public void setProximaSesion(SesionEstudio proximaSesion) {
-    this.proximaSesion = proximaSesion;
-  }
-
-  public Integer getRacha() {
-    return racha;
-  }
-
-  public void setRacha(Integer racha) {
-    this.racha = racha;
-  }
-
-  public Integer getRecordRacha() {
-    return recordRacha;
-  }
-
-  public void setRecordRacha(Integer recordRacha) {
-    this.recordRacha = recordRacha;
-  }
-
-  public List<EventoConEstado> getProximosVencimientos() {
-    return proximosVencimientos;
-  }
-
-  public void setProximosVencimientos(List<EventoConEstado> proximosVencimientos) {
-    this.proximosVencimientos = proximosVencimientos;
   }
 }
