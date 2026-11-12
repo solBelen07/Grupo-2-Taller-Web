@@ -44,7 +44,7 @@ public class ControladorTrabajoPracticoTest {
     when(enCurso.getEstado()).thenReturn(EstadoTP.EN_CURSO);
     when(finalizado.getEstado()).thenReturn(EstadoTP.FINALIZADO);
     when(servicioTrabajoPracticoMock.obtenerTodos())
-            .thenReturn(new ArrayList<>(List.of(pendiente, enCurso, finalizado)));
+      .thenReturn(new ArrayList<>(List.of(pendiente, enCurso, finalizado)));
 
     ModelAndView mav = controlador.listarTrabajosPracticos(null, new MockHttpServletRequest());
 
@@ -57,9 +57,13 @@ public class ControladorTrabajoPracticoTest {
 
   @Test
   public void listarConFiltroDeMateriaDeberiaBuscarPorMateriaYConservarElFiltro() {
-    when(servicioTrabajoPracticoMock.buscarPorMateria("Taller Web I")).thenReturn(new ArrayList<>());
+    when(servicioTrabajoPracticoMock.buscarPorMateria("Taller Web I"))
+      .thenReturn(new ArrayList<>());
 
-    ModelAndView mav = controlador.listarTrabajosPracticos("Taller Web I", new MockHttpServletRequest());
+    ModelAndView mav = controlador.listarTrabajosPracticos(
+      "Taller Web I",
+      new MockHttpServletRequest()
+    );
 
     assertThat(mav.getModel().get("materiaBuscada"), equalTo("Taller Web I"));
     verify(servicioTrabajoPracticoMock, times(1)).buscarPorMateria("Taller Web I");
@@ -94,8 +98,8 @@ public class ControladorTrabajoPracticoTest {
     ModelAndView mav = controlador.listarTrabajosPracticos(null, requestConUsuario(7L));
 
     assertThat(
-            mav.getModel().get("materias"),
-            equalTo(List.of("Taller Web I", "Base de Datos II"))
+      mav.getModel().get("materias"),
+      equalTo(List.of("Taller Web I", "Base de Datos II"))
     );
   }
 

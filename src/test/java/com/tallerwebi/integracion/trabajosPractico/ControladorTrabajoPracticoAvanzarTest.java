@@ -29,57 +29,57 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class ControladorTrabajoPracticoAvanzarTest {
 
-    @Autowired
-    private WebApplicationContext wac;
+  @Autowired
+  private WebApplicationContext wac;
 
-    @Autowired
-    private SessionFactory sessionFactory;
+  @Autowired
+  private SessionFactory sessionFactory;
 
-    private MockMvc mockMvc;
+  private MockMvc mockMvc;
 
-    @BeforeEach
-    public void init() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-    }
+  @BeforeEach
+  public void init() {
+    this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+  }
 
-    @Test
-    public void avanzarDeberiaPasarDePendienteAEnCursoYAFinalizado() throws Exception {
-        TrabajoPractico tp = persistirTp(EstadoTP.PENDIENTE);
+  @Test
+  public void avanzarDeberiaPasarDePendienteAEnCursoYAFinalizado() throws Exception {
+    TrabajoPractico tp = persistirTp(EstadoTP.PENDIENTE);
 
-        this.mockMvc.perform(post("/trabajos-practicos/avanzar/" + tp.getId()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/trabajos-practicos"));
-        assertThat(estadoGuardado(tp.getId()), equalTo(EstadoTP.EN_CURSO));
+    this.mockMvc.perform(post("/trabajos-practicos/avanzar/" + tp.getId()))
+      .andExpect(status().is3xxRedirection())
+      .andExpect(redirectedUrl("/trabajos-practicos"));
+    assertThat(estadoGuardado(tp.getId()), equalTo(EstadoTP.EN_CURSO));
 
-        this.mockMvc.perform(post("/trabajos-practicos/avanzar/" + tp.getId()))
-                .andExpect(status().is3xxRedirection());
-        assertThat(estadoGuardado(tp.getId()), equalTo(EstadoTP.FINALIZADO));
-    }
+    this.mockMvc.perform(post("/trabajos-practicos/avanzar/" + tp.getId()))
+      .andExpect(status().is3xxRedirection());
+    assertThat(estadoGuardado(tp.getId()), equalTo(EstadoTP.FINALIZADO));
+  }
 
-    @Test
-    public void avanzarUnFinalizadoNoDeberiaCambiarElEstado() throws Exception {
-        TrabajoPractico tp = persistirTp(EstadoTP.FINALIZADO);
+  @Test
+  public void avanzarUnFinalizadoNoDeberiaCambiarElEstado() throws Exception {
+    TrabajoPractico tp = persistirTp(EstadoTP.FINALIZADO);
 
-        this.mockMvc.perform(post("/trabajos-practicos/avanzar/" + tp.getId()))
-                .andExpect(status().is3xxRedirection());
+    this.mockMvc.perform(post("/trabajos-practicos/avanzar/" + tp.getId()))
+      .andExpect(status().is3xxRedirection());
 
-        assertThat(estadoGuardado(tp.getId()), equalTo(EstadoTP.FINALIZADO));
-    }
+    assertThat(estadoGuardado(tp.getId()), equalTo(EstadoTP.FINALIZADO));
+  }
 
-    private TrabajoPractico persistirTp(EstadoTP estado) {
-        TrabajoPractico tp = new TrabajoPractico();
-        tp.setNombre("TP avanzar");
-        tp.setMateria("Taller Web I");
-        tp.setTipo(TipoTrabajo.INDIVIDUAL);
-        tp.setEstado(estado);
-        sessionFactory.getCurrentSession().persist(tp);
-        sessionFactory.getCurrentSession().flush();
-        return tp;
-    }
+  private TrabajoPractico persistirTp(EstadoTP estado) {
+    TrabajoPractico tp = new TrabajoPractico();
+    tp.setNombre("TP avanzar");
+    tp.setMateria("Taller Web I");
+    tp.setTipo(TipoTrabajo.INDIVIDUAL);
+    tp.setEstado(estado);
+    sessionFactory.getCurrentSession().persist(tp);
+    sessionFactory.getCurrentSession().flush();
+    return tp;
+  }
 
-    private EstadoTP estadoGuardado(Long id) {
-        sessionFactory.getCurrentSession().flush();
-        sessionFactory.getCurrentSession().clear();
-        return sessionFactory.getCurrentSession().get(TrabajoPractico.class, id).getEstado();
-    }
+  private EstadoTP estadoGuardado(Long id) {
+    sessionFactory.getCurrentSession().flush();
+    sessionFactory.getCurrentSession().clear();
+    return sessionFactory.getCurrentSession().get(TrabajoPractico.class, id).getEstado();
+  }
 }

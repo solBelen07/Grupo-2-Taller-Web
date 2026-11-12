@@ -10,67 +10,67 @@ import org.junit.jupiter.api.Test;
 
 public class ServicioTrabajoPracticoAvanzarEstadoTest {
 
-    private ServicioTrabajoPracticoImpl servicio;
-    private RepositorioTrabajoPractico repositorioMock;
+  private ServicioTrabajoPracticoImpl servicio;
+  private RepositorioTrabajoPractico repositorioMock;
 
-    @BeforeEach
-    public void init() {
-        repositorioMock = mock(RepositorioTrabajoPractico.class);
-        servicio = new ServicioTrabajoPracticoImpl(repositorioMock);
-    }
+  @BeforeEach
+  public void init() {
+    repositorioMock = mock(RepositorioTrabajoPractico.class);
+    servicio = new ServicioTrabajoPracticoImpl(repositorioMock);
+  }
 
-    @Test
-    public void avanzarUnPendienteDeberiaPasarloAEnCurso() {
-        TrabajoPractico tp = tpConEstado(EstadoTP.PENDIENTE);
-        when(repositorioMock.buscarPorId(1L)).thenReturn(tp);
+  @Test
+  public void avanzarUnPendienteDeberiaPasarloAEnCurso() {
+    TrabajoPractico tp = tpConEstado(EstadoTP.PENDIENTE);
+    when(repositorioMock.buscarPorId(1L)).thenReturn(tp);
 
-        TrabajoPractico resultado = servicio.avanzarEstado(1L);
+    TrabajoPractico resultado = servicio.avanzarEstado(1L);
 
-        assertThat(resultado.getEstado(), equalTo(EstadoTP.EN_CURSO));
-    }
+    assertThat(resultado.getEstado(), equalTo(EstadoTP.EN_CURSO));
+  }
 
-    @Test
-    public void avanzarUnEnCursoDeberiaPasarloAFinalizado() {
-        TrabajoPractico tp = tpConEstado(EstadoTP.EN_CURSO);
-        when(repositorioMock.buscarPorId(1L)).thenReturn(tp);
+  @Test
+  public void avanzarUnEnCursoDeberiaPasarloAFinalizado() {
+    TrabajoPractico tp = tpConEstado(EstadoTP.EN_CURSO);
+    when(repositorioMock.buscarPorId(1L)).thenReturn(tp);
 
-        TrabajoPractico resultado = servicio.avanzarEstado(1L);
+    TrabajoPractico resultado = servicio.avanzarEstado(1L);
 
-        assertThat(resultado.getEstado(), equalTo(EstadoTP.FINALIZADO));
-    }
+    assertThat(resultado.getEstado(), equalTo(EstadoTP.FINALIZADO));
+  }
 
-    @Test
-    public void avanzarUnFinalizadoNoDeberiaCambiarlo() {
-        TrabajoPractico tp = tpConEstado(EstadoTP.FINALIZADO);
-        when(repositorioMock.buscarPorId(1L)).thenReturn(tp);
+  @Test
+  public void avanzarUnFinalizadoNoDeberiaCambiarlo() {
+    TrabajoPractico tp = tpConEstado(EstadoTP.FINALIZADO);
+    when(repositorioMock.buscarPorId(1L)).thenReturn(tp);
 
-        TrabajoPractico resultado = servicio.avanzarEstado(1L);
+    TrabajoPractico resultado = servicio.avanzarEstado(1L);
 
-        assertThat(resultado.getEstado(), equalTo(EstadoTP.FINALIZADO));
-    }
+    assertThat(resultado.getEstado(), equalTo(EstadoTP.FINALIZADO));
+  }
 
-    @Test
-    public void avanzarDosVecesDesdePendienteDeberiaLlegarAFinalizado() {
-        TrabajoPractico tp = tpConEstado(EstadoTP.PENDIENTE);
-        when(repositorioMock.buscarPorId(1L)).thenReturn(tp);
+  @Test
+  public void avanzarDosVecesDesdePendienteDeberiaLlegarAFinalizado() {
+    TrabajoPractico tp = tpConEstado(EstadoTP.PENDIENTE);
+    when(repositorioMock.buscarPorId(1L)).thenReturn(tp);
 
-        servicio.avanzarEstado(1L);
-        servicio.avanzarEstado(1L);
+    servicio.avanzarEstado(1L);
+    servicio.avanzarEstado(1L);
 
-        assertThat(tp.getEstado(), equalTo(EstadoTP.FINALIZADO));
-    }
+    assertThat(tp.getEstado(), equalTo(EstadoTP.FINALIZADO));
+  }
 
-    @Test
-    public void avanzarUnIdInexistenteDeberiaLanzarExcepcion() {
-        when(repositorioMock.buscarPorId(99L)).thenReturn(null);
+  @Test
+  public void avanzarUnIdInexistenteDeberiaLanzarExcepcion() {
+    when(repositorioMock.buscarPorId(99L)).thenReturn(null);
 
-        assertThrows(RuntimeException.class, () -> servicio.avanzarEstado(99L));
-    }
+    assertThrows(RuntimeException.class, () -> servicio.avanzarEstado(99L));
+  }
 
-    private TrabajoPractico tpConEstado(EstadoTP estado) {
-        TrabajoPractico tp = new TrabajoPractico();
-        tp.setNombre("TP de prueba");
-        tp.setEstado(estado);
-        return tp;
-    }
+  private TrabajoPractico tpConEstado(EstadoTP estado) {
+    TrabajoPractico tp = new TrabajoPractico();
+    tp.setNombre("TP de prueba");
+    tp.setEstado(estado);
+    return tp;
+  }
 }

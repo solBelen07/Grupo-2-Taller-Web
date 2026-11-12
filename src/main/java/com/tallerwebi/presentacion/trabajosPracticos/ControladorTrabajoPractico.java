@@ -37,19 +37,21 @@ public class ControladorTrabajoPractico {
 
   @Autowired
   public ControladorTrabajoPractico(
-          ServicioTrabajoPractico servicioTrabajoPractico, ServicioMateria servicioMateria) {
+    ServicioTrabajoPractico servicioTrabajoPractico,
+    ServicioMateria servicioMateria
+  ) {
     this.servicioTrabajoPractico = servicioTrabajoPractico;
     this.servicioMateria = servicioMateria;
   }
 
   @RequestMapping(method = RequestMethod.GET)
   public ModelAndView listarTrabajosPracticos(
-          @RequestParam(value = "materia", required = false) String materia,
-          HttpServletRequest request) {
-
+    @RequestParam(value = "materia", required = false) String materia,
+    HttpServletRequest request
+  ) {
     List<TrabajoPractico> lista = (materia != null && !materia.isEmpty())
-            ? servicioTrabajoPractico.buscarPorMateria(materia)
-            : servicioTrabajoPractico.obtenerTodos();
+      ? servicioTrabajoPractico.buscarPorMateria(materia)
+      : servicioTrabajoPractico.obtenerTodos();
 
     Map<String, Object> modelo = new ModelMap();
     modelo.put("pendientes", filtrar(lista, EstadoTP.PENDIENTE));
@@ -70,14 +72,17 @@ public class ControladorTrabajoPractico {
 
   @RequestMapping(path = "/guardar", method = RequestMethod.POST)
   public ModelAndView guardarTrabajoPractico(
-          @ModelAttribute(CLAVE_TP) TrabajoPractico trabajoPractico) {
+    @ModelAttribute(CLAVE_TP) TrabajoPractico trabajoPractico
+  ) {
     servicioTrabajoPractico.crearTrabajoPractico(trabajoPractico);
     return new ModelAndView(REDIRECT_LISTADO);
   }
 
   @RequestMapping(path = "/editar/{id}", method = RequestMethod.GET)
   public ModelAndView editarTrabajoPractico(
-          @PathVariable("id") Long id, HttpServletRequest request) {
+    @PathVariable("id") Long id,
+    HttpServletRequest request
+  ) {
     Map<String, Object> modelo = new ModelMap();
     modelo.put(CLAVE_TP, servicioTrabajoPractico.buscarPorId(id));
     cargarOpcionesDelFormulario(modelo, request);
@@ -109,10 +114,10 @@ public class ControladorTrabajoPractico {
       return List.of();
     }
     return servicioMateria
-            .obtenerMateriasPorUsuario(((Usuario) usuario).getId())
-            .stream()
-            .map(Materia::getNombre)
-            .toList();
+      .obtenerMateriasPorUsuario(((Usuario) usuario).getId())
+      .stream()
+      .map(Materia::getNombre)
+      .toList();
   }
 
   private List<TrabajoPractico> filtrar(List<TrabajoPractico> lista, EstadoTP estado) {
