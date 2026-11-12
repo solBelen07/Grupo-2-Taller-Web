@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.*; // crea un repo simulado
 
 import com.tallerwebi.dominio.grupo.Grupo;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -315,5 +316,282 @@ public class ServicioTareaTest {
 
     // validacion
     assertThat(progreso.get("Sin grupo"), equalTo(50.0));
+  }
+
+  @Test
+  public void calcularProgresoDeberiaDevolverCeroCuandoNoHayTareas() {
+    when(repositorioTareaMock.buscarTodas()).thenReturn(List.of());
+
+    double resultado = servicioTarea.calcularProgreso();
+
+    assertThat(resultado, equalTo(0.0));
+  }
+
+  @Test
+  public void contarTareasDeberiaDevolverCeroCuandoNoHayTareas() {
+    when(repositorioTareaMock.buscarTodas()).thenReturn(List.of());
+
+    assertThat(servicioTarea.contarTareasCompletadas(), equalTo(0L));
+    assertThat(servicioTarea.contarTareasPendientes(), equalTo(0L));
+    assertThat(servicioTarea.contarTareasTotales(), equalTo(0L));
+  }
+
+  @Test
+  public void calcularAporteIndividualDeberiaIgnorarResponsablesNulosOVacios() {
+    Tarea tarea1 = tarea("COMPLETADA", null);
+    tarea1.setResponsable(null);
+
+    Tarea tarea2 = tarea("COMPLETADA", null);
+    tarea2.setResponsable("");
+
+    Tarea tarea3 = tarea("COMPLETADA", null);
+    tarea3.setResponsable("   ");
+
+    Tarea tarea4 = tarea("COMPLETADA", null);
+    tarea4.setResponsable("Camila");
+
+    Tarea tarea5 = tarea("PENDIENTE", null);
+    tarea5.setResponsable("Juan");
+
+    when(repositorioTareaMock.buscarTodas())
+      .thenReturn(Arrays.asList(tarea1, tarea2, tarea3, tarea4, tarea5));
+
+    Map<String, Long> resultado = servicioTarea.calcularAporteIndividual();
+
+    assertThat(resultado.size(), equalTo(1));
+    assertThat(resultado.get("Camila"), equalTo(1L));
+    assertThat(resultado.containsKey("Juan"), equalTo(false));
+  }
+
+  @Test
+  public void calcularProgresoPorGrupoDeberiaDevolverMapaVacioSinTareas() {
+    when(repositorioTareaMock.buscarTodas()).thenReturn(List.of());
+
+    Map<String, Double> resultado = servicioTarea.calcularProgresoPorGrupo();
+
+    assertThat(resultado.isEmpty(), equalTo(true));
+  }
+
+  @Test
+  public void agruparPorGrupoDeberiaOrdenarAlfabeticamenteLosGrupos() {
+    Grupo grupoZ = grupo("Zeta");
+    Grupo grupoA = grupo("Alfa");
+
+    when(repositorioTareaMock.buscarTodas())
+      .thenReturn(Arrays.asList(tarea("PENDIENTE", grupoZ), tarea("COMPLETADA", grupoA)));
+
+    Map<String, List<Tarea>> resultado = servicioTarea.agruparPorGrupo();
+
+    assertThat(List.copyOf(resultado.keySet()), equalTo(List.of("Alfa", "Zeta")));
+  }
+
+  @Test
+  public void calcularPorcentajeHorasDeberiaDevolverCeroSiHorasPlanificadasSonNulas() {
+    Tarea tarea = new Tarea();
+    tarea.setHorasPlanificadas(null);
+    tarea.setHorasRealizadas(5);
+
+    double resultado = servicioTarea.calcularPorcentajeHoras(tarea);
+
+    assertThat(resultado, equalTo(0.0));
+  }
+
+  @Test
+  public void calcularPorcentajeHorasDeberiaDevolverCeroSiHorasPlanificadasSonCero() {
+    Tarea tarea = new Tarea();
+    tarea.setHorasPlanificadas(0);
+    tarea.setHorasRealizadas(5);
+
+    double resultado = servicioTarea.calcularPorcentajeHoras(tarea);
+
+    assertThat(resultado, equalTo(0.0));
+  }
+
+  @Test
+  public void calcularPorcentajeHorasDeberiaDevolverCeroSiHorasPlanificadasSonNegativas() {
+    Tarea tarea = new Tarea();
+    tarea.setHorasPlanificadas(-5);
+    tarea.setHorasRealizadas(3);
+
+    double resultado = servicioTarea.calcularPorcentajeHoras(tarea);
+
+    assertThat(resultado, equalTo(0.0));
+  }
+
+  @Test
+  public void calcularPorcentajeHorasDeberiaDevolverCeroSiHorasRealizadasSonNulas() {
+    Tarea tarea = new Tarea();
+    tarea.setHorasPlanificadas(10);
+    tarea.setHorasRealizadas(null);
+
+    double resultado = servicioTarea.calcularPorcentajeHoras(tarea);
+
+    assertThat(resultado, equalTo(0.0));
+  }
+
+  @Test
+  public void calcularPorcentajeHorasDeberiaDevolverCeroSiHorasRealizadasSonNegativas() {
+    Tarea tarea = new Tarea();
+    tarea.setHorasPlanificadas(10);
+    tarea.setHorasRealizadas(-2);
+
+    double resultado = servicioTarea.calcularPorcentajeHoras(tarea);
+
+    assertThat(resultado, equalTo(0.0));
+  }
+
+  @Test
+  public void calcularPorcentajeHorasDeberiaDevolverCeroSiNoSeRealizaronHoras() {
+    Tarea tarea = new Tarea();
+    tarea.setHorasPlanificadas(10);
+    tarea.setHorasRealizadas(0);
+
+    double resultado = servicioTarea.calcularPorcentajeHoras(tarea);
+
+    assertThat(resultado, equalTo(0.0));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaDevolverRegularConCincuentaPorCiento() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo("PARCIAL");
+    tarea.setHorasPlanificadas(10);
+    tarea.setHorasRealizadas(5);
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("REGULAR"));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaDevolverRegularConSetentaYNuevePorCiento() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo("PARCIAL");
+    tarea.setHorasPlanificadas(100);
+    tarea.setHorasRealizadas(79);
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("REGULAR"));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaDevolverInsuficienteConMenosDeCincuentaPorCiento() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo("PARCIAL");
+    tarea.setHorasPlanificadas(100);
+    tarea.setHorasRealizadas(49);
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("INSUFICIENTE"));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaDevolverInsuficienteSinHorasPlanificadas() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo("PARCIAL");
+    tarea.setHorasPlanificadas(null);
+    tarea.setHorasRealizadas(null);
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("INSUFICIENTE"));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaReconocerTipoParcialEnMinusculas() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo("parcial");
+    tarea.setHorasPlanificadas(10);
+    tarea.setHorasRealizadas(8);
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("PREPARACIÓN ADECUADA"));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaDevolverCompletadoParaTareaFinalizada() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo("TAREA");
+    tarea.setEstado("COMPLETADA");
+    tarea.setFechaVencimiento(LocalDate.now().minusDays(5));
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("COMPLETADO"));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaDevolverEnTiempoSinFechaDeVencimiento() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo("TAREA");
+    tarea.setEstado("PENDIENTE");
+    tarea.setFechaVencimiento(null);
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("EN TIEMPO"));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaDevolverAtrasadoSiVencioAyer() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo("TAREA");
+    tarea.setEstado("PENDIENTE");
+    tarea.setFechaVencimiento(LocalDate.now().minusDays(1));
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("ATRASADO"));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaDevolverProximoAVencerSiVenceHoy() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo("TAREA");
+    tarea.setEstado("PENDIENTE");
+    tarea.setFechaVencimiento(LocalDate.now());
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("PRÓXIMO A VENCER"));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaDevolverProximoAVencerSiFaltanTresDias() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo("TAREA");
+    tarea.setEstado("PENDIENTE");
+    tarea.setFechaVencimiento(LocalDate.now().plusDays(3));
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("PRÓXIMO A VENCER"));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaDevolverEnTiempoSiFaltanMasDeTresDias() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo("TAREA");
+    tarea.setEstado("PENDIENTE");
+    tarea.setFechaVencimiento(LocalDate.now().plusDays(4));
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("EN TIEMPO"));
+  }
+
+  @Test
+  public void calcularIndicadorDeberiaAceptarTipoNuloEnTareaPendiente() {
+    Tarea tarea = new Tarea();
+    tarea.setTipo(null);
+    tarea.setEstado("PENDIENTE");
+    tarea.setFechaVencimiento(LocalDate.now().plusDays(5));
+
+    String resultado = servicioTarea.calcularIndicador(tarea);
+
+    assertThat(resultado, equalTo("EN TIEMPO"));
   }
 }

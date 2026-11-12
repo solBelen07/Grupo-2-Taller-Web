@@ -1,190 +1,154 @@
 INSERT INTO Materia
 (id, nombre, descripcion, docente, color, dias, horario, materialBibliografico)
-VALUES
-    (
-        null,
+VALUES (null,
         'Taller Web I',
         'Desarrollo de aplicaciones web con Spring MVC, Hibernate y Thymeleaf.',
         'Spizzirri',
         '#8B5CF6',
         'Lunes y Miércoles',
         '18:00 - 22:00',
-        'Documentación de Spring'
-    );
+        'Documentación de Spring');
 
 INSERT INTO Materia
 (id, nombre, descripcion, docente, color, dias, horario, materialBibliografico)
-VALUES
-    (
-        null,
+VALUES (null,
         'Base de Datos II',
         'Diseño y administración de bases de datos.',
         'Laura Ibáñez',
         '#3B82F6',
         'Martes y Jueves',
         '16:00 - 20:00',
-        'Apuntes SQL'
-    );
+        'Apuntes SQL');
 
 INSERT INTO Materia
 (id, nombre, descripcion, docente, color, dias, horario, materialBibliografico)
-VALUES
-    (
-        null,
+VALUES (null,
         'Visualización e Interfaces',
         'Diseño de interfaces y experiencia de usuario.',
         'Mariana López',
         '#EC4899',
         'Viernes',
         '14:00 - 18:00',
-        'Material de Figma'
-    );
+        'Material de Figma');
 
 INSERT INTO Parcial
 (id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
-VALUES
-    (null, 'Segundo Parcial de Base de Datos II', (SELECT id FROM Materia WHERE nombre = 'Base de Datos II'), '2026-12-03', '16:00:00', 5, 3);
+VALUES (null, 'Segundo Parcial de Base de Datos II', (SELECT id FROM Materia WHERE nombre = 'Base de Datos II'),
+        '2026-12-03', '16:00:00', 5, 3);
 
 -- Vencimientos de muestra para el dashboard.
 INSERT INTO Parcial
 (id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
-VALUES
-    (null, 'Segundo Parcial de Interfaces', (SELECT id FROM Materia WHERE nombre = 'Visualización e Interfaces'),
-     '2026-11-27', '14:00:00', 3, 2);
+VALUES (null, 'Segundo Parcial de Interfaces', (SELECT id FROM Materia WHERE nombre = 'Visualización e Interfaces'),
+        '2026-11-27', '14:00:00', 3, 2);
 
 INSERT INTO TrabajoPractico
-(id, nombre, materia, descripcion, fechaEntrega, tipo, estado)
-VALUES
-    (null, 'TP Integrador de Normalización', 'Base de Datos II',
-     'Normalizar el modelo de datos hasta tercera forma normal.',
-     '2026-11-24', 'INDIVIDUAL', 'EN_CURSO');
+    (id, nombre, materia, descripcion, fechaEntrega, tipo, estado)
+VALUES (null, 'TP Integrador de Normalización', 'Base de Datos II',
+        'Normalizar el modelo de datos hasta tercera forma normal.',
+        '2026-11-24', 'INDIVIDUAL', 'EN_CURSO');
 
 INSERT INTO Parcial
 (id, nombre, materia_id, fecha, horario, cantidadDiasEstudio, horasPorDia)
-VALUES
-    (null, 'Sprint 6', (SELECT id FROM Materia WHERE nombre = 'Taller Web I'),
-     '2026-11-19', '21:30:00', 4, 2);
+VALUES (null, 'Sprint 6', (SELECT id FROM Materia WHERE nombre = 'Taller Web I'),
+        '2026-11-19', '21:30:00', 4, 2);
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'Terminar los tests de punta a punta', '2026-10-11', 2, true,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'Terminar los tests de punta a punta', '2026-10-11', 2, true,
+        (SELECT id
          FROM Parcial
          WHERE nombre = 'Sprint 6'));
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'Corregir errores', '2026-10-12', 2, true,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'Corregir errores', '2026-10-12', 2, true,
+        (SELECT id
          FROM Parcial
-         WHERE nombre = 'Sprint 6'
-     ));
+         WHERE nombre = 'Sprint 6'));
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'Preparar la demo', '2026-11-16', 2, false,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'Preparar la demo', '2026-11-16', 2, false,
+        (SELECT id
          FROM Parcial
-         WHERE nombre = 'Sprint 6'
-     ));
+         WHERE nombre = 'Sprint 6'));
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'Ensayar la presentación', '2026-11-17', 2, false,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'Ensayar la presentación', '2026-11-17', 2, false,
+        (SELECT id
          FROM Parcial
-         WHERE nombre = 'Sprint 6'
-     ));
+         WHERE nombre = 'Sprint 6'));
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'Modelo entidad relación', '2026-10-17', 3, true,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'Modelo entidad relación', '2026-10-17', 3, true,
+        (SELECT id
          FROM Parcial
-         WHERE nombre = 'Segundo Parcial de Base de Datos II'
-     ));
+         WHERE nombre = 'Segundo Parcial de Base de Datos II'));
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'Normalización', '2026-10-18', 3, true,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'Normalización', '2026-10-18', 3, true,
+        (SELECT id
          FROM Parcial
-         WHERE nombre = 'Segundo Parcial de Base de Datos II'
-     ));
+         WHERE nombre = 'Segundo Parcial de Base de Datos II'));
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'Consultas SQL', '2026-10-19', 3, true,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'Consultas SQL', '2026-10-19', 3, true,
+        (SELECT id
          FROM Parcial
-         WHERE nombre = 'Segundo Parcial de Base de Datos II'
-     ));
+         WHERE nombre = 'Segundo Parcial de Base de Datos II'));
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'JOIN y subconsultas', '2026-11-30', 3, false,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'JOIN y subconsultas', '2026-11-30', 3, false,
+        (SELECT id
          FROM Parcial
-         WHERE nombre = 'Segundo Parcial de Base de Datos II'
-     ));
+         WHERE nombre = 'Segundo Parcial de Base de Datos II'));
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'Procedimientos y triggers', '2026-12-02', 3, false,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'Procedimientos y triggers', '2026-12-02', 3, false,
+        (SELECT id
          FROM Parcial
-         WHERE nombre = 'Segundo Parcial de Base de Datos II'
-     ));
+         WHERE nombre = 'Segundo Parcial de Base de Datos II'));
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'Principios de diseño visual', '2026-11-23', 2, false,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'Principios de diseño visual', '2026-11-23', 2, false,
+        (SELECT id
          FROM Parcial
-         WHERE nombre = 'Segundo Parcial de Interfaces'
-     ));
+         WHERE nombre = 'Segundo Parcial de Interfaces'));
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'Wireframes y prototipos', '2026-11-24', 2, false,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'Wireframes y prototipos', '2026-11-24', 2, false,
+        (SELECT id
          FROM Parcial
-         WHERE nombre = 'Segundo Parcial de Interfaces'
-     ));
+         WHERE nombre = 'Segundo Parcial de Interfaces'));
 
 INSERT INTO SesionEstudio
-(id, tema, fecha, cantidadHoras, completada, parcial_id)
-VALUES
-    (null, 'Usabilidad y experiencia de usuario', '2026-11-26', 2, false,
-     (   SELECT id
+    (id, tema, fecha, cantidadHoras, completada, parcial_id)
+VALUES (null, 'Usabilidad y experiencia de usuario', '2026-11-26', 2, false,
+        (SELECT id
          FROM Parcial
-         WHERE nombre = 'Segundo Parcial de Interfaces'
-     ));
+         WHERE nombre = 'Segundo Parcial de Interfaces'));
 
 -- =====================================================================
 -- Usuarios y grupos
 -- =====================================================================
 INSERT INTO Usuario(id, nombre, apellido, email, password, rol, activo, puntos)
-VALUES
-    (null, 'Juan', 'Mendez','test@unlam.edu.ar', 'test', 'ADMIN', true, 0),
-    (null, 'Usuario', 'Test', 'user@test.com', 'USER', 'ADMIN', true, 0),
-    (null, 'Usuario1', 'Test', 'user1@test.com', '1234', 'ADMIN', true, 0),
-    (null, 'Usuario2', 'Test', 'user2@test.com', '1234', 'ADMIN', true, 0),
-    (null, 'Usuario3', 'Test', 'user3@test.com', '1234', 'ADMIN', true, 0),
-    (null, 'Usuario4', 'Test', 'user4@test.com', '1234', 'ADMIN', true, 0),
-    (null, 'Usuario5', 'Test', 'user5@test.com', '1234', 'ADMIN', true, 0),
-    (null, 'Usuario6', 'Test', 'user6@test.com', '1234', 'ADMIN', true, 0);
+VALUES (null, 'Juan', 'Mendez', 'test@unlam.edu.ar', 'test', 'ADMIN', true, 0),
+       (null, 'Usuario', 'Test', 'user@test.com', 'USER', 'ADMIN', true, 0),
+       (null, 'Usuario1', 'Test', 'user1@test.com', '1234', 'ADMIN', true, 0),
+       (null, 'Usuario2', 'Test', 'user2@test.com', '1234', 'ADMIN', true, 0),
+       (null, 'Usuario3', 'Test', 'user3@test.com', '1234', 'ADMIN', true, 0),
+       (null, 'Usuario4', 'Test', 'user4@test.com', '1234', 'ADMIN', true, 0),
+       (null, 'Usuario5', 'Test', 'user5@test.com', '1234', 'ADMIN', true, 0),
+       (null, 'Usuario6', 'Test', 'user6@test.com', '1234', 'ADMIN', true, 0);
 
 -- DSH-02: las sesiones de estudio de ejemplo son del usuario de prueba (el dueño de esas materias).
 UPDATE SesionEstudio
@@ -192,20 +156,18 @@ SET usuario = (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')
 WHERE usuario IS NULL;
 
 INSERT INTO materia_usuario (materia_id, usuario_id)
-VALUES
-    (1, 1),
-    (2, 1),
-    (3, 1);
+VALUES (1, 1),
+       (2, 1),
+       (3, 1);
 
 -- GRP-06: cada grupo tiene un creador (administrador). Es el mismo usuario que invita en los datos de abajo.
 INSERT INTO Grupo (id, nombre, creador_id)
-VALUES
-    (null, 'grupo1', (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')),
-    (null, 'grupo2', (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')),
-    (null, 'grupo3', (SELECT id FROM Usuario WHERE email = 'user@test.com')),
-    (null, 'grupo4', (SELECT id FROM Usuario WHERE email = 'user1@test.com')),
-    (null, 'grupo5', (SELECT id FROM Usuario WHERE email = 'user3@test.com')),
-    (null, 'grupo6', (SELECT id FROM Usuario WHERE email = 'user5@test.com'));
+VALUES (null, 'grupo1', (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')),
+       (null, 'grupo2', (SELECT id FROM Usuario WHERE email = 'test@unlam.edu.ar')),
+       (null, 'grupo3', (SELECT id FROM Usuario WHERE email = 'user@test.com')),
+       (null, 'grupo4', (SELECT id FROM Usuario WHERE email = 'user1@test.com')),
+       (null, 'grupo5', (SELECT id FROM Usuario WHERE email = 'user3@test.com')),
+       (null, 'grupo6', (SELECT id FROM Usuario WHERE email = 'user5@test.com'));
 
 -- =====================================================================
 -- CAL-01: eventos de ejemplo para el calendario, del usuario
@@ -214,26 +176,22 @@ VALUES
 -- =====================================================================
 
 INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id)
-VALUES (
-           null,
-           1,
-           'Clase de Taller Web I',
-           'CLASE',
-           CONCAT(CURDATE(), ' 18:00:00'),
-           CONCAT(CURDATE(), ' 22:00:00'),
-           1
-       );
+VALUES (null,
+        1,
+        'Clase de Taller Web I',
+        'CLASE',
+        CONCAT(CURDATE(), ' 18:00:00'),
+        CONCAT(CURDATE(), ' 22:00:00'),
+        1);
 
 INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id)
-VALUES (
-           null,
-           1,
-           'Práctica de Base de Datos II',
-           'CLASE',
-           CONCAT(CURDATE(), ' 08:00:00'),
-           CONCAT(CURDATE(), ' 10:00:00'),
-           2
-       );
+VALUES (null,
+        1,
+        'Práctica de Base de Datos II',
+        'CLASE',
+        CONCAT(CURDATE(), ' 08:00:00'),
+        CONCAT(CURDATE(), ' 10:00:00'),
+        2);
 
 -- =====================================================================
 -- CAL-02: Tareas de /tareas vinculadas a eventos del calendario, para
@@ -242,105 +200,97 @@ VALUES (
 
 -- Ejemplo 1, hoy: un TP con 40% de avance y 10 días para la entrega.
 -- Menos del 50% -> "En tiempo".
-INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento, grupo_id)
-VALUES (
-           null,
-           'Entrega TP de Taller Web I',
-           'Taller Web I',
-           'PENDIENTE',
-           4,
-           10,
-           'test@unlam.edu.ar',
-           'TP',
-           DATE_ADD(CURDATE(), INTERVAL 10 DAY),
-           (SELECT id FROM Grupo WHERE nombre = 'grupo1')
-       );
+INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento,
+                   grupo_id)
+VALUES (null,
+        'Entrega TP de Taller Web I',
+        'Taller Web I',
+        'PENDIENTE',
+        4,
+        10,
+        'test@unlam.edu.ar',
+        'TP',
+        DATE_ADD(CURDATE(), INTERVAL 10 DAY),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo1'));
 
 INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id, tareaId)
-VALUES (
-           null,
-           1,
-           'Entrega TP de Taller Web I',
-           'TRABAJO_PRACTICO',
-           CONCAT(CURDATE(), ' 20:00:00'),
-           CONCAT(CURDATE(), ' 21:00:00'),
-           1,
-           1
-       );
+VALUES (null,
+        1,
+        'Entrega TP de Taller Web I',
+        'TRABAJO_PRACTICO',
+        CONCAT(CURDATE(), ' 20:00:00'),
+        CONCAT(CURDATE(), ' 21:00:00'),
+        1,
+        1);
 
--- Ejemplo 2, mañana: un Parcial con 70% de avance pero que vence en 2
+-- Ejemplo 2, mañana: un simulacro de parcial con 70% de avance pero que vence en 2
 -- días. La urgencia por fecha le gana al progreso -> "Próxima a vencer".
-INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento, grupo_id)
-VALUES (
-           null,
-           'Parcial de Base de Datos II',
-           'Base de Datos II',
-           'PENDIENTE',
-           7,
-           10,
-           'test@unlam.edu.ar',
-           'PARCIAL',
-           DATE_ADD(CURDATE(), INTERVAL 2 DAY),
-           (SELECT id FROM Grupo WHERE nombre = 'grupo1')
-       );
+INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento,
+                   grupo_id)
+VALUES (null,
+        'Simulacro de parcial de Base de Datos II',
+        'Base de Datos II',
+        'PENDIENTE',
+        7,
+        10,
+        'test@unlam.edu.ar',
+        'PARCIAL',
+        DATE_ADD(CURDATE(), INTERVAL 2 DAY),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo1'));
 
 INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id, tareaId)
-VALUES (
-           null,
-           1,
-           'Parcial de Base de Datos II',
-           'PARCIAL',
-           CONCAT(DATE_ADD(CURDATE(), INTERVAL 1 DAY), ' 09:00:00'),
-           CONCAT(DATE_ADD(CURDATE(), INTERVAL 1 DAY), ' 11:00:00'),
-           2,
-           2
-       );
+VALUES (null,
+        1,
+        'Simulacro de parcial de Base de Datos II',
+        'PARCIAL',
+        CONCAT(DATE_ADD(CURDATE(), INTERVAL 1 DAY), ' 09:00:00'),
+        CONCAT(DATE_ADD(CURDATE(), INTERVAL 1 DAY), ' 11:00:00'),
+        2,
+        2);
 
--- Ejemplo 3, pasado mañana: un Parcial con 60% de avance y 15 días
+-- Ejemplo 3, pasado mañana: un simulacro de parcial con 60% de avance y 15 días
 -- todavía. Acá gana el progreso -> "Parcialmente completada".
-INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento, grupo_id)
-VALUES (
-           null,
-           'Parcial de Visualización e Interfaces',
-           'Visualización e Interfaces',
-           'PENDIENTE',
-           6,
-           10,
-           'test@unlam.edu.ar',
-           'PARCIAL',
-           DATE_ADD(CURDATE(), INTERVAL 15 DAY),
-           (SELECT id FROM Grupo WHERE nombre = 'grupo2')
-       );
+INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento,
+                   grupo_id)
+VALUES (null,
+        'Simulacro de parcial de Visualización e Interfaces',
+        'Visualización e Interfaces',
+        'PENDIENTE',
+        6,
+        10,
+        'test@unlam.edu.ar',
+        'PARCIAL',
+        DATE_ADD(CURDATE(), INTERVAL 15 DAY),
+        (SELECT id FROM Grupo WHERE nombre = 'grupo2'));
 
 INSERT INTO Evento (id, usuarioId, titulo, tipo, inicio, fin, materia_id, tareaId)
-VALUES (
-           null,
-           1,
-           'Parcial de Visualización e Interfaces',
-           'PARCIAL',
-           CONCAT(DATE_ADD(CURDATE(), INTERVAL 2 DAY), ' 14:00:00'),
-           CONCAT(DATE_ADD(CURDATE(), INTERVAL 2 DAY), ' 16:00:00'),
-           3,
-           3
-       );
+VALUES (null,
+        1,
+        'Simulacro de parcial de Visualización e Interfaces',
+        'PARCIAL',
+        CONCAT(DATE_ADD(CURDATE(), INTERVAL 2 DAY), ' 14:00:00'),
+        CONCAT(DATE_ADD(CURDATE(), INTERVAL 2 DAY), ' 16:00:00'),
+        3,
+        3);
 
 -- =====================================================================
 -- GRP-02: tareas de ejemplo repartidas entre grupos, para ver el tablero
 -- grupal con una barra de progreso distinta por grupo.
 -- (Las 3 tareas de arriba quedan en grupo1, grupo1 y grupo2)
 -- =====================================================================
-INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento, grupo_id)
-VALUES
-    (null, 'Práctica 1 de Taller Web I', 'Taller Web I', 'COMPLETADA', 6, 6, 'test@unlam.edu.ar', 'TP',
-     DATE_ADD(CURDATE(), INTERVAL 5 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo1')),
-    (null, 'Informe de Base de Datos II', 'Base de Datos II', 'COMPLETADA', 8, 8, 'user@test.com', 'TP',
-     DATE_ADD(CURDATE(), INTERVAL 7 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo2')),
-    (null, 'Prototipo de Visualización e Interfaces', 'Visualización e Interfaces', 'PENDIENTE', 2, 10, 'user@test.com', 'TP',
-     DATE_ADD(CURDATE(), INTERVAL 12 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
+INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento,
+                   grupo_id)
+VALUES (null, 'Práctica 1 de Taller Web I', 'Taller Web I', 'COMPLETADA', 6, 6, 'test@unlam.edu.ar', 'TP',
+        DATE_ADD(CURDATE(), INTERVAL 5 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo1')),
+       (null, 'Informe de Base de Datos II', 'Base de Datos II', 'COMPLETADA', 8, 8, 'user@test.com', 'TP',
+        DATE_ADD(CURDATE(), INTERVAL 7 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo2')),
+       (null, 'Prototipo de Visualización e Interfaces', 'Visualización e Interfaces', 'PENDIENTE', 2, 10,
+        'user@test.com', 'TP',
+        DATE_ADD(CURDATE(), INTERVAL 12 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo3'));
 
 INSERT INTO Logro(id, nombre, descripcion)
-VALUES (null,'Maratonista','Estudiaste más de 50 horas'),
-       (null,'Popular','Fuiste invitado muchas veces a grupos'),
+VALUES (null, 'Maratonista', 'Estudiaste más de 50 horas'),
+       (null, 'Popular', 'Fuiste invitado muchas veces a grupos'),
        -- Más logros, que se pueden ganar usando la app
        (null, 'Primeros pasos', 'Cargaste tu primera materia'),
        (null, 'Primer vuelo', 'Completaste tu primera sesión en FocusFlight'),
@@ -353,43 +303,43 @@ VALUES (null,'Maratonista','Estudiaste más de 50 horas'),
 -- =====================================================================
 -- Universidades, carreras e intereses
 -- =====================================================================
-INSERT INTO Universidad (id, nombre) VALUES
-                                         (null, 'Universidad Nacional de La Matanza (UNLaM)'),
-                                         (null, 'Universidad de Buenos Aires (UBA)'),
-                                         (null, 'Universidad Tecnológica Nacional (UTN)'),
-                                         (null, 'Universidad Nacional de La Plata (UNLP)'),
-                                         (null, 'Universidad Nacional de Córdoba (UNC)'),
-                                         (null, 'Universidad Argentina de la Empresa (UADE)'),
-                                         (null, 'Instituto Tecnológico de Buenos Aires (ITBA)');
+INSERT INTO Universidad (id, nombre)
+VALUES (null, 'Universidad Nacional de La Matanza (UNLaM)'),
+       (null, 'Universidad de Buenos Aires (UBA)'),
+       (null, 'Universidad Tecnológica Nacional (UTN)'),
+       (null, 'Universidad Nacional de La Plata (UNLP)'),
+       (null, 'Universidad Nacional de Córdoba (UNC)'),
+       (null, 'Universidad Argentina de la Empresa (UADE)'),
+       (null, 'Instituto Tecnológico de Buenos Aires (ITBA)');
 
-INSERT INTO Carrera (id, nombre) VALUES
-                                     (null, 'Ingeniería en Informática'),
-                                     (null, 'Ingeniería en Sistemas'),
-                                     (null, 'Licenciatura en Sistemas'),
-                                     (null, 'Tecnicatura en Programación'),
-                                     (null, 'Ingeniería Industrial'),
-                                     (null, 'Ingeniería Electrónica');
+INSERT INTO Carrera (id, nombre)
+VALUES (null, 'Ingeniería en Informática'),
+       (null, 'Ingeniería en Sistemas'),
+       (null, 'Licenciatura en Sistemas'),
+       (null, 'Tecnicatura en Programación'),
+       (null, 'Ingeniería Industrial'),
+       (null, 'Ingeniería Electrónica');
 
-INSERT INTO Interes (id, nombre) VALUES
-                                     (null, 'JavaScript'),
-                                     (null, 'Java'),
-                                     (null, 'Python'),
-                                     (null, 'C#'),
-                                     (null, 'PHP'),
-                                     (null, 'SQL'),
-                                     (null, 'HTML y CSS'),
-                                     (null, 'React'),
-                                     (null, 'Spring'),
-                                     (null, 'Node.js'),
-                                     (null, 'Docker'),
-                                     (null, 'Git'),
-                                     (null, 'Inteligencia Artificial'),
-                                     (null, 'Ciberseguridad'),
-                                     (null, 'Redes'),
-                                     (null, 'Desarrollo móvil'),
-                                     (null, 'DevOps'),
-                                     (null, 'UX/UI'),
-                                     (null, 'Testing');
+INSERT INTO Interes (id, nombre)
+VALUES (null, 'JavaScript'),
+       (null, 'Java'),
+       (null, 'Python'),
+       (null, 'C#'),
+       (null, 'PHP'),
+       (null, 'SQL'),
+       (null, 'HTML y CSS'),
+       (null, 'React'),
+       (null, 'Spring'),
+       (null, 'Node.js'),
+       (null, 'Docker'),
+       (null, 'Git'),
+       (null, 'Inteligencia Artificial'),
+       (null, 'Ciberseguridad'),
+       (null, 'Redes'),
+       (null, 'Desarrollo móvil'),
+       (null, 'DevOps'),
+       (null, 'UX/UI'),
+       (null, 'Testing');
 
 -- GAM-02: logro obtenido de ejemplo (quién obtuvo qué logro y cuándo)
 INSERT INTO LogroObtenido (id, usuario_id, logro_id, fechaObtencion)
@@ -465,3 +415,32 @@ VALUES (null, 'PENDIENTE', true,
         (SELECT id FROM Usuario WHERE email = 'user5@test.com'),
         (SELECT id FROM Usuario WHERE email = 'user1@test.com'),
         (SELECT id FROM Grupo WHERE nombre = 'grupo6'));
+
+-- materia + usuario
+INSERT INTO materia_usuario (materia_id, usuario_id)
+VALUES ((SELECT id FROM Materia WHERE nombre = 'Base de Datos II'),
+        (SELECT id FROM Usuario WHERE email = 'user@test.com')),
+       ((SELECT id FROM Materia WHERE nombre = 'Visualización e Interfaces'),
+        (SELECT id FROM Usuario WHERE email = 'user@test.com')),
+
+       ((SELECT id FROM Materia WHERE nombre = 'Taller Web I'),
+        (SELECT id FROM Usuario WHERE email = 'user1@test.com')),
+       ((SELECT id FROM Materia WHERE nombre = 'Base de Datos II'),
+        (SELECT id FROM Usuario WHERE email = 'user1@test.com')),
+
+       ((SELECT id FROM Materia WHERE nombre = 'Visualización e Interfaces'),
+        (SELECT id FROM Usuario WHERE email = 'user2@test.com'));
+
+-- Tareas nuevas
+INSERT INTO Tarea (id, titulo, materia, estado, horasRealizadas, horasPlanificadas, responsable, tipo, fechaVencimiento,
+                   grupo_id)
+VALUES
+    (null, 'Informe de normalización', 'Base de Datos II', 'COMPLETADA', 4, 4, 'user1@test.com', 'TP',
+     DATE_ADD(CURDATE(), INTERVAL 4 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo1')),
+    (null, 'Maqueta de Taller Web I', 'Taller Web I', 'COMPLETADA', 6, 6, 'user1@test.com', 'TP',
+     DATE_ADD(CURDATE(), INTERVAL 6 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo1')),
+
+    (null, 'Wireframes de la app', 'Visualización e Interfaces', 'COMPLETADA', 5, 5, 'user2@test.com', 'TP',
+     DATE_ADD(CURDATE(), INTERVAL 8 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo4')),
+    (null, 'Prototipo de alta fidelidad', 'Visualización e Interfaces', 'PENDIENTE', 1, 8, 'user2@test.com', 'TP',
+     DATE_ADD(CURDATE(), INTERVAL 14 DAY), (SELECT id FROM Grupo WHERE nombre = 'grupo4'));

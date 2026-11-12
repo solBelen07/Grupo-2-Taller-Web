@@ -2,6 +2,10 @@ package com.tallerwebi.dominio.trabajosPracticos;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
@@ -23,7 +27,6 @@ public class ServicioTrabajoPracticoTest {
 
   @Test
   void crearTrabajoPracticoDeberiaCrearloYGuardarloEnElRepositorio() {
-    // Arrange
     TrabajoPractico tpNuevo = new TrabajoPractico(
       "TP Arquitectura",
       "Desarrollo de Software",
@@ -35,10 +38,8 @@ public class ServicioTrabajoPracticoTest {
     when(repositorioTrabajoPracticoMock.save(any(TrabajoPractico.class)))
       .thenAnswer(invocation -> invocation.getArgument(0));
 
-    // Act
     TrabajoPractico resultado = servicioTrabajoPractico.crearTrabajoPractico(tpNuevo);
 
-    // Assert
     assertNotNull(resultado);
     assertEquals("TP Arquitectura", resultado.getNombre());
     assertEquals(EstadoTP.PENDIENTE, resultado.getEstado());
@@ -47,7 +48,6 @@ public class ServicioTrabajoPracticoTest {
 
   @Test
   void deberiaCambiarElEstadoDelTrabajoPracticoExitosamente() {
-    // Arrange
     Long idTp = 1L;
     TrabajoPractico tpExistente = new TrabajoPractico(
       "TP Arquitectura",
@@ -64,10 +64,8 @@ public class ServicioTrabajoPracticoTest {
     when(repositorioTrabajoPracticoMock.save(any(TrabajoPractico.class)))
       .thenAnswer(invocation -> invocation.getArgument(0));
 
-    // Act
     TrabajoPractico resultado = servicioTrabajoPractico.cambiarEstado(idTp, EstadoTP.EN_CURSO);
 
-    // Assert
     assertNotNull(resultado);
     assertEquals(EstadoTP.EN_CURSO, resultado.getEstado());
 
@@ -77,7 +75,6 @@ public class ServicioTrabajoPracticoTest {
 
   @Test
   void deberiaRetornarListaDeTrabajosPracticos() {
-    // Arrange
     List<TrabajoPractico> listaSimulada = List.of(
       new TrabajoPractico("TP 1", "Matemática", LocalDateTime.now(), TipoTrabajo.GRUPAL, "Desc 1"),
       new TrabajoPractico("TP 2", "Física", LocalDateTime.now(), TipoTrabajo.INDIVIDUAL, "Desc 2")
@@ -85,13 +82,92 @@ public class ServicioTrabajoPracticoTest {
 
     when(repositorioTrabajoPracticoMock.obtenerTodos()).thenReturn(listaSimulada);
 
-    // Act
     List<TrabajoPractico> resultado = servicioTrabajoPractico.obtenerTodos();
 
-    // Assert
     assertNotNull(resultado);
     assertEquals(2, resultado.size());
     assertEquals("TP 1", resultado.getFirst().getNombre());
     verify(repositorioTrabajoPracticoMock, times(1)).obtenerTodos();
+  }
+
+  @Test
+  void deberiaBuscarUnTrabajoPracticoPorId() {
+    Long idTp = 1L;
+
+    TrabajoPractico tp = new TrabajoPractico(
+      "TP Arquitectura",
+      "Desarrollo de Software",
+      LocalDateTime.now().plusDays(7),
+      TipoTrabajo.GRUPAL,
+      "Descripción del TP"
+    );
+
+    when(repositorioTrabajoPracticoMock.buscarPorId(idTp)).thenReturn(tp);
+
+    TrabajoPractico resultado = servicioTrabajoPractico.buscarPorId(idTp);
+
+    assertNotNull(resultado);
+    assertSame(tp, resultado);
+
+    verify(repositorioTrabajoPracticoMock, times(1)).buscarPorId(idTp);
+  }
+
+  @Test
+  void deberiaDevolverNullSiElTrabajoPracticoNoExiste() {
+    Long idTp = 99L;
+
+    when(repositorioTrabajoPracticoMock.buscarPorId(idTp)).thenReturn(null);
+    TrabajoPractico resultado = servicioTrabajoPractico.buscarPorId(idTp);
+    assertNull(resultado);
+    verify(repositorioTrabajoPracticoMock, times(1)).buscarPorId(idTp);
+  }
+
+  @Test
+  void deberiaEliminarUnTrabajoPracticoExistente() {
+    Long idTp = 1L;
+
+    TrabajoPractico tp = new TrabajoPractico(
+      "TP Arquitectura",
+      "Desarrollo de Software",
+      LocalDateTime.now().plusDays(7),
+      TipoTrabajo.GRUPAL,
+      "Descripción del TP"
+    );
+
+    when(repositorioTrabajoPracticoMock.buscarPorId(idTp)).thenReturn(tp);
+    servicioTrabajoPractico.eliminar(idTp);
+    verify(repositorioTrabajoPracticoMock, times(1)).buscarPorId(idTp);
+    verify(repositorioTrabajoPracticoMock, times(1)).eliminar(tp);
+  }
+
+  @Test
+  void deberiaLanzarExcepcionAlEliminarUnTrabajoPracticoInexistente() {
+    Long idTp = 99L;
+
+    when(repositorioTrabajoPracticoMock.buscarPorId(idTp)).thenReturn(null);
+
+    RuntimeException excepcion = assertThrows(
+      RuntimeException.class,
+      () -> servicioTrabajoPractico.eliminar(idTp)
+    );
+
+    assertEquals("Trabajo práctico no encontrado para eliminar", excepcion.getMessage());
+    verify(repositorioTrabajoPracticoMock, times(1)).buscarPorId(idTp);
+    verify(repositorioTrabajoPracticoMock, never()).eliminar(any(TrabajoPractico.class));
+  }
+
+  @Test
+  void deberiaLanzarExcepcionAlCambiarEstadoDeTrabajoPracticoInexistente() {
+    Long idTp = 99L;
+
+    when(repositorioTrabajoPracticoMock.buscarPorId(idTp)).thenReturn(null);
+
+    RuntimeException excepcion = assertThrows(
+      RuntimeException.class,
+      () -> servicioTrabajoPractico.cambiarEstado(idTp, EstadoTP.EN_CURSO)
+    );
+    assertEquals("Trabajo práctico no encontrado", excepcion.getMessage());
+    verify(repositorioTrabajoPracticoMock, times(1)).buscarPorId(idTp);
+    verify(repositorioTrabajoPracticoMock, never()).save(any(TrabajoPractico.class));
   }
 }

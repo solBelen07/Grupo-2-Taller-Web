@@ -13,10 +13,12 @@ import com.tallerwebi.dominio.materialBibliografico.ServicioMaterial;
 import com.tallerwebi.presentacion.materia.ControladorMateria;
 import com.tallerwebi.presentacion.materia.DatosMateria;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -290,7 +292,13 @@ public class ControladorMateriaTest {
     assertEquals(200, respuesta.getStatusCode().value());
     assertEquals(MediaType.APPLICATION_PDF, respuesta.getHeaders().getContentType());
     assertArrayEquals(contenido, respuesta.getBody());
-    assertTrue(respuesta.getHeaders().getFirst("Content-Disposition").startsWith("inline"));
+    assertEquals(contenido.length, respuesta.getHeaders().getContentLength());
+    assertEquals("nosniff", respuesta.getHeaders().getFirst("X-Content-Type-Options"));
+    String disposicion = respuesta.getHeaders().getFirst(HttpHeaders.CONTENT_DISPOSITION);
+    assertNotNull(disposicion);
+    assertTrue(disposicion.startsWith("inline"));
+    assertTrue(disposicion.contains("unidad1.pdf"));
+    verify(servicioMaterialMock).buscarPorId(10);
     verify(servicioMaterialMock).descargarMaterial(10);
   }
 
@@ -320,8 +328,137 @@ public class ControladorMateriaTest {
 
     ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(20, request);
 
+    assertEquals(200, respuesta.getStatusCode().value());
     assertEquals(MediaType.APPLICATION_OCTET_STREAM, respuesta.getHeaders().getContentType());
-    assertTrue(respuesta.getHeaders().getFirst("Content-Disposition").startsWith("attachment"));
+    assertArrayEquals(contenido, respuesta.getBody());
+    assertEquals(contenido.length, respuesta.getHeaders().getContentLength());
+    assertEquals("nosniff", respuesta.getHeaders().getFirst("X-Content-Type-Options"));
+    assertTrue(
+      respuesta.getHeaders().getFirst(HttpHeaders.CONTENT_DISPOSITION).startsWith("attachment")
+    );
+    verify(servicioMaterialMock).descargarMaterial(20);
+  }
+
+  // Cobertura adicional de verMaterial(): autenticacion, autorizacion y formatos.
+
+  @Test
+  public void verMaterialSinUsuarioDeberiaRedirigirAlLogin() {
+    MockHttpServletRequest sinUsuario = new MockHttpServletRequest();
+
+    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(10, sinUsuario);
+
+    assertEquals(302, respuesta.getStatusCode().value());
+    assertEquals(URI.create("/login"), respuesta.getHeaders().getLocation());
+    assertNull(respuesta.getBody());
+    verifyNoInteractions(servicioMaterialMock);
+  }
+
+  @Test
+  public void verMaterialSinMateriaDeberiaDevolver404() {
+    MaterialBibliografico material = new MaterialBibliografico();
+    material.setId(10);
+    material.setNombreArchivo("unidad1.pdf");
+    material.setMateria(null);
+    when(servicioMaterialMock.buscarPorId(10)).thenReturn(material);
+
+    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(10, request);
+
+    assertEquals(404, respuesta.getStatusCode().value());
+    verify(servicioMaterialMock).buscarPorId(10);
+    verify(servicioMaterialMock, never()).descargarMaterial(anyInt());
+  }
+
+  @Test
+  public void verMaterialDeOtroUsuarioDeberiaDevolver404() {
+    MaterialBibliografico material = new MaterialBibliografico();
+    material.setId(10);
+    material.setNombreArchivo("privado.pdf");
+    material.setMateria(crearMateriaDeOtroUsuario(5));
+    when(servicioMaterialMock.buscarPorId(10)).thenReturn(material);
+
+    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(10, request);
+
+    assertEquals(404, respuesta.getStatusCode().value());
+    verify(servicioMaterialMock, never()).descargarMaterial(anyInt());
+  }
+
+  @Test
+  public void verMaterialDeMateriaSinUsuariosDeberiaDevolver404() {
+    Materia materia = new Materia();
+    materia.setId(5);
+    materia.setUsuarios(null);
+
+    MaterialBibliografico material = new MaterialBibliografico();
+    material.setId(10);
+    material.setMateria(materia);
+    when(servicioMaterialMock.buscarPorId(10)).thenReturn(material);
+
+    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(10, request);
+
+    assertEquals(404, respuesta.getStatusCode().value());
+    verify(servicioMaterialMock, never()).descargarMaterial(anyInt());
+  }
+
+  @Test
+  public void verMaterialDeMateriaConUsuariosVaciosDeberiaDevolver404() {
+    Materia materia = new Materia();
+    materia.setId(5);
+    materia.setUsuarios(List.of());
+
+    MaterialBibliografico material = new MaterialBibliografico();
+    material.setId(10);
+    material.setMateria(materia);
+    when(servicioMaterialMock.buscarPorId(10)).thenReturn(material);
+
+    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(10, request);
+
+    assertEquals(404, respuesta.getStatusCode().value());
+    verify(servicioMaterialMock, never()).descargarMaterial(anyInt());
+  }
+
+  @Test
+  public void verMaterialPdfConExtensionMayusculaDeberiaAbrirseEnNavegador() {
+    MaterialBibliografico material = new MaterialBibliografico();
+    material.setId(30);
+    material.setMateria(crearMateriaDePrueba(3, "Taller Web I"));
+    material.setNombreArchivo("apuntes.PDF");
+
+    byte[] contenido = "%PDF-prueba".getBytes(StandardCharsets.UTF_8);
+    when(servicioMaterialMock.buscarPorId(30)).thenReturn(material);
+    when(servicioMaterialMock.descargarMaterial(30)).thenReturn(contenido);
+
+    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(30, request);
+
+    assertEquals(200, respuesta.getStatusCode().value());
+    assertEquals(MediaType.APPLICATION_PDF, respuesta.getHeaders().getContentType());
+    assertTrue(
+      respuesta.getHeaders().getFirst(HttpHeaders.CONTENT_DISPOSITION).startsWith("inline")
+    );
+    assertArrayEquals(contenido, respuesta.getBody());
+    verify(servicioMaterialMock).descargarMaterial(30);
+  }
+
+  @Test
+  public void verMaterialConNombreArchivoNuloDeberiaDescargarseComoBinario() {
+    MaterialBibliografico material = new MaterialBibliografico();
+    material.setId(31);
+    material.setMateria(crearMateriaDePrueba(3, "Taller Web I"));
+    material.setNombreArchivo(null);
+
+    byte[] contenido = new byte[] { 1, 2, 3 };
+    when(servicioMaterialMock.buscarPorId(31)).thenReturn(material);
+    when(servicioMaterialMock.descargarMaterial(31)).thenReturn(contenido);
+
+    ResponseEntity<byte[]> respuesta = controladorMateria.verMaterial(31, request);
+
+    assertEquals(200, respuesta.getStatusCode().value());
+    assertEquals(MediaType.APPLICATION_OCTET_STREAM, respuesta.getHeaders().getContentType());
+    assertTrue(
+      respuesta.getHeaders().getFirst(HttpHeaders.CONTENT_DISPOSITION).startsWith("attachment")
+    );
+    assertArrayEquals(contenido, respuesta.getBody());
+    assertEquals(contenido.length, respuesta.getHeaders().getContentLength());
+    verify(servicioMaterialMock).descargarMaterial(31);
   }
 
   @Test

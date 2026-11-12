@@ -141,4 +141,45 @@ public class RepositorioParcialTest {
 
     return parcial;
   }
+
+  @Test
+  public void eliminarPorMateriaDeberiaBorrarSoloLosParcialesDeEsaMateria() {
+    Materia materiaABorrar = dadoQueExisteUnaMateria();
+    Materia otraMateria = dadoQueExisteOtraMateria("Base de Datos II");
+    dadoQueExisteUnParcial(materiaABorrar);
+    dadoQueExisteUnParcial(materiaABorrar);
+    Parcial parcialDeOtraMateria = dadoQueExisteUnParcial(otraMateria);
+
+    cuandoEliminoLosParcialesDeLaMateria(materiaABorrar);
+
+    List<Parcial> parcialesQueQuedan = repositorioParcial.obtenerTodos();
+    assertEquals(1, parcialesQueQuedan.size(), "Solo debería quedar el parcial de la otra materia");
+    assertEquals(parcialDeOtraMateria.getId(), parcialesQueQuedan.get(0).getId());
+  }
+
+  @Test
+  public void eliminarPorUnaMateriaSinParcialesNoDeberiaBorrarNada() {
+    dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    Materia materiaSinParciales = dadoQueExisteOtraMateria("Base de Datos II");
+
+    cuandoEliminoLosParcialesDeLaMateria(materiaSinParciales);
+
+    List<Parcial> parcialesQueQuedan = repositorioParcial.obtenerTodos();
+    assertEquals(1, parcialesQueQuedan.size(), "El parcial de la otra materia no debería borrarse");
+  }
+
+  private void cuandoEliminoLosParcialesDeLaMateria(Materia materia) {
+    sessionFactory.getCurrentSession().flush();
+    repositorioParcial.eliminarPorMateriaId(materia.getId());
+    sessionFactory.getCurrentSession().clear();
+  }
+
+  private Materia dadoQueExisteOtraMateria(String nombre) {
+    Materia materia = new Materia();
+    materia.setNombre(nombre);
+    materia.setDescripcion("Otra materia");
+    materia.setDocente("Profesora");
+    sessionFactory.getCurrentSession().persist(materia);
+    return materia;
+  }
 }
