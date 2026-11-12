@@ -9,4 +9,5 @@ public interface ServicioTrabajoPractico {
   List<TrabajoPractico> buscarPorMateria(String materiaFiltro);
   TrabajoPractico buscarPorId(Long id);
   void eliminar(Long id);
+  TrabajoPractico avanzarEstado(Long id);
 }
