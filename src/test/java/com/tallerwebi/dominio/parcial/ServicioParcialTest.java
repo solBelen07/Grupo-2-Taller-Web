@@ -153,4 +153,145 @@ public class ServicioParcialTest {
 
     verify(servicioSesionEstudioMock, never()).crearSesion(any(SesionEstudio.class));
   }
+
+  @Test
+  public void deberiaDevolverCeroPorcentajeCuandoLasSesionesSonNulas() {
+    Parcial parcial = new Parcial();
+    parcial.setSesiones(null);
+
+    Integer resultado = parcial.getPorcentajeCompletado();
+
+    assertEquals(0, resultado);
+  }
+
+  @Test
+  public void deberiaDevolverCeroPorcentajeCuandoNoHaySesiones() {
+    Parcial parcial = new Parcial();
+    parcial.setSesiones(List.of());
+
+    Integer resultado = parcial.getPorcentajeCompletado();
+
+    assertEquals(0, resultado);
+  }
+
+  @Test
+  public void deberiaCalcularPorcentajeDeSesionesCompletadas() {
+    Parcial parcial = new Parcial();
+
+    SesionEstudio sesion1 = new SesionEstudio();
+    sesion1.setCompletada(true);
+
+    SesionEstudio sesion2 = new SesionEstudio();
+    sesion2.setCompletada(false);
+
+    SesionEstudio sesion3 = new SesionEstudio();
+    sesion3.setCompletada(true);
+
+    SesionEstudio sesion4 = new SesionEstudio();
+    sesion4.setCompletada(null);
+
+    parcial.setSesiones(Arrays.asList(sesion1, sesion2, sesion3, sesion4));
+
+    Integer resultado = parcial.getPorcentajeCompletado();
+
+    assertEquals(50, resultado);
+  }
+
+  @Test
+  public void deberiaDevolverCienPorCientoSiTodasLasSesionesEstanCompletadas() {
+    Parcial parcial = new Parcial();
+
+    SesionEstudio sesion1 = new SesionEstudio();
+    sesion1.setCompletada(true);
+
+    SesionEstudio sesion2 = new SesionEstudio();
+    sesion2.setCompletada(true);
+
+    parcial.setSesiones(Arrays.asList(sesion1, sesion2));
+
+    assertEquals(100, parcial.getPorcentajeCompletado());
+  }
+
+  @Test
+  public void deberiaDevolverCeroPorcentajeSiNingunaSesionEstaCompletada() {
+    Parcial parcial = new Parcial();
+
+    SesionEstudio sesion1 = new SesionEstudio();
+    sesion1.setCompletada(false);
+
+    SesionEstudio sesion2 = new SesionEstudio();
+    sesion2.setCompletada(null);
+
+    parcial.setSesiones(Arrays.asList(sesion1, sesion2));
+
+    assertEquals(0, parcial.getPorcentajeCompletado());
+  }
+
+  @Test
+  public void deberiaDevolverCeroCantidadSesionesCuandoLaListaEsNula() {
+    Parcial parcial = new Parcial();
+    parcial.setSesiones(null);
+
+    Integer resultado = parcial.getCantidadSesiones();
+
+    assertEquals(0, resultado);
+  }
+
+  @Test
+  public void deberiaDevolverCeroCantidadSesionesCuandoLaListaEstaVacia() {
+    Parcial parcial = new Parcial();
+    parcial.setSesiones(List.of());
+
+    Integer resultado = parcial.getCantidadSesiones();
+
+    assertEquals(0, resultado);
+  }
+
+  @Test
+  public void deberiaDevolverLaCantidadTotalDeSesiones() {
+    Parcial parcial = new Parcial();
+
+    SesionEstudio sesion1 = new SesionEstudio();
+    SesionEstudio sesion2 = new SesionEstudio();
+    SesionEstudio sesion3 = new SesionEstudio();
+
+    parcial.setSesiones(Arrays.asList(sesion1, sesion2, sesion3));
+
+    Integer resultado = parcial.getCantidadSesiones();
+
+    assertEquals(3, resultado);
+  }
+
+  @Test
+  public void deberiaDevolverCeroSesionesCompletadasCuandoLaListaEsNula() {
+    Parcial parcial = new Parcial();
+    parcial.setSesiones(null);
+
+    Long resultado = parcial.getCantidadSesionesCompletadas();
+
+    assertEquals(0L, resultado);
+  }
+
+  @Test
+  public void deberiaContarSolamenteLasSesionesCompletadas() {
+    Parcial parcial = new Parcial();
+
+    SesionEstudio sesion1 = new SesionEstudio();
+    sesion1.setCompletada(true);
+
+    SesionEstudio sesion2 = new SesionEstudio();
+    sesion2.setCompletada(false);
+
+    SesionEstudio sesion3 = new SesionEstudio();
+    sesion3.setCompletada(true);
+
+    SesionEstudio sesion4 = new SesionEstudio();
+    sesion4.setCompletada(null);
+
+    parcial.setSesiones(Arrays.asList(sesion1, sesion2, sesion3, sesion4));
+
+    Long resultado = parcial.getCantidadSesionesCompletadas();
+
+    assertEquals(2L, resultado);
+  }
 }
