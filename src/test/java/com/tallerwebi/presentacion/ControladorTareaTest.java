@@ -6,6 +6,7 @@ import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.excepcion.excepcionGrupo.GrupoNoEncontrado;
 import com.tallerwebi.dominio.grupo.Grupo;
 import com.tallerwebi.dominio.grupo.ServicioGrupo;
@@ -32,7 +33,9 @@ public class ControladorTareaTest {
   private MockHttpServletRequest crearRequestConUsuarioLogueado() {
     MockHttpServletRequest request = new MockHttpServletRequest();
     HttpSession session = request.getSession();
-    session.setAttribute("USUARIO", new com.tallerwebi.dominio.Usuario());
+    Usuario usuario = new Usuario();
+    usuario.setEmail("user@test.com");
+    session.setAttribute("USUARIO", usuario);
     return request;
   }
 
@@ -196,9 +199,11 @@ public class ControladorTareaTest {
   @Test
   public void verNuevaTareaDeberiaCargarLosGruposParaElSelect() {
     // preparacion
+    Grupo grupo = new Grupo();
+    grupo.setNombre("grupo-test");
     List<Grupo> grupos = new ArrayList<>();
-    grupos.add(new Grupo());
-    when(servicioGrupoMock.listarGrupos()).thenReturn(grupos);
+    grupos.add(grupo);
+    when(servicioGrupoMock.listarGruposDelUsuario(anyString())).thenReturn(grupos);
 
     // ejecucion
     MockHttpServletRequest request = crearRequestConUsuarioLogueado();
@@ -206,7 +211,7 @@ public class ControladorTareaTest {
 
     // validacion
     assertThat(modelAndView.getModel().get("grupos"), equalTo(grupos));
-    verify(servicioGrupoMock, times(1)).listarGrupos();
+    verify(servicioGrupoMock, times(1)).listarGruposDelUsuario(anyString());
   }
 
   @Test

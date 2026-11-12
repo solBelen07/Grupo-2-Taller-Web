@@ -1,6 +1,7 @@
 package com.tallerwebi.presentacion.parcial;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.mockito.ArgumentMatchers.any;
@@ -186,14 +187,6 @@ public class ControladorParcialTest {
 
     controladorParcial.guardarParcial(datosParcial, requestConUsuario());
 
-    /*
-     * Fecha parcial:
-     * 20/10/2026
-     *
-     * 3 días de estudio:
-     * fechaInicio = 17/10/2026
-     */
-
     verify(servicioParcialMock, times(1))
       .agregarTema(5, "Spring MVC", LocalDate.of(2026, 10, 17), 2, usuarioLogueado);
 
@@ -283,12 +276,12 @@ public class ControladorParcialTest {
     ModelAndView mav = controladorParcial.cambiarEstadoSesion(idSesion, request);
 
     verify(servicioSesionEstudioMock, times(1)).cambiarEstado(idSesion);
-    verify(servicioRachaMock, never()).registrarRacha(any(Usuario.class));
+    verifyNoInteractions(servicioRachaMock);
     assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
   }
 
   @Test
-  public void queAlDesmarcarUnaSesionNoSeRegistreLaRacha() {
+  public void queAlDesmarcarUnaSesionSeRecalculeLaRacha() {
     Integer idSesion = 3;
     Usuario usuario = new Usuario();
     usuario.setId(1L);
@@ -296,9 +289,12 @@ public class ControladorParcialTest {
     request.getSession().setAttribute("USUARIO", usuario);
     when(servicioSesionEstudioMock.cambiarEstado(idSesion)).thenReturn(false);
 
-    controladorParcial.cambiarEstadoSesion(idSesion, request);
+    ModelAndView mav = controladorParcial.cambiarEstadoSesion(idSesion, request);
 
+    verify(servicioRachaMock, times(1)).recalcularRacha(usuario);
     verify(servicioRachaMock, never()).registrarRacha(any(Usuario.class));
+    assertThat(request.getSession().getAttribute("USUARIO"), sameInstance(usuario));
+    assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
   }
 
   private MockHttpServletRequest requestConUsuario() {
@@ -315,6 +311,253 @@ public class ControladorParcialTest {
     );
 
     assertThat(mav.getViewName(), equalTo("redirect:/login"));
-    verifyNoInteractions(servicioParcialMock);
+    verifyNoInteractions(
+      servicioMateriaMock,
+      servicioParcialMock,
+      servicioSesionEstudioMock,
+      servicioRachaMock
+    );
+  }
+
+  // --- Validaciones de guardarParcial ---
+
+  @Test
+  public void queNoSeGuardeUnParcialCuandoLosTemasSonNulos() {
+    DatosParcial datos = datosValidos(3, 2, null);
+    comprobarFormularioConError(datos);
+  }
+
+  @Test
+  public void queNoSeGuardeUnParcialCuandoTodosLosTemasEstanVacios() {
+    DatosParcial datos = datosValidos(3, 2, java.util.Arrays.asList(null, "", "   ", "\t"));
+    comprobarFormularioConError(datos);
+  }
+
+  @Test
+  public void queNoSeGuardeUnParcialCuandoLosDiasSonNulos() {
+    DatosParcial datos = datosValidos(3, 2, List.of("Tema 1"));
+    datos.setCantidadDiasEstudio(null);
+    comprobarFormularioConError(datos);
+  }
+
+  @Test
+  public void queNoSeGuardeUnParcialCuandoLosDiasSonCero() {
+    DatosParcial datos = datosValidos(0, 2, List.of("Tema 1"));
+    comprobarFormularioConError(datos);
+  }
+
+  @Test
+  public void queNoSeGuardeUnParcialCuandoLosDiasSonNegativos() {
+    DatosParcial datos = datosValidos(-1, 2, List.of("Tema 1"));
+    comprobarFormularioConError(datos);
+  }
+
+  @Test
+  public void queNoSeGuardeUnParcialCuandoLasHorasSonNulas() {
+    DatosParcial datos = datosValidos(3, 2, List.of("Tema 1"));
+    datos.setHorasPorDia(null);
+    comprobarFormularioConError(datos);
+  }
+
+  @Test
+  public void queNoSeGuardeUnParcialCuandoLasHorasSonCero() {
+    DatosParcial datos = datosValidos(3, 0, List.of("Tema 1"));
+    comprobarFormularioConError(datos);
+  }
+
+  @Test
+  public void queNoSeGuardeUnParcialCuandoLasHorasSonNegativas() {
+    DatosParcial datos = datosValidos(3, -2, List.of("Tema 1"));
+    comprobarFormularioConError(datos);
+  }
+
+  @Test
+  public void queNoSeGuardeUnParcialCuandoHayMasTemasQueHorasDisponibles() {
+    // Un día de dos horas no alcanza para tres temas de al menos una hora.
+    DatosParcial datos = datosValidos(1, 2, List.of("Tema 1", "Tema 2", "Tema 3"));
+    comprobarFormularioConError(datos);
+  }
+
+  @Test
+  public void queSePermitaGuardarElMaximoDeTemasSegunDiasYHoras() {
+    DatosParcial datos = datosValidos(2, 2, List.of("Tema 1", "Tema 2", "Tema 3", "Tema 4"));
+    prepararGuardadoParcial(21);
+
+    ModelAndView mav = controladorParcial.guardarParcial(datos, requestConUsuario());
+
+    assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
+    verify(servicioParcialMock).crearParcial(any(Parcial.class));
+    verify(servicioParcialMock)
+      .agregarTema(21, "Tema 1", LocalDate.of(2026, 10, 18), 1, usuarioLogueado);
+    verify(servicioParcialMock)
+      .agregarTema(21, "Tema 2", LocalDate.of(2026, 10, 18), 1, usuarioLogueado);
+    verify(servicioParcialMock)
+      .agregarTema(21, "Tema 3", LocalDate.of(2026, 10, 19), 1, usuarioLogueado);
+    verify(servicioParcialMock)
+      .agregarTema(21, "Tema 4", LocalDate.of(2026, 10, 19), 1, usuarioLogueado);
+    verify(servicioParcialMock, times(4))
+      .agregarTema(anyInt(), anyString(), any(LocalDate.class), anyInt(), any(Usuario.class));
+  }
+
+  @Test
+  public void queSeRepartanLosTemasSobrantesYLasHorasSobrantes() {
+    DatosParcial datos = datosValidos(
+      3,
+      3,
+      List.of("Tema 1", "Tema 2", "Tema 3", "Tema 4", "Tema 5")
+    );
+    prepararGuardadoParcial(22);
+
+    ModelAndView mav = controladorParcial.guardarParcial(datos, requestConUsuario());
+
+    assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
+    InOrder orden = inOrder(servicioParcialMock);
+    orden.verify(servicioParcialMock).crearParcial(any(Parcial.class));
+    orden
+      .verify(servicioParcialMock)
+      .agregarTema(22, "Tema 1", LocalDate.of(2026, 10, 17), 2, usuarioLogueado);
+    orden
+      .verify(servicioParcialMock)
+      .agregarTema(22, "Tema 2", LocalDate.of(2026, 10, 17), 1, usuarioLogueado);
+    orden
+      .verify(servicioParcialMock)
+      .agregarTema(22, "Tema 3", LocalDate.of(2026, 10, 18), 2, usuarioLogueado);
+    orden
+      .verify(servicioParcialMock)
+      .agregarTema(22, "Tema 4", LocalDate.of(2026, 10, 18), 1, usuarioLogueado);
+    orden
+      .verify(servicioParcialMock)
+      .agregarTema(22, "Tema 5", LocalDate.of(2026, 10, 19), 3, usuarioLogueado);
+    orden.verifyNoMoreInteractions();
+  }
+
+  @Test
+  public void queSiHayMenosTemasQueDiasSoloSeCreenSesionesParaDiasConTemas() {
+    DatosParcial datos = datosValidos(5, 3, List.of("Tema 1", "Tema 2"));
+    prepararGuardadoParcial(23);
+
+    ModelAndView mav = controladorParcial.guardarParcial(datos, requestConUsuario());
+
+    assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
+    verify(servicioParcialMock)
+      .agregarTema(23, "Tema 1", LocalDate.of(2026, 10, 15), 3, usuarioLogueado);
+    verify(servicioParcialMock)
+      .agregarTema(23, "Tema 2", LocalDate.of(2026, 10, 16), 3, usuarioLogueado);
+    verify(servicioParcialMock, times(2))
+      .agregarTema(anyInt(), anyString(), any(LocalDate.class), anyInt(), any(Usuario.class));
+  }
+
+  @Test
+  public void queSeEliminenTemasVaciosYSeQuitenEspaciosAlGuardar() {
+    DatosParcial datos = datosValidos(
+      2,
+      2,
+      java.util.Arrays.asList("  Spring MVC  ", "   ", null, " Hibernate ")
+    );
+    prepararGuardadoParcial(24);
+
+    ModelAndView mav = controladorParcial.guardarParcial(datos, requestConUsuario());
+
+    assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
+    verify(servicioParcialMock)
+      .agregarTema(24, "Spring MVC", LocalDate.of(2026, 10, 18), 2, usuarioLogueado);
+    verify(servicioParcialMock)
+      .agregarTema(24, "Hibernate", LocalDate.of(2026, 10, 19), 2, usuarioLogueado);
+    verify(servicioParcialMock, times(2))
+      .agregarTema(anyInt(), anyString(), any(LocalDate.class), anyInt(), any(Usuario.class));
+  }
+
+  @Test
+  public void queUnSoloTemaRecibaTodasLasHorasDelDia() {
+    DatosParcial datos = datosValidos(1, 4, List.of("Tema único"));
+    prepararGuardadoParcial(25);
+
+    ModelAndView mav = controladorParcial.guardarParcial(datos, requestConUsuario());
+
+    assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
+    verify(servicioParcialMock)
+      .agregarTema(25, "Tema único", LocalDate.of(2026, 10, 19), 4, usuarioLogueado);
+    verify(servicioParcialMock, times(1))
+      .agregarTema(anyInt(), anyString(), any(LocalDate.class), anyInt(), any(Usuario.class));
+  }
+
+  @Test
+  public void queSiElServicioDevuelveNullNoSeRecalculeLaRacha() {
+    MockHttpServletRequest request = requestConUsuario();
+    when(servicioSesionEstudioMock.cambiarEstado(8)).thenReturn(null);
+
+    ModelAndView mav = controladorParcial.cambiarEstadoSesion(8, request);
+
+    assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
+    verify(servicioSesionEstudioMock).cambiarEstado(8);
+    verifyNoInteractions(servicioRachaMock);
+    assertThat(request.getSession().getAttribute("USUARIO"), sameInstance(usuarioLogueado));
+  }
+
+  @Test
+  public void queNoSeRecalculeLaRachaSinUsuarioAunqueSeCompleteLaSesion() {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    when(servicioSesionEstudioMock.cambiarEstado(8)).thenReturn(true);
+
+    ModelAndView mav = controladorParcial.cambiarEstadoSesion(8, request);
+
+    assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
+    verify(servicioSesionEstudioMock).cambiarEstado(8);
+    verifyNoInteractions(servicioRachaMock);
+  }
+
+  @Test
+  public void queAlDesmarcarUnaSesionPrimeroCambieEstadoYDespuesRecalculeLaRacha() {
+    MockHttpServletRequest request = requestConUsuario();
+    when(servicioSesionEstudioMock.cambiarEstado(9)).thenReturn(false);
+
+    ModelAndView mav = controladorParcial.cambiarEstadoSesion(9, request);
+
+    assertThat(mav.getViewName(), equalTo("redirect:/parciales"));
+    InOrder orden = inOrder(servicioSesionEstudioMock, servicioRachaMock);
+    orden.verify(servicioSesionEstudioMock).cambiarEstado(9);
+    orden.verify(servicioRachaMock).recalcularRacha(usuarioLogueado);
+    verify(servicioRachaMock, never()).registrarRacha(any(Usuario.class));
+    assertThat(request.getSession().getAttribute("USUARIO"), sameInstance(usuarioLogueado));
+  }
+
+  private DatosParcial datosValidos(int dias, int horas, List<String> temas) {
+    DatosParcial datos = new DatosParcial();
+    datos.setNombre("Primer Parcial");
+    datos.setMateriaId(1L);
+    datos.setFecha(LocalDate.of(2026, 10, 20));
+    datos.setHorario(LocalTime.of(18, 0));
+    datos.setCantidadDiasEstudio(dias);
+    datos.setHorasPorDia(horas);
+    datos.setTemas(temas);
+    return datos;
+  }
+
+  private void prepararGuardadoParcial(int idParcial) {
+    Materia materia = new Materia();
+    materia.setId(1);
+    when(servicioMateriaMock.buscarMateriaPorId(1)).thenReturn(materia);
+    doAnswer(invocation -> {
+        Parcial parcial = invocation.getArgument(0);
+        parcial.setId(idParcial);
+        return null;
+      })
+      .when(servicioParcialMock)
+      .crearParcial(any(Parcial.class));
+  }
+
+  private void comprobarFormularioConError(DatosParcial datos) {
+    List<Materia> materias = List.of(new Materia());
+    when(servicioMateriaMock.obtenerMaterias()).thenReturn(materias);
+
+    ModelAndView mav = controladorParcial.guardarParcial(datos, requestConUsuario());
+
+    assertThat(mav.getViewName(), equalTo("paginas/materia/parcial-formulario"));
+    assertThat(mav.getModel().get("datosParcial"), sameInstance(datos));
+    assertThat(mav.getModel().get("materias"), sameInstance(materias));
+    assertThat((String) mav.getModel().get("error"), containsString("Ingresá datos válidos"));
+    verify(servicioMateriaMock).obtenerMaterias();
+    verify(servicioMateriaMock, never()).buscarMateriaPorId(anyInt());
+    verifyNoInteractions(servicioParcialMock, servicioSesionEstudioMock, servicioRachaMock);
   }
 }

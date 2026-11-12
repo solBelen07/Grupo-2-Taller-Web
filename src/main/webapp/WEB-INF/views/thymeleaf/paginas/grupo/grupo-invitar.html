@@ -73,11 +73,11 @@
                         <span class="input-group-text border-end-0">
                             <i class="fa-solid fa-envelope"></i>
                         </span>
-                        <input type="email" name="receptor" class="form-control form-control-custom border-start-0 ps-0" placeholder="usuario@ejemplo.com" required>
+                        <input type="email" id="receptor" name="receptor" class="form-control form-control-custom border-start-0 ps-0" placeholder="usuario@ejemplo.com" required>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-purple w-100 mb-3">
+                <button type="submit" id="btn-enviar-invitacion" class="btn btn-purple w-100 mb-3">
                     <i class="fa-solid fa-paper-plane me-2"></i> Enviar Invitación
                 </button>
                 <a th:href="@{/grupos}" class="btn btn-outline-secondary border-0 w-100 text-muted">Cancelar</a>

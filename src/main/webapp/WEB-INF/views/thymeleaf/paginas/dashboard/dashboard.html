@@ -63,7 +63,7 @@
                         <i class="fa-regular fa-clock"></i>
                     </div>
                 </div>
-                <div class="kpi-value" th:text="${dashboardData.horasEstudio + 'h'}">142h</div>
+                <div id="kpi-horas-estudio" class="kpi-value" th:text="${dashboardData.horasEstudio + 'h'}">142h</div>
                 <div class="kpi-subtext subtext-purple">Horas de Estudio Registradas</div>
                 <div class="kpi-progress-bar">
                     <div class="progress-fill fill-purple" style="width: 100%;"></div>
@@ -91,7 +91,7 @@
                         <i class="fa-solid fa-plane-departure"></i>
                     </div>
                 </div>
-                <div class="kpi-value" th:text="${dashboardData.proximaSesion != null ? #temporals.format(dashboardData.proximaSesion.fecha, 'dd/MM') : 'Sin sesiones'}"></div>
+                <div id="kpi-proxima-sesion" class="kpi-value" th:text="${dashboardData.proximaSesion != null ? #temporals.format(dashboardData.proximaSesion.fecha, 'dd/MM') : 'Sin sesiones'}"></div>
                 <div class="kpi-label"></div>
                 <div class="kpi-subtext subtext-orange">
                     Próxima Sesión
@@ -167,27 +167,25 @@
                 <article class="widget-card">
                     <h3 class="widget-title">Próximos Vencimientos</h3>
                     <ul class="deadlines-list">
-                        <li class="deadline-item">
-                            <span class="bullet bullet-red"></span>
+                        <li class="deadline-item"
+                            th:each="vencimiento : ${dashboardData.proximosVencimientos}"
+                            th:with="urgente=${vencimiento.estado != null and vencimiento.estado.name() == 'PROXIMA_A_VENCER'},
+                                     esParcial=${vencimiento.evento.tipo.name() == 'PARCIAL'}">
+                            <span class="bullet"
+                                  th:classappend="${urgente} ? 'bullet-red' : (${esParcial} ? 'bullet-purple' : 'bullet-orange')"></span>
                             <div class="deadline-content">
-                                <strong>Parcial BD II</strong>
-                                <span class="deadline-time text-red">
-                                    <i class="fa-solid fa-triangle-exclamation"></i> Hoy · 10:00
+                                <strong th:text="${vencimiento.evento.titulo}">Parcial</strong>
+                                <span class="deadline-time" th:classappend="${urgente} ? 'text-red' : ''">
+                                    <i class="fa-solid fa-triangle-exclamation" th:if="${urgente}"></i>
+                                    <span th:text="${vencimiento.evento.tipo.etiqueta + ' · ' + vencimiento.evento.materia.nombre + ' · ' + #temporals.format(vencimiento.evento.inicio, 'dd/MM · HH:mm')}">
+                                        Parcial · Materia · 01/01 · 10:00
+                                    </span>
                                 </span>
                             </div>
                         </li>
-                        <li class="deadline-item">
-                            <span class="bullet bullet-purple"></span>
+                        <li class="deadline-item" th:if="${#lists.isEmpty(dashboardData.proximosVencimientos)}">
                             <div class="deadline-content">
-                                <strong>Entrega TP1 Ing. SW</strong>
-                                <span class="deadline-time">14 Sep · 23:59</span>
-                            </div>
-                        </li>
-                        <li class="deadline-item">
-                            <span class="bullet bullet-orange"></span>
-                            <div class="deadline-content">
-                                <strong>Parcial Análisis Mat.</strong>
-                                <span class="deadline-time">18 Sep · 14:00</span>
+                                <span class="deadline-time">Sin vencimientos próximos</span>
                             </div>
                         </li>
                     </ul>

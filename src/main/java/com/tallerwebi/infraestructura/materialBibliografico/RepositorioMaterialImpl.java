@@ -22,7 +22,17 @@ public class RepositorioMaterialImpl implements RepositorioMaterial {
 
   @Override
   public MaterialBibliografico buscarPorId(Integer id) {
-    return sessionFactory.getCurrentSession().get(MaterialBibliografico.class, id);
+    return sessionFactory
+      .getCurrentSession()
+      .createQuery(
+        "SELECT DISTINCT mb FROM MaterialBibliografico mb " +
+        "JOIN FETCH mb.materia m " +
+        "LEFT JOIN FETCH m.usuarios " +
+        "WHERE mb.id = :id",
+        MaterialBibliografico.class
+      )
+      .setParameter("id", id)
+      .uniqueResult();
   }
 
   @Override

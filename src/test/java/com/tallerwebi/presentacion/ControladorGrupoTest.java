@@ -128,6 +128,22 @@ public class ControladorGrupoTest {
     verify(servicioGrupoMock, never()).listarGrupos();
   }
 
+  @Test
+  public void irAGruposDeberiaMarcarComoPendientesLosGruposDondeTodaviaNoEsIntegrante() {
+    Grupo grupoIntegrante = new Grupo();
+    grupoIntegrante.setNombre("grupo3");
+    Grupo grupoInvitado = new Grupo();
+    grupoInvitado.setNombre("grupo4");
+    when(servicioGrupoMock.listarGruposDelUsuario(EMAIL_USUARIO))
+      .thenReturn(java.util.Arrays.asList(grupoIntegrante, grupoInvitado));
+    when(servicioGrupoMock.esIntegrante(eq(grupoIntegrante), any())).thenReturn(true);
+    when(servicioGrupoMock.esIntegrante(eq(grupoInvitado), any())).thenReturn(false);
+
+    ModelAndView modelAndView = controladorGrupo.verGrupos(requestConUsuarioLogueado());
+
+    assertEquals(List.of("grupo4"), modelAndView.getModel().get("gruposPendientes"));
+  }
+
   private MockHttpServletRequest requestConUsuarioLogueado() {
     Usuario usuario = new Usuario();
     usuario.setEmail(EMAIL_USUARIO);

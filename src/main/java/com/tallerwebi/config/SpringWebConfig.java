@@ -23,7 +23,7 @@ import org.thymeleaf.templatemode.TemplateMode;
   { "com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura" }
 )
 @PropertySource(
-  value = { "classpath:application.properties", "file:config-r2/application.properties" },
+  value = { "classpath:application.properties", "file:/resources/application.properties" },
   ignoreResourceNotFound = true
 )
 public class SpringWebConfig implements WebMvcConfigurer {

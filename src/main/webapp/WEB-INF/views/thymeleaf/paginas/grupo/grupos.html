@@ -54,7 +54,7 @@
                 <p class="text-muted">Gestiona tus espacios de estudio colaborativo.</p>
             </div>
             <!-- GRP-06: alta de grupo -->
-            <a th:href="@{/grupos/nuevo}" class="btn btn-purple">
+            <a th:href="@{/grupos/nuevo}" class="btn btn-purple btn-crear-grupo">
                 <i class="fa-solid fa-plus me-1"></i> Crear grupo
             </a>
         </div>
@@ -82,17 +82,22 @@
                         <span th:if="${grupo.esAdministradoPor(session.USUARIO)}" class="badge bg-warning text-dark rounded-pill px-3">
                             <i class="fa-solid fa-crown me-1"></i>Administrador/a
                         </span>
-                        <span th:unless="${grupo.esAdministradoPor(session.USUARIO)}" class="badge badge-live rounded-pill px-3">Activo</span>
+                        <th:block th:unless="${grupo.esAdministradoPor(session.USUARIO)}">
+                            <span th:if="${#lists.contains(gruposPendientes, grupo.nombre)}" class="badge bg-secondary rounded-pill px-3">
+                                <i class="fa-solid fa-clock me-1"></i>Pendiente
+                            </span>
+                            <span th:unless="${#lists.contains(gruposPendientes, grupo.nombre)}" class="badge badge-live rounded-pill px-3">Activo</span>
+                        </th:block>
                     </div>
 
                     <h5 class="fw-bold text-light" th:text="${grupo.nombre}">Nombre del Grupo</h5>
                     <p class="text-muted small mb-4">Espacio de trabajo colaborativo.</p>
 
                     <div class="mt-auto d-flex gap-2">
-                        <a th:href="@{/grupos/{nombre}(nombre=${grupo.nombre})}" class="btn btn-purple btn-sm w-100">
+                        <a th:href="@{/grupos/{nombre}(nombre=${grupo.nombre})}" class="btn btn-purple btn-sm w-100 btn-ver-grupo">
                             <i class="fa-solid fa-eye me-1"></i> Ver grupo
                         </a>
-                        <a th:href="@{/grupos/{nombre}/invitar(nombre=${grupo.nombre})}" class="btn btn-outline-light btn-sm w-100">
+                        <a th:href="@{/grupos/{nombre}/invitar(nombre=${grupo.nombre})}" class="btn btn-outline-light btn-sm w-100 btn-invitar-grupo">
                             <i class="fa-solid fa-user-plus me-1"></i> Invitar
                         </a>
                     </div>
