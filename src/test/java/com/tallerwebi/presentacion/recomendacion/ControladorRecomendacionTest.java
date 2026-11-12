@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 public class ControladorRecomendacionTest {
 
   private static final String VISTA = "paginas/grupo/recomendaciones";
-  private static final String URL = "/recomendaciones/companieros";
+  private static final String URL = "/recomendaciones";
   private static final double DELTA = 0.001;
 
   private ServicioRecomendacion servicioRecomendacionMock;
