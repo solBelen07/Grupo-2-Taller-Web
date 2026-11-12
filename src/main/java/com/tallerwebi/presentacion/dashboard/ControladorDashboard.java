@@ -27,17 +27,11 @@ public class ControladorDashboard {
 
   private final ServicioDashboard servicioDashboard;
   private final ServicioRacha servicioRacha;
-  private final ServicioTarea servicioTarea;
 
   @Autowired
-  public ControladorDashboard(
-    ServicioDashboard servicioDashboard,
-    ServicioRacha servicioRacha,
-    ServicioTarea servicioTarea
-  ) {
+  public ControladorDashboard(ServicioDashboard servicioDashboard, ServicioRacha servicioRacha) {
     this.servicioDashboard = servicioDashboard;
     this.servicioRacha = servicioRacha;
-    this.servicioTarea = servicioTarea;
   }
 
   @RequestMapping("/dashboard")

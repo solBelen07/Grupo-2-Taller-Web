@@ -63,7 +63,7 @@
                         <i class="fa-regular fa-clock"></i>
                     </div>
                 </div>
-                <div class="kpi-value" th:text="${dashboardData.horasEstudio + 'h'}">142h</div>
+                <div id="kpi-horas-estudio" class="kpi-value" th:text="${dashboardData.horasEstudio + 'h'}">142h</div>
                 <div class="kpi-subtext subtext-purple">Horas de Estudio Registradas</div>
                 <div class="kpi-progress-bar">
                     <div class="progress-fill fill-purple" style="width: 100%;"></div>
@@ -91,7 +91,7 @@
                         <i class="fa-solid fa-plane-departure"></i>
                     </div>
                 </div>
-                <div class="kpi-value" th:text="${dashboardData.proximaSesion != null ? #temporals.format(dashboardData.proximaSesion.fecha, 'dd/MM') : 'Sin sesiones'}"></div>
+                <div id="kpi-proxima-sesion" class="kpi-value" th:text="${dashboardData.proximaSesion != null ? #temporals.format(dashboardData.proximaSesion.fecha, 'dd/MM') : 'Sin sesiones'}"></div>
                 <div class="kpi-label"></div>
                 <div class="kpi-subtext subtext-orange">
                     Próxima Sesión
