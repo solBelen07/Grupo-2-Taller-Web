@@ -1,8 +1,10 @@
 package com.tallerwebi.infraestructura.sesionEstudio;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.tallerwebi.dominio.Usuario;
 import com.tallerwebi.dominio.materia.Materia;
@@ -42,7 +44,6 @@ public class RepositorioSesionEstudioTest {
 
   @Test
   public void queSePuedaGuardarUnaSesionDeEstudio() {
-    // preparacion
     Materia materia = dadoQueExisteUnaMateria();
 
     Parcial parcial = dadoQueExisteUnParcial(materia);
@@ -54,26 +55,21 @@ public class RepositorioSesionEstudioTest {
       2
     );
 
-    // ejecucion
     repositorioSesionEstudio.guardar(sesionEstudio);
 
-    // validacion
     assertNotNull(sesionEstudio.getId());
   }
 
   @Test
   public void queSePuedaBuscarUnaSesionDeEstudioPorId() {
-    // preparacion
     Materia materia = dadoQueExisteUnaMateria();
 
     Parcial parcial = dadoQueExisteUnParcial(materia);
 
     SesionEstudio sesionEstudio = dadoQueExisteUnaSesionDeEstudio(parcial);
 
-    // ejecucion
     SesionEstudio sesionBuscada = repositorioSesionEstudio.buscarPorId(sesionEstudio.getId());
 
-    // validacion
     assertNotNull(sesionBuscada);
 
     assertEquals(sesionEstudio.getId(), sesionBuscada.getId());
@@ -83,7 +79,6 @@ public class RepositorioSesionEstudioTest {
 
   @Test
   public void queSePuedaModificarUnaSesionDeEstudio() {
-    // preparacion
     Materia materia = dadoQueExisteUnaMateria();
 
     Parcial parcial = dadoQueExisteUnParcial(materia);
@@ -94,19 +89,12 @@ public class RepositorioSesionEstudioTest {
     sesionEstudio.setCantidadHoras(4);
     sesionEstudio.setCompletada(true);
 
-    // ejecucion
     repositorioSesionEstudio.modificar(sesionEstudio);
 
-    /*
-     * Forzamos a Hibernate a ejecutar los cambios
-     * y después limpiamos la sesión para asegurarnos
-     * de volver a consultar desde la base de datos.
-     */
     sessionFactory.getCurrentSession().flush();
 
     sessionFactory.getCurrentSession().clear();
 
-    // validacion
     SesionEstudio sesionModificada = repositorioSesionEstudio.buscarPorId(sesionEstudio.getId());
 
     assertEquals("Spring MVC y Thymeleaf", sesionModificada.getTema());
@@ -118,7 +106,6 @@ public class RepositorioSesionEstudioTest {
 
   @Test
   public void queSePuedaEliminarUnaSesionDeEstudio() {
-    // preparacion
     Materia materia = dadoQueExisteUnaMateria();
 
     Parcial parcial = dadoQueExisteUnParcial(materia);
@@ -127,14 +114,12 @@ public class RepositorioSesionEstudioTest {
 
     Integer idSesion = sesionEstudio.getId();
 
-    // ejecucion
     repositorioSesionEstudio.eliminar(sesionEstudio);
 
     sessionFactory.getCurrentSession().flush();
 
     sessionFactory.getCurrentSession().clear();
 
-    // validacion
     SesionEstudio sesionEliminada = repositorioSesionEstudio.buscarPorId(idSesion);
 
     assertNull(sesionEliminada);
@@ -202,8 +187,6 @@ public class RepositorioSesionEstudioTest {
 
     return sesionEstudio;
   }
-
-  // próxima sesion
 
   @Test
   public void laProximaSesionEsLaPrimeraSinCompletarDeHoyEnAdelanteDelUsuario() {
@@ -284,5 +267,254 @@ public class RepositorioSesionEstudioTest {
     sesion.setUsuario(usuario);
     sesion.setCompletada(completada);
     repositorioSesionEstudio.guardar(sesion);
+  }
+
+  @Test
+  public void buscarUnaSesionInexistenteDeberiaDevolverNull() {
+    assertNull(repositorioSesionEstudio.buscarPorId(-1));
+  }
+
+  @Test
+  public void eliminarPorMateriaIdDeberiaEliminarSoloLasSesionesDeEsaMateria() {
+    Materia materiaA = dadoQueExisteUnaMateria();
+    Materia materiaB = dadoQueExisteUnaMateria();
+    Parcial primerParcialA = dadoQueExisteUnParcial(materiaA);
+    Parcial segundoParcialA = dadoQueExisteUnParcial(materiaA);
+    Parcial parcialB = dadoQueExisteUnParcial(materiaB);
+
+    SesionEstudio sesionA1 = dadoQueExisteUnaSesionDeEstudio(primerParcialA);
+    SesionEstudio sesionA2 = dadoQueExisteUnaSesionDeEstudio(segundoParcialA);
+    SesionEstudio sesionB = dadoQueExisteUnaSesionDeEstudio(parcialB);
+
+    Integer idA1 = sesionA1.getId();
+    Integer idA2 = sesionA2.getId();
+    Integer idB = sesionB.getId();
+
+    sessionFactory.getCurrentSession().flush();
+    repositorioSesionEstudio.eliminarPorMateriaId(materiaA.getId());
+    sessionFactory.getCurrentSession().clear();
+
+    assertNull(repositorioSesionEstudio.buscarPorId(idA1));
+    assertNull(repositorioSesionEstudio.buscarPorId(idA2));
+    assertNotNull(repositorioSesionEstudio.buscarPorId(idB));
+  }
+
+  @Test
+  public void eliminarPorMateriaIdSinSesionesNoDeberiaEliminarSesionesDeOtraMateria() {
+    Materia materiaSinSesiones = dadoQueExisteUnaMateria();
+    Materia otraMateria = dadoQueExisteUnaMateria();
+    Parcial parcial = dadoQueExisteUnParcial(otraMateria);
+    SesionEstudio sesion = dadoQueExisteUnaSesionDeEstudio(parcial);
+    Integer idSesion = sesion.getId();
+
+    sessionFactory.getCurrentSession().flush();
+    repositorioSesionEstudio.eliminarPorMateriaId(materiaSinSesiones.getId());
+    sessionFactory.getCurrentSession().clear();
+
+    assertNotNull(repositorioSesionEstudio.buscarPorId(idSesion));
+  }
+
+  @Test
+  public void unaSesionConEstadoNuloPuedeSerLaProximaSesion() {
+    Usuario usuario = dadoQueExisteUnUsuario("proxima-nula@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate manana = LocalDate.now().plusDays(1);
+
+    SesionEstudio sinEstado = guardarSesionConDatos(
+      parcial,
+      usuario,
+      "Sin estado",
+      manana,
+      2,
+      null,
+      null
+    );
+    guardarSesion(parcial, usuario, "Pendiente posterior", manana.plusDays(1), false);
+
+    SesionEstudio proxima = repositorioSesionEstudio.buscarProximaSesionEstudio(usuario.getId());
+
+    assertNotNull(proxima);
+    assertEquals(sinEstado.getId(), proxima.getId());
+  }
+
+  @Test
+  public void siTodasLasSesionesFuturasEstanCompletadasNoHayProximaSesion() {
+    Usuario usuario = dadoQueExisteUnUsuario("todas-completas@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    guardarSesion(parcial, usuario, "Completa hoy", LocalDate.now(), true);
+    guardarSesion(parcial, usuario, "Completa mañana", LocalDate.now().plusDays(1), true);
+
+    assertNull(repositorioSesionEstudio.buscarProximaSesionEstudio(usuario.getId()));
+  }
+
+  @Test
+  public void laProximaSesionDebeSerDelUsuarioSolicitadoAunqueOtroTengaUnaAnterior() {
+    Usuario usuario = dadoQueExisteUnUsuario("proximo-propio@prueba.com");
+    Usuario otroUsuario = dadoQueExisteUnUsuario("proximo-ajeno@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    guardarSesion(parcial, otroUsuario, "Del otro", LocalDate.now(), false);
+    guardarSesion(parcial, usuario, "Propia", LocalDate.now().plusDays(2), false);
+
+    assertEquals(
+      "Propia",
+      repositorioSesionEstudio.buscarProximaSesionEstudio(usuario.getId()).getTema()
+    );
+  }
+
+  @Test
+  public void calcularHorasCompletadasDeberiaSumarSoloLasCompletadasDelUsuario() {
+    Usuario usuario = dadoQueExisteUnUsuario("horas-propias@prueba.com");
+    Usuario otroUsuario = dadoQueExisteUnUsuario("horas-otro@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate hoy = LocalDate.now();
+
+    guardarSesionConDatos(parcial, usuario, "Tema 1", hoy, 2, true, hoy);
+    guardarSesionConDatos(parcial, usuario, "Tema 2", hoy, 3, true, hoy);
+    guardarSesionConDatos(parcial, usuario, "Pendiente", hoy, 7, false, null);
+    guardarSesionConDatos(parcial, usuario, "Estado nulo", hoy, 6, null, null);
+    guardarSesionConDatos(parcial, otroUsuario, "De otro", hoy, 9, true, hoy);
+
+    assertEquals(5L, repositorioSesionEstudio.calcularHorasCompletadas(usuario.getId()));
+  }
+
+  @Test
+  public void calcularHorasCompletadasSinSesionesDeberiaDevolverCero() {
+    Usuario usuario = dadoQueExisteUnUsuario("sin-horas@prueba.com");
+
+    assertEquals(0L, repositorioSesionEstudio.calcularHorasCompletadas(usuario.getId()));
+  }
+
+  @Test
+  public void calcularHorasCompletadasConSoloPendientesDeberiaDevolverCero() {
+    Usuario usuario = dadoQueExisteUnUsuario("solo-pendientes@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate hoy = LocalDate.now();
+    guardarSesionConDatos(parcial, usuario, "Pendiente", hoy, 4, false, null);
+    guardarSesionConDatos(parcial, usuario, "Sin estado", hoy, 5, null, null);
+
+    assertEquals(0L, repositorioSesionEstudio.calcularHorasCompletadas(usuario.getId()));
+  }
+
+  @Test
+  public void calcularHorasCompletadasDeberiaIgnorarHorasNulas() {
+    Usuario usuario = dadoQueExisteUnUsuario("horas-nulas@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate hoy = LocalDate.now();
+    guardarSesionConDatos(parcial, usuario, "Con horas", hoy, 2, true, hoy);
+    guardarSesionConDatos(parcial, usuario, "Sin horas", hoy, null, true, hoy);
+
+    assertEquals(2L, repositorioSesionEstudio.calcularHorasCompletadas(usuario.getId()));
+  }
+
+  @Test
+  public void calcularHorasCompletadasDeOtroUsuarioNoDeberiaSumarse() {
+    Usuario usuario = dadoQueExisteUnUsuario("usuario-sin-horas@prueba.com");
+    Usuario otro = dadoQueExisteUnUsuario("otro-con-horas@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate hoy = LocalDate.now();
+    guardarSesionConDatos(parcial, otro, "Otro usuario", hoy, 8, true, hoy);
+
+    assertEquals(0L, repositorioSesionEstudio.calcularHorasCompletadas(usuario.getId()));
+  }
+
+  @Test
+  public void existeSesionCompletadaEnFechaDeberiaDevolverTrueSiCompletoEseDia() {
+    Usuario usuario = dadoQueExisteUnUsuario("racha-hoy@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate fecha = LocalDate.now();
+    guardarSesionConDatos(parcial, usuario, "Terminado", fecha, 2, true, fecha);
+
+    assertTrue(repositorioSesionEstudio.existeSesionCompletadaEnFecha(usuario.getId(), fecha));
+  }
+
+  @Test
+  public void existeSesionCompletadaEnFechaDeberiaDevolverFalseSinSesiones() {
+    Usuario usuario = dadoQueExisteUnUsuario("racha-sin-sesiones@prueba.com");
+
+    assertFalse(
+      repositorioSesionEstudio.existeSesionCompletadaEnFecha(usuario.getId(), LocalDate.now())
+    );
+  }
+
+  @Test
+  public void unaSesionPendienteNoDeberiaContarComoCompletadaEnFecha() {
+    Usuario usuario = dadoQueExisteUnUsuario("racha-pendiente@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate fecha = LocalDate.now();
+    guardarSesionConDatos(parcial, usuario, "Pendiente", fecha, 2, false, fecha);
+
+    assertFalse(repositorioSesionEstudio.existeSesionCompletadaEnFecha(usuario.getId(), fecha));
+  }
+
+  @Test
+  public void unaSesionDeOtroUsuarioNoDeberiaContarComoCompletadaEnFecha() {
+    Usuario usuario = dadoQueExisteUnUsuario("racha-usuario@prueba.com");
+    Usuario otro = dadoQueExisteUnUsuario("racha-otro@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate fecha = LocalDate.now();
+    guardarSesionConDatos(parcial, otro, "De otro", fecha, 2, true, fecha);
+
+    assertFalse(repositorioSesionEstudio.existeSesionCompletadaEnFecha(usuario.getId(), fecha));
+  }
+
+  @Test
+  public void unaSesionCompletadaEnOtraFechaNoDeberiaContarHoy() {
+    Usuario usuario = dadoQueExisteUnUsuario("racha-ayer@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate hoy = LocalDate.now();
+    guardarSesionConDatos(parcial, usuario, "Ayer", hoy.minusDays(2), 2, true, hoy.minusDays(1));
+
+    assertFalse(repositorioSesionEstudio.existeSesionCompletadaEnFecha(usuario.getId(), hoy));
+  }
+
+  @Test
+  public void unaSesionSinFechaCompletadoNoDeberiaContarEnLaRacha() {
+    Usuario usuario = dadoQueExisteUnUsuario("racha-sin-fecha@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate hoy = LocalDate.now();
+    guardarSesionConDatos(parcial, usuario, "Sin fecha", hoy, 2, true, null);
+
+    assertFalse(repositorioSesionEstudio.existeSesionCompletadaEnFecha(usuario.getId(), hoy));
+  }
+
+  @Test
+  public void debeUsarFechaCompletadoYNoFechaPlanificadaParaLaRacha() {
+    Usuario usuario = dadoQueExisteUnUsuario("racha-fecha-real@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate hoy = LocalDate.now();
+    guardarSesionConDatos(parcial, usuario, "Completada hoy", hoy.minusDays(4), 2, true, hoy);
+
+    assertTrue(repositorioSesionEstudio.existeSesionCompletadaEnFecha(usuario.getId(), hoy));
+    assertFalse(
+      repositorioSesionEstudio.existeSesionCompletadaEnFecha(usuario.getId(), hoy.minusDays(4))
+    );
+  }
+
+  @Test
+  public void variasSesionesCompletadasEnLaFechaDeberianDevolverTrue() {
+    Usuario usuario = dadoQueExisteUnUsuario("racha-varias@prueba.com");
+    Parcial parcial = dadoQueExisteUnParcial(dadoQueExisteUnaMateria());
+    LocalDate fecha = LocalDate.now();
+    guardarSesionConDatos(parcial, usuario, "Tema 1", fecha, 1, true, fecha);
+    guardarSesionConDatos(parcial, usuario, "Tema 2", fecha, 1, true, fecha);
+
+    assertTrue(repositorioSesionEstudio.existeSesionCompletadaEnFecha(usuario.getId(), fecha));
+  }
+
+  private SesionEstudio guardarSesionConDatos(
+    Parcial parcial,
+    Usuario usuario,
+    String tema,
+    LocalDate fecha,
+    Integer horas,
+    Boolean completada,
+    LocalDate fechaCompletado
+  ) {
+    SesionEstudio sesion = dadoQueTengoUnaSesionDeEstudio(parcial, tema, fecha, horas);
+    sesion.setUsuario(usuario);
+    sesion.setCompletada(completada);
+    sesion.setFechaCompletado(fechaCompletado);
+    repositorioSesionEstudio.guardar(sesion);
+    return sesion;
   }
 }

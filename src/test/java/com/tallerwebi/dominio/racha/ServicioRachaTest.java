@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -371,6 +372,205 @@ public class ServicioRachaTest {
     Usuario usuario = crearUsuario(new Racha(null, null, null));
 
     assertThat(this.servicioRacha.obtenerRecordRacha(usuario), equalTo(0));
+  }
+
+  // Pruebas de recalcularRacha(): actividad del día, decremento y casos límite.
+
+  @Test
+  public void noDeberiaConsultarRepositoriosAlRecalcularConUsuarioNuloOSinId() {
+    this.servicioRacha.recalcularRacha(null);
+    this.servicioRacha.recalcularRacha(new Usuario());
+
+    verifyNoInteractions(
+      this.repositorioUsuarioMock,
+      this.repositorioSesionEstudioMock,
+      this.repositorioPomodoroMock
+    );
+  }
+
+  @Test
+  public void deberiaRegistrarRachaSiCompletoUnaSesionDeEstudioHoy() {
+    Usuario persistido = crearUsuario(new Racha(2, 5, this.hoy.minusDays(1)));
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioSesionEstudioMock.existeSesionCompletadaEnFecha(ID_USUARIO, this.hoy))
+      .thenReturn(true);
+    when(this.repositorioPomodoroMock.existePomodoroCompletadoEnFecha(ID_USUARIO, this.hoy))
+      .thenReturn(false);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(persistido);
+
+    this.servicioRacha.recalcularRacha(sesion);
+
+    assertThat(persistido.getRacha().getRachaActual(), equalTo(3));
+    assertThat(persistido.getRacha().getRecordRacha(), equalTo(5));
+    assertThat(persistido.getRacha().getUltimaFechaEstudio(), equalTo(this.hoy));
+    assertThat(sesion.getRacha().getRachaActual(), equalTo(3));
+    assertThat(sesion.getRacha(), not(sameInstance(persistido.getRacha())));
+    verify(this.repositorioSesionEstudioMock).existeSesionCompletadaEnFecha(ID_USUARIO, this.hoy);
+    verify(this.repositorioPomodoroMock).existePomodoroCompletadoEnFecha(ID_USUARIO, this.hoy);
+    verify(this.repositorioUsuarioMock, times(1)).modificar(persistido);
+  }
+
+  @Test
+  public void deberiaRegistrarRachaSiCompletoUnPomodoroHoy() {
+    Usuario persistido = crearUsuario(new Racha(2, 5, this.hoy.minusDays(1)));
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioSesionEstudioMock.existeSesionCompletadaEnFecha(ID_USUARIO, this.hoy))
+      .thenReturn(false);
+    when(this.repositorioPomodoroMock.existePomodoroCompletadoEnFecha(ID_USUARIO, this.hoy))
+      .thenReturn(true);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(persistido);
+
+    this.servicioRacha.recalcularRacha(sesion);
+
+    assertThat(persistido.getRacha().getRachaActual(), equalTo(3));
+    assertThat(persistido.getRacha().getUltimaFechaEstudio(), equalTo(this.hoy));
+    assertThat(sesion.getRacha().getRachaActual(), equalTo(3));
+    verify(this.repositorioUsuarioMock, times(1)).modificar(persistido);
+  }
+
+  @Test
+  public void noDeberiaSumarDosDiasSiCompletoSesionYPomodoroElMismoDia() {
+    Usuario persistido = crearUsuario(new Racha(2, 2, this.hoy.minusDays(1)));
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioSesionEstudioMock.existeSesionCompletadaEnFecha(ID_USUARIO, this.hoy))
+      .thenReturn(true);
+    when(this.repositorioPomodoroMock.existePomodoroCompletadoEnFecha(ID_USUARIO, this.hoy))
+      .thenReturn(true);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(persistido);
+
+    this.servicioRacha.recalcularRacha(sesion);
+
+    assertThat(persistido.getRacha().getRachaActual(), equalTo(3));
+    assertThat(persistido.getRacha().getRecordRacha(), equalTo(3));
+    assertThat(sesion.getRacha().getRachaActual(), equalTo(3));
+    verify(this.repositorioUsuarioMock, times(1)).modificar(persistido);
+  }
+
+  @Test
+  public void noDeberiaIncrementarSiYaRegistroActividadHoy() {
+    Usuario persistido = crearUsuario(new Racha(3, 6, this.hoy));
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioSesionEstudioMock.existeSesionCompletadaEnFecha(ID_USUARIO, this.hoy))
+      .thenReturn(true);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(persistido);
+
+    this.servicioRacha.recalcularRacha(sesion);
+
+    assertThat(persistido.getRacha().getRachaActual(), equalTo(3));
+    assertThat(persistido.getRacha().getUltimaFechaEstudio(), equalTo(this.hoy));
+    assertThat(sesion.getRacha().getRachaActual(), equalTo(3));
+    verify(this.repositorioUsuarioMock, never()).modificar(any(Usuario.class));
+  }
+
+  @Test
+  public void deberiaDescontarUnDiaSiNoQuedanActividadesCompletadasHoy() {
+    Usuario persistido = crearUsuario(new Racha(4, 9, this.hoy));
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(persistido);
+
+    this.servicioRacha.recalcularRacha(sesion);
+
+    assertThat(persistido.getRacha().getRachaActual(), equalTo(3));
+    assertThat(persistido.getRacha().getRecordRacha(), equalTo(9));
+    assertThat(persistido.getRacha().getUltimaFechaEstudio(), equalTo(this.hoy.minusDays(1)));
+    assertThat(sesion.getRacha().getRachaActual(), equalTo(3));
+    assertThat(sesion.getRacha().getUltimaFechaEstudio(), equalTo(this.hoy.minusDays(1)));
+    assertThat(sesion.getRacha(), not(sameInstance(persistido.getRacha())));
+    verify(this.repositorioSesionEstudioMock).existeSesionCompletadaEnFecha(ID_USUARIO, this.hoy);
+    verify(this.repositorioPomodoroMock).existePomodoroCompletadoEnFecha(ID_USUARIO, this.hoy);
+    verify(this.repositorioUsuarioMock, times(1)).modificar(persistido);
+  }
+
+  @Test
+  public void deberiaDejarLaRachaEnCeroYFechaNulaSiSoloTeniaUnDia() {
+    Usuario persistido = crearUsuario(new Racha(1, 8, this.hoy));
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(persistido);
+
+    this.servicioRacha.recalcularRacha(sesion);
+
+    assertThat(persistido.getRacha().getRachaActual(), equalTo(0));
+    assertThat(persistido.getRacha().getRecordRacha(), equalTo(8));
+    assertNull(persistido.getRacha().getUltimaFechaEstudio());
+    assertThat(sesion.getRacha().getRachaActual(), equalTo(0));
+    assertNull(sesion.getRacha().getUltimaFechaEstudio());
+    verify(this.repositorioUsuarioMock, times(1)).modificar(persistido);
+  }
+
+  @Test
+  public void noDeberiaDejarUnaRachaNegativaAlRecalcular() {
+    Usuario persistido = crearUsuario(new Racha(0, 8, this.hoy));
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(persistido);
+
+    this.servicioRacha.recalcularRacha(sesion);
+
+    assertThat(persistido.getRacha().getRachaActual(), equalTo(0));
+    assertNull(persistido.getRacha().getUltimaFechaEstudio());
+    assertThat(persistido.getRacha().getRecordRacha(), equalTo(8));
+    verify(this.repositorioUsuarioMock, times(1)).modificar(persistido);
+  }
+
+  @Test
+  public void noDeberiaModificarRachaSiNoHuboActividadHoyPeroLaUltimaFueAyer() {
+    Usuario persistido = crearUsuario(new Racha(3, 7, this.hoy.minusDays(1)));
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(persistido);
+
+    this.servicioRacha.recalcularRacha(sesion);
+
+    assertThat(persistido.getRacha().getRachaActual(), equalTo(3));
+    assertThat(persistido.getRacha().getRecordRacha(), equalTo(7));
+    assertThat(persistido.getRacha().getUltimaFechaEstudio(), equalTo(this.hoy.minusDays(1)));
+    verify(this.repositorioUsuarioMock, never()).modificar(any(Usuario.class));
+  }
+
+  @Test
+  public void noDeberiaModificarRachaSiNuncaRegistroUnaFechaDeEstudio() {
+    Usuario persistido = crearUsuario(new Racha(0, 0, null));
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(persistido);
+
+    this.servicioRacha.recalcularRacha(sesion);
+
+    assertThat(persistido.getRacha().getRachaActual(), equalTo(0));
+    assertNull(persistido.getRacha().getUltimaFechaEstudio());
+    verify(this.repositorioUsuarioMock, never()).modificar(any(Usuario.class));
+  }
+
+  @Test
+  public void noDeberiaModificarRachaSiLaUltimaFechaFueHaceVariosDias() {
+    Usuario persistido = crearUsuario(new Racha(0, 9, this.hoy.minusDays(4)));
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(persistido);
+
+    this.servicioRacha.recalcularRacha(sesion);
+
+    assertThat(persistido.getRacha().getRachaActual(), equalTo(0));
+    assertThat(persistido.getRacha().getUltimaFechaEstudio(), equalTo(this.hoy.minusDays(4)));
+    verify(this.repositorioUsuarioMock, never()).modificar(any(Usuario.class));
+  }
+
+  @Test
+  public void deberiaLanzarUsuarioNoEncontradoAlRecalcularSinActividadSiNoEstaPersistido() {
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(null);
+
+    assertThrows(UsuarioNoEncontrado.class, () -> this.servicioRacha.recalcularRacha(sesion));
+
+    verify(this.repositorioUsuarioMock, never()).modificar(any(Usuario.class));
+  }
+
+  @Test
+  public void deberiaLanzarUsuarioNoEncontradoAlRecalcularConActividadSiNoEstaPersistido() {
+    Usuario sesion = crearUsuario(null);
+    when(this.repositorioSesionEstudioMock.existeSesionCompletadaEnFecha(ID_USUARIO, this.hoy))
+      .thenReturn(true);
+    when(this.repositorioUsuarioMock.buscarPorId(ID_USUARIO)).thenReturn(null);
+
+    assertThrows(UsuarioNoEncontrado.class, () -> this.servicioRacha.recalcularRacha(sesion));
+
+    verify(this.repositorioUsuarioMock, never()).modificar(any(Usuario.class));
   }
 
   private Usuario crearUsuario(Racha racha) {
