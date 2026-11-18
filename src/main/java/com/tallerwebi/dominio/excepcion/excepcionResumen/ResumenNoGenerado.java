@@ -7,4 +7,8 @@ public class ResumenNoGenerado extends RuntimeException {
   public ResumenNoGenerado(String message) {
     super(message);
   }
+
+  public ResumenNoGenerado(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

@@ -1,10 +1,11 @@
 package com.tallerwebi.dominio.resumen;
 
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.excepcion.excepcionGemini.CuotaDeGeminiAgotada;
+import com.tallerwebi.dominio.excepcion.excepcionGemini.ErrorDeGemini;
 import com.tallerwebi.dominio.excepcion.excepcionResumen.ResumenInvalido;
 import com.tallerwebi.dominio.excepcion.excepcionResumen.ResumenNoGenerado;
 import com.tallerwebi.dominio.gemini.ServicioGemini;
-import com.tallerwebi.dominio.gemini.errores.ErroresGemini;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,6 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ServicioResumenImpl implements ServicioResumen {
 
   public static final int MAXIMO_CARACTERES = 5000;
+
+  static final String MENSAJE_ERROR_GENERICO =
+    "No pudimos generar el resumen en este momento. Intentá nuevamente en unos minutos.";
+  static final String MENSAJE_SIN_CUOTA =
+    "Alcanzamos el límite de uso de la IA por hoy. Intentá nuevamente más tarde.";
 
   private static final String ALGORITMO_MARCA = "SHA-256";
   private static final Pattern ESPACIOS = Pattern.compile("\\s+");
@@ -50,11 +56,7 @@ public class ServicioResumenImpl implements ServicioResumen {
       this.repositorioResumen.actualizar(existente);
       return new ResultadoResumen(existente, true);
     }
-    String respuesta = servicioGemini.preguntar(textoLimpio);
-
-    if (ErroresGemini.esFallida(respuesta)) throw new ResumenNoGenerado(
-      "No pudimos generar el resumen en este momento. Intentá nuevamente en unos minutos."
-    );
+    String respuesta = pedirResumenAGemini(textoLimpio);
 
     Resumen nuevo = new Resumen(usuario, textoLimpio, marca, respuesta, LocalDateTime.now(reloj));
     this.repositorioResumen.guardar(nuevo);
@@ -72,6 +74,21 @@ public class ServicioResumenImpl implements ServicioResumen {
   @Transactional(readOnly = true)
   public Resumen buscarPorIdYUsuario(Long id, Long usuarioId) {
     return repositorioResumen.buscarPorIdYUsuario(id, usuarioId);
+  }
+
+  private String pedirResumenAGemini(String texto) throws ResumenNoGenerado {
+    String respuesta;
+    try {
+      respuesta = servicioGemini.preguntar(texto);
+    } catch (CuotaDeGeminiAgotada e) {
+      throw new ResumenNoGenerado(MENSAJE_SIN_CUOTA, e);
+    } catch (ErrorDeGemini e) {
+      throw new ResumenNoGenerado(MENSAJE_ERROR_GENERICO, e);
+    }
+    if (respuesta == null || respuesta.isBlank()) throw new ResumenNoGenerado(
+      MENSAJE_ERROR_GENERICO
+    );
+    return respuesta;
   }
 
   private String validarYLimpiar(String texto) throws ResumenInvalido {
