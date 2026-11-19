@@ -4,16 +4,25 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-import com.tallerwebi.dominio.gemini.errores.ErroresGemini;
+import com.tallerwebi.dominio.excepcion.excepcionGemini.CuotaDeGeminiAgotada;
+import com.tallerwebi.dominio.excepcion.excepcionGemini.ErrorDeGemini;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestOperations;
 
 public class ServicioGeminiTest {
@@ -23,19 +32,30 @@ public class ServicioGeminiTest {
   private static final String PREGUNTA = "¿Hola?";
   private static final String RESPUESTA_ESPERADA = "Respuesta Gemini";
   private static final String JSON_RESPONSE = jsonConTexto(RESPUESTA_ESPERADA);
+  private static final String MODELO_PRINCIPAL = "modelo-principal";
+  private static final String MODELO_ALTERNATIVO = "modelo-alternativo";
+  private static final String API_KEY_VALIDA = "api-key-falsa-de-prueba";
+  private static final String API_KEY_INVALIDA = "api-key-invalida-de-prueba";
+  private static final String API_KEY_SIN_PERMISOS = "api-key-sin-permisos-de-prueba";
 
   @BeforeEach
   public void inicializar() {
     restTemplateMock = mock(RestOperations.class);
-    String apiKey = System.getenv("GEMINI_API_KEY");
-    servicioGemini = new ServicioGeminiImpl(restTemplateMock, apiKey);
+    servicioGemini = crearServicioConApiKey(API_KEY_VALIDA);
+  }
+
+  private ServicioGemini crearServicioConApiKey(String apiKey) {
+    return new ServicioGeminiImpl(
+      restTemplateMock,
+      apiKey,
+      List.of(MODELO_PRINCIPAL, MODELO_ALTERNATIVO)
+    );
   }
 
   @Test
   public void deberiaObtenerUnaRespuestaAPartirDeUnaPreguntaYRegla() {
     dadoQueLaApiResponde(JSON_RESPONSE);
     String respuestaObtenida = cuandoPregunto(PREGUNTA);
-    // La respuesta de preguntar() se devuelve convertida de Markdown a HTML.
     entoncesLaRespuestaEs(respuestaObtenida, "<p>" + RESPUESTA_ESPERADA + "</p>\n");
   }
 
@@ -89,43 +109,161 @@ public class ServicioGeminiTest {
   }
 
   @Test
-  public void deberiaDevolverErrorDePeticionSiFallaElEnvio() {
+  public void deberiaLanzarErrorDeGeminiSiNoHayConexion() {
     when(restTemplateMock.postForObject(anyString(), any(HttpEntity.class), eq(String.class)))
-      .thenThrow(new RuntimeException("sin conexión"));
+      .thenThrow(new ResourceAccessException("sin conexión"));
 
-    String respuesta = cuandoPregunto(PREGUNTA);
-
-    assertThat(respuesta, startsWith(ErroresGemini.ERROR_AL_ARMAR_LA_PETICION));
-    assertThat(respuesta, containsString("Error al armar la petición: "));
+    assertThrows(ErrorDeGemini.class, () -> cuandoPregunto(PREGUNTA));
   }
 
   @Test
-  public void deberiaDevolverErrorDePeticionAunqueLaExcepcionNoTengaMensaje() {
-    when(restTemplateMock.postForObject(anyString(), any(HttpEntity.class), eq(String.class)))
-      .thenThrow(new RuntimeException());
-
-    String respuesta = cuandoPregunto(PREGUNTA);
-
-    assertThat(respuesta, equalTo(ErroresGemini.ERROR_AL_ARMAR_LA_PETICION + "null"));
-  }
-
-  @Test
-  public void deberiaDevolverErrorDeRespuestaSiElJsonNoTieneCandidatos() {
+  public void deberiaLanzarErrorDeGeminiSiElJsonNoTieneCandidatos() {
     dadoQueLaApiResponde("{}");
 
-    String respuesta = cuandoPregunto(PREGUNTA);
-
-    assertThat(respuesta, startsWith("<p>" + ErroresGemini.ERROR_PROCESANDO_RESPUESTA));
-    assertThat(ErroresGemini.esFallida(respuesta), equalTo(true));
+    assertThrows(ErrorDeGemini.class, () -> cuandoPregunto(PREGUNTA));
   }
 
   @Test
-  public void deberiaDevolverErrorDeRespuestaSiElJsonEsInvalido() {
+  public void deberiaLanzarErrorDeGeminiSiElJsonEsInvalido() {
     dadoQueLaApiResponde("esto no es json");
-    assertThat(
-      cuandoPregunto(PREGUNTA),
-      startsWith("<p>" + ErroresGemini.ERROR_PROCESANDO_RESPUESTA)
+
+    assertThrows(ErrorDeGemini.class, () -> cuandoPregunto(PREGUNTA));
+  }
+
+  @Test
+  public void deberiaCambiarAlSiguienteModeloSiSeAcaboLaCuota() {
+    dadoQueElModeloResponde(MODELO_PRINCIPAL, error(HttpStatus.TOO_MANY_REQUESTS));
+    when(
+      restTemplateMock.postForObject(
+        contains(MODELO_ALTERNATIVO),
+        any(HttpEntity.class),
+        eq(String.class)
+      )
+    )
+      .thenReturn(JSON_RESPONSE);
+
+    entoncesLaRespuestaEs(cuandoPregunto(PREGUNTA), "<p>" + RESPUESTA_ESPERADA + "</p>\n");
+    verify(restTemplateMock)
+      .postForObject(contains(MODELO_ALTERNATIVO), any(HttpEntity.class), eq(String.class));
+  }
+
+  @Test
+  public void deberiaCambiarAlSiguienteModeloSiElModeloNoEstaDisponible() {
+    dadoQueElModeloResponde(MODELO_PRINCIPAL, error(HttpStatus.SERVICE_UNAVAILABLE));
+    when(
+      restTemplateMock.postForObject(
+        contains(MODELO_ALTERNATIVO),
+        any(HttpEntity.class),
+        eq(String.class)
+      )
+    )
+      .thenReturn(JSON_RESPONSE);
+
+    entoncesLaRespuestaEs(cuandoPregunto(PREGUNTA), "<p>" + RESPUESTA_ESPERADA + "</p>\n");
+  }
+
+  @Test
+  public void deberiaLanzarCuotaAgotadaSiTodosLosModelosSeQuedaronSinCuota() {
+    when(restTemplateMock.postForObject(anyString(), any(HttpEntity.class), eq(String.class)))
+      .thenThrow(error(HttpStatus.TOO_MANY_REQUESTS));
+
+    assertThrows(CuotaDeGeminiAgotada.class, () -> cuandoPregunto(PREGUNTA));
+    verify(restTemplateMock, times(2))
+      .postForObject(anyString(), any(HttpEntity.class), eq(String.class));
+  }
+
+  @Test
+  public void deberiaLanzarErrorDeGeminiYNoCuotaSiNingunModeloEstaDisponible() {
+    when(restTemplateMock.postForObject(anyString(), any(HttpEntity.class), eq(String.class)))
+      .thenThrow(error(HttpStatus.SERVICE_UNAVAILABLE));
+
+    ErrorDeGemini error = assertThrows(ErrorDeGemini.class, () -> cuandoPregunto(PREGUNTA));
+    assertThat(error, not(instanceOf(CuotaDeGeminiAgotada.class)));
+  }
+
+  @Test
+  public void noDeberiaCambiarDeModeloAnteUnErrorDeAutenticacion() {
+    dadoQueElModeloResponde(MODELO_PRINCIPAL, error(HttpStatus.FORBIDDEN));
+
+    assertThrows(ErrorDeGemini.class, () -> cuandoPregunto(PREGUNTA));
+    verify(restTemplateMock, never())
+      .postForObject(contains(MODELO_ALTERNATIVO), any(HttpEntity.class), eq(String.class));
+  }
+
+  @Test
+  public void deberiaEnviarLaApiKeyConfiguradaEnElHeaderDeLaPeticion() {
+    dadoQueLaApiResponde(JSON_RESPONSE);
+    cuandoPregunto(PREGUNTA);
+
+    assertThat(peticionEnviada().getHeaders().getFirst("x-goog-api-key"), equalTo(API_KEY_VALIDA));
+  }
+
+  @Test
+  public void noDeberiaEnviarLaApiKeyEnLaUrl() {
+    dadoQueLaApiResponde(JSON_RESPONSE);
+    cuandoPregunto(PREGUNTA);
+
+    ArgumentCaptor<String> url = ArgumentCaptor.forClass(String.class);
+    verify(restTemplateMock).postForObject(url.capture(), any(HttpEntity.class), eq(String.class));
+    assertThat(url.getValue(), not(containsString(API_KEY_VALIDA)));
+  }
+
+  @Test
+  public void deberiaLanzarErrorDeGeminiSiLaApiKeyEsInvalida() {
+    servicioGemini = crearServicioConApiKey(API_KEY_INVALIDA);
+    dadoQueElModeloResponde(
+      MODELO_PRINCIPAL,
+      error(HttpStatus.BAD_REQUEST, "API key not valid. Please pass a valid API key.")
     );
+
+    ErrorDeGemini error = assertThrows(ErrorDeGemini.class, () -> cuandoPregunto(PREGUNTA));
+
+    assertThat(error, not(instanceOf(CuotaDeGeminiAgotada.class)));
+    assertThat(
+      peticionEnviada().getHeaders().getFirst("x-goog-api-key"),
+      equalTo(API_KEY_INVALIDA)
+    );
+    verify(restTemplateMock, never())
+      .postForObject(contains(MODELO_ALTERNATIVO), any(HttpEntity.class), eq(String.class));
+  }
+
+  @Test
+  public void deberiaLanzarErrorDeGeminiSiLaApiKeyNoTienePermisos() {
+    servicioGemini = crearServicioConApiKey(API_KEY_SIN_PERMISOS);
+    dadoQueElModeloResponde(
+      MODELO_PRINCIPAL,
+      error(HttpStatus.FORBIDDEN, "Method doesn't allow unregistered callers.")
+    );
+
+    assertThrows(ErrorDeGemini.class, () -> cuandoPregunto(PREGUNTA));
+    assertThat(
+      peticionEnviada().getHeaders().getFirst("x-goog-api-key"),
+      equalTo(API_KEY_SIN_PERMISOS)
+    );
+    verify(restTemplateMock, never())
+      .postForObject(contains(MODELO_ALTERNATIVO), any(HttpEntity.class), eq(String.class));
+  }
+
+  @Test
+  public void deberiaUsarLaMismaApiKeyAlCambiarDeModelo() {
+    dadoQueElModeloResponde(MODELO_PRINCIPAL, error(HttpStatus.TOO_MANY_REQUESTS));
+    when(
+      restTemplateMock.postForObject(
+        contains(MODELO_ALTERNATIVO),
+        any(HttpEntity.class),
+        eq(String.class)
+      )
+    )
+      .thenReturn(JSON_RESPONSE);
+
+    cuandoPregunto(PREGUNTA);
+
+    ArgumentCaptor<HttpEntity> captor = ArgumentCaptor.forClass(HttpEntity.class);
+    verify(restTemplateMock, times(2))
+      .postForObject(anyString(), captor.capture(), eq(String.class));
+    for (HttpEntity<?> peticion : captor.getAllValues()) {
+      assertThat(peticion.getHeaders().getFirst("x-goog-api-key"), equalTo(API_KEY_VALIDA));
+    }
   }
 
   @Test
@@ -151,13 +289,44 @@ public class ServicioGeminiTest {
   }
 
   @Test
-  public void generarEjerciciosDeberiaDevolverErrorSiFallaElEnvio() {
+  public void generarEjerciciosDeberiaLanzarCuotaAgotadaSiTodosLosModelosSeQuedaronSinCuota() {
     when(restTemplateMock.postForObject(anyString(), any(HttpEntity.class), eq(String.class)))
-      .thenThrow(new RuntimeException("caído"));
+      .thenThrow(error(HttpStatus.TOO_MANY_REQUESTS));
 
-    String respuesta = servicioGemini.generarEjercicios("Programación", "Herencia", 5);
+    assertThrows(
+      CuotaDeGeminiAgotada.class,
+      () -> servicioGemini.generarEjercicios("Programación", "Herencia", 5)
+    );
+  }
 
-    assertThat(respuesta, startsWith("Error procesando respuesta de Gemini: "));
+  private static RuntimeException error(HttpStatus status) {
+    return error(status, "detalle de prueba");
+  }
+
+  private static RuntimeException error(HttpStatus status, String mensaje) {
+    String cuerpo = "{\"error\":{\"message\":\"" + mensaje + "\"}}";
+    byte[] bytes = cuerpo.getBytes(StandardCharsets.UTF_8);
+    if (status.is5xxServerError()) {
+      return HttpServerErrorException.create(
+        status,
+        status.name(),
+        null,
+        bytes,
+        StandardCharsets.UTF_8
+      );
+    }
+    return HttpClientErrorException.create(
+      status,
+      status.name(),
+      null,
+      bytes,
+      StandardCharsets.UTF_8
+    );
+  }
+
+  private void dadoQueElModeloResponde(String modelo, RuntimeException error) {
+    when(restTemplateMock.postForObject(contains(modelo), any(HttpEntity.class), eq(String.class)))
+      .thenThrow(error);
   }
 
   private static String jsonConTexto(String texto) {
@@ -173,10 +342,14 @@ public class ServicioGeminiTest {
     return servicioGemini.preguntar(pregunta);
   }
 
-  private String cuerpoEnviado() {
+  private HttpEntity<?> peticionEnviada() {
     ArgumentCaptor<HttpEntity> captor = ArgumentCaptor.forClass(HttpEntity.class);
     verify(restTemplateMock).postForObject(anyString(), captor.capture(), eq(String.class));
-    return String.valueOf(captor.getValue().getBody());
+    return captor.getValue();
+  }
+
+  private String cuerpoEnviado() {
+    return String.valueOf(peticionEnviada().getBody());
   }
 
   private void entoncesLaRespuestaEs(String respuestaActual, String respuestaEsperada) {

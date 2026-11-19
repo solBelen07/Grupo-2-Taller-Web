@@ -14,10 +14,11 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.excepcion.excepcionGemini.CuotaDeGeminiAgotada;
+import com.tallerwebi.dominio.excepcion.excepcionGemini.ErrorDeGemini;
 import com.tallerwebi.dominio.excepcion.excepcionResumen.ResumenInvalido;
 import com.tallerwebi.dominio.excepcion.excepcionResumen.ResumenNoGenerado;
 import com.tallerwebi.dominio.gemini.ServicioGemini;
-import com.tallerwebi.dominio.gemini.errores.ErroresGemini;
 import java.security.NoSuchAlgorithmException;
 import java.time.Clock;
 import java.time.Instant;
@@ -167,21 +168,27 @@ public class ServicioResumenTest {
   // ---------- fallas de Gemini: no se guardan ----------
 
   @Test
-  void noDeberiaGuardarNadaSiGeminiDevuelveUnErrorDePeticion() {
-    when(servicioGemini.preguntar("texto"))
-      .thenReturn(ErroresGemini.ERROR_AL_ARMAR_LA_PETICION + "timeout");
+  void noDeberiaGuardarNadaSiGeminiFalla() {
+    when(servicioGemini.preguntar("texto")).thenThrow(new ErrorDeGemini("timeout"));
 
-    assertThrows(ResumenNoGenerado.class, () -> servicio.resumir(usuario, "texto"));
+    ResumenNoGenerado error = assertThrows(
+      ResumenNoGenerado.class,
+      () -> servicio.resumir(usuario, "texto")
+    );
+    assertEquals(ServicioResumenImpl.MENSAJE_ERROR_GENERICO, error.getMessage());
 
     verify(repositorioResumen, never()).guardar(any(Resumen.class));
   }
 
   @Test
-  void noDeberiaGuardarNadaSiGeminiDevuelveUnErrorDeRespuesta() {
-    when(servicioGemini.preguntar("texto"))
-      .thenReturn("<p>" + ErroresGemini.ERROR_PROCESANDO_RESPUESTA + "null</p>\n");
+  void deberiaAvisarQueSeAcaboLaCuotaSiGeminiSeQuedoSinCuota() {
+    when(servicioGemini.preguntar("texto")).thenThrow(new CuotaDeGeminiAgotada("sin cuota"));
 
-    assertThrows(ResumenNoGenerado.class, () -> servicio.resumir(usuario, "texto"));
+    ResumenNoGenerado error = assertThrows(
+      ResumenNoGenerado.class,
+      () -> servicio.resumir(usuario, "texto")
+    );
+    assertEquals(ServicioResumenImpl.MENSAJE_SIN_CUOTA, error.getMessage());
 
     verify(repositorioResumen, never()).guardar(any(Resumen.class));
   }

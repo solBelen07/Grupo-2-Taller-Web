@@ -59,7 +59,7 @@
 </head>
 
 <body>
-<div th:replace="~{componentes/sidebar :: sidebar-nav('ia-resumen')}"></div>
+<div th:replace="~{componentes/sidebar :: sidebar-nav('ai')}"></div>
 
 <div class="contenido-principal">
     <div th:replace="~{componentes/header :: header-principal}"></div>
@@ -76,8 +76,8 @@
                 </div>
             </div>
             <div>
-                <a th:href="@{/materias}" class="btn btn-outline-secondary border-0 text-muted" style="background-color: #171324;">
-                    <i class="fa-solid fa-arrow-left me-2"></i> Volver a Materias
+                <a th:href="@{/ia}" class="btn btn-outline-secondary border-0 text-muted" style="background-color: #171324;">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Volver al Asistente IA
                 </a>
             </div>
         </div>

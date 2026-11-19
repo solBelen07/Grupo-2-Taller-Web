@@ -2,6 +2,8 @@ package com.tallerwebi.presentacion.gemini;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.excepcion.excepcionGemini.CuotaDeGeminiAgotada;
+import com.tallerwebi.dominio.excepcion.excepcionGemini.ErrorDeGemini;
 import com.tallerwebi.dominio.gemini.ServicioGemini;
 import com.tallerwebi.dominio.materia.ServicioMateria;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,17 +54,25 @@ public class ControladorEjercicio {
       return ResponseEntity.badRequest().body("La materia seleccionada no es válida.");
     }
 
+    String respuesta;
     try {
-      String respuesta = servicioGemini.generarEjercicios(
-        materia.getNombre(),
-        solicitud.getTema(),
-        solicitud.getCantidad()
-      );
+      respuesta =
+        servicioGemini.generarEjercicios(
+          materia.getNombre(),
+          solicitud.getTema(),
+          solicitud.getCantidad()
+        );
+    } catch (CuotaDeGeminiAgotada e) {
+      return ResponseEntity
+        .status(503)
+        .body("Alcanzamos el límite de uso de la IA por hoy. Intentá nuevamente más tarde.");
+    } catch (ErrorDeGemini e) {
+      return ResponseEntity
+        .internalServerError()
+        .body("No pudimos generar los ejercicios en este momento. Intentá nuevamente.");
+    }
 
-      if (respuesta.startsWith("Error")) {
-        return ResponseEntity.internalServerError().body(respuesta);
-      }
-
+    try {
       RespuestaEjercicios ejercicios = objectMapper.readValue(respuesta, RespuestaEjercicios.class);
 
       List<PreguntaEjercicio> preguntas = ejercicios.getPreguntas();

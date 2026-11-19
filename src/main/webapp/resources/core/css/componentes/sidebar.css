@@ -1,16 +1,57 @@
+/*
+ * El menú lateral se usa en pantallas con y sin Bootstrap (y con versiones
+ * distintas). Por eso fija explícitamente fuente, interlineado, márgenes y
+ * colores, para no heredar los estilos base de cada página y verse igual en todas.
+ */
 .sidebar {
-                                                                   width: var(--sidebar-width);
-                                                                   background-color: var(--bg-dark);
-                                                                   border-right: 1px solid var(--card-border);
-                                                                   padding: 20px 16px;
-                                                                   display: flex;
-                                                                   flex-direction: column;
-                                                                   justify-content: space-between;
-                                                                   position: fixed;
-                                                                   height: 100vh;
-                                                               }
+    width: var(--sidebar-width);
+    background-color: var(--bg-dark);
+    border-right: 1px solid var(--card-border);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 100;
+    box-sizing: border-box;
+    color: var(--text-primary);
+    font-size: 16px;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.sidebar .brand h2,
+.sidebar .brand p,
+.sidebar .nav-item,
+.sidebar .user-info h4,
+.sidebar .user-info p,
+.sidebar .avatar-circle {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.sidebar .brand h2,
+.sidebar .brand p,
+.sidebar .user-info h4,
+.sidebar .user-info p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.3;
+}
+
+/* Logo + navegación: ocupa el alto disponible y, si no entra, scrollea solo la lista. */
+.sidebar > div:first-child {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1 1 auto;
+}
 
 .brand {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -22,16 +63,23 @@
     color: var(--accent-purple);
 }
 
-.brand h2 { font-size: 16px; font-weight: 700; }
-.brand p { font-size: 11px; color: var(--text-secondary); }
+.sidebar .brand h2 { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+.sidebar .brand p { font-size: 11px; color: var(--text-secondary); }
 
 .nav-menu {
+    margin: 0;
+    padding: 0;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--card-border) transparent;
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
 .nav-item {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -39,8 +87,17 @@
     color: var(--text-secondary);
     text-decoration: none;
     font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    border: 1px solid transparent;
     border-radius: 10px;
     transition: all 0.2s;
+}
+
+.nav-item i {
+    width: 16px;
+    text-align: center;
+    flex-shrink: 0;
 }
 
 .nav-item:hover, .nav-item.activo {
@@ -49,10 +106,12 @@
 }
 
 .nav-item.activo {
-    border: 1px solid #3b235d;
+    border-color: #3b235d;
 }
 
 .sidebar-user {
+    flex-shrink: 0;
+    margin-top: 12px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -60,8 +119,17 @@
     border-top: 1px solid var(--card-border);
 }
 
-.user-info h4 { font-size: 13px; font-weight: 600; }
-.user-info p { font-size: 11px; color: var(--text-secondary); }
+.sidebar .user-info { min-width: 0; }
+.sidebar .user-info h4 { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.sidebar .user-info p {
+    font-size: 11px;
+    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidebar .avatar-circle { flex-shrink: 0; }
 
 .logout-btn {
     margin-left: auto;

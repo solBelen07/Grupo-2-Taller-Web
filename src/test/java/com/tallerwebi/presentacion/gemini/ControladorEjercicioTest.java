@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.tallerwebi.dominio.Usuario;
+import com.tallerwebi.dominio.excepcion.excepcionGemini.CuotaDeGeminiAgotada;
+import com.tallerwebi.dominio.excepcion.excepcionGemini.ErrorDeGemini;
 import com.tallerwebi.dominio.gemini.ServicioGemini;
 import com.tallerwebi.dominio.materia.Materia;
 import com.tallerwebi.dominio.materia.ServicioMateria;
@@ -92,11 +94,26 @@ class ControladorEjercicioTest {
     when(servicioMateria.buscarMateriaPorIdYUsuario(1, 1L)).thenReturn(materia);
 
     when(servicioGemini.generarEjercicios("Programación", "Java", 1))
-      .thenReturn("Error al generar ejercicios");
+      .thenThrow(new ErrorDeGemini("falla"));
 
     ResponseEntity<?> respuesta = controlador.generarEjercicios(solicitudValida(), request);
 
     assertEquals(500, respuesta.getStatusCode().value());
+  }
+
+  @Test
+  void deberiaDevolver503SiSeAcaboLaCuotaDeGemini() {
+    Materia materia = new Materia();
+    materia.setNombre("Programación");
+
+    when(servicioMateria.buscarMateriaPorIdYUsuario(1, 1L)).thenReturn(materia);
+    when(servicioGemini.generarEjercicios("Programación", "Java", 1))
+      .thenThrow(new CuotaDeGeminiAgotada("sin cuota"));
+
+    ResponseEntity<?> respuesta = controlador.generarEjercicios(solicitudValida(), request);
+
+    assertEquals(503, respuesta.getStatusCode().value());
+    assertTrue(String.valueOf(respuesta.getBody()).contains("límite de uso"));
   }
 
   @Test

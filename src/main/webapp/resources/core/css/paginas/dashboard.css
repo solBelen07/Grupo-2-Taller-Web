@@ -3,24 +3,26 @@
    ========================================================================== */
 
 .dashboard-container {
-    padding: 2rem;
+    flex: 1;
+    padding: 1.25rem 2rem 1rem;
     color: #FFFFFF;
     background-color: #0B0713;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    min-height: 100vh;
 }
 
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .greeting-title {
-    font-size: 1.875rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    margin: 0 0 0.35rem 0;
+    margin: 0 0 0.2rem 0;
+    line-height: 1.2;
     color: #FFFFFF;
 }
 
@@ -80,25 +82,40 @@
 
 .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.25rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
+/* Ícono a la izquierda, valor y descripción a la derecha, barra abajo. */
 .kpi-card {
     background-color: #130D1E;
     border: 1px solid #231B30;
     border-radius: 1rem;
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
+    padding: 1rem 1.1rem;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.85rem;
+    align-content: start;
+    align-items: center;
 }
 
 .kpi-card-header {
+    grid-column: 1;
+    grid-row: 1 / span 3;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin: 0;
+}
+
+.kpi-value,
+.kpi-label,
+.kpi-subtext {
+    grid-column: 2;
+}
+
+.kpi-label:empty {
+    display: none;
 }
 
 .kpi-icon-badge {
@@ -127,22 +144,24 @@
 }
 
 .kpi-value {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 700;
+    line-height: 1.2;
     color: #FFFFFF;
-    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .kpi-label {
     font-size: 0.75rem;
     color: #9A95AA;
-    margin-bottom: 0.5rem;
 }
 
 .kpi-subtext {
     font-size: 0.75rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    line-height: 1.3;
 }
 
 .subtext-green { color: #22C55E; }
@@ -156,7 +175,8 @@
     background-color: #231B30;
     border-radius: 1rem;
     overflow: hidden;
-    margin-top: auto;
+    grid-column: 1 / -1;
+    margin-top: 0.75rem;
 }
 
 .progress-fill {
@@ -174,22 +194,30 @@
 
 .dashboard-main-grid {
     display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 1rem;
+    align-items: stretch;
 }
 
 .section-card {
     background-color: #130D1E;
     border: 1px solid #231B30;
     border-radius: 1rem;
-    padding: 1.5rem;
+    padding: 1.25rem;
+}
+
+/* La semana ocupa todo el alto de la columna de widgets. */
+.academic-week-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 }
 
 .section-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .section-title {
@@ -219,8 +247,9 @@
 
 .week-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.75rem;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.6rem;
+    flex: 1;
 }
 
 .week-day-column {
@@ -231,7 +260,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 220px;
+    min-width: 0;
+    min-height: 160px;
 }
 
 .week-day-column.active-day {
@@ -249,7 +279,7 @@
     font-size: 1rem;
     font-weight: 700;
     color: #FFFFFF;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 .day-events {
@@ -287,21 +317,22 @@
 .sidebar-widgets {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 0.75rem;
+    min-width: 0;
 }
 
 .widget-card {
     background-color: #130D1E;
     border: 1px solid #231B30;
     border-radius: 1rem;
-    padding: 1.25rem;
+    padding: 1rem 1.1rem;
 }
 
 .widget-title {
     font-size: 0.95rem;
     font-weight: 700;
     color: #FFFFFF;
-    margin: 0 0 1rem 0;
+    margin: 0 0 0.6rem 0;
 }
 
 /* Widget Iniciar FocusFlight */
@@ -313,7 +344,7 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 .widget-icon {
@@ -342,7 +373,7 @@
 .next-session-info {
     font-size: 0.75rem;
     color: #9A95AA;
-    margin-bottom: 1rem;
+    margin: 0 0 0.75rem 0;
 }
 
 .btn-takeoff {
@@ -353,7 +384,7 @@
     width: 100%;
     background-color: #A855F7;
     color: #FFFFFF;
-    padding: 0.75rem;
+    padding: 0.6rem;
     border-radius: 0.6rem;
     font-weight: 700;
     font-size: 0.875rem;
@@ -373,7 +404,7 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 0.5rem;
 }
 
 .deadline-item {
@@ -397,7 +428,14 @@
 .deadline-content {
     display: flex;
     flex-direction: column;
+    min-width: 0;
     font-size: 0.8rem;
+}
+
+.deadline-content strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .deadline-content strong {
@@ -415,11 +453,38 @@
     color: #EF4444;
 }
 
+/* Widget Racha de Estudio: cuadritos y contador en la misma fila */
+.streak-widget {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: 0.75rem;
+}
+
+.streak-widget .widget-title,
+.streak-widget .streak-record {
+    grid-column: 1 / -1;
+}
+
+.streak-widget .streak-boxes-container {
+    margin: 0;
+    flex-wrap: nowrap;
+}
+
+.streak-widget .streak-count {
+    justify-content: flex-end;
+    margin: 0;
+}
+
+.streak-widget .streak-record {
+    margin-top: 0.4rem;
+}
+
 /* Widget Racha de Estudio */
 .streak-boxes-container {
     display: flex;
     gap: 0.35rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.6rem;
     flex-wrap: wrap;
 }
 
@@ -455,4 +520,33 @@
 .streak-record {
     font-size: 0.725rem;
     color: #8B859E;
+}
+
+/* ==========================================================================
+   PANTALLAS MÁS ANGOSTAS
+   ========================================================================== */
+
+@media (max-width: 1200px) {
+    .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-main-grid {
+        grid-template-columns: minmax(0, 1fr) 280px;
+    }
+}
+
+@media (max-width: 900px) {
+    .dashboard-container {
+        padding: 1rem;
+    }
+
+    .dashboard-main-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .week-grid {
+        overflow-x: auto;
+        grid-template-columns: repeat(7, minmax(72px, 1fr));
+    }
 }

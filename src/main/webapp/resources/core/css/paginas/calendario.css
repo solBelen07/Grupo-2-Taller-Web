@@ -443,12 +443,13 @@
 }
 
 /* ---------- Pantallas chicas ---------- */
+/* Solo en pantallas con .app-shell, que son las que quitan el margen del contenido. */
 @media (max-width: 900px) {
-  .sidebar {
+  .app-shell .sidebar {
     display: none;
   }
 
-  .app-content {
+  .app-shell .app-content {
     margin-left: 0;
   }
 }

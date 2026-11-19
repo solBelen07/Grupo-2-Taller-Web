@@ -64,7 +64,9 @@ async function enviarPregunta(pregunta) {
 
     if (!respuestaHttp.ok) {
       const detalle = await respuestaHttp.text();
-      throw new Error(detalle || "El servidor respondió con un error.");
+      mensajeEspera.lastChild.textContent =
+        detalle || "El servidor respondió con un error. Intentá nuevamente.";
+      return;
     }
 
     const datos = await respuestaHttp.json();
